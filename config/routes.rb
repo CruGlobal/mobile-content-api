@@ -6,4 +6,6 @@ Rails.application.routes.draw do
 
   get '/resources/:id', to: 'resources#getMeta'
 
+  post '/auth', to: 'auth#getAuthToken'
+
 end
