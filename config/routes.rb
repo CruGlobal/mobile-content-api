@@ -6,6 +6,9 @@ Rails.application.routes.draw do
 
   get '/resources/:id', to: 'resources#getMeta'
 
+  get '/drafts/:resourceId/:languageId/', to: 'drafts#getPage'
+  post '/drafts/:resourceId/:languageId/', to: 'drafts#createDraft'
+
   post '/auth', to: 'auth#getAuthToken'
 
 end
