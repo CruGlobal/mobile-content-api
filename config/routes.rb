@@ -9,6 +9,7 @@ Rails.application.routes.draw do
 
   get '/drafts/:resourceId/:languageId/', to: 'drafts#getPage'
   post '/drafts/:resourceId/:languageId/', to: 'drafts#createDraft'
+  put '/drafts/:resourceId/:languageId/', to: 'drafts#publishDraft'
 
   post '/auth', to: 'auth#getAuthToken'
 

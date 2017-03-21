@@ -19,4 +19,11 @@ class PageHelper
                    }
   end
 
+  def self.deleteTempPages
+
+    tempDir = Dir.glob('pages/*')
+    tempDir.each { |file| File.delete(file) }
+
+  end
+
 end

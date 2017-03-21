@@ -1,5 +1,7 @@
 require 'rest-client'
 require 'digest/md5'
+require 'zip'
+require 'aws-sdk-rails'
 require 'page_helper'
 
 class DraftsController < ApplicationController
@@ -18,7 +20,6 @@ class DraftsController < ApplicationController
     render json: result
 
   end
-
 
   def createDraft
     resourceId = params[:resourceId]
@@ -52,7 +53,36 @@ class DraftsController < ApplicationController
       end
     }
 
+    PageHelper::deleteTempPages
+
     render json: result
+  end
+
+  def publishDraft
+
+    languageCode = Language.where(id: params[:languageId]).first.abbreviation
+    resource = Resource.where(id: params[:resourceId]).first
+
+    filename = resource.abbreviation + '_' + languageCode + '.zip'
+
+    Zip::File.open(filename, Zip::File::CREATE) do |zipfile|
+      resource.pages.each do |page|
+        tempFile = File.open('pages/' + page.filename, 'w')
+        tempFile.puts page.structure
+        tempFile.close
+
+        zipfile.add(page.filename, 'pages/'  + page.filename)
+      end
+    end
+
+    s3 = Aws::S3::Resource.new(region: ENV['AWS_REGION'])
+    bucket = s3.bucket(ENV['GODTOOLS_V2_BUCKET'])
+    obj = bucket.object(File.basename(filename))
+    obj.upload_file(filename)
+
+    PageHelper::deleteTempPages
+    File.delete(filename)
+
   end
 
 end
