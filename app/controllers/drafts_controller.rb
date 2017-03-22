@@ -61,7 +61,7 @@ class DraftsController < ApplicationController
     language_code = Language.where(id: params[:language_id]).first.abbreviation
     resource = Resource.where(id: params[:resource_id]).first
 
-    file_name = resource.abbreviation + '_' + language_code + '.zip'
+    file_name = language_code + '.zip'
 
     Zip::File.open(file_name, Zip::File::CREATE) do |zipfile|
       resource.pages.each do |page|
@@ -75,7 +75,7 @@ class DraftsController < ApplicationController
 
     s3 = Aws::S3::Resource.new(region: ENV['AWS_REGION'])
     bucket = s3.bucket(ENV['GODTOOLS_V2_BUCKET'])
-    obj = bucket.object(File.basename(file_name))
+    obj = bucket.object(resource.system.name + '/' + resource.abbreviation + '/' + file_name)
     obj.upload_file(file_name)
 
     PageHelper.delete_temp_pages
