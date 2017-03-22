@@ -1,14 +1,14 @@
-class SystemsController < ApplicationController
+# frozen_string_literal: true
 
-  def getSystems
+class SystemsController < ApplicationController
+  def systems
     systems = System.all
     render json: systems
   end
 
-  def getResources
-    systemId = params[:id]
-    system = System.find(systemId)
+  def resources
+    system_id = params[:id]
+    system = System.find(system_id)
     render json: system.resources
   end
-
 end

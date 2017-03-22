@@ -1,19 +1,17 @@
-class AuthController < ApplicationController
+# frozen_string_literal: true
 
+class AuthController < ApplicationController
   protect_from_forgery with: :null_session
 
-  def getAuthToken
+  def auth_token
+    submitted_code = params[:code]
+    code_from_db = AccessCode.where(code: submitted_code)
 
-    submittedCode = params[:code]
-    codeFromDb = AccessCode.where(code: submittedCode)
-
-    if codeFromDb.empty?
-      render json: "Access code not valid.", status: 400
+    if code_from_db.empty?
+      render json: 'Access code not valid.', status: 400
     else
-      token = AuthToken.create(id: SecureRandom.uuid, access_code: codeFromDb.first, token: SecureRandom.uuid)
+      token = AuthToken.create(id: SecureRandom.uuid, access_code: code_from_db.first, token: SecureRandom.uuid)
       render json: token.token, status: 200
     end
-
   end
-
 end

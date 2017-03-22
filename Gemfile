@@ -36,6 +36,7 @@ gem 'pg'
 gem 'rest-client', '~> 2.0.1'
 gem 'rubyzip', '>= 1.0.0'
 gem 'aws-sdk-rails'
+gem 'rubocop', '~> 0.47.1', require: false
 
 # Use Capistrano for deployment
 # gem 'capistrano-rails', group: :development
