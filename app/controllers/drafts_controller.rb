@@ -9,12 +9,12 @@ require 'page_helper'
 class DraftsController < ApplicationController
   def page
     resource_id = params[:resource_id]
-    language_code = params[:language_id]
+    language_code = Language.where(id: params[:language_id]).first.abbreviation
     page_name = params[:page_id]
 
     begin
       result = PageHelper.download_translated_page(resource_id, page_name, language_code)
-    rescue RestClient.ExceptionWithResponse => e
+    rescue RestClient::ExceptionWithResponse => e
       result = e.response
     end
 
@@ -22,12 +22,14 @@ class DraftsController < ApplicationController
   end
 
   def create_draft
-    resource_id = params[:resource_id]
-    language_code = params[:language_id]
+    resource = Resource.where(id: params[:resource_id]).first
+    language_code = Language.where(id: params[:language_id]).first.abbreviation
+
+    project_id = resource.one_sky_project_id
 
     result = 'OK'
 
-    pages = Page.all
+    pages = resource.pages
     pages.each { |page|
       page_to_upload = {}
 
@@ -38,7 +40,7 @@ class DraftsController < ApplicationController
       temp_file.close
 
       begin
-        RestClient.post 'https://platform.api.onesky.io/1/projects/' + resource_id + '/files',
+        RestClient.post "https://platform.api.onesky.io/1/projects/#{project_id}/files",
                         file: File.new('pages/' + page.filename),
                         file_format: 'HIERARCHICAL_JSON',
                         api_key: ENV['ONESKY_API_KEY'],
@@ -47,7 +49,7 @@ class DraftsController < ApplicationController
                         dev_hash: AuthHelper.dev_hash,
                         multipart: true
 
-      rescue RestClient.ExceptionWithResponse => e
+      rescue RestClient::ExceptionWithResponse => e
         result = e.response
       end
     }

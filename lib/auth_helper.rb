@@ -7,6 +7,6 @@ class AuthHelper
   end
 
   def self.dev_hash
-    Digest.MD5.hexdigest(epoch_time_seconds + ENV['ONESKY_API_SECRET'])
+    Digest::MD5.hexdigest(epoch_time_seconds + ENV['ONESKY_API_SECRET'])
   end
 end

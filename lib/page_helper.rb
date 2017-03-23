@@ -4,7 +4,9 @@ require 'auth_helper'
 
 class PageHelper
   def self.download_translated_page(resource_id, page_name, language_code)
-    RestClient.get 'https://platform.api.onesky.io/1/projects/' + resource_id + '/translations',
+    project_id = Resource.where(id: resource_id).first.one_sky_project_id
+
+    RestClient.get "https://platform.api.onesky.io/1/projects/#{project_id}/translations",
                    params:
                        {
                            api_key: ENV['ONESKY_API_KEY'],

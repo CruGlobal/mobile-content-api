@@ -8,11 +8,11 @@ class ResourcesController < ApplicationController
   end
 
   def download_resource
-    system_id = params[:system_id]
-    resource_id = params[:resource_id]
+    system = System.where(id: params[:system_id]).first
+    resource = Resource.where(id: params[:resource_id]).first
     language_code = params[:language_id]
 
-    path = 'https://s3.amazonaws.com/' + ENV['GODTOOLS_V2_BUCKET'] + '/' + system_id + '/' + resource_id + '/' + language_code + '.zip'
+    path = 'https://s3.amazonaws.com/' + ENV['GODTOOLS_V2_BUCKET'] + '/' + system.name + '/' + resource.abbreviation + '/' + language_code + '.zip'
 
     redirect_to path, status: 302
   end
