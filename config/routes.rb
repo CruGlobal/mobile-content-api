@@ -6,7 +6,8 @@ Rails.application.routes.draw do
   get '/systems/:id', to: 'systems#resources'
 
   get '/resources/:id', to: 'resources#meta'
-  get '/resources/:system_id/:resource_id/:language_id/', to: 'resources#download_resource'
+
+  get '/translations/:id', to: 'translations#download_translated_resource'
 
   get '/drafts/:resource_id/:language_id/', to: 'drafts#page'
   post '/drafts/:resource_id/:language_id/', to: 'drafts#create_draft'
