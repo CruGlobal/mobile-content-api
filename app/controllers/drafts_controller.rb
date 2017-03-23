@@ -23,7 +23,7 @@ class DraftsController < ApplicationController
 
   def create_draft
     resource = Resource.where(id: params[:resource_id]).first
-    language_code = Language.where(id: params[:language_id]).first.abbreviation
+    language = Language.where(id: params[:language_id]).first
 
     project_id = resource.one_sky_project_id
 
@@ -45,7 +45,7 @@ class DraftsController < ApplicationController
                         file_format: 'HIERARCHICAL_JSON',
                         api_key: ENV['ONESKY_API_KEY'],
                         timestamp: AuthHelper.epoch_time_seconds,
-                        locale: language_code,
+                        locale: language.abbreviation,
                         dev_hash: AuthHelper.dev_hash,
                         multipart: true
 
@@ -55,6 +55,12 @@ class DraftsController < ApplicationController
     }
 
     PageHelper.delete_temp_pages
+
+    translation = Translation.new
+    translation.id = SecureRandom.uuid
+    translation.resource = resource
+    translation.language = language
+    translation.save
 
     render json: result
   end
