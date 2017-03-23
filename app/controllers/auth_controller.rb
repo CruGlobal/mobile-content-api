@@ -11,7 +11,7 @@ class AuthController < ApplicationController
       render json: 'Access code not valid.', status: 400
     else
       token = AuthToken.create(id: SecureRandom.uuid, access_code: code_from_db.first, token: SecureRandom.uuid)
-      render json: token.token, status: 200
+      render json: token.token
     end
   end
 end

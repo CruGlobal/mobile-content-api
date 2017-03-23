@@ -5,6 +5,7 @@ require 'digest/md5'
 require 'zip'
 require 'aws-sdk-rails'
 require 'page_helper'
+require 's3_helper'
 
 class DraftsController < ApplicationController
   def page
@@ -12,9 +13,7 @@ class DraftsController < ApplicationController
     page_name = Page.where(id: params[:page_id]).first.filename
 
     begin
-      result = PageHelper.download_translated_page(translation.resource.id,
-                                                   page_name,
-                                                   translation.language.abbreviation)
+      result = PageHelper.download_translated_page(translation, page_name)
     rescue RestClient::ExceptionWithResponse => e
       result = e.response
     end
@@ -26,78 +25,20 @@ class DraftsController < ApplicationController
     resource = Resource.where(id: params[:resource_id]).first
     language = Language.where(id: params[:language_id]).first
 
-    project_id = resource.one_sky_project_id
+    result = PageHelper.push_new_onesky_translation(resource, language.abbreviation)
 
-    result = 'OK'
+    Translation.create(
+      id: SecureRandom.uuid,
+      resource: resource,
+      language: language
+    )
 
-    pages = resource.pages
-    pages.each { |page|
-      page_to_upload = {}
-
-      page.translation_elements.each { |element| page_to_upload[element.id] = element.text }
-
-      temp_file = File.open("pages/#{page.filename}", 'w')
-      temp_file.puts page_to_upload.to_json
-      temp_file.close
-
-      begin
-        RestClient.post "https://platform.api.onesky.io/1/projects/#{project_id}/files",
-                        file: File.new("pages/#{page.filename}"),
-                        file_format: 'HIERARCHICAL_JSON',
-                        api_key: ENV['ONESKY_API_KEY'],
-                        timestamp: AuthHelper.epoch_time_seconds,
-                        locale: language.abbreviation,
-                        dev_hash: AuthHelper.dev_hash,
-                        multipart: true
-
-      rescue RestClient::ExceptionWithResponse => e
-        result = e.response
-      end
-    }
-
-    PageHelper.delete_temp_pages
-
-    translation = Translation.new
-    translation.id = SecureRandom.uuid
-    translation.resource = resource
-    translation.language = language
-    translation.save
-
-    render json: result
+    result
   end
 
   def publish_draft
     translation = Translation.where(id: params[:id]).first
-    language_code = translation.language.abbreviation
-    resource = translation.resource
 
-    file_name = language_code + '.zip'
-
-    Zip::File.open(file_name, Zip::File::CREATE) do |zipfile|
-      resource.pages.each do |page|
-
-        begin
-          result = PageHelper.download_translated_page(resource.id, page.filename, language_code)
-          page.structure = result
-          page.save
-        rescue RestClient::ExceptionWithResponse => e
-          result = e.response
-        end
-
-        temp_file = File.open("pages/#{page.filename}", 'w')
-        temp_file.puts page.structure
-        temp_file.close
-
-        zipfile.add(page.filename, "pages/#{page.filename}")
-      end
-    end
-
-    s3 = Aws::S3::Resource.new(region: ENV['AWS_REGION'])
-    bucket = s3.bucket(ENV['GODTOOLS_V2_BUCKET'])
-    obj = bucket.object("#{resource.system.name}/#{resource.abbreviation}/#{file_name}")
-    obj.upload_file(file_name, options = {acl: 'public-read'})
-
-    PageHelper.delete_temp_pages
-    File.delete(file_name)
+    S3Helper.push_translation(translation)
   end
 end

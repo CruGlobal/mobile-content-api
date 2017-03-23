@@ -3,7 +3,7 @@ require 'digest/md5'
 
 class AuthHelper
   def self.epoch_time_seconds
-    Time.new.strftime('%s')
+    Time.new.utc.strftime('%s')
   end
 
   def self.dev_hash
