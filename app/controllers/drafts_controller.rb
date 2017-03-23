@@ -78,7 +78,7 @@ class DraftsController < ApplicationController
     s3 = Aws::S3::Resource.new(region: ENV['AWS_REGION'])
     bucket = s3.bucket(ENV['GODTOOLS_V2_BUCKET'])
     obj = bucket.object(resource.system.name + '/' + resource.abbreviation + '/' + file_name)
-    obj.upload_file(file_name)
+    obj.upload_file(file_name, options = {acl: 'public-read'})
 
     PageHelper.delete_temp_pages
     File.delete(file_name)
