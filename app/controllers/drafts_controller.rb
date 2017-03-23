@@ -67,6 +67,15 @@ class DraftsController < ApplicationController
 
     Zip::File.open(file_name, Zip::File::CREATE) do |zipfile|
       resource.pages.each do |page|
+
+        begin
+          result = PageHelper.download_translated_page(resource.id, page.filename, language_code)
+          page.structure = result
+          page.save
+        rescue RestClient::ExceptionWithResponse => e
+          result = e.response
+        end
+
         temp_file = File.open('pages/' + page.filename, 'w')
         temp_file.puts page.structure
         temp_file.close
