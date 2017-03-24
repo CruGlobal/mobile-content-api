@@ -9,8 +9,8 @@ require 's3_helper'
 
 class DraftsController < ApplicationController
   def page
-    translation = Translation.where(id: params[:draft_id]).first
-    page_name = Page.where(id: params[:page_id]).first.filename
+    translation = Translation.find(params[:draft_id])
+    page_name = Page.find(params[:page_id]).filename
 
     begin
       result = PageHelper.download_translated_page(translation, page_name)
@@ -22,8 +22,8 @@ class DraftsController < ApplicationController
   end
 
   def create_draft
-    resource = Resource.where(id: params[:resource_id]).first
-    language = Language.where(id: params[:language_id]).first
+    resource = Resource.find(params[:resource_id])
+    language = Language.find(params[:language_id])
 
     result = PageHelper.push_new_onesky_translation(resource, language.abbreviation)
 
@@ -37,7 +37,7 @@ class DraftsController < ApplicationController
   end
 
   def publish_draft
-    translation = Translation.where(id: params[:id]).first
+    translation = Translation.find(params[:id])
 
     S3Helper.push_translation(translation)
   end

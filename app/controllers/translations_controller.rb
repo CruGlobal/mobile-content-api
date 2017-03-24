@@ -2,7 +2,7 @@
 
 class TranslationsController < ApplicationController
   def download_translated_resource
-    translation = Translation.where(id: params[:id]).first
+    translation = Translation.find(params[:id])
 
     resource = translation.resource
     system = resource.system

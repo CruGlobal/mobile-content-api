@@ -20,10 +20,12 @@ class PageHelper
     push_all_pages(resource, language_code)
     delete_temp_pages
 
-    head :created
+    :created
   end
 
-  def self.push_all_pages(resource, language_code)
+  private
+
+  def push_all_pages(resource, language_code)
     resource.pages.each do |page|
       write_temp_file(page)
 
@@ -43,7 +45,7 @@ class PageHelper
     end
   end
 
-  def self.write_temp_file(page)
+  def write_temp_file(page)
     page_to_upload = {}
     page.translation_elements.each { |element| page_to_upload[element.id] = element.text }
 
@@ -52,7 +54,7 @@ class PageHelper
     temp_file.close
   end
 
-  def self.delete_temp_pages
+  def delete_temp_pages
     temp_dir = Dir.glob('pages/*')
     temp_dir.each { |file| File.delete(file) }
   end
