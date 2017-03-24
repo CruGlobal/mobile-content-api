@@ -9,9 +9,9 @@ Rails.application.routes.draw do
 
   get '/translations/:id', to: 'translations#download_translated_resource'
 
-  get '/drafts/:resource_id/:language_id/', to: 'drafts#page'
+  get '/drafts', to: 'drafts#page'
   post '/drafts', to: 'drafts#create_draft'
-  put '/drafts/:id/', to: 'drafts#publish_draft'
+  put '/drafts/:id', to: 'drafts#publish_draft'
 
   post '/auth', to: 'auth#auth_token'
 end

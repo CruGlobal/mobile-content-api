@@ -14,9 +14,8 @@ class S3Helper
     File.delete(file_name)
   end
 
-  private
-
-  def build_zip(file_name, translation)
+  private_class_method
+  def self.build_zip(file_name, translation)
     Zip::File.open(file_name, Zip::File::CREATE) do |zipfile|
       translation.resource.pages.each do |page|
         update_all_pages(translation, page)
@@ -30,7 +29,8 @@ class S3Helper
     end
   end
 
-  def update_all_pages(translation, page)
+  private_class_method
+  def self.update_all_pages(translation, page)
     result = PageHelper.download_translated_page(translation, page.filename)
     page.structure = result
     page.save
@@ -38,7 +38,8 @@ class S3Helper
     raise e
   end
 
-  def upload(file_name, resource)
+  private_class_method
+  def self.upload(file_name, resource)
     s3 = Aws::S3::Resource.new(region: ENV['AWS_REGION'])
     bucket = s3.bucket(ENV['GODTOOLS_V2_BUCKET'])
     obj = bucket.object("#{resource.system.name}/#{resource.abbreviation}/#{file_name}")

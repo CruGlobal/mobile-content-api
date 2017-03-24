@@ -4,7 +4,7 @@ require 'auth_helper'
 
 class PageHelper
   def self.download_translated_page(translation, page_name)
-    RestClient.get "https://platform.api.onesky.io/1/projects/#{translation.resource.one_sky_project_id}/translations",
+    RestClient.get "https://platform.api.onesky.io/1/projects/#{translation.resource.onesky_project_id}/translations",
                    params:
                      {
                        api_key: ENV['ONESKY_API_KEY'],
@@ -23,14 +23,13 @@ class PageHelper
     :created
   end
 
-  private
-
-  def push_all_pages(resource, language_code)
+  private_class_method
+  def self.push_all_pages(resource, language_code)
     resource.pages.each do |page|
       write_temp_file(page)
 
       begin
-        RestClient.post "https://platform.api.onesky.io/1/projects/#{resource.one_sky_project_id}/files",
+        RestClient.post "https://platform.api.onesky.io/1/projects/#{resource.onesky_project_id}/files",
                         file: File.new("pages/#{page.filename}"),
                         file_format: 'HIERARCHICAL_JSON',
                         api_key: ENV['ONESKY_API_KEY'],
@@ -45,7 +44,8 @@ class PageHelper
     end
   end
 
-  def write_temp_file(page)
+  private_class_method
+  def self.write_temp_file(page)
     page_to_upload = {}
     page.translation_elements.each { |element| page_to_upload[element.id] = element.text }
 
@@ -54,7 +54,8 @@ class PageHelper
     temp_file.close
   end
 
-  def delete_temp_pages
+  private_class_method
+  def self.delete_temp_pages
     temp_dir = Dir.glob('pages/*')
     temp_dir.each { |file| File.delete(file) }
   end
