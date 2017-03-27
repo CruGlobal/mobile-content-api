@@ -34,8 +34,8 @@ english = Language.create(name: 'English', abbreviation: 'en')
 german = Language.create(name: 'German', abbreviation: 'de')
 Language.create(name: 'Slovak', abbreviation: 'sk')
 
-Translation.create(resource: kgp, language: english)
-Translation.create(resource: kgp, language: german, version: 1)
+Translation.create(resource: kgp, language: english, version: 1, is_published: true)
+Translation.create(resource: kgp, language: german, version: 1, is_published: true)
 Translation.create(resource: kgp, language: german, version: 2)
 
 AccessCode.create(code: 123456)

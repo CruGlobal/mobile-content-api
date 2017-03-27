@@ -32,11 +32,18 @@ describe DraftsController do
     post :create_draft, params: { resource_id: 1, language_id: 1 }
   end
 
-  it 'increments version and creates new draft if resource/language combo exists' do
+  it 'increments version and creates new draft if resource/language translation exists' do
     post :create_draft, params: { resource_id: 1, language_id: 1 }
 
     translation = Translation.where(resource_id: 1, language_id: 1, version: 2).first
     assert(!translation.nil?)
+  end
+
+  it 'bad request returned if resource/language draft exists' do
+    post :create_draft, params: { resource_id: 1, language_id: 2 }
+
+    assert(response.status == 400)
+    assert(response.body == 'Draft already exists for this resource and language.')
   end
 
   it 'publishing draft sets published flag to true' do

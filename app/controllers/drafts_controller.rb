@@ -32,6 +32,8 @@ class DraftsController < ApplicationController
       PageHelper.push_new_onesky_translation(resource, language.abbreviation)
 
       Translation.create(resource: resource, language: language)
+    elsif !existing_translation.is_published
+      render json: 'Draft already exists for this resource and language.', status: 400
     else
       existing_translation.add_new_version
     end
