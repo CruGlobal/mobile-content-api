@@ -28,7 +28,6 @@ class DraftsController < ApplicationController
     result = PageHelper.push_new_onesky_translation(resource, language.abbreviation)
 
     Translation.create(
-      id: SecureRandom.uuid,
       resource: resource,
       language: language
     )

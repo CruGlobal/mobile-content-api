@@ -37,6 +37,8 @@ gem 'rest-client', '~> 2.0.1'
 gem 'rubyzip', '>= 1.0.0'
 gem 'aws-sdk-rails'
 gem 'rubocop', '~> 0.47.1', require: false
+gem 'rspec'
+gem 'rspec-rails', '~> 3.4'
 
 # Use Capistrano for deployment
 # gem 'capistrano-rails', group: :development
