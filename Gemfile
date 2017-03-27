@@ -39,6 +39,7 @@ gem 'aws-sdk-rails'
 gem 'rubocop', '~> 0.47.1', require: false
 gem 'rspec'
 gem 'rspec-rails', '~> 3.4'
+gem 'simplecov', '~> 0.12.0', require: false
 
 # Use Capistrano for deployment
 # gem 'capistrano-rails', group: :development
