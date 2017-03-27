@@ -2,9 +2,7 @@
 
 require 'rest-client'
 require 'digest/md5'
-require 'zip'
 require 'aws-sdk-rails'
-require 'page_helper'
 require 's3_helper'
 
 class DraftsController < ApplicationController

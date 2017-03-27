@@ -1,5 +1,8 @@
 # frozen_string_literal: true
 
+require 'zip'
+require 'page_helper'
+
 class S3Helper
   def self.push_translation(translation)
     language_code = translation.language.abbreviation

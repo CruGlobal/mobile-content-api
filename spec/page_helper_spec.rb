@@ -11,7 +11,7 @@ describe PageHelper do
     assert(values['3'] == 'This is a German phrase')
   end
 
-  it 'does not leave behind temp files' do
+  it 'deletes temp files' do
     allow(RestClient).to receive(:post)
 
     push
