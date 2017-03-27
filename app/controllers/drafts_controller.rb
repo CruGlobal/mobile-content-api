@@ -47,4 +47,19 @@ class DraftsController < ApplicationController
     S3Helper.push_translation(translation)
     translation.update(is_published: true)
   end
+
+  def delete_draft
+    translation = Translation.find(params[:id])
+
+    if translation.is_published
+      status = 400
+      message = 'Cannot delete published translations.'
+    else
+      translation.destroy
+      status = 204
+      message = ''
+    end
+
+    render json: message, status: status
+  end
 end

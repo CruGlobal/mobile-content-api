@@ -52,4 +52,17 @@ describe DraftsController do
     translation = Translation.find(1)
     assert(translation.is_published)
   end
+
+  it 'delete draft' do
+    delete :delete_draft, params: { id: 3 }
+
+    assert(response.status == 204)
+  end
+
+  it 'cannot delete translations' do
+    delete :delete_draft, params: { id: 1 }
+
+    assert(response.status == 400)
+    assert(response.body == 'Cannot delete published translations.')
+  end
 end

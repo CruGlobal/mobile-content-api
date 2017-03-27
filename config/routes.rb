@@ -12,6 +12,7 @@ Rails.application.routes.draw do
   get '/drafts', to: 'drafts#page'
   post '/drafts', to: 'drafts#create_draft'
   put '/drafts/:id', to: 'drafts#publish_draft'
+  delete '/drafts/:id', to: 'drafts#delete_draft'
 
   post '/auth', to: 'auth#auth_token'
 end
