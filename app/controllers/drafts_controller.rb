@@ -41,6 +41,26 @@ class DraftsController < ApplicationController
     :created
   end
 
+  def add_page_structure_for_one_translation
+    translation = Translation.find(params[:id])
+    page_id = params[:page_id]
+    structure = params[:structure]
+
+    existing_translation_page = TranslationPage.find_by(translation_id: translation.id, page_id: page_id)
+
+    if existing_translation_page.nil?
+      TranslationPage.create(translation: translation,
+                             page_id: page_id,
+                             structure: structure)
+      status = :created
+    else
+      existing_translation_page.update(structure: structure)
+      status = :no_content
+    end
+
+    render json: '', status: status
+  end
+
   def publish_draft
     translation = Translation.find(params[:id])
 

@@ -14,6 +14,10 @@ page_13 = Page.create(filename: '13_FinalPage.xml',
                       resource: kgp,
                       structure: '<note><to>Tove</to><from>Jani</from><heading>Reminder</heading>'\
                                  '<body>Dont forget me this weekend!</body></note>')
+Page.create(filename: '04_ThirdPoint.xml',
+                      resource: kgp,
+                      structure: '<note><to>Tove</to><from>Jani</from><heading>Reminder</heading>'\
+                                 '<body>Dont forget me this weekend!</body></note>')
 page_13_elements = [10]
 page_13_elements.push('WEBSITES TO ASSIST YOU')
 page_13_elements.push('Still not sure who Jesus is?')
@@ -36,6 +40,8 @@ Language.create(name: 'Slovak', abbreviation: 'sk')
 
 Translation.create(resource: kgp, language: english, version: 1, is_published: true)
 Translation.create(resource: kgp, language: german, version: 1, is_published: true)
-Translation.create(resource: kgp, language: german, version: 2)
+german_kgp = Translation.create(resource: kgp, language: german, version: 2)
+
+TranslationPage.create(translation: german_kgp, page: page_13, structure: '<custom>This is some custom xml for one translation</custom>')
 
 AccessCode.create(code: 123456)

@@ -38,6 +38,12 @@ class InitialMigration < ActiveRecord::Migration[5.0]
       t.references :resource, null: false
     end
 
+    create_table :translation_pages do |t|
+      t.string :structure
+      t.references :page, null: false
+      t.references :translation, null: false
+    end
+
     create_table :translation_elements do |t|
       t.integer :page_order
       t.string :text

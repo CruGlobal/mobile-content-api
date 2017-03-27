@@ -59,6 +59,14 @@ ActiveRecord::Schema.define(version: 20170324171408) do
     t.index ["page_id"], name: "index_translation_elements_on_page_id", using: :btree
   end
 
+  create_table "translation_pages", force: :cascade do |t|
+    t.string  "structure"
+    t.integer "page_id",        null: false
+    t.integer "translation_id", null: false
+    t.index ["page_id"], name: "index_translation_pages_on_page_id", using: :btree
+    t.index ["translation_id"], name: "index_translation_pages_on_translation_id", using: :btree
+  end
+
   create_table "translations", force: :cascade do |t|
     t.boolean "is_published", default: false
     t.integer "version",      default: 1
