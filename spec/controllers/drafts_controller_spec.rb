@@ -38,4 +38,11 @@ describe DraftsController do
     translation = Translation.where(resource_id: 1, language_id: 1, version: 2).first
     assert(!translation.nil?)
   end
+
+  it 'publishing draft sets published flag to true' do
+    put :publish_draft, params: { id: 1 }
+
+    translation = Translation.find(1)
+    assert(translation.is_published)
+  end
 end

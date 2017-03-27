@@ -43,5 +43,6 @@ class DraftsController < ApplicationController
     translation = Translation.find(params[:id])
 
     S3Helper.push_translation(translation)
+    translation.update(is_published: true)
   end
 end
