@@ -18,6 +18,7 @@ class InitialMigration < ActiveRecord::Migration[5.0]
 
     create_table :translations do |t|
       t.boolean :is_published, default: false
+      t.integer :version, default: 1
       t.references :resource, null: false
       t.references :language, null: false
     end

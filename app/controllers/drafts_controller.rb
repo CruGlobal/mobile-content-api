@@ -20,17 +20,23 @@ class DraftsController < ApplicationController
   end
 
   def create_draft
-    resource = Resource.find(params[:resource_id])
-    language = Language.find(params[:language_id])
+    resource_id = params[:resource_id]
+    language_id = params[:language_id]
 
-    result = PageHelper.push_new_onesky_translation(resource, language.abbreviation)
+    existing_translation = Translation.latest_translation(resource_id, language_id)
 
-    Translation.create(
-      resource: resource,
-      language: language
-    )
+    if existing_translation.nil?
+      resource = Resource.find(resource_id)
+      language = Language.find(language_id)
 
-    result
+      PageHelper.push_new_onesky_translation(resource, language.abbreviation)
+
+      Translation.create(resource: resource, language: language)
+    else
+      existing_translation.add_new_version
+    end
+
+    :created
   end
 
   def publish_draft

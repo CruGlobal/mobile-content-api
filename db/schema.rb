@@ -61,6 +61,7 @@ ActiveRecord::Schema.define(version: 20170324171408) do
 
   create_table "translations", force: :cascade do |t|
     t.boolean "is_published", default: false
+    t.integer "version",      default: 1
     t.integer "resource_id",                  null: false
     t.integer "language_id",                  null: false
     t.index ["language_id"], name: "index_translations_on_language_id", using: :btree
