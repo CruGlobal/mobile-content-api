@@ -19,7 +19,7 @@ describe Translation do
 
   it 'replaces original pages with custom pages' do
     german_kgp = Translation.find(3)
-    pages = german_kgp.translation_pages_include_custom
+    pages = german_kgp.translated_pages
 
     assert(pages[0].structure == '<custom>This is some custom xml for one translation</custom>')
     assert(pages[1].structure == '<note><to>Tove</to><from>Jani</from><heading>Reminder</heading>'\

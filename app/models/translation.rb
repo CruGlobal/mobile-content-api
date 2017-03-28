@@ -39,20 +39,20 @@ class Translation < ActiveRecord::Base
     return :bad_request
   end
 
-  def translation_pages_include_custom
-    returned_pages = []
+  def translated_pages
+    translated_pages = []
 
     resource.pages.each do |resource_page|
-      translation_pages.each do |custom_page|
+      custom_pages.each do |custom_page|
         if resource_page.id == custom_page.page_id
-          returned_pages.push(custom_page)
+          translated_pages.push(custom_page)
         else
-          returned_pages.push(resource_page)
+          translated_pages.push(resource_page)
         end
       end
     end
 
-    returned_pages
+    translated_pages
   end
 
   def self.latest_translation(resource_id, language_id)
