@@ -1,24 +1,4 @@
-# README
+# Godtools API V2
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
-
-Things you may want to cover:
-
-* Ruby version
-
-* System dependencies
-
-* Configuration
-
-* Database creation
-
-* Database initialization
-
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
+* Ruby version: 2.4 
+* `Drafts`/`Translations` are somewhat interchangeable terms.  They are both stored in the same table, and a `Translation` is simply a published `Draft`.  The field `is_published` denotes this.
