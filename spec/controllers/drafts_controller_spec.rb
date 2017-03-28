@@ -47,7 +47,8 @@ describe DraftsController do
   end
 
   it 'adds new translation page if translation id/page id combo does not exist' do
-    put :add_page_structure_for_one_translation, params: { id: 3, page_id: 2, structure: '<custom>This is some custom xml for one translation</custom>' }
+    put :add_page_structure_for_one_translation,
+        params: { id: 3, page_id: 2, structure: '<custom>This is some custom xml for one translation</custom>' }
 
     assert(response.status == 201)
     new_page = TranslationPage.find_by(translation_id: 3, page_id: 2)
