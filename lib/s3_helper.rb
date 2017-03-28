@@ -8,10 +8,10 @@ class S3Helper
     language_code = translation.language.abbreviation
     resource = translation.resource
 
-    file_name = language_code + '.zip'
+    file_name = "version_#{translation.version}.zip"
 
     build_zip(file_name, translation)
-    upload(file_name, resource)
+    upload(file_name, resource, language_code)
 
     PageHelper.delete_temp_pages
     File.delete(file_name)
@@ -42,10 +42,10 @@ class S3Helper
   end
 
   private_class_method
-  def self.upload(file_name, resource)
+  def self.upload(file_name, resource, language_code)
     s3 = Aws::S3::Resource.new(region: ENV['AWS_REGION'])
     bucket = s3.bucket(ENV['GODTOOLS_V2_BUCKET'])
-    obj = bucket.object("#{resource.system.name}/#{resource.abbreviation}/#{file_name}")
+    obj = bucket.object("#{resource.system.name}/#{resource.abbreviation}/#{language_code}/#{file_name}")
     obj.upload_file(file_name, acl: 'public-read')
   end
 end

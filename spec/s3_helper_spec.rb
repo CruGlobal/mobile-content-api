@@ -13,7 +13,7 @@ describe S3Helper do
 
   it 'deletes zip file' do
     push
-    assert(!File.exist?('en.zip'))
+    assert(!File.exist?('version_1.zip'))
   end
 
   private def push
