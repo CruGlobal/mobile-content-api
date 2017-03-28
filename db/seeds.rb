@@ -42,8 +42,8 @@ Translation.create(resource: kgp, language: english, version: 1, is_published: t
 Translation.create(resource: kgp, language: german, version: 1, is_published: true)
 german_kgp = Translation.create(resource: kgp, language: german, version: 2)
 
-TranslationPage.create(translation: german_kgp,
-                       page: page_13,
-                       structure: '<custom>This is some custom xml for one translation</custom>')
+CustomPage.create(translation: german_kgp,
+                  page: page_13,
+                  structure: '<custom>This is some custom xml for one translation</custom>')
 
 AccessCode.create(code: 123456)

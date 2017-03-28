@@ -51,7 +51,7 @@ describe DraftsController do
         params: { id: 3, page_id: 2, structure: '<custom>This is some custom xml for one translation</custom>' }
 
     assert(response.status == 201)
-    new_page = TranslationPage.find_by(translation_id: 3, page_id: 2)
+    new_page = CustomPage.find_by(translation_id: 3, page_id: 2)
     assert(!new_page.nil?)
   end
 
@@ -60,7 +60,7 @@ describe DraftsController do
     put :add_page_structure_for_one_translation, params: { id: 3, page_id: 1, structure: updated_structure }
 
     assert(response.status == 204)
-    page = TranslationPage.find_by(translation_id: 3, page_id: 1)
+    page = CustomPage.find_by(translation_id: 3, page_id: 1)
     assert(page.structure = updated_structure)
   end
 

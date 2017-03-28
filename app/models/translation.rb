@@ -3,7 +3,7 @@
 class Translation < ActiveRecord::Base
   belongs_to :resource
   belongs_to :language
-  has_many :translation_pages
+  has_many :custom_pages
 
   def add_new_version
     Translation.create(resource: resource, language: language, version: version + 1)

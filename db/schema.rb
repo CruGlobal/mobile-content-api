@@ -25,6 +25,14 @@ ActiveRecord::Schema.define(version: 20170324171408) do
     t.index ["access_code_id"], name: "index_auth_tokens_on_access_code_id", using: :btree
   end
 
+  create_table "custom_pages", force: :cascade do |t|
+    t.string  "structure"
+    t.integer "page_id",        null: false
+    t.integer "translation_id", null: false
+    t.index ["page_id"], name: "index_custom_pages_on_page_id", using: :btree
+    t.index ["translation_id"], name: "index_custom_pages_on_translation_id", using: :btree
+  end
+
   create_table "languages", force: :cascade do |t|
     t.string "name"
     t.string "abbreviation"
@@ -57,14 +65,6 @@ ActiveRecord::Schema.define(version: 20170324171408) do
     t.string  "text"
     t.integer "page_id",    null: false
     t.index ["page_id"], name: "index_translation_elements_on_page_id", using: :btree
-  end
-
-  create_table "translation_pages", force: :cascade do |t|
-    t.string  "structure"
-    t.integer "page_id",        null: false
-    t.integer "translation_id", null: false
-    t.index ["page_id"], name: "index_translation_pages_on_page_id", using: :btree
-    t.index ["translation_id"], name: "index_translation_pages_on_translation_id", using: :btree
   end
 
   create_table "translations", force: :cascade do |t|
