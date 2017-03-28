@@ -21,7 +21,7 @@ class S3Helper
   def self.build_zip(file_name, translation)
     Zip::File.open(file_name, Zip::File::CREATE) do |zipfile|
       translation.resource.pages.each do |page|
-        update_all_pages(translation, page)
+        update_page(translation, page)
 
         temp_file = File.open("pages/#{page.filename}", 'w')
         temp_file.puts page.structure
@@ -33,7 +33,7 @@ class S3Helper
   end
 
   private_class_method
-  def self.update_all_pages(translation, page)
+  def self.update_page(translation, page)
     result = translation.download_translated_page(page.filename)
     page.structure = result
     page.save
