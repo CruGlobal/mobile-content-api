@@ -4,12 +4,12 @@ class AuthController < ApplicationController
   protect_from_forgery with: :null_session
 
   def auth_token
-    create(params[:code])
+    create
   end
 
   private
 
-  def create(code)
-    head AuthToken.create_from_access_code(AccessCode.find_by(code: code))
+  def create
+    head AuthToken.create_from_access_code!(AccessCode.find_by(code: params[:code]))
   end
 end

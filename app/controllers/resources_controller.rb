@@ -2,7 +2,12 @@
 
 class ResourcesController < ApplicationController
   def meta
-    resource = Resource.find(params[:id])
-    render json: resource, include: :translations
+    resource
+  end
+
+  private
+
+  def resource
+    render json: Resource.find(params[:id]), include: :translations, status: :ok
   end
 end

@@ -2,13 +2,20 @@
 
 class SystemsController < ApplicationController
   def systems
-    systems = System.all
-    render json: systems
+    all_systems
   end
 
   def resources
-    system_id = params[:id]
-    system = System.find(system_id)
-    render json: system.resources
+    system
+  end
+
+  private
+
+  def all_systems
+    render json: System.all, status: :ok
+  end
+
+  def system
+    render json: System.find(params[:id]), status: :ok
   end
 end
