@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class InitialMigration < ActiveRecord::Migration[5.0]
   def change
     create_table :systems do |t|
@@ -44,11 +46,12 @@ class InitialMigration < ActiveRecord::Migration[5.0]
       t.references :translation, null: false
     end
 
+    add_index :custom_pages, [:page_id, :translation_id], unique: true
+
     create_table :translation_elements do |t|
       t.integer :page_order
       t.string :text
       t.references :page, null: false
     end
-
   end
 end

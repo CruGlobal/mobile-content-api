@@ -29,6 +29,7 @@ ActiveRecord::Schema.define(version: 20170324171408) do
     t.string  "structure"
     t.integer "page_id",        null: false
     t.integer "translation_id", null: false
+    t.index ["page_id", "translation_id"], name: "index_custom_pages_on_page_id_and_translation_id", unique: true, using: :btree
     t.index ["page_id"], name: "index_custom_pages_on_page_id", using: :btree
     t.index ["translation_id"], name: "index_custom_pages_on_translation_id", using: :btree
   end

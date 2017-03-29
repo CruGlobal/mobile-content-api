@@ -5,7 +5,6 @@ require 'rails_helper'
 describe Translation do
   it 'increments version by one' do
     translation = Translation.find(1)
-    translation.destroy
     new_translation = translation.add_new_version
 
     assert(new_translation.version == 2)
