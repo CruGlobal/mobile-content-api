@@ -1,19 +1,19 @@
 # frozen_string_literal: true
 
 class DraftsController < ApplicationController
-  def page
+  def show
     download_page
   end
 
-  def edit_page_structure
-    head(edit_structure)
+  def create
+    create_new_draft
   end
 
-  def publish_draft
+  def update
     publish
   end
 
-  def delete_draft
+  def destroy
     delete
   end
 
@@ -26,9 +26,18 @@ class DraftsController < ApplicationController
     render json: translation.download_translated_page(page_filename)
   end
 
-  def edit_structure
-    translation = Translation.find(params[:id])
-    translation.edit_page_structure(params[:page_id], params[:structure])
+  def create_new_draft
+    resource = Resource.find(params[:resource_id])
+    language_id = params[:language_id]
+    existing_translation = Translation.latest_translation(resource.id, language_id)
+
+    if existing_translation.nil?
+      resource.create_new_draft(language_id)
+    elsif !existing_translation.is_published
+      render json: 'Draft already exists for this resource and language.', status: 400
+    else
+      existing_translation.add_new_version
+    end
   end
 
   def publish

@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class TranslationsController < ApplicationController
-  def download_translated_resource
+  def show
     redirect
   end
 

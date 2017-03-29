@@ -1,11 +1,11 @@
 # frozen_string_literal: true
 
 class SystemsController < ApplicationController
-  def systems
+  def index
     all_systems
   end
 
-  def resources
+  def show
     system
   end
 
