@@ -4,13 +4,12 @@ class AuthController < ApplicationController
   protect_from_forgery with: :null_session
 
   def auth_token
-    code_from_db = AccessCode.find_by(code: params[:code])
+    create(params[:code])
+  end
 
-    if code_from_db.nil?
-      render json: 'Access code not valid.', status: 400
-    else
-      token = AuthToken.create(access_code: code_from_db, token: SecureRandom.uuid)
-      render json: token.token
-    end
+  private
+
+  def create(code)
+    head AuthToken.create_from_access_code(AccessCode.find_by(code: code))
   end
 end
