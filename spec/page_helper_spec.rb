@@ -4,13 +4,6 @@ require 'rails_helper'
 require 'page_helper'
 
 describe PageHelper do
-  it 'downloads translated page from OneSky' do
-    translation = Translation.find(2)
-    result = PageHelper.download_translated_page(translation, '13_FinalPage.xml')
-    values = JSON.parse(result)
-    assert(values['3'] == 'This is a German phrase')
-  end
-
   it 'deletes temp files' do
     allow(RestClient).to receive(:post)
 

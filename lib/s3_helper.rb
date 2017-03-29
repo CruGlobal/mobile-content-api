@@ -34,7 +34,7 @@ class S3Helper
 
   private_class_method
   def self.update_all_pages(translation, page)
-    result = PageHelper.download_translated_page(translation, page.filename)
+    result = translation.download_translated_page(page.filename)
     page.structure = result
     page.save
   rescue RestClient::ExceptionWithResponse => e

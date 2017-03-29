@@ -20,7 +20,7 @@ class DraftsController < ApplicationController
   private
 
   def download_page
-    translation = Translation.find(params[:draft_id])
+    translation = Translation.find(params[:id])
     page_filename = Page.find(params[:page_id]).filename
 
     render json: translation.download_translated_page(page_filename)

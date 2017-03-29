@@ -10,7 +10,7 @@ Rails.application.routes.draw do
 
   get '/translations/:id', to: 'translations#download_translated_resource'
 
-  get '/drafts', to: 'drafts#page'
+  get '/drafts/:id', to: 'drafts#page'
   put '/drafts/:id/structure', to: 'drafts#edit_page_structure'
   put '/drafts/:id/publish', to: 'drafts#publish_draft'
   delete '/drafts/:id', to: 'drafts#delete_draft'

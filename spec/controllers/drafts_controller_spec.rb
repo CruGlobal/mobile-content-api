@@ -5,9 +5,12 @@ require 'rails_helper'
 describe DraftsController do
   it 'downloads translated page with correct filename' do
     result = '{ \"1\": \"phrase\" }'
-    allow(PageHelper).to receive(:download_translated_page).with(Translation.find(2),
-                                                                 Page.find(1).filename).and_return(result)
-    get :page, params: { draft_id: 2, page_id: 1 }
+
+    translation = double
+    allow(Translation).to receive(:find).and_return(translation)
+    allow(translation).to receive(:download_translated_page).with('13_FinalPage.xml').and_return(result)
+
+    get :page, params: { id: 2, page_id: 1 }
     assert(response.body == result)
   end
 
