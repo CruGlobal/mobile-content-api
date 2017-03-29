@@ -9,7 +9,7 @@ class Translation < ActiveRecord::Base
 
   before_destroy :prevent_destroy_published
 
-  def add_new_version
+  def create_new_version
     Translation.create(resource: resource, language: language, version: version + 1)
   end
 

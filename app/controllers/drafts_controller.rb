@@ -36,7 +36,7 @@ class DraftsController < ApplicationController
     elsif !existing_translation.is_published
       render json: 'Draft already exists for this resource and language.', status: 400
     else
-      existing_translation.add_new_version
+      existing_translation.create_new_version
     end
   end
 

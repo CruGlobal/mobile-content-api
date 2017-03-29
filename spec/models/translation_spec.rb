@@ -12,7 +12,7 @@ describe Translation do
 
   it 'increments version by one' do
     translation = Translation.find(1)
-    new_translation = translation.add_new_version
+    new_translation = translation.create_new_version
 
     assert(new_translation.version == 2)
   end
