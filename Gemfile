@@ -36,10 +36,6 @@ gem 'pg'
 gem 'rest-client', '~> 2.0.1'
 gem 'rubyzip', '>= 1.0.0'
 gem 'aws-sdk-rails'
-gem 'rubocop', '~> 0.47.1', require: false
-gem 'rspec'
-gem 'rspec-rails', '~> 3.4'
-gem 'simplecov', '~> 0.12.0', require: false
 
 # Use Capistrano for deployment
 # gem 'capistrano-rails', group: :development
@@ -47,6 +43,10 @@ gem 'simplecov', '~> 0.12.0', require: false
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'byebug', platform: :mri
+  gem 'rubocop', '~> 0.47.1', require: false
+  gem 'rspec'
+  gem 'rspec-rails', '~> 3.4'
+  gem 'simplecov', '~> 0.12.0', require: false
 end
 
 group :development do
