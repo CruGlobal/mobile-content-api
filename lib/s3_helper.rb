@@ -4,48 +4,48 @@ require 'zip'
 require 'page_helper'
 
 class S3Helper
-  def self.push_translation(translation)
-    language_code = translation.language.abbreviation
-    resource = translation.resource
-
-    file_name = "version_#{translation.version}.zip"
-
-    build_zip(file_name, translation)
-    upload(file_name, resource, language_code)
-
-    PageHelper.delete_temp_pages
-    File.delete(file_name)
+  def initialize(translation)
+    @translation = translation
+    @zip_file_name = "version_#{@translation.version}.zip"
   end
 
-  private_class_method
-  def self.build_zip(file_name, translation)
-    Zip::File.open(file_name, Zip::File::CREATE) do |zipfile|
-      translation.resource.pages.each do |page|
-        update_page(translation, page)
+  def push_translation
+    build_zip
+    upload
+
+    PageHelper.delete_temp_pages
+    File.delete(@zip_file_name)
+  end
+
+  private
+
+  def build_zip
+    Zip::File.open(@zip_file_name, Zip::File::CREATE) do |zip_file|
+      @translation.resource.pages.each do |page|
+        update_page(page)
 
         temp_file = File.open("pages/#{page.filename}", 'w')
         temp_file.puts page.structure
         temp_file.close
 
-        zipfile.add(page.filename, "pages/#{page.filename}")
+        zip_file.add(page.filename, "pages/#{page.filename}")
       end
     end
   end
 
-  private_class_method
-  def self.update_page(translation, page)
-    result = translation.download_translated_page(page.filename)
+  def update_page(page)
+    result = @translation.download_translated_page(page.filename)
     page.structure = result
     page.save
   rescue RestClient::ExceptionWithResponse => e
     raise e
   end
 
-  private_class_method
-  def self.upload(file_name, resource, language_code)
+  def upload
     s3 = Aws::S3::Resource.new(region: ENV['AWS_REGION'])
     bucket = s3.bucket(ENV['GODTOOLS_V2_BUCKET'])
-    obj = bucket.object("#{resource.system.name}/#{resource.abbreviation}/#{language_code}/#{file_name}")
-    obj.upload_file(file_name, acl: 'public-read')
+    obj = bucket.object("#{@translation.resource.system.name}/#{@translation.resource.abbreviation}"\
+                        "/#{@translation.language.abbreviation}/#{@zip_file_name}")
+    obj.upload_file(@zip_file_name, acl: 'public-read')
   end
 end

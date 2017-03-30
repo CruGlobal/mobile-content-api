@@ -28,7 +28,8 @@ class Translation < ActiveRecord::Base
   end
 
   def publish
-    S3Helper.push_translation(self)
+    s3helper = S3Helper.new(self)
+    s3helper.push_translation
     update(is_published: true)
   end
 

@@ -8,7 +8,8 @@ class Resource < ActiveRecord::Base
   def create_new_draft(language_id)
     language = Language.find(language_id)
 
-    PageHelper.push_new_onesky_translation(self, language.abbreviation)
+    page_helper = PageHelper.new(self, language.abbreviation)
+    page_helper.push_new_onesky_translation
     Translation.create(resource: self, language: language)
   end
 end
