@@ -6,7 +6,6 @@ class CustomPagesController < ApplicationController
   end
 
   def upsert_custom_page
-    translation = Translation.find(params[:id])
-    translation.edit_page_structure(params[:page_id], params[:structure])
+    CustomPage.upsert(params)
   end
 end

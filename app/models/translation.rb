@@ -27,10 +27,6 @@ class Translation < ActiveRecord::Base
     return e.response
   end
 
-  def edit_page_structure(page_id, structure)
-    CustomPage.upsert(self, page_id, structure)
-  end
-
   def publish
     S3Helper.push_translation(self)
     update(is_published: true)

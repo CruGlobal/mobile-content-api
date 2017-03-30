@@ -6,12 +6,16 @@ class CustomPage < ActiveRecord::Base
 
   validates :page, uniqueness: { scope: :translation, message: 'Only one page/translation combo allowed.' }
 
-  def self.upsert(translation, page_id, structure)
-    create!(translation: translation, page_id: page_id, structure: structure)
+  def self.upsert(params)
+    translation_id = params[:translation_id]
+    page_id = params[:page_id]
+    structure = params[:structure]
+
+    create!(translation_id: translation_id, page_id: page_id, structure: structure)
     :created
   rescue
-    existing = find_by(translation_id: translation.id, page_id: page_id)
-    existing.update(structure: structure)
+    existing = find_by(translation_id: translation_id, page_id: page_id)
+    existing.update(params.permit(:structure))
     :no_content
   end
 end
