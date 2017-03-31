@@ -35,4 +35,18 @@ describe Translation do
     translation = Translation.latest_translation(1, 3)
     assert(translation.nil?)
   end
+
+  it 'returns the S3 URI as bucket/system name/resource abbreviation/language abbreviation' do
+    ENV['GODTOOLS_V2_BUCKET'] = 'test_bucket'
+
+    uri = Translation.find(1).s3_uri
+
+    assert(uri == 'https://s3.amazonaws.com/test_bucket/GodTools/kgp/en/version_1.zip')
+  end
+
+  it 'returns bad request if deletion of a translation is attempted' do
+    translation = Translation.find(1)
+
+    expect { translation.destroy! }.to raise_error('Cannot delete published drafts.')
+  end
 end

@@ -15,7 +15,7 @@ class Translation < ActiveRecord::Base
 
   def s3_uri
     "https://s3.amazonaws.com/#{ENV['GODTOOLS_V2_BUCKET']}/"\
-    "#{resource.system.name}/#{resource.abbreviation}/#{language.abbreviation}.zip"
+    "#{resource.system.name}/#{resource.abbreviation}/#{language.abbreviation}/version_#{version}.zip"
   end
 
   def download_translated_page(page_filename)
