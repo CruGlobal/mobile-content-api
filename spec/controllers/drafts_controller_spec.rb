@@ -27,6 +27,7 @@ describe DraftsController do
     end
 
     it 'creates new draft if resource/language combo does not exist' do
+      allow(RestClient).to receive(:post)
       post :create, params: { resource_id: 1, language_id: 3 }
 
       translation = Translation.where(resource_id: 1, language_id: 3, version: 1).first
