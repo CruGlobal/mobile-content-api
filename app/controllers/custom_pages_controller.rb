@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class CustomPagesController < ApplicationController
+class CustomPagesController < SecureController
   def create
     head(upsert_custom_page)
   end
