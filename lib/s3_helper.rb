@@ -37,8 +37,6 @@ class S3Helper
     result = @translation.download_translated_page(page.filename)
     page.structure = result
     page.save
-  rescue RestClient::ExceptionWithResponse => e
-    raise e
   end
 
   def upload

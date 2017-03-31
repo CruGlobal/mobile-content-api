@@ -24,7 +24,7 @@ class Translation < ActiveRecord::Base
                                     dev_hash: AuthHelper.dev_hash, locale: language.abbreviation,
                                     source_file_name: page_filename, export_file_name: page_filename }
   rescue RestClient::ExceptionWithResponse => e
-    return e.response
+    raise e
   end
 
   def publish
