@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 require 'rails_helper'
-require Rails.root.join('spec', 'support', 'test_auth_helper.rb')
+require Rails.root.join('spec', 'support', 'mock_auth_helper.rb')
 
 describe DraftsController do
   it 'does not allow unauthorized POSTs' do
