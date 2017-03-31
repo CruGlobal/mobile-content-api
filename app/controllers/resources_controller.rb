@@ -8,6 +8,6 @@ class ResourcesController < ApplicationController
   private
 
   def resource
-    render json: Resource.find(params[:id]), include: :translations, status: :ok
+    render json: Resource.find(params[:id]), status: :ok
   end
 end

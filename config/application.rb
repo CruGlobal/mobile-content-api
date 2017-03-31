@@ -9,6 +9,8 @@ Bundler.require(*Rails.groups)
 
 module GodtoolsApiV2
   class Application < Rails::Application
+    ActiveModelSerializers.config.adapter = :json_api
+
     # Settings in config/environments/* take precedence over those specified here.
     # Application configuration should go into files in config/initializers
     # -- all .rb files in that directory are automatically loaded.
