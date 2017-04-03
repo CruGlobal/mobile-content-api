@@ -19,12 +19,10 @@ class Translation < ActiveRecord::Base
   end
 
   def download_translated_page(page_filename)
-    return RestClient.get "https://platform.api.onesky.io/1/projects/#{resource.onesky_project_id}/translations",
-                          params: { api_key: ENV['ONESKY_API_KEY'], timestamp: AuthHelper.epoch_time_seconds,
-                                    dev_hash: AuthHelper.dev_hash, locale: language.abbreviation,
-                                    source_file_name: page_filename, export_file_name: page_filename }
-  rescue RestClient::ExceptionWithResponse => e
-    raise e
+    RestClient.get "https://platform.api.onesky.io/1/projects/#{resource.onesky_project_id}/translations",
+                   params: { api_key: ENV['ONESKY_API_KEY'], timestamp: AuthHelper.epoch_time_seconds,
+                             dev_hash: AuthHelper.dev_hash, locale: language.abbreviation,
+                             source_file_name: page_filename, export_file_name: page_filename }
   end
 
   def publish
