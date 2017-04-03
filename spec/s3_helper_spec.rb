@@ -8,12 +8,12 @@ describe S3Helper do
     push
 
     pages_dir = Dir.glob('pages/*')
-    assert(pages_dir.empty?)
+    expect(pages_dir.empty?).to be(true)
   end
 
   it 'deletes zip file' do
     push
-    assert(!File.exist?('version_1.zip'))
+    expect(File.exist?('version_1.zip')).to be(false)
   end
 
   private def push
