@@ -39,7 +39,7 @@ class DraftsController < SecureController
   end
 
   def publish
-    load_translation.publish
+    load_translation.update_draft(params)
   end
 
   def delete

@@ -49,9 +49,9 @@ describe DraftsController do
     end
 
     it 'publishing draft sets published flag to true' do
-      put :update, params: { id: 1 }
+      put :update, params: { id: 3, is_published: true }
 
-      translation = Translation.find(1)
+      translation = Translation.find(3)
       expect(translation.is_published).to be(true)
     end
 
