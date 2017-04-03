@@ -16,17 +16,17 @@ ActiveRecord::Schema.define(version: 20170324171408) do
   enable_extension "plpgsql"
 
   create_table "access_codes", force: :cascade do |t|
-    t.string "code"
+    t.string "code", null: false
   end
 
   create_table "auth_tokens", force: :cascade do |t|
-    t.string  "token"
+    t.string  "token",          null: false
     t.integer "access_code_id", null: false
     t.index ["access_code_id"], name: "index_auth_tokens_on_access_code_id", using: :btree
   end
 
   create_table "custom_pages", force: :cascade do |t|
-    t.string  "structure"
+    t.string  "structure",      null: false
     t.integer "page_id",        null: false
     t.integer "translation_id", null: false
     t.index ["page_id", "translation_id"], name: "index_custom_pages_on_page_id_and_translation_id", unique: true, using: :btree
@@ -35,42 +35,42 @@ ActiveRecord::Schema.define(version: 20170324171408) do
   end
 
   create_table "languages", force: :cascade do |t|
-    t.string "name"
-    t.string "abbreviation"
+    t.string "name",         null: false
+    t.string "abbreviation", null: false
     t.index ["abbreviation"], name: "index_languages_on_abbreviation", unique: true, using: :btree
   end
 
   create_table "pages", force: :cascade do |t|
-    t.string  "filename"
-    t.string  "structure"
+    t.string  "filename",    null: false
+    t.string  "structure",   null: false
     t.integer "resource_id", null: false
     t.index ["resource_id"], name: "index_pages_on_resource_id", using: :btree
   end
 
   create_table "resources", force: :cascade do |t|
-    t.string  "name"
-    t.string  "abbreviation"
-    t.integer "onesky_project_id"
+    t.string  "name",              null: false
+    t.string  "abbreviation",      null: false
+    t.integer "onesky_project_id", null: false
     t.integer "system_id",         null: false
     t.index ["abbreviation"], name: "index_resources_on_abbreviation", unique: true, using: :btree
     t.index ["system_id"], name: "index_resources_on_system_id", using: :btree
   end
 
   create_table "systems", force: :cascade do |t|
-    t.string "name"
+    t.string "name", null: false
     t.index ["name"], name: "index_systems_on_name", unique: true, using: :btree
   end
 
   create_table "translation_elements", force: :cascade do |t|
     t.integer "page_order"
-    t.string  "text"
+    t.string  "text",       null: false
     t.integer "page_id",    null: false
     t.index ["page_id"], name: "index_translation_elements_on_page_id", using: :btree
   end
 
   create_table "translations", force: :cascade do |t|
     t.boolean "is_published", default: false
-    t.integer "version",      default: 1
+    t.integer "version",      default: 1,     null: false
     t.integer "resource_id",                  null: false
     t.integer "language_id",                  null: false
     t.index ["language_id"], name: "index_translations_on_language_id", using: :btree

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class DraftsController < ApplicationController
+class DraftsController < SecureController
   def show
     download_page
   end

@@ -15,7 +15,7 @@ class Translation < ActiveRecord::Base
 
   def s3_uri
     "https://s3.amazonaws.com/#{ENV['GODTOOLS_V2_BUCKET']}/"\
-    "#{resource.system.name}/#{resource.abbreviation}/#{language.abbreviation}.zip"
+    "#{resource.system.name}/#{resource.abbreviation}/#{language.abbreviation}/version_#{version}.zip"
   end
 
   def download_translated_page(page_filename)
@@ -28,7 +28,8 @@ class Translation < ActiveRecord::Base
   end
 
   def publish
-    S3Helper.push_translation(self)
+    s3helper = S3Helper.new(self)
+    s3helper.push_translation
     update(is_published: true)
   end
 
@@ -37,6 +38,12 @@ class Translation < ActiveRecord::Base
     return :no_content
   rescue
     return :bad_request
+  end
+
+  def translated_pages
+    resource.pages.map do |resource_page|
+      custom_pages.find_by(page_id: resource_page.id) || resource_page
+    end
   end
 
   def self.latest_translation(resource_id, language_id)

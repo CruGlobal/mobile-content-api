@@ -13,7 +13,7 @@ describe S3Helper do
 
   it 'deletes zip file' do
     push
-    assert(!File.exist?('en.zip'))
+    assert(!File.exist?('version_1.zip'))
   end
 
   private def push
@@ -23,6 +23,7 @@ describe S3Helper do
     allow(Aws::S3::Resource).to receive(:new).and_return(s3)
 
     translation = Translation.find(1)
-    S3Helper.push_translation(translation)
+    s3helper = S3Helper.new(translation)
+    s3helper.push_translation
   end
 end

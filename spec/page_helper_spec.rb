@@ -28,6 +28,7 @@ describe PageHelper do
 
     resource = Resource.new(pages: [page], onesky_project_id: 1)
 
-    PageHelper.push_new_onesky_translation(resource, 'de')
+    page_helper = PageHelper.new(resource, 'de')
+    page_helper.push_new_onesky_translation
   end
 end
