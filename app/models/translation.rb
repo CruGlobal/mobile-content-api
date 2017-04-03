@@ -41,19 +41,9 @@ class Translation < ActiveRecord::Base
   end
 
   def translated_pages
-    translated_pages = []
-
-    resource.pages.each do |resource_page|
-      custom_pages.each do |custom_page|
-        if resource_page.id == custom_page.page_id
-          translated_pages.push(custom_page)
-        else
-          translated_pages.push(resource_page)
-        end
-      end
+    resource.pages.map do |resource_page|
+      custom_pages.find_by(page_id: resource_page.id) || resource_page
     end
-
-    translated_pages
   end
 
   def self.latest_translation(resource_id, language_id)
