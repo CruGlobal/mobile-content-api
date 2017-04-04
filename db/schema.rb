@@ -49,6 +49,7 @@ ActiveRecord::Schema.define(version: 20170324171408) do
 
   create_table "resources", force: :cascade do |t|
     t.string  "name",              null: false
+    t.string  "description"
     t.string  "abbreviation",      null: false
     t.integer "onesky_project_id", null: false
     t.integer "system_id",         null: false
@@ -69,10 +70,12 @@ ActiveRecord::Schema.define(version: 20170324171408) do
   end
 
   create_table "translations", force: :cascade do |t|
-    t.boolean "is_published", default: false
-    t.integer "version",      default: 1,     null: false
-    t.integer "resource_id",                  null: false
-    t.integer "language_id",                  null: false
+    t.boolean "is_published",           default: false
+    t.integer "version",                default: 1,     null: false
+    t.string  "translated_name"
+    t.string  "translated_description"
+    t.integer "resource_id",                            null: false
+    t.integer "language_id",                            null: false
     t.index ["language_id"], name: "index_translations_on_language_id", using: :btree
     t.index ["resource_id"], name: "index_translations_on_resource_id", using: :btree
   end
