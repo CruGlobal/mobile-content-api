@@ -20,10 +20,8 @@ class DraftsController < SecureController
   private
 
   def download_page
-    translation = Translation.find(params[:id])
     page_filename = Page.find(params[:page_id]).filename
-
-    render json: translation.download_translated_page(page_filename)
+    render json: load_translation.download_translated_page(page_filename)
   end
 
   def create_new_draft
@@ -41,12 +39,14 @@ class DraftsController < SecureController
   end
 
   def publish
-    translation = Translation.find(params[:id])
-    translation.publish
+    load_translation.publish
   end
 
   def delete
-    translation = Translation.find(params[:id])
-    head translation.delete_draft!
+    load_translation.delete_draft!
+  end
+
+  def load_translation
+    Translation.find(params[:id])
   end
 end

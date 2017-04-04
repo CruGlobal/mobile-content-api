@@ -26,18 +26,15 @@ class PageHelper
     @resource.pages.each do |page|
       write_temp_file(page)
 
-      begin # TODO: we might not need to push every page when we're creating a draft for a new language
-        RestClient.post "https://platform.api.onesky.io/1/projects/#{@resource.onesky_project_id}/files",
-                        file: File.new("pages/#{page.filename}"),
-                        file_format: 'HIERARCHICAL_JSON',
-                        api_key: ENV['ONESKY_API_KEY'],
-                        timestamp: AuthHelper.epoch_time_seconds,
-                        locale: @language_code,
-                        dev_hash: AuthHelper.dev_hash,
-                        multipart: true
-      rescue RestClient::ExceptionWithResponse => e
-        raise e
-      end
+      # TODO: we might not need to push every page when we're creating a draft for a new language
+      RestClient.post "https://platform.api.onesky.io/1/projects/#{@resource.onesky_project_id}/files",
+                      file: File.new("pages/#{page.filename}"),
+                      file_format: 'HIERARCHICAL_JSON',
+                      api_key: ENV['ONESKY_API_KEY'],
+                      timestamp: AuthHelper.epoch_time_seconds,
+                      locale: @language_code,
+                      dev_hash: AuthHelper.dev_hash,
+                      multipart: true
     end
   end
 
