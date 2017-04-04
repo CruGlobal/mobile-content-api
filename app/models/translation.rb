@@ -56,6 +56,10 @@ class Translation < ActiveRecord::Base
   def push_published_to_s3
     return unless is_published
 
+    p = JSON.parse(download_translated_page('name_description.xml'))
+    self.translated_name = p['name']
+    self.translated_description = p['description']
+
     s3helper = S3Helper.new(self)
     s3helper.push_translation
   end
