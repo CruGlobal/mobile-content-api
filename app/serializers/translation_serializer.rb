@@ -4,7 +4,7 @@ class TranslationSerializer < ActiveModel::Serializer
   attributes :id, :is_published, :version
 
   belongs_to :resource
-  belongs_to :translation
+  belongs_to :language
 
   has_many :custom_pages
 end
