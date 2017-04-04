@@ -10,6 +10,7 @@ describe ResourceSerializer do
     serialization = ActiveModelSerializers::Adapter.create(serializer)
 
     latest_translations = serialization.as_json[:data][:relationships][:'latest-translations'][:data]
+
     expect(latest_translations.count).to be(2)
     expect(latest_translations[0][:id]).to eq('5')
     expect(latest_translations[1][:id]).to eq('8')

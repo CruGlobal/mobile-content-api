@@ -10,7 +10,7 @@ class DraftsController < SecureController
   end
 
   def update
-    publish
+    edit
   end
 
   def destroy
@@ -38,7 +38,7 @@ class DraftsController < SecureController
     end
   end
 
-  def publish
+  def edit
     load_translation.update_draft(params)
   end
 

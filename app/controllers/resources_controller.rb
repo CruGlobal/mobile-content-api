@@ -12,6 +12,6 @@ class ResourcesController < ApplicationController
   end
 
   def includes_param
-    params.key?(:include) ? params[:include] : 'latest_translations'
+    params[:include] || 'latest_translations'
   end
 end
