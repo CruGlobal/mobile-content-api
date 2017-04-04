@@ -32,7 +32,7 @@ class DraftsController < SecureController
     if existing_translation.nil?
       resource.create_new_draft(language_id)
     elsif !existing_translation.is_published
-      render json: 'Draft already exists for this resource and language.', status: 400
+      render json: 'Draft already exists for this resource and language.', status: :bad_request
     else
       existing_translation.create_new_version
     end

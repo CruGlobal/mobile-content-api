@@ -7,6 +7,6 @@ class SecureController < ApplicationController
 
   def authorize!
     authorization = AuthToken.find_by(token: request.headers['Authorization'])
-    render json: 'Unauthorized', status: 401 if authorization.nil?
+    render json: 'Unauthorized', status: :unauthorized if authorization.nil?
   end
 end

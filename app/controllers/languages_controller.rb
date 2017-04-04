@@ -12,10 +12,10 @@ class LanguagesController < ApplicationController
   private
 
   def all_languages
-    render json: Language.all, status: 200
+    render json: Language.all, status: :ok
   end
 
   def language
-    render json: Language.find(params[:id]), status: 200
+    render json: Language.find(params[:id]), status: :ok
   end
 end

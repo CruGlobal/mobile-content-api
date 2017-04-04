@@ -7,7 +7,7 @@ describe DraftsController do
   it 'does not allow unauthorized POSTs' do
     post :create, params: { resource_id: 1, language_id: 3 }
 
-    expect(response.status).to be(401)
+    expect(response).to have_http_status(:unauthorized)
   end
 
   context 'authorized' do
@@ -44,7 +44,7 @@ describe DraftsController do
     it 'bad request returned if resource/language draft exists' do
       post :create, params: { resource_id: 1, language_id: 2 }
 
-      expect(response.status).to be(400)
+      expect(response).to have_http_status(:bad_request)
       expect(response.body).to eq('Draft already exists for this resource and language.')
     end
 
@@ -58,7 +58,7 @@ describe DraftsController do
     it 'delete draft' do
       delete :destroy, params: { id: 3 }
 
-      expect(response.status).to be(204)
+      expect(response).to have_http_status(:no_content)
     end
   end
 end
