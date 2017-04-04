@@ -10,13 +10,22 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170406130806) do
+ActiveRecord::Schema.define(version: 20170406133003) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
   create_table "access_codes", force: :cascade do |t|
     t.string "code", null: false
+  end
+
+  create_table "attributes", force: :cascade do |t|
+    t.string  "key",                             null: false
+    t.string  "value",                           null: false
+    t.boolean "is_translatable", default: false
+    t.integer "resource_id",                     null: false
+    t.index ["key", "resource_id"], name: "index_attributes_on_key_and_resource_id", unique: true, using: :btree
+    t.index ["resource_id"], name: "index_attributes_on_resource_id", using: :btree
   end
 
   create_table "auth_tokens", force: :cascade do |t|
@@ -60,6 +69,15 @@ ActiveRecord::Schema.define(version: 20170406130806) do
   create_table "systems", force: :cascade do |t|
     t.string "name", null: false
     t.index ["name"], name: "index_systems_on_name", unique: true, using: :btree
+  end
+
+  create_table "translated_attributes", force: :cascade do |t|
+    t.string  "value",          null: false
+    t.integer "attribute_id",   null: false
+    t.integer "translation_id", null: false
+    t.index ["attribute_id", "translation_id"], name: "index_translated_attributes_on_attribute_id_and_translation_id", unique: true, using: :btree
+    t.index ["attribute_id"], name: "index_translated_attributes_on_attribute_id", using: :btree
+    t.index ["translation_id"], name: "index_translated_attributes_on_translation_id", using: :btree
   end
 
   create_table "translation_elements", force: :cascade do |t|

@@ -54,3 +54,5 @@ Translation.create(resource: satisfied, language: german, version: 1, is_publish
 Translation.create(resource: satisfied, language: german, version: 2, is_published: true)
 
 AccessCode.create(code: 123456)
+
+Attribute.create(resource: kgp, key: 'Banner Image', value: 'this is a location')
