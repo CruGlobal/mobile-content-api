@@ -33,7 +33,7 @@ describe Translation do
 
   it 'returns nil for resource/language combination that does not exist' do
     translation = Translation.latest_translation(1, 3)
-    expect(translation).to be(nil)
+    expect(translation).to be_nil
   end
 
   it 'returns the S3 URI as bucket/system name/resource abbreviation/language abbreviation' do

@@ -10,7 +10,7 @@ describe PageHelper do
     push
 
     pages_dir = Dir.glob('pages/*')
-    expect(pages_dir.empty?).to be(true)
+    expect(pages_dir).to be_empty
   end
 
   it 'posts to OneSky' do

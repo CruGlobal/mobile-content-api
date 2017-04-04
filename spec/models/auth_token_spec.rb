@@ -10,7 +10,7 @@ describe AuthToken do
 
   it 'generates a value for the token' do
     result = AuthToken.create(access_code: AccessCode.find(1))
-    expect(result).to_not be(nil)
+    expect(result).to_not be_nil
   end
 
   it 'returns bad request a token if access code is invalid' do

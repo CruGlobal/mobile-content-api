@@ -23,7 +23,7 @@ describe CustomPagesController do
 
       expect(response.status).to be(201)
       new_page = CustomPage.find_by(translation_id: 3, page_id: 2)
-      expect(new_page).to_not be(nil)
+      expect(new_page).to_not be_nil
     end
 
     it 'updates structure of translation page if translation id/page id combo exists' do

@@ -31,14 +31,14 @@ describe DraftsController do
       post :create, params: { resource_id: 1, language_id: 3 }
 
       translation = Translation.where(resource_id: 1, language_id: 3, version: 1).first
-      expect(translation).to_not be(nil)
+      expect(translation).to_not be_nil
     end
 
     it 'increments version and creates new draft if resource/language translation exists' do
       post :create, params: { resource_id: 1, language_id: 1 }
 
       translation = Translation.where(resource_id: 1, language_id: 1, version: 2).first
-      expect(translation).to_not be(nil)
+      expect(translation).to_not be_nil
     end
 
     it 'bad request returned if resource/language draft exists' do
