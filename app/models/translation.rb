@@ -15,7 +15,7 @@ class Translation < ActiveRecord::Base
   end
 
   def s3_uri
-    "https://s3.amazonaws.com/#{ENV['GODTOOLS_V2_BUCKET']}/"\
+    "https://s3.amazonaws.com/#{ENV['MOBILE_CONTENT_API_BUCKET']}/"\
     "#{resource.system.name}/#{resource.abbreviation}/#{language.abbreviation}/version_#{version}.zip"
   end
 

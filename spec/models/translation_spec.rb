@@ -37,7 +37,7 @@ describe Translation do
   end
 
   it 'returns the S3 URI as bucket/system name/resource abbreviation/language abbreviation' do
-    ENV['GODTOOLS_V2_BUCKET'] = 'test_bucket'
+    ENV['MOBILE_CONTENT_API_BUCKET'] = 'test_bucket'
 
     uri = Translation.find(1).s3_uri
     expect(uri).to eq('https://s3.amazonaws.com/test_bucket/GodTools/kgp/en/version_1.zip')

@@ -7,7 +7,7 @@ require 'rails/all'
 # you've limited to :test, :development, or :production.
 Bundler.require(*Rails.groups)
 
-module GodtoolsApiV2
+module MobileContentApi
   class Application < Rails::Application
     ActiveModelSerializers.config.adapter = :json_api
 
