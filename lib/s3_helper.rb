@@ -41,7 +41,7 @@ class S3Helper
 
   def upload
     s3 = Aws::S3::Resource.new(region: ENV['AWS_REGION'])
-    bucket = s3.bucket(ENV['GODTOOLS_V2_BUCKET'])
+    bucket = s3.bucket(ENV['MOBILE_CONTENT_API_BUCKET'])
     obj = bucket.object("#{@translation.resource.system.name}/#{@translation.resource.abbreviation}"\
                         "/#{@translation.language.abbreviation}/#{@zip_file_name}")
     obj.upload_file(@zip_file_name, acl: 'public-read')
