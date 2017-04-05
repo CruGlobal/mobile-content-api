@@ -9,6 +9,7 @@
 godtools = System.create(name: 'GodTools')
 
 kgp = Resource.create(name: 'Knowing God Personally', abbreviation: 'kgp', onesky_project_id: 148314, system: godtools)
+satisfied = Resource.create(name: 'Satisfied?', abbreviation: 'sat', onesky_project_id: 123456, system: godtools)
 
 page_13 = Page.create(filename: '13_FinalPage.xml',
                       resource: kgp,
@@ -45,5 +46,11 @@ german_kgp = Translation.create(resource: kgp, language: german, version: 2)
 CustomPage.create(translation: german_kgp,
                   page: page_13,
                   structure: '<custom>This is some custom xml for one translation</custom>')
+
+Translation.create(resource: satisfied, language: english, version: 1, is_published: true)
+Translation.create(resource: satisfied, language: english, version: 2, is_published: true)
+Translation.create(resource: satisfied, language: english, version: 3)
+Translation.create(resource: satisfied, language: german, version: 1, is_published: true)
+Translation.create(resource: satisfied, language: german, version: 2, is_published: true)
 
 AccessCode.create(code: 123456)

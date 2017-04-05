@@ -9,6 +9,6 @@ class TranslationsController < ApplicationController
 
   def redirect
     translation = Translation.find(params[:id])
-    redirect_to translation.s3_uri, status: 302
+    redirect_to translation.s3_uri, status: :found
   end
 end

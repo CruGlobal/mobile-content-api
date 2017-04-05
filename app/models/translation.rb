@@ -8,6 +8,7 @@ class Translation < ActiveRecord::Base
   has_many :custom_pages
 
   before_destroy :prevent_destroy_published
+  before_update :push_published_to_s3
 
   def create_new_version
     Translation.create(resource: resource, language: language, version: version + 1)
@@ -25,10 +26,8 @@ class Translation < ActiveRecord::Base
                              source_file_name: page_filename, export_file_name: page_filename }
   end
 
-  def publish
-    s3helper = S3Helper.new(self)
-    s3helper.push_translation
-    update(is_published: true)
+  def update_draft(params)
+    update(params.permit(:is_published))
   end
 
   def delete_draft!
@@ -52,5 +51,12 @@ class Translation < ActiveRecord::Base
 
   def prevent_destroy_published
     raise 'Cannot delete published drafts.' if is_published
+  end
+
+  def push_published_to_s3
+    return unless is_published
+
+    s3helper = S3Helper.new(self)
+    s3helper.push_translation
   end
 end
