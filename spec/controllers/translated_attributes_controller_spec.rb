@@ -18,7 +18,7 @@ describe TranslatedAttributesController do
     it 'creates a Translated Attribute' do
       post :create, params: { translated_attribute: { attribute_id: 2, translation_id: 2, value: 'translated attr' } }
 
-      attribute = TranslatedAttribute.order('id desc').first
+      attribute = TranslatedAttribute.find(response.headers['Location'].sub('translated_attributes/', ''))
       expect(attribute.attribute_id).to eq(2)
       expect(attribute.translation_id).to eq(2)
       expect(attribute.value).to eq('translated attr')

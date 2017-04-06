@@ -18,7 +18,7 @@ describe AttributesController do
     it 'creates an Attribute' do
       post :create, params: { attribute: { key: 'foo', value: 'bar', resource_id: 1 } }
 
-      attribute = Attribute.order('id desc').first
+      attribute = Attribute.find(response.headers['Location'].sub('attributes/', ''))
       expect(attribute.key).to eq('foo')
       expect(attribute.value).to eq('bar')
       expect(attribute.resource_id).to eq(1)
