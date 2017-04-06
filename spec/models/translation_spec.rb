@@ -37,15 +37,35 @@ describe Translation do
   end
 
   it 'returns the S3 URI as bucket/system name/resource abbreviation/language abbreviation' do
-    ENV['MOBILE_CONTENT_API_BUCKET'] = 'test_bucket'
+    bucket = 'test_bucket'
+    stub_const('ENV', 'MOBILE_CONTENT_API_BUCKET' => bucket)
 
     uri = Translation.find(1).s3_uri
-    expect(uri).to eq('https://s3.amazonaws.com/test_bucket/GodTools/kgp/en/version_1.zip')
+    expect(uri).to eq("https://s3.amazonaws.com/#{bucket}/GodTools/kgp/en/version_1.zip")
   end
 
   it 'returns bad request if deletion of a translation is attempted' do
     translation = Translation.find(1)
 
     expect { translation.destroy! }.to raise_error('Cannot delete published drafts.')
+  end
+
+  context 'is_published set to true' do
+    let(:translation) { Translation.find(3) }
+
+    it 'uploads the translation to S3' do
+      s3helper = double
+      allow(S3Helper).to receive(:new).and_return(s3helper)
+      allow(s3helper).to receive(:push_translation)
+
+      translation.update(is_published: true)
+    end
+
+    it 'downloads translated name and description' do
+      translation.update(is_published: true)
+
+      expect(translation.translated_name).to eq('kgp german')
+      expect(translation.translated_description).to eq('german description')
+    end
   end
 end
