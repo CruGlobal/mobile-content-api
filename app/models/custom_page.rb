@@ -4,8 +4,6 @@ class CustomPage < ActiveRecord::Base
   belongs_to :translation
   belongs_to :page
 
-  validates :page, uniqueness: { scope: :translation, message: 'Only one page/translation combo allowed.' }
-
   def self.upsert(params)
     translation_id = params[:translation_id]
     page_id = params[:page_id]
