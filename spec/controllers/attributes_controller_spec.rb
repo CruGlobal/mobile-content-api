@@ -28,7 +28,9 @@ describe AttributesController do
       put :update, params: { id: 1, attribute: { key: 'foo', value: 'new value', resource_id: 1 } }
 
       attribute = Attribute.find(1)
+      expect(attribute.key).to eq('foo')
       expect(attribute.value).to eq('new value')
+      expect(attribute.resource_id).to eq(1)
     end
 
     it 'deletes an Attribute' do

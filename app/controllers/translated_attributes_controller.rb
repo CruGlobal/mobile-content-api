@@ -16,11 +16,11 @@ class TranslatedAttributesController < SecureController
   private
 
   def create_translated_attr
-    TranslatedAttribute.create_attribute(params[:translated_attribute].permit(permitted_params))
+    TranslatedAttribute.create(params[:translated_attribute].permit(permitted_params))
   end
 
   def update_translated_attr
-    load_translated_attr.update(params.permit(permitted_params))
+    load_translated_attr.update(params[:translated_attribute].permit(permitted_params))
   end
 
   def destroy_translated_attr

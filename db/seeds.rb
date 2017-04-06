@@ -56,3 +56,6 @@ Translation.create(resource: satisfied, language: german, version: 2, is_publish
 AccessCode.create(code: 123456)
 
 Attribute.create(resource: kgp, key: 'Banner Image', value: 'this is a location')
+attribute = Attribute.create(resource: kgp, key: 'translate me', value: 'base language', is_translatable: true)
+
+TranslatedAttribute.create(parent_attribute: attribute, translation: german_kgp, value: 'german attribute')
