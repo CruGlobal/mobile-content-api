@@ -6,8 +6,11 @@ describe Translation do
   let(:translations) { TestConstants::GodTools::Translations }
 
   it 'downloads translated page from OneSky' do
+    allow(RestClient).to receive(:get).with(any_args).and_return('{ "3":"This is a German phrase" }')
     translation = Translation.find(translations::German1::ID)
+
     result = translation.download_translated_page('13_FinalPage.xml')
+
     values = JSON.parse(result)
     expect(values['3']).to eq('This is a German phrase')
   end
@@ -55,6 +58,10 @@ describe Translation do
   context 'is_published set to true' do
     let(:translation) { Translation.find(translations::German2::ID) }
 
+    before(:each) do
+      allow(RestClient).to receive(:get).with(any_args).and_return('{ "3":"This is a German phrase" }')
+    end
+
     it 'uploads the translation to S3' do
       s3helper = double
       allow(S3Helper).to receive(:new).and_return(s3helper)
@@ -64,6 +71,12 @@ describe Translation do
     end
 
     it 'downloads translated name and description' do
+      s3helper = double.as_null_object
+      allow(S3Helper).to receive(:new).and_return(s3helper)
+
+      allow(RestClient).to receive(:get).with(any_args)
+        .and_return('{ "name":"kgp german", "description":"german description" }')
+
       translation.update(is_published: true)
 
       expect(translation.translated_name).to eq('kgp german')

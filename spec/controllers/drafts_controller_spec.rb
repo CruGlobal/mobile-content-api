@@ -51,11 +51,14 @@ describe DraftsController do
       expect(response.body).to eq('Draft already exists for this resource and language.')
     end
 
-    it 'publishing draft sets published flag to true' do
+    it 'edits a draft' do
+      translation = double
+      allow(Translation).to receive(:find).and_return(translation)
+      allow(translation).to receive(:update_draft)
+
       put :update, params: { id: godtools::Translations::German2::ID, is_published: true }
 
-      translation = Translation.find(godtools::Translations::German2::ID)
-      expect(translation.is_published).to be(true)
+      expect(response).to have_http_status(:no_content)
     end
 
     it 'delete draft' do
