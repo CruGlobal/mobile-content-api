@@ -16,27 +16,32 @@ describe AttributesController do
     end
 
     it 'creates an Attribute' do
+      allow(Attribute).to receive(:create).and_return(Attribute.new(id: 100))
+
       post :create, params: { attribute: { key: 'foo', value: 'bar', resource_id: 1 } }
 
-      attribute = Attribute.find(response.headers['Location'].sub('attributes/', ''))
-      expect(attribute.key).to eq('foo')
-      expect(attribute.value).to eq('bar')
-      expect(attribute.resource_id).to eq(1)
+      expect(response).to have_http_status(:created)
+      expect(response.headers['Location']).to eq('attributes/100')
     end
 
     it 'updates an Attribute' do
+      attribute = double
+      allow(Attribute).to receive(:find).and_return(attribute)
+      allow(attribute).to receive(:update)
+
       put :update, params: { id: 1, attribute: { key: 'foo', value: 'new value', resource_id: 1 } }
 
-      attribute = Attribute.find(1)
-      expect(attribute.key).to eq('foo')
-      expect(attribute.value).to eq('new value')
-      expect(attribute.resource_id).to eq(1)
+      expect(response).to have_http_status(:no_content)
     end
 
     it 'deletes an Attribute' do
+      attribute = double
+      allow(Attribute).to receive(:find).and_return(attribute)
+      allow(attribute).to receive(:destroy)
+
       delete :destroy, params: { id: 1 }
 
-      expect { Attribute.find(1) }.to raise_error('Couldn\'t find Attribute with \'id\'=1')
+      expect(response).to have_http_status(:no_content)
     end
   end
 end

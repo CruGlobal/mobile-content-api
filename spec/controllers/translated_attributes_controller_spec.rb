@@ -16,28 +16,33 @@ describe TranslatedAttributesController do
     end
 
     it 'creates a Translated Attribute' do
+      allow(TranslatedAttribute).to receive(:create).and_return(TranslatedAttribute.new(id: 100))
+
       post :create, params: { translated_attribute: { attribute_id: 2, translation_id: 2, value: 'translated attr' } }
 
-      attribute = TranslatedAttribute.find(response.headers['Location'].sub('translated_attributes/', ''))
-      expect(attribute.attribute_id).to eq(2)
-      expect(attribute.translation_id).to eq(2)
-      expect(attribute.value).to eq('translated attr')
+      expect(response).to have_http_status(:created)
+      expect(response.headers['Location']).to eq('translated_attributes/100')
     end
 
     it 'updates a Translated Attribute' do
+      attribute = double
+      allow(TranslatedAttribute).to receive(:find).and_return(attribute)
+      allow(attribute).to receive(:update)
+
       put :update,
           params: { id: 1, translated_attribute: { attribute_id: 2, translation_id: 3, value: 'updated translation' } }
 
-      attribute = TranslatedAttribute.find(1)
-      expect(attribute.attribute_id).to eq(2)
-      expect(attribute.translation_id).to eq(3)
-      expect(attribute.value).to eq('updated translation')
+      expect(response).to have_http_status(:no_content)
     end
 
     it 'deletes a Translated Attribute' do
+      attribute = double
+      allow(TranslatedAttribute).to receive(:find).and_return(attribute)
+      allow(attribute).to receive(:destroy)
+
       delete :destroy, params: { id: 1 }
 
-      expect { TranslatedAttribute.find(1) }.to raise_error('Couldn\'t find TranslatedAttribute with \'id\'=1')
+      expect(response).to have_http_status(:no_content)
     end
   end
 end

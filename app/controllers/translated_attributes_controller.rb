@@ -22,7 +22,7 @@ class TranslatedAttributesController < SecureController
 
   def update_translated_attr
     load_translated_attr.update(params[:translated_attribute].permit(permitted_params))
-    head :updated
+    head :no_content
   end
 
   def destroy_translated_attr

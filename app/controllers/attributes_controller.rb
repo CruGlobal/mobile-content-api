@@ -22,7 +22,7 @@ class AttributesController < SecureController
 
   def update_attr
     load_attribute.update(params[:attribute].permit(permitted_params))
-    head :updated
+    head :no_content
   end
 
   def destroy_attribute
