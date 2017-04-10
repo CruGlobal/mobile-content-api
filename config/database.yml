@@ -4,31 +4,29 @@
 #   Ensure the SQLite 3 gem is defined in your Gemfile
 #   gem 'sqlite3'
 #
-default: &default
+development: &development
   adapter: postgresql
-  pool: 5
-  database: mobile-content-api
-  username:
-  password:
-  host: localhost
+  pool: <%= ENV['DB_POOL'] || 5 %>
   port: 5432
   timeout: 5000
-
-development:
-  <<: *default
-
-# Warning: The database defined as "test" will be erased and
-# re-generated from your development database when you run "rake".
-# Do not set this db to the same as development or production.
-test:
-  <<: *default
-
-staging:
-  <<: *default
   host: <%= ENV['DB_HOST'] %>
   database: <%= ENV['DB_NAME'] %>
   username: <%= ENV['DB_USER'] %>
   password: <%= ENV['DB_PASSWORD'] %>
 
+staging: &staging
+  <<: *development
+  pool: <%= ENV['DB_POOL'] || 25 %>
+
 production:
   <<: *staging
+
+# Warning: The database defined as "test" will be erased and
+# re-generated from your development database when you run "rake".
+# Do not set this db to the same as development or production.
+test:
+  <<: *development
+  host: <%= ENV['TEST_DB_HOST'] %>
+  database: <%= ENV['TEST_DB_NAME'] %>
+  username: <%= ENV['TEST_DB_USER'] %>
+  password: <%= ENV['TEST_DB_PASSWORD'] %>
