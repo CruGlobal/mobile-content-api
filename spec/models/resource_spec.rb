@@ -4,7 +4,7 @@ require 'rails_helper'
 
 describe Resource do
   it 'returns latest published translation for each language' do
-    resource = Resource.find(2)
+    resource = Resource.find(TestConstants::Satisfied::ID)
 
     latest_translations = resource.latest_translations
 

@@ -22,7 +22,7 @@ describe S3Helper do
     s3 = double(bucket: bucket)
     allow(Aws::S3::Resource).to receive(:new).and_return(s3)
 
-    translation = Translation.find(1)
+    translation = Translation.find(TestConstants::GodTools::Translations::English::ID)
     s3helper = S3Helper.new(translation)
     s3helper.push_translation
   end

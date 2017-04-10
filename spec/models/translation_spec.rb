@@ -3,22 +3,24 @@
 require 'rails_helper'
 
 describe Translation do
+  let(:translations) { TestConstants::GodTools::Translations }
+
   it 'downloads translated page from OneSky' do
-    translation = Translation.find(2)
+    translation = Translation.find(translations::German1::ID)
     result = translation.download_translated_page('13_FinalPage.xml')
     values = JSON.parse(result)
     expect(values['3']).to eq('This is a German phrase')
   end
 
   it 'increments version by one' do
-    translation = Translation.find(1)
+    translation = Translation.find(translations::English::ID)
     new_translation = translation.create_new_version
 
     expect(new_translation.version).to be(2)
   end
 
   it 'replaces original pages with custom pages' do
-    german_kgp = Translation.find(3)
+    german_kgp = Translation.find(translations::German2::ID)
     pages = german_kgp.translated_pages
 
     expect(pages[0].structure).to eq('<custom>This is some custom xml for one translation</custom>')
@@ -27,12 +29,12 @@ describe Translation do
   end
 
   it 'returns latest version for resource/language combination' do
-    translation = Translation.latest_translation(1, 2)
+    translation = Translation.latest_translation(TestConstants::GodTools::ID, TestConstants::Languages::German::ID)
     expect(translation.version).to be(2)
   end
 
   it 'returns nil for resource/language combination that does not exist' do
-    translation = Translation.latest_translation(1, 3)
+    translation = Translation.latest_translation(TestConstants::GodTools::ID, TestConstants::Languages::Slovak::ID)
     expect(translation).to be_nil
   end
 
@@ -40,18 +42,18 @@ describe Translation do
     bucket = 'test_bucket'
     stub_const('ENV', 'MOBILE_CONTENT_API_BUCKET' => bucket)
 
-    uri = Translation.find(1).s3_uri
+    uri = Translation.find(translations::English::ID).s3_uri
     expect(uri).to eq("https://s3.amazonaws.com/#{bucket}/GodTools/kgp/en/version_1.zip")
   end
 
   it 'returns bad request if deletion of a translation is attempted' do
-    translation = Translation.find(1)
+    translation = Translation.find(translations::English::ID)
 
     expect { translation.destroy! }.to raise_error('Cannot delete published drafts.')
   end
 
   context 'is_published set to true' do
-    let(:translation) { Translation.find(3) }
+    let(:translation) { Translation.find(translations::German2::ID) }
 
     it 'uploads the translation to S3' do
       s3helper = double
