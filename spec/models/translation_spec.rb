@@ -6,7 +6,7 @@ describe Translation do
   let(:translations) { TestConstants::GodTools::Translations }
 
   it 'downloads translated page from OneSky' do
-    allow(RestClient).to receive(:get).with(any_args).and_return('{ "3":"This is a German phrase" }')
+    mock_onesky('13_FinalPage.xml', '{ "3":"This is a German phrase" }')
     translation = Translation.find(translations::German1::ID)
 
     result = translation.download_translated_page('13_FinalPage.xml')
@@ -59,7 +59,7 @@ describe Translation do
     let(:translation) { Translation.find(translations::German2::ID) }
 
     before(:each) do
-      allow(RestClient).to receive(:get).with(any_args).and_return('{ "3":"This is a German phrase" }')
+      mock_onesky('name_description.xml', '{ "name":"kgp german", "description":"german description" }')
     end
 
     it 'uploads the translation to S3' do
@@ -74,13 +74,18 @@ describe Translation do
       s3helper = double.as_null_object
       allow(S3Helper).to receive(:new).and_return(s3helper)
 
-      allow(RestClient).to receive(:get).with(any_args)
-        .and_return('{ "name":"kgp german", "description":"german description" }')
-
       translation.update(is_published: true)
 
       expect(translation.translated_name).to eq('kgp german')
       expect(translation.translated_description).to eq('german description')
     end
+  end
+
+  private
+
+  def mock_onesky(filename, result)
+    allow(RestClient).to receive(:get).with(any_args,
+                                            hash_including(params: hash_including(source_file_name: filename)))
+      .and_return(result)
   end
 end
