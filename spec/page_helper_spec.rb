@@ -4,7 +4,7 @@ require 'rails_helper'
 require 'page_helper'
 
 describe PageHelper do
-  it 'deletes temp files' do
+  it 'deletes all temp files' do
     allow(RestClient).to receive(:post)
 
     push
