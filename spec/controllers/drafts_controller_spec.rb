@@ -26,35 +26,51 @@ describe DraftsController do
       allow(translation).to receive(:download_translated_page).with('13_FinalPage.xml').and_return(result)
 
       get :show, params: { id: 2, page_id: godtools::Pages::Page13::ID }
+      expect(response).to have_http_status(:ok)
       expect(response.body).to eq(result)
     end
 
-    it 'creates new draft if resource/language combo does not exist' do
-      allow(RestClient).to receive(:post)
-      post :create, params: { resource_id: godtools::ID, language_id: languages::Slovak::ID }
+    context 'POST' do
+      let(:resource) { double }
 
-      translation = Translation.where(resource_id: godtools::ID, language_id: languages::Slovak::ID, version: 1).first
-      expect(translation).to_not be_nil
-    end
+      before(:each) do
+        allow(Resource).to receive(:find).and_return(resource)
+        allow(resource).to receive(:id)
+      end
 
-    it 'increments version and creates new draft if resource/language translation exists' do
-      post :create, params: { resource_id: godtools::ID, language_id: languages::English::ID }
+      it 'creates new draft if resource/language combo does not exist' do
+        allow(resource).to receive(:create_new_draft)
+        allow(Translation).to receive(:latest_translation).and_return(nil)
 
-      translation = Translation.where(resource_id: godtools::ID, language_id: languages::English::ID, version: 2).first
-      expect(translation).to_not be_nil
-    end
+        post :create, params: { resource_id: godtools::ID, language_id: languages::Slovak::ID }
 
-    it 'bad request returned if resource/language draft exists' do
-      post :create, params: { resource_id: godtools::ID, language_id: languages::German::ID }
+        expect(response).to have_http_status(:no_content)
+      end
 
-      expect(response).to have_http_status(:bad_request)
-      expect(response.body).to eq('Draft already exists for this resource and language.')
+      it 'increments version and creates new draft if resource/language translation exists' do
+        existing_translation = double(is_published: true)
+        allow(Translation).to receive(:latest_translation).and_return(existing_translation)
+        allow(existing_translation).to receive(:create_new_version)
+
+        post :create, params: { resource_id: godtools::ID, language_id: languages::English::ID }
+
+        expect(response).to have_http_status(:no_content)
+      end
+
+      it 'bad request returned if resource/language draft exists' do
+        existing_translation = double(is_published: false)
+        allow(Translation).to receive(:latest_translation).and_return(existing_translation)
+
+        post :create, params: { resource_id: godtools::ID, language_id: languages::German::ID }
+
+        expect(response).to have_http_status(:bad_request)
+        expect(response.body).to eq('Draft already exists for this resource and language.')
+      end
     end
 
     it 'edits a draft' do
-      translation = double
+      translation = double(update_draft: true)
       allow(Translation).to receive(:find).and_return(translation)
-      allow(translation).to receive(:update_draft)
 
       put :update, params: { id: godtools::Translations::German2::ID, is_published: true }
 
@@ -62,6 +78,9 @@ describe DraftsController do
     end
 
     it 'delete draft' do
+      translation = double(delete_draft!: :no_content)
+      allow(Translation).to receive(:find).and_return(translation)
+
       delete :destroy, params: { id: godtools::Translations::German2::ID }
 
       expect(response).to have_http_status(:no_content)

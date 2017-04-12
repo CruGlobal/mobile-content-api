@@ -14,16 +14,29 @@ describe CustomPagesController do
   end
 
   context 'authorized' do
-    it 'upserts the custom page' do
+    before(:each) do
       mock_auth
-      allow(CustomPage).to receive(:upsert).and_return(:created)
+    end
+
+    it 'upserts the custom page' do
+      expect(CustomPage).to receive(:upsert).and_return(:no_content)
 
       post :create,
            params: { translation_id: german_2,
                      page_id: pages::Page4::ID,
                      structure: '<custom>This is some custom xml for one translation</custom>' }
 
-      expect(response).to have_http_status(:created)
+      expect(response).to have_http_status(:no_content)
+    end
+
+    it 'destroys a custom page' do
+      custom_page = double
+      allow(CustomPage).to receive(:find).with('1').and_return(custom_page)
+      allow(custom_page).to receive(:destroy)
+
+      delete :destroy, params: { id: 1 }
+
+      expect(response).to have_http_status(:no_content)
     end
   end
 end
