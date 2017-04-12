@@ -8,6 +8,6 @@ class MonitorsController < ActionController::Base
   end
 
   def commit
-    render text: ENV['GIT_COMMIT']
+    render plain: ENV['GIT_COMMIT']
   end
 end
