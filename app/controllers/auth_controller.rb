@@ -8,6 +8,7 @@ class AuthController < ApplicationController
   private
 
   def create_auth_token
-    head AuthToken.create_from_access_code!(AccessCode.find_by(code: params[:code]))
+    AuthToken.create_from_access_code!(AccessCode.find_by(code: params[:code]))
+    render plain: 'OK', status: :created
   end
 end

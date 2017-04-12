@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 require 'rest-client'
-require 'auth_helper'
+require 'auth_util'
 
-class PageHelper
+class PageUtil
   def initialize(resource, language_code)
     @resource = resource
     @language_code = language_code
@@ -31,9 +31,9 @@ class PageHelper
                       file: File.new("pages/#{page.filename}"),
                       file_format: 'HIERARCHICAL_JSON',
                       api_key: ENV['ONESKY_API_KEY'],
-                      timestamp: AuthHelper.epoch_time_seconds,
+                      timestamp: AuthUtil.epoch_time_seconds,
                       locale: @language_code,
-                      dev_hash: AuthHelper.dev_hash,
+                      dev_hash: AuthUtil.dev_hash,
                       multipart: true
     end
   end

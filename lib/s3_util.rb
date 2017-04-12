@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
 require 'zip'
-require 'page_helper'
+require 'page_util'
 
-class S3Helper
+class S3Util
   def initialize(translation)
     @translation = translation
     @zip_file_name = "version_#{@translation.version}.zip"
@@ -13,7 +13,7 @@ class S3Helper
     build_zip
     upload
 
-    PageHelper.delete_temp_pages
+    PageUtil.delete_temp_pages
     File.delete(@zip_file_name)
   end
 

@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 require 'digest/md5'
 
-class AuthHelper
+module AuthUtil
   def self.epoch_time_seconds
     Time.new.utc.strftime('%s')
   end

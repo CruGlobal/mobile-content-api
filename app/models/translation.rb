@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require 's3_helper'
+require 's3_util'
 
 class Translation < ActiveRecord::Base
   belongs_to :resource
@@ -21,8 +21,8 @@ class Translation < ActiveRecord::Base
 
   def download_translated_page(page_filename)
     RestClient.get "https://platform.api.onesky.io/1/projects/#{resource.onesky_project_id}/translations",
-                   params: { api_key: ENV['ONESKY_API_KEY'], timestamp: AuthHelper.epoch_time_seconds,
-                             dev_hash: AuthHelper.dev_hash, locale: language.abbreviation,
+                   params: { api_key: ENV['ONESKY_API_KEY'], timestamp: AuthUtil.epoch_time_seconds,
+                             dev_hash: AuthUtil.dev_hash, locale: language.abbreviation,
                              source_file_name: page_filename, export_file_name: page_filename }
   end
 
@@ -60,7 +60,7 @@ class Translation < ActiveRecord::Base
     self.translated_name = p['name']
     self.translated_description = p['description']
 
-    s3helper = S3Helper.new(self)
+    s3helper = S3Util.new(self)
     s3helper.push_translation
   end
 end

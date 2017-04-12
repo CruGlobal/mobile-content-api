@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
 require 'rails_helper'
-require 's3_helper'
+require 's3_util'
 
-describe S3Helper do
+describe S3Util do
   let(:godtools) { TestConstants::GodTools }
 
   before(:each) do
@@ -42,7 +42,7 @@ describe S3Helper do
 
   def push
     translation = Translation.find(godtools::Translations::English::ID)
-    s3helper = S3Helper.new(translation)
+    s3helper = S3Util.new(translation)
     s3helper.push_translation
   end
 end

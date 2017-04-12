@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
 require 'rails_helper'
-require 'page_helper'
+require 'page_util'
 
-describe PageHelper do
+describe PageUtil do
   it 'deletes all temp files' do
     allow(RestClient).to receive(:post)
 
@@ -28,7 +28,7 @@ describe PageHelper do
 
     resource = Resource.new(pages: [page], onesky_project_id: 1)
 
-    page_helper = PageHelper.new(resource, 'de')
+    page_helper = PageUtil.new(resource, 'de')
     page_helper.push_new_onesky_translation
   end
 end
