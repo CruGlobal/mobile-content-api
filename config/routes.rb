@@ -4,4 +4,7 @@ Rails.application.routes.draw do
 
   resources :systems, :auth, :translations, :drafts, :resources, :custom_pages, :languages, :attributes,
             :translated_attributes
+
+  get 'monitors/lb'
+  get 'monitors/commit'
 end
