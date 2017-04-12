@@ -20,7 +20,9 @@
 # Ignore Byebug command history file.
 .byebug_history
 
-.idea/
+vendor/ruby
+.idea
+*.iml
 /pages/*
 /coverage/*
 
