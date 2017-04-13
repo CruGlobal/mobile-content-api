@@ -22,10 +22,10 @@ describe DraftsController do
       result = '{ \"1\": \"phrase\" }'
 
       translation = double
-      allow(Translation).to receive(:find).and_return(translation)
+      allow(Translation).to receive(:find).with(godtools::Translations::German2::ID.to_s).and_return(translation)
       allow(translation).to receive(:download_translated_page).with('13_FinalPage.xml').and_return(result)
 
-      get :show, params: { id: 2, page_id: godtools::Pages::Page13::ID }
+      get :show, params: { id: godtools::Translations::German2::ID, page_id: godtools::Pages::Page13::ID }
       expect(response).to have_http_status(:ok)
       expect(response.body).to eq(result)
     end
@@ -70,7 +70,7 @@ describe DraftsController do
 
     it 'edits a draft' do
       translation = double(update_draft: true)
-      allow(Translation).to receive(:find).and_return(translation)
+      allow(Translation).to receive(:find).with(godtools::Translations::German2::ID.to_s).and_return(translation)
 
       put :update, params: { id: godtools::Translations::German2::ID, is_published: true }
 
@@ -79,7 +79,7 @@ describe DraftsController do
 
     it 'delete draft' do
       translation = double(delete_draft!: :no_content)
-      allow(Translation).to receive(:find).and_return(translation)
+      allow(Translation).to receive(:find).with(godtools::Translations::German2::ID.to_s).and_return(translation)
 
       delete :destroy, params: { id: godtools::Translations::German2::ID }
 
