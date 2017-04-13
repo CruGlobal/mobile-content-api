@@ -42,7 +42,7 @@ describe S3Util do
 
   def push
     translation = Translation.find(godtools::Translations::English::ID)
-    s3helper = S3Util.new(translation)
-    s3helper.push_translation
+    s3_util = S3Util.new(translation)
+    s3_util.push_translation
   end
 end

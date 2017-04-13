@@ -28,7 +28,7 @@ describe PageUtil do
 
     resource = Resource.new(pages: [page], onesky_project_id: 1)
 
-    page_helper = PageUtil.new(resource, 'de')
-    page_helper.push_new_onesky_translation
+    page_util = PageUtil.new(resource, 'de')
+    page_util.push_new_onesky_translation
   end
 end
