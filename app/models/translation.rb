@@ -60,7 +60,7 @@ class Translation < ActiveRecord::Base
     self.translated_name = p['name']
     self.translated_description = p['description']
 
-    s3helper = S3Util.new(self)
-    s3helper.push_translation
+    s3_util = S3Util.new(self)
+    s3_util.push_translation
   end
 end

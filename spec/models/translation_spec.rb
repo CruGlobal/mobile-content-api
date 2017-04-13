@@ -63,16 +63,16 @@ describe Translation do
     end
 
     it 'uploads the translation to S3' do
-      s3helper = double
-      allow(S3Util).to receive(:new).and_return(s3helper)
-      allow(s3helper).to receive(:push_translation)
+      s3_util = double
+      allow(S3Util).to receive(:new).and_return(s3_util)
+      allow(s3_util).to receive(:push_translation)
 
       translation.update(is_published: true)
     end
 
     it 'downloads translated name and description' do
-      s3helper = double.as_null_object
-      allow(S3Util).to receive(:new).and_return(s3helper)
+      s3_util = double.as_null_object
+      allow(S3Util).to receive(:new).and_return(s3_util)
 
       translation.update(is_published: true)
 
