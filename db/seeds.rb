@@ -7,9 +7,11 @@
 #   Character.create(name: 'Luke', movie: movies.first)
 
 godtools = System.create(name: 'GodTools')
+every_student = System.create(name: 'EveryStudent')
 
 kgp = Resource.create(name: 'Knowing God Personally', abbreviation: 'kgp', onesky_project_id: 148314, system: godtools)
 satisfied = Resource.create(name: 'Satisfied?', abbreviation: 'sat', onesky_project_id: 123456, system: godtools)
+Resource.create(name: 'Is There A God?', abbreviation: 'God?', onesky_project_id: 223456, system: every_student)
 
 page_13 = Page.create(filename: '13_FinalPage.xml',
                       resource: kgp,
