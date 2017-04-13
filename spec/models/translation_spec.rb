@@ -31,14 +31,16 @@ describe Translation do
                                  '<body>Dont forget me this weekend!</body></note>')
   end
 
-  it 'returns latest version for resource/language combination' do
-    translation = Translation.latest_translation(TestConstants::GodTools::ID, TestConstants::Languages::German::ID)
-    expect(translation.version).to be(2)
-  end
+  context 'latest translation' do
+    it 'returns latest version for resource/language combination' do
+      translation = Translation.latest_translation(TestConstants::GodTools::ID, TestConstants::Languages::German::ID)
+      expect(translation.version).to be(2)
+    end
 
-  it 'returns nil for resource/language combination that does not exist' do
-    translation = Translation.latest_translation(TestConstants::GodTools::ID, TestConstants::Languages::Slovak::ID)
-    expect(translation).to be_nil
+    it 'returns nil for resource/language combination that does not exist' do
+      translation = Translation.latest_translation(TestConstants::GodTools::ID, TestConstants::Languages::Slovak::ID)
+      expect(translation).to be_nil
+    end
   end
 
   it 'returns the S3 URI as bucket/system name/resource abbreviation/language abbreviation' do
