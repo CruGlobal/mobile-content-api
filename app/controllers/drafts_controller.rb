@@ -15,6 +15,9 @@ class DraftsController < SecureController
 
   def destroy
     load_translation.destroy!
+    render plain: 'OK', status: :no_content
+  rescue Error::TranslationError => e
+    render plain: e.message, status: :bad_request
   end
 
   private

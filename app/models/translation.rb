@@ -43,7 +43,7 @@ class Translation < ActiveRecord::Base
   private
 
   def prevent_destroy_published
-    raise 'Cannot delete published drafts.' if is_published
+    raise Error::TranslationError, 'Cannot delete published drafts.' if is_published
   end
 
   def push_published_to_s3
