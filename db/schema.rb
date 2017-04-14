@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170406133003) do
+ActiveRecord::Schema.define(version: 20170414034911) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -59,7 +59,7 @@ ActiveRecord::Schema.define(version: 20170406133003) do
   create_table "resources", force: :cascade do |t|
     t.string  "name",              null: false
     t.string  "abbreviation",      null: false
-    t.integer "onesky_project_id", null: false
+    t.integer "onesky_project_id"
     t.integer "system_id",         null: false
     t.string  "description"
     t.index ["abbreviation"], name: "index_resources_on_abbreviation", unique: true, using: :btree
