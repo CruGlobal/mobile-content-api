@@ -12,8 +12,8 @@ class ResourcesController < ApplicationController
   private
 
   def all_resources
-    if params[:system]
-      Resource.system_name(params[:system])
+    if params['filter']
+      Resource.system_name(params['filter']['system'])
     else
       Resource.all
     end
