@@ -14,7 +14,7 @@ class DraftsController < SecureController
   end
 
   def destroy
-    delete
+    load_translation.destroy!
   end
 
   private
@@ -40,10 +40,6 @@ class DraftsController < SecureController
 
   def edit
     load_translation.update_draft(params)
-  end
-
-  def delete
-    load_translation.delete_draft!
   end
 
   def load_translation

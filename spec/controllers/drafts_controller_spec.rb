@@ -78,7 +78,7 @@ describe DraftsController do
     end
 
     it 'delete draft' do
-      translation = double(delete_draft!: :no_content)
+      translation = double(destroy!: nil)
       allow(Translation).to receive(:find).with(godtools::Translations::German2::ID.to_s).and_return(translation)
 
       delete :destroy, params: { id: godtools::Translations::German2::ID }
