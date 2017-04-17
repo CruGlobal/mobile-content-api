@@ -5,6 +5,8 @@ class Resource < ActiveRecord::Base
   has_many :translations
   has_many :pages
 
+  scope :system_name, ->(name) { where system: System.find_by(name: name) }
+
   def create_new_draft(language_id)
     language = Language.find(language_id)
 

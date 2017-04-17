@@ -77,13 +77,29 @@ describe DraftsController do
       expect(response).to have_http_status(:no_content)
     end
 
-    it 'delete draft' do
-      translation = double(delete_draft!: :no_content)
-      allow(Translation).to receive(:find).with(godtools::Translations::German2::ID.to_s).and_return(translation)
+    context 'deleting a draft' do
+      let(:translation_id) { 1 }
+      let(:translation) { double }
 
-      delete :destroy, params: { id: godtools::Translations::German2::ID }
+      before(:each) do
+        allow(Translation).to receive(:find).with(translation_id.to_s).and_return(translation)
+      end
 
-      expect(response).to have_http_status(:no_content)
+      it 'deletes' do
+        allow(translation).to receive(:destroy!)
+
+        delete :destroy, params: { id: translation_id }
+
+        expect(response).to have_http_status(:no_content)
+      end
+
+      it 'cannot delete translations' do
+        allow(translation).to receive(:destroy!).and_raise(Error::TranslationError)
+
+        delete :destroy, params: { id: translation_id }
+
+        expect(response).to have_http_status(:bad_request)
+      end
     end
   end
 end

@@ -51,10 +51,10 @@ describe Translation do
     expect(uri).to eq("https://s3.amazonaws.com/#{bucket}/GodTools/kgp/en/version_1.zip")
   end
 
-  it 'returns bad request if deletion of a translation is attempted' do
+  it 'raises an error if deletion of a translation is attempted' do
     translation = Translation.find(translations::English::ID)
 
-    expect { translation.destroy! }.to raise_error('Cannot delete published drafts.')
+    expect { translation.destroy! }.to raise_error(Error::TranslationError, 'Cannot delete published drafts.')
   end
 
   context 'is_published set to true' do

@@ -30,13 +30,6 @@ class Translation < ActiveRecord::Base
     update(params.permit(:is_published))
   end
 
-  def delete_draft!
-    destroy!
-    return :no_content
-  rescue
-    return :bad_request
-  end
-
   def translated_pages
     resource.pages.map do |resource_page|
       custom_pages.find_by(page_id: resource_page.id) || resource_page
@@ -50,7 +43,7 @@ class Translation < ActiveRecord::Base
   private
 
   def prevent_destroy_published
-    raise 'Cannot delete published drafts.' if is_published
+    raise Error::TranslationError, 'Cannot delete published drafts.' if is_published
   end
 
   def push_published_to_s3

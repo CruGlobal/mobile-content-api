@@ -14,7 +14,10 @@ class DraftsController < SecureController
   end
 
   def destroy
-    delete
+    load_translation.destroy!
+    render plain: 'OK', status: :no_content
+  rescue Error::TranslationError => e
+    render plain: e.message, status: :bad_request
   end
 
   private
@@ -40,10 +43,6 @@ class DraftsController < SecureController
 
   def edit
     load_translation.update_draft(params)
-  end
-
-  def delete
-    load_translation.delete_draft!
   end
 
   def load_translation
