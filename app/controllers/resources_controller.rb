@@ -2,7 +2,7 @@
 
 class ResourcesController < ApplicationController
   def index
-    render json: all_resources, status: :ok
+    render json: all_resources, include: params[:include], status: :ok
   end
 
   def show

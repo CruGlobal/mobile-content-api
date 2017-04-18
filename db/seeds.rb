@@ -12,7 +12,7 @@ every_student = System.find_or_create_by(name: 'EveryStudent')
 
 kgp = Resource.find_or_create_by(name: 'Knowing God Personally', abbreviation: 'kgp', onesky_project_id: 148_314, system: godtools)
 satisfied = Resource.find_or_create_by(name: 'Satisfied?', abbreviation: 'sat', onesky_project_id: 123_456, system: godtools)
-Resource.find_or_create_by(name: 'Is There A God?', abbreviation: 'God?', onesky_project_id: 223_456, system: every_student)
+is_there_god = Resource.find_or_create_by(name: 'Is There A God?', abbreviation: 'God?', onesky_project_id: 223_456, system: every_student)
 
 page_13 = Page.find_or_create_by(filename: '13_FinalPage.xml',
                                  resource: kgp,
@@ -55,6 +55,8 @@ Translation.find_or_create_by(resource: satisfied, language: english, version: 2
 Translation.find_or_create_by(resource: satisfied, language: english, version: 3)
 Translation.find_or_create_by(resource: satisfied, language: german, version: 1, is_published: true)
 Translation.find_or_create_by(resource: satisfied, language: german, version: 2, is_published: true)
+
+Translation.find_or_create_by(resource: is_there_god, language: english, version: 1, is_published: true)
 
 AccessCode.find_or_create_by(code: 123_456)
 

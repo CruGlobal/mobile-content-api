@@ -18,30 +18,23 @@ describe ResourcesController do
       expect(response).to have_http_status(:ok)
       expect(JSON.parse(response.body)['data'].count).to be(2)
     end
+
+    it 'includes translations' do
+      get :index, params: { 'filter[system]': 'GodTools', include: :translations }
+
+      expect(response).to have_http_status(:ok)
+      expect(JSON.parse(response.body)['included'].count).to be(8)
+    end
   end
 
   context 'GET individual Resource' do
     let(:resource_id) { 1 }
 
-    it 'includes no translations by default' do
-      get :show, params: { id: resource_id }
-
-      expect(response).to have_http_status(:ok)
-      expect(JSON.parse(response.body)['included']).to be(nil)
-    end
-
-    it 'includes all translations when specified' do
+    it 'includes translations' do
       get :show, params: { id: resource_id, include: :translations }
 
       expect(response).to have_http_status(:ok)
       expect(JSON.parse(response.body)['included'].count).to be(3)
-    end
-
-    it 'includes latest translations by default' do
-      get :show, params: { id: resource_id, include: :latest_translations }
-
-      expect(response).to have_http_status(:ok)
-      expect(JSON.parse(response.body)['included'].count).to be(2)
     end
   end
 end
