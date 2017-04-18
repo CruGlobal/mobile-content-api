@@ -20,10 +20,6 @@ class ResourcesController < ApplicationController
   end
 
   def resource
-    render json: Resource.find(params[:id]), include: includes_param, status: :ok
-  end
-
-  def includes_param
-    params[:include] || 'latest_translations'
+    render json: Resource.find(params[:id]), include: params[:include], status: :ok
   end
 end
