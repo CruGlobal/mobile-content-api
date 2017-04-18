@@ -38,6 +38,7 @@ gem 'oj', '~> 2.12.14'
 gem 'pg'
 gem 'rest-client', '~> 2.0.1'
 gem 'rollbar'
+gem 'rspec_api_documentation'
 gem 'rubyzip', '>= 1.0.0'
 
 # Use Capistrano for deployment
