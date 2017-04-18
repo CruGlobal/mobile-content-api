@@ -11,4 +11,12 @@ describe TranslatedAttribute do
       TranslatedAttribute.create!(parent_attribute: attribute, value: 'default', translation: translation)
     end.to raise_error('Parent attribute is not translatable.')
   end
+
+  it 'attribute/translation combination must be unique' do
+    expect do
+      TranslatedAttribute.create(attribute_id: 2,
+                                 translation_id: 3,
+                                 value: 'foo')
+    end.to raise_error(ActiveRecord::RecordNotUnique)
+  end
 end

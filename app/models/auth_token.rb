@@ -8,13 +8,6 @@ class AuthToken < ActiveRecord::Base
 
   before_validation :generate_token!
 
-  def self.create_from_access_code!(access_code)
-    create!(access_code: access_code)
-    return :created
-  rescue
-    return :bad_request
-  end
-
   private
 
   def generate_token!

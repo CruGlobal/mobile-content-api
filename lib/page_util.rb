@@ -11,8 +11,6 @@ class PageUtil
   def push_new_onesky_translation
     push_all_pages
     self.class.delete_temp_pages
-
-    :created
   end
 
   def self.delete_temp_pages

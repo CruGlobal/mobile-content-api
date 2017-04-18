@@ -37,7 +37,7 @@ class Translation < ActiveRecord::Base
   end
 
   def self.latest_translation(resource_id, language_id)
-    Translation.order(version: :desc).find_by(resource_id: resource_id, language_id: language_id)
+    order(version: :desc).find_by(resource_id: resource_id, language_id: language_id)
   end
 
   private

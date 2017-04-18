@@ -18,8 +18,20 @@ describe CustomPagesController do
       mock_auth
     end
 
-    it 'upserts the custom page' do
-      expect(CustomPage).to receive(:upsert).and_return(:no_content)
+    it 'creates the custom page if translation/page combination does not exist' do
+      expect(CustomPage).to receive(:create!)
+
+      post :create,
+           params: { translation_id: german_2,
+                     page_id: pages::Page4::ID,
+                     structure: '<custom>This is some custom xml for one translation</custom>' }
+
+      expect(response).to have_http_status(:created)
+    end
+
+    it 'updates the custom page if translation/page combination does exist' do
+      expect(CustomPage).to receive(:create!).and_raise(ActiveRecord::RecordNotUnique)
+      expect(CustomPage).to receive(:find_by).and_return(double(update: true))
 
       post :create,
            params: { translation_id: german_2,
