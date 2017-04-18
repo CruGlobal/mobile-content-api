@@ -8,8 +8,8 @@ class AuthController < ApplicationController
   private
 
   def create_auth_token
-    AuthToken.create!(access_code: access_code)
-    render plain: 'OK', status: :created
+    token = AuthToken.create!(access_code: access_code)
+    render json: token, status: :created
   rescue
     render plain: 'Access code not found', status: :bad_request
   end
