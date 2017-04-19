@@ -36,6 +36,7 @@ gem 'active_model_serializers', '~> 0.10.3'
 gem 'aws-sdk-rails'
 gem 'oj', '~> 2.12.14'
 gem 'pg'
+gem 'raddocs', git: 'https://github.com/krim/raddocs.git', branch: 'rails_5_support'
 gem 'rest-client', '~> 2.0.1'
 gem 'rollbar'
 gem 'rspec_api_documentation'
@@ -51,7 +52,7 @@ group :development, :test do
   gem 'rspec'
   gem 'rspec-rails', '~> 3.4'
   gem 'rubocop', '~> 0.47.1', require: false
-  gem 'simplecov', '~> 0.12.0', require: false
+  gem 'simplecov', require: false
 end
 
 group :development do
