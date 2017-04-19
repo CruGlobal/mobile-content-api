@@ -24,7 +24,7 @@ resource 'Drafts' do
     let(:id) { godtools::Translations::German2::ID }
     header 'Authorization', :authorization
 
-    it 'downloads translated page with correct filename' do
+    it 'get translated page' do
       result = '{ \"1\": \"phrase\" }'
       translation = double
       allow(Translation).to receive(:find).with(godtools::Translations::German2::ID.to_s).and_return(translation)
@@ -46,7 +46,7 @@ resource 'Drafts' do
       allow(resource).to receive(:id)
     end
 
-    it 'creates new draft if resource/language combo does not exist' do
+    it 'create draft with new resource/language combination' do
       allow(resource).to receive(:create_new_draft)
       allow(Translation).to receive(:latest_translation).and_return(nil)
 
@@ -55,7 +55,7 @@ resource 'Drafts' do
       expect(status).to be(204)
     end
 
-    it 'increments version and creates new draft if resource/language translation exists' do
+    it 'create draft with existing resource/language combination' do
       existing_translation = double(is_published: true)
       allow(Translation).to receive(:latest_translation).and_return(existing_translation)
       allow(existing_translation).to receive(:create_new_version)
@@ -65,7 +65,7 @@ resource 'Drafts' do
       expect(status).to be(204)
     end
 
-    it 'bad request returned if resource/language draft exists' do
+    it 'create draft with resource/language combination for an existing draft' do
       existing_translation = double(is_published: false)
       allow(Translation).to receive(:latest_translation).and_return(existing_translation)
 
@@ -80,7 +80,7 @@ resource 'Drafts' do
     let(:id) { godtools::Translations::German2::ID }
     header 'Authorization', :authorization
 
-    it 'edits a draft' do
+    it 'update draft' do
       translation = double(update_draft: true)
       allow(Translation).to receive(:find).with(godtools::Translations::German2::ID.to_s).and_return(translation)
 
@@ -99,7 +99,7 @@ resource 'Drafts' do
       allow(Translation).to receive(:find).with(id.to_s).and_return(translation)
     end
 
-    it 'deletes' do
+    it 'delete draft' do
       allow(translation).to receive(:destroy!)
 
       do_request
@@ -107,7 +107,7 @@ resource 'Drafts' do
       expect(status).to be(204)
     end
 
-    it 'cannot delete translations' do
+    it 'delete translation' do
       allow(translation).to receive(:destroy!).and_raise(Error::TranslationError)
 
       do_request
