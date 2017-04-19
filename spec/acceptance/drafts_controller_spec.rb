@@ -1,9 +1,6 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-require 'rspec_api_documentation'
-require 'rspec_api_documentation/dsl'
-require Rails.root.join('spec', 'support', 'mock_auth_helper.rb')
+require 'acceptance_helper'
 
 resource 'Drafts' do
   let(:languages) { TestConstants::Languages }

@@ -1,9 +1,6 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-require 'page_util'
-require 'rspec_api_documentation'
-require 'rspec_api_documentation/dsl'
+require 'acceptance_helper'
 
 resource 'Resources' do
   get 'resources/' do
