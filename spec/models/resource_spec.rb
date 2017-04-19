@@ -10,14 +10,14 @@ describe Resource do
     let(:language) { Language.find(1) }
 
     it 'pushes to OneSky' do
-      allow(PageUtil).to receive(:new).with(resource, language.abbreviation)
+      allow(PageUtil).to receive(:new).with(resource, language.code)
         .and_return(double(push_new_onesky_translation: :created))
 
       resource.create_new_draft(language.id)
     end
 
     it 'adds a new record to the database' do
-      allow(PageUtil).to receive(:new).with(resource, language.abbreviation).and_return(double.as_null_object)
+      allow(PageUtil).to receive(:new).with(resource, language.code).and_return(double.as_null_object)
 
       result = resource.create_new_draft(language.id)
 

@@ -38,9 +38,9 @@ page_13_elements.each do |e|
   TranslationElement.find_or_create_by(page: page_13, text: e)
 end
 
-english = Language.find_or_create_by(name: 'English', abbreviation: 'en')
-german = Language.find_or_create_by(name: 'German', abbreviation: 'de')
-Language.find_or_create_by(name: 'Slovak', abbreviation: 'sk')
+english = Language.find_or_create_by(name: 'English', code: 'en')
+german = Language.find_or_create_by(name: 'German', code: 'de')
+Language.find_or_create_by(name: 'Slovak', code: 'sk')
 
 Translation.find_or_create_by(resource: kgp, language: english, version: 1, is_published: true)
 Translation.find_or_create_by(resource: kgp, language: german, version: 1, is_published: true)
