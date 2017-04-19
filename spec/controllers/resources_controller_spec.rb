@@ -13,7 +13,7 @@ describe ResourcesController do
     end
 
     it 'can filter by resource name' do
-      get :index, params: { 'filter[system]': 'GodTools' }
+      get :index, params: { 'filter[system]': 'godtools' }
 
       expect(response).to have_http_status(:ok)
       expect(JSON.parse(response.body)['data'].count).to be(2)
