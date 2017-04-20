@@ -5,7 +5,10 @@ class Resource < ActiveRecord::Base
   has_many :translations
   has_many :pages
 
-  scope :system_name, ->(name) { where system: System.find_by(name: name) }
+  scope :system_name, lambda { |name|
+    t = System.arel_table
+    where system: System.find_by(t[:name].matches(name))
+  }
 
   def create_new_draft(language_id)
     language = Language.find(language_id)
