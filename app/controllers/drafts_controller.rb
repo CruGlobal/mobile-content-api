@@ -30,7 +30,7 @@ class DraftsController < SecureController
   end
 
   def create_new_draft
-    resource = Resource.find(params[:resource_id])
+    resource = load_resource
     language_id = params[:language_id]
     existing_translation = Translation.latest_translation(resource.id, language_id)
 
@@ -45,6 +45,10 @@ class DraftsController < SecureController
     else
       existing_translation.create_new_version
     end
+  end
+
+  def load_resource
+    Resource.find(params[:resource_id])
   end
 
   def edit

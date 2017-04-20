@@ -70,13 +70,14 @@ resource 'Drafts' do
     end
 
     it 'create draft with resource/language combination for an existing draft' do
-      existing_translation = double(is_published: false)
-      allow(Translation).to receive(:latest_translation).and_return(existing_translation)
+      allow(Translation).to receive(:latest_translation).and_return(Translation.find(3))
 
       do_request resource_id: godtools::ID, language_id: languages::German::ID
 
       expect(status).to be(400)
-      expect(response_body).to eq('Draft already exists for this resource and language.')
+      expect(JSON.parse(response_body)['errors'][0]['detail']).to(
+        eq('Draft already exists for this resource and language.')
+      )
     end
   end
 
