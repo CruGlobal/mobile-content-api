@@ -3,6 +3,10 @@
 require 'acceptance_helper'
 
 resource 'Drafts' do
+  header 'Accept', 'application/vnd.api+json'
+  header 'Content-Type', 'application/vnd.api+json'
+  let(:raw_post) { params.to_json }
+
   let(:languages) { TestConstants::Languages }
   let(:godtools) { TestConstants::GodTools }
   let(:authorization) do
@@ -50,7 +54,7 @@ resource 'Drafts' do
       allow(resource).to receive(:create_new_draft)
       allow(Translation).to receive(:latest_translation).and_return(nil)
 
-      do_request resource_id: godtools::ID, language_id: languages::Slovak::ID
+      do_request data: { resource_id: godtools::ID, language_id: languages::Slovak::ID }
 
       expect(status).to be(204)
     end

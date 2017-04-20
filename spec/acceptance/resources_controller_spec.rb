@@ -3,6 +3,10 @@
 require 'acceptance_helper'
 
 resource 'Resources' do
+  header 'Accept', 'application/vnd.api+json'
+  header 'Content-Type', 'application/vnd.api+json'
+  let(:raw_post) { params.to_json }
+
   get 'resources/' do
     it 'get all resources' do
       do_request
