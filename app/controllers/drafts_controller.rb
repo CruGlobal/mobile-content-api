@@ -15,9 +15,11 @@ class DraftsController < SecureController
 
   def destroy
     load_translation.destroy!
-    render plain: 'OK', status: :no_content
+    head :no_content
   rescue Error::TranslationError => e
-    render plain: e.message, status: :bad_request
+    t = Translation.new
+    t.errors.add(:id, e.message)
+    render json: t, status: :bad_request, adapter: :json_api, serializer: ActiveModel::Serializer::ErrorSerializer
   end
 
   private
@@ -35,7 +37,11 @@ class DraftsController < SecureController
     if existing_translation.nil?
       resource.create_new_draft(language_id)
     elsif !existing_translation.is_published
-      render json: 'Draft already exists for this resource and language.', status: :bad_request
+      existing_translation.errors.add(:id, 'Draft already exists for this resource and language.')
+      render json: existing_translation,
+             status: :bad_request,
+             adapter: :json_api,
+             serializer: ActiveModel::Serializer::ErrorSerializer
     else
       existing_translation.create_new_version
     end

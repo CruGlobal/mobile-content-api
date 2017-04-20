@@ -112,7 +112,7 @@ resource 'Drafts' do
     end
 
     it 'delete translation' do
-      allow(translation).to receive(:destroy!).and_raise(Error::TranslationError)
+      allow(translation).to receive(:destroy!).and_raise(Error::TranslationError, 'Cannot delete published drafts.')
 
       do_request
 
