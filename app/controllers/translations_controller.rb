@@ -6,21 +6,29 @@ class TranslationsController < ApplicationController
   end
 
   def show
-    redirect
+    @translation = Translation.find(params[:id])
+    if @translation.is_published
+      redirect
+    else
+      render_not_found
+    end
   end
 
   private
 
   def all_translations
-    if params['filter']
-      Translation.is_published(params['filter']['is_published'])
-    else
-      Translation.all
-    end
+    Translation.where(is_published: true)
+  end
+
+  def render_not_found
+    @translation.errors.add(:message, 'Translation not found.')
+    render json: @translation,
+           status: :not_found,
+           adapter: :json_api,
+           serializer: ActiveModel::Serializer::ErrorSerializer
   end
 
   def redirect
-    translation = Translation.find(params[:id])
-    redirect_to translation.s3_uri, status: :found
+    redirect_to @translation.s3_uri, status: :found
   end
 end
