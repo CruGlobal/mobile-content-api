@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 class TranslationsController < ApplicationController
-
   def index
     render json: all_translations, include: params[:include], status: :ok
   end
