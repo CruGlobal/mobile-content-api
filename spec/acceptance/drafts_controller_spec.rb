@@ -13,22 +13,11 @@ resource 'Drafts' do
     AuthToken.create(access_code: AccessCode.find(1)).token
   end
 
-  #   it 'does not allow unauthorized POSTs' do
-  #     post :create, params: { resource_id: godtools::ID, language_id: languages::Slovak::ID }
-  #
-  #     expect(response).to have_http_status(:unauthorized)
-  #   end
-
-  #   context 'authorized' do
-  #     before(:each) do
-  #       mock_auth
-  #     end
-
   get 'drafts/:id' do
     let(:id) { godtools::Translations::German2::ID }
-    header 'Authorization', :authorization
 
     it 'get translated page' do
+      header 'Authorization', :authorization
       result = '{ \"1\": \"phrase\" }'
       translation = double
       allow(Translation).to receive(:find).with(godtools::Translations::German2::ID.to_s).and_return(translation)
@@ -38,6 +27,14 @@ resource 'Drafts' do
 
       expect(status).to be(200)
       expect(response_body).to eq(result)
+    end
+
+    it 'get translation page without authorization' do
+      header 'Authorization', nil
+
+      do_request page_id: godtools::Pages::Page13::ID
+
+      expect(status).to be(401)
     end
   end
 
