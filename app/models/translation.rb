@@ -16,13 +16,13 @@ class Translation < ActiveRecord::Base
 
   def s3_uri
     "https://s3.amazonaws.com/#{ENV['MOBILE_CONTENT_API_BUCKET']}/"\
-    "#{resource.system.name}/#{resource.abbreviation}/#{language.abbreviation}/version_#{version}.zip"
+    "#{resource.system.name}/#{resource.abbreviation}/#{language.code}/version_#{version}.zip"
   end
 
   def download_translated_page(page_filename)
     RestClient.get "https://platform.api.onesky.io/1/projects/#{resource.onesky_project_id}/translations",
                    params: { api_key: ENV['ONESKY_API_KEY'], timestamp: AuthUtil.epoch_time_seconds,
-                             dev_hash: AuthUtil.dev_hash, locale: language.abbreviation,
+                             dev_hash: AuthUtil.dev_hash, locale: language.code,
                              source_file_name: page_filename, export_file_name: page_filename }
   end
 
