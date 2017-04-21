@@ -111,6 +111,7 @@ GEM
     nio4r (2.0.0)
     nokogiri (1.7.1)
       mini_portile2 (~> 2.1.0)
+    oj (2.12.14)
     parser (2.4.0.0)
       ast (~> 2.2)
     pg (0.20.0)
@@ -151,6 +152,8 @@ GEM
       http-cookie (>= 1.0.2, < 2.0)
       mime-types (>= 1.16, < 4.0)
       netrc (~> 0.8)
+    rollbar (2.14.0)
+      multi_json
     rspec (3.5.0)
       rspec-core (~> 3.5.0)
       rspec-expectations (~> 3.5.0)
@@ -240,10 +243,12 @@ DEPENDENCIES
   jbuilder (~> 2.5)
   jquery-rails
   listen (~> 3.0.5)
+  oj (~> 2.12.14)
   pg
   puma (~> 3.0)
   rails (~> 5.0.2)
   rest-client (~> 2.0.1)
+  rollbar
   rspec
   rspec-rails (~> 3.4)
   rubocop (~> 0.47.1)
