@@ -29,7 +29,7 @@ resource 'Drafts' do
       expect(response_body).to eq(result)
     end
 
-    it 'get translation page without authorization' do
+    it 'get translation page without authorization', document: false do
       header 'Authorization', nil
 
       do_request page_id: godtools::Pages::Page13::ID
