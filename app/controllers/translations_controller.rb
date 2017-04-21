@@ -1,11 +1,11 @@
 # frozen_string_literal: true
 
 class TranslationsController < ApplicationController
-  
+
   def index
     render json: all_translations, include: params[:include], status: :ok
   end
-  
+
   def show
     redirect
   end
@@ -19,7 +19,7 @@ class TranslationsController < ApplicationController
       Translation.all
     end
   end
-      
+
   def redirect
     translation = Translation.find(params[:id])
     redirect_to translation.s3_uri, status: :found
