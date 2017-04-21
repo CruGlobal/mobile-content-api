@@ -34,8 +34,10 @@ gem 'jbuilder', '~> 2.5'
 
 gem 'active_model_serializers', '~> 0.10.3'
 gem 'aws-sdk-rails'
+gem 'oj', '~> 2.12.14'
 gem 'pg'
 gem 'rest-client', '~> 2.0.1'
+gem 'rollbar'
 gem 'rubyzip', '>= 1.0.0'
 
 # Use Capistrano for deployment
