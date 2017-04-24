@@ -7,4 +7,6 @@ Rails.application.routes.draw do
 
   get 'monitors/lb'
   get 'monitors/commit'
+
+  mount Raddocs::App => '/docs'
 end
