@@ -13,11 +13,18 @@ class S3Util
     build_zip
     upload
 
-    PageUtil.delete_temp_pages
-    File.delete(@zip_file_name)
+    delete_temp_files
+  rescue StandardError => e
+    delete_temp_files
+    raise e
   end
 
   private
+
+  def delete_temp_files
+    PageUtil.delete_temp_pages
+    File.delete(@zip_file_name)
+  end
 
   def build_zip
     Zip::File.open(@zip_file_name, Zip::File::CREATE) do |zip_file|
