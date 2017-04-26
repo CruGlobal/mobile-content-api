@@ -25,11 +25,11 @@ page_13 = Page.find_or_create_by(filename: '13_FinalPage.xml',
       <content:text i18n-id="2">two un-translated phrase</content:text>
     </heading>
 
-    <paragraph>
+    <base_xml_element>
       <content:text i18n-id="{{uuid}}">These four points explain how to enter into a personal relationship with God and
         experience the life for which you were created.
       </content:text>
-    </paragraph>
+    </base_xml_element>
   </hero>
 </page>')
 Page.find_or_create_by(filename: '04_ThirdPoint.xml',
@@ -62,7 +62,22 @@ german_kgp = Translation.find_or_create_by(resource: kgp, language: german, vers
 
 CustomPage.find_or_create_by(translation: german_kgp,
                              page: page_13,
-                             structure: '<custom>This is some custom xml for one translation</custom>')
+                             structure: '<?xml version="1.0" encoding="UTF-8" ?>
+<page xmlns="http://mobile-content-api.cru.org/xmlns/tract"
+      xmlns:content="https://mobile-content-api.cru.org/xmlns/content">
+  <hero>
+    <heading>
+      <content:text i18n-id="1">one un-translated phrase</content:text>
+      <content:text i18n-id="2">two un-translated phrase</content:text>
+    </heading>
+
+    <custom_xml_element>
+      <content:text i18n-id="{{uuid}}">These four points explain how to enter into a personal relationship with God and
+        experience the life for which you were created.
+      </content:text>
+    </custom_xml_element>
+  </hero>
+</page>')
 
 Translation.find_or_create_by(resource: satisfied, language: english, version: 1, is_published: true)
 Translation.find_or_create_by(resource: satisfied, language: english, version: 2, is_published: true)

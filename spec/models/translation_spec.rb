@@ -16,12 +16,24 @@ describe Translation do
     expect(values['2']).to eq('another phrase in German')
   end
 
-  it 'builds a translated page' do
+  it 'builds a translated page from resource page' do
     mock_onesky('13_FinalPage.xml', '{ "1":"This is a German phrase", "2":"another phrase in German" }')
     translation = Translation.find(translations::German1::ID)
 
     result = translation.build_translated_page(1).to_s
 
+    expect(result.include?('base_xml_element')).to be_truthy
+    expect(result.include?('<content:text i18n-id="1">This is a German phrase</content:text>')).to be_truthy
+    expect(result.include?('<content:text i18n-id="2">another phrase in German</content:text>')).to be_truthy
+  end
+
+  it 'builds a translated page from custom page' do
+    mock_onesky('13_FinalPage.xml', '{ "1":"This is a German phrase", "2":"another phrase in German" }')
+    translation = Translation.find(translations::German2::ID)
+
+    result = translation.build_translated_page(1).to_s
+
+    expect(result.include?('custom_xml_element')).to be_truthy
     expect(result.include?('<content:text i18n-id="1">This is a German phrase</content:text>')).to be_truthy
     expect(result.include?('<content:text i18n-id="2">another phrase in German</content:text>')).to be_truthy
   end
@@ -31,15 +43,6 @@ describe Translation do
     new_translation = translation.create_new_version
 
     expect(new_translation.version).to be(2)
-  end
-
-  it 'replaces original pages with custom pages' do
-    german_kgp = Translation.find(translations::German2::ID)
-    pages = german_kgp.translated_pages
-
-    expect(pages[0].structure).to eq('<custom>This is some custom xml for one translation</custom>')
-    expect(pages[1].structure).to eq('<note><to>Tove</to><from>Jani</from><heading>Reminder</heading>'\
-                                 '<body>Dont forget me this weekend!</body></note>')
   end
 
   context 'latest translation' do

@@ -21,14 +21,14 @@ class Translation < ActiveRecord::Base
 
   def build_translated_page(page_id)
     page = Page.find(page_id)
-    xml = Nokogiri::XML(page.structure)
+    xml = page_structure(page_id)
 
     JSON.parse(download_translated_phrases(page.filename)).each do |key, value|
       node = xml.xpath("//content:text[@i18n-id=#{key}]")
       node.first.content = value
     end
 
-    xml
+    xml # TODO: should return string?
   end
 
   def download_translated_phrases(page_filename)
@@ -42,17 +42,17 @@ class Translation < ActiveRecord::Base
     update(params.permit(:is_published))
   end
 
-  def translated_pages
-    resource.pages.map do |resource_page|
-      custom_pages.find_by(page_id: resource_page.id) || resource_page
-    end
-  end
-
   def self.latest_translation(resource_id, language_id)
     order(version: :desc).find_by(resource_id: resource_id, language_id: language_id)
   end
 
   private
+
+  def page_structure(page_id)
+    custom_page = custom_pages.find_by(page_id: page_id)
+    structure = custom_page.nil? ? Page.find(page_id).structure : custom_page.structure
+    Nokogiri::XML(structure)
+  end
 
   def prevent_destroy_published
     raise Error::TranslationError, 'Cannot delete published drafts.' if is_published
