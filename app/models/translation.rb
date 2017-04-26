@@ -23,14 +23,16 @@ class Translation < ActiveRecord::Base
     page = Page.find(page_id)
     xml = page_structure(page_id)
 
-    JSON.parse(download_translated_phrases(page.filename)).each do |key, value|
+    phrases = download_translated_phrases(page.filename)
+    JSON.parse(phrases).each do |key, value|
       node = xml.xpath("//content:text[@i18n-id=#{key}]")
       node.first.content = value
     end
 
-    xml # TODO: should return string?
+    xml.to_s
   end
 
+  # TODO: this could probably be private.  maybe also parse JSON in it?
   def download_translated_phrases(page_filename)
     RestClient.get "https://platform.api.onesky.io/1/projects/#{resource.onesky_project_id}/translations",
                    params: { api_key: ENV['ONESKY_API_KEY'], timestamp: AuthUtil.epoch_time_seconds,

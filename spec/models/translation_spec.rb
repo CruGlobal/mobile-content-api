@@ -20,7 +20,7 @@ describe Translation do
     mock_onesky('13_FinalPage.xml', '{ "1":"This is a German phrase", "2":"another phrase in German" }')
     translation = Translation.find(translations::German1::ID)
 
-    result = translation.build_translated_page(1).to_s
+    result = translation.build_translated_page(1)
 
     expect(result.include?('base_xml_element')).to be_truthy
     expect(result.include?('<content:text i18n-id="1">This is a German phrase</content:text>')).to be_truthy
@@ -31,7 +31,7 @@ describe Translation do
     mock_onesky('13_FinalPage.xml', '{ "1":"This is a German phrase", "2":"another phrase in German" }')
     translation = Translation.find(translations::German2::ID)
 
-    result = translation.build_translated_page(1).to_s
+    result = translation.build_translated_page(1)
 
     expect(result.include?('custom_xml_element')).to be_truthy
     expect(result.include?('<content:text i18n-id="1">This is a German phrase</content:text>')).to be_truthy

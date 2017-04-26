@@ -37,11 +37,12 @@ describe S3Util do
     onesky_project_id = Resource.find(godtools::ID).onesky_project_id
     allow(RestClient).to receive(:get)
       .with("https://platform.api.onesky.io/1/projects/#{onesky_project_id}/translations", any_args)
-      .and_return('{ "this is some json":"value" }')
+      .and_return('{ "1":"value" }')
   end
 
   def push
     translation = Translation.find(godtools::Translations::English::ID)
+    allow(translation).to receive(:build_translated_page).and_return('this is a translated page')
     s3_util = S3Util.new(translation)
     s3_util.push_translation
   end

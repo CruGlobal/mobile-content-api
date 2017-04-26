@@ -22,21 +22,13 @@ class S3Util
   def build_zip
     Zip::File.open(@zip_file_name, Zip::File::CREATE) do |zip_file|
       @translation.resource.pages.each do |page|
-        update_page(page)
-
         temp_file = File.open("pages/#{page.filename}", 'w')
-        temp_file.puts page.structure
+        temp_file.puts(@translation.build_translated_page(page.id))
         temp_file.close
 
         zip_file.add(page.filename, "pages/#{page.filename}")
       end
     end
-  end
-
-  def update_page(page)
-    result = @translation.download_translated_phrases(page.filename)
-    page.structure = result
-    page.save
   end
 
   def upload
