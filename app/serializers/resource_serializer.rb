@@ -7,6 +7,6 @@ class ResourceSerializer < ActiveModel::Serializer
   belongs_to :system
 
   has_many :translations
-  has_many :latest_translations
+  has_many :latest_translations, key: 'latest-translations'
   has_many :pages
 end
