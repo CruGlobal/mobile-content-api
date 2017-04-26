@@ -2,7 +2,7 @@
 
 class DraftsController < SecureController
   def show
-    download_page
+    render json: load_translation.build_translated_page(params[:page_id])
   end
 
   def create
@@ -23,11 +23,6 @@ class DraftsController < SecureController
   end
 
   private
-
-  def download_page
-    page_filename = Page.find(params[:page_id]).filename
-    render json: load_translation.download_translated_phrases(page_filename)
-  end
 
   def create_new_draft
     resource = load_resource

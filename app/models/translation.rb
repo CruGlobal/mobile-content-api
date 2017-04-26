@@ -32,7 +32,7 @@ class Translation < ActiveRecord::Base
     xml.to_s
   end
 
-  # TODO: this could probably be private.  maybe also parse JSON in it?
+  # TODO: parse JSON here?
   def download_translated_phrases(page_filename)
     RestClient.get "https://platform.api.onesky.io/1/projects/#{resource.onesky_project_id}/translations",
                    params: { api_key: ENV['ONESKY_API_KEY'], timestamp: AuthUtil.epoch_time_seconds,
