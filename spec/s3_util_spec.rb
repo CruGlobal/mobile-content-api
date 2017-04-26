@@ -8,7 +8,6 @@ describe S3Util do
 
   before(:each) do
     mock_onesky
-    push
   end
 
   it 'deletes temp files after successful request' do
