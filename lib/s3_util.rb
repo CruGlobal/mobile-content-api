@@ -27,15 +27,34 @@ class S3Util
   end
 
   def build_zip
+    doc = Nokogiri::XML::Document.new
+    root_node = Nokogiri::XML::Node.new('pages', doc)
+    doc.root = root_node
+
     Zip::File.open(@zip_file_name, Zip::File::CREATE) do |zip_file|
       @translation.resource.pages.each do |page|
-        temp_file = File.open("pages/#{page.filename}", 'w')
-        temp_file.puts(@translation.build_translated_page(page.id))
-        temp_file.close
-
+        write_temp_file(page)
         zip_file.add(page.filename, "pages/#{page.filename}")
+
+        add_page_node(doc, root_node, page.filename)
       end
     end
+
+    file = File.open('pages/manifest.xml', 'w')
+    doc.write_to(file)
+    file.close
+  end
+
+  def write_temp_file(page)
+    temp_file = File.open("pages/#{page.filename}", 'w')
+    temp_file.puts(@translation.build_translated_page(page.id))
+    temp_file.close
+  end
+
+  def add_page_node(doc, parent, filename)
+    node = Nokogiri::XML::Node.new('page', doc)
+    node['src'] = filename
+    parent.add_child(node)
   end
 
   def upload

@@ -37,6 +37,25 @@ describe S3Util do
     expect(File).to_not exist('version_1.zip')
   end
 
+  it 'builds a manifest with names of all pages' do
+    mock_s3(double(upload_file: true))
+    allow(PageUtil).to receive(:delete_temp_pages)
+
+    push
+
+    manifest = Nokogiri::XML(File.open('pages/manifest.xml')) do |config|
+      config.options = Nokogiri::XML::ParseOptions::STRICT
+    end
+    expect(manifest.to_s).to eq('<?xml version="1.0"?>
+<pages>
+  <page src="13_FinalPage.xml"/>
+  <page src="04_ThirdPoint.xml"/>
+</pages>
+')
+    allow(PageUtil).to receive(:delete_temp_pages).and_call_original
+    PageUtil.delete_temp_pages
+  end
+
   private
 
   def pages_dir_empty
