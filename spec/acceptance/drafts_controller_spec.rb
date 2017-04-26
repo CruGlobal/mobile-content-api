@@ -21,7 +21,7 @@ resource 'Drafts' do
       result = '{ \"1\": \"phrase\" }'
       translation = double
       allow(Translation).to receive(:find).with(godtools::Translations::German2::ID.to_s).and_return(translation)
-      allow(translation).to receive(:download_translated_page).with('13_FinalPage.xml').and_return(result)
+      allow(translation).to receive(:download_translated_phrases).with('13_FinalPage.xml').and_return(result)
 
       do_request page_id: godtools::Pages::Page13::ID
 

@@ -19,7 +19,19 @@ class Translation < ActiveRecord::Base
     "#{resource.system.name}/#{resource.abbreviation}/#{language.code}/version_#{version}.zip"
   end
 
-  def download_translated_page(page_filename)
+  def build_translated_page(page_id)
+    page = Page.find(page_id)
+    xml = Nokogiri::XML(page.structure)
+
+    JSON.parse(download_translated_phrases(page.filename)).each do |key, value|
+      node = xml.xpath("//content:text[@i18n-id=#{key}]")
+      node.first.content = value
+    end
+
+    xml
+  end
+
+  def download_translated_phrases(page_filename)
     RestClient.get "https://platform.api.onesky.io/1/projects/#{resource.onesky_project_id}/translations",
                    params: { api_key: ENV['ONESKY_API_KEY'], timestamp: AuthUtil.epoch_time_seconds,
                              dev_hash: AuthUtil.dev_hash, locale: language.code,
@@ -49,7 +61,7 @@ class Translation < ActiveRecord::Base
   def push_published_to_s3
     return unless is_published
 
-    p = JSON.parse(download_translated_page('name_description.xml'))
+    p = JSON.parse(download_translated_phrases('name_description.xml'))
     self.translated_name = p['name']
     self.translated_description = p['description']
 

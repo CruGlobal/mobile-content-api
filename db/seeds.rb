@@ -16,8 +16,22 @@ is_there_god = Resource.find_or_create_by(name: 'Is There A God?', abbreviation:
 
 page_13 = Page.find_or_create_by(filename: '13_FinalPage.xml',
                                  resource: kgp,
-                                 structure: '<note><to>Tove</to><from>Jani</from><heading>Reminder</heading>'\
-                                 '<body>Dont forget me this weekend!</body></note>')
+                                 structure: '<?xml version="1.0" encoding="UTF-8" ?>
+<page xmlns="http://mobile-content-api.cru.org/xmlns/tract"
+      xmlns:content="https://mobile-content-api.cru.org/xmlns/content">
+  <hero>
+    <heading>
+      <content:text i18n-id="1">one un-translated phrase</content:text>
+      <content:text i18n-id="2">two un-translated phrase</content:text>
+    </heading>
+
+    <paragraph>
+      <content:text i18n-id="{{uuid}}">These four points explain how to enter into a personal relationship with God and
+        experience the life for which you were created.
+      </content:text>
+    </paragraph>
+  </hero>
+</page>')
 Page.find_or_create_by(filename: '04_ThirdPoint.xml',
                        resource: kgp,
                        structure: '<note><to>Tove</to><from>Jani</from><heading>Reminder</heading>'\

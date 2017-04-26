@@ -26,7 +26,7 @@ class DraftsController < SecureController
 
   def download_page
     page_filename = Page.find(params[:page_id]).filename
-    render json: load_translation.download_translated_page(page_filename)
+    render json: load_translation.download_translated_phrases(page_filename)
   end
 
   def create_new_draft

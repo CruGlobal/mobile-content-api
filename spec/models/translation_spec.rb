@@ -5,14 +5,25 @@ require 'rails_helper'
 describe Translation do
   let(:translations) { TestConstants::GodTools::Translations }
 
-  it 'downloads translated page from OneSky' do
-    mock_onesky('13_FinalPage.xml', '{ "3":"This is a German phrase" }')
+  it 'downloads translated phrases from OneSky' do
+    mock_onesky('13_FinalPage.xml', '{ "1":"This is a German phrase", "2":"another phrase in German" }')
     translation = Translation.find(translations::German1::ID)
 
-    result = translation.download_translated_page('13_FinalPage.xml')
+    result = translation.download_translated_phrases('13_FinalPage.xml')
 
     values = JSON.parse(result)
-    expect(values['3']).to eq('This is a German phrase')
+    expect(values['1']).to eq('This is a German phrase')
+    expect(values['2']).to eq('another phrase in German')
+  end
+
+  it 'builds a translated page' do
+    mock_onesky('13_FinalPage.xml', '{ "1":"This is a German phrase", "2":"another phrase in German" }')
+    translation = Translation.find(translations::German1::ID)
+
+    result = translation.build_translated_page(1).to_s
+
+    expect(result.include?('<content:text i18n-id="1">This is a German phrase</content:text>')).to be_truthy
+    expect(result.include?('<content:text i18n-id="2">another phrase in German</content:text>')).to be_truthy
   end
 
   it 'increments version by one' do

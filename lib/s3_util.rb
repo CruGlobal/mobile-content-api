@@ -34,7 +34,7 @@ class S3Util
   end
 
   def update_page(page)
-    result = @translation.download_translated_page(page.filename)
+    result = @translation.download_translated_phrases(page.filename)
     page.structure = result
     page.save
   end
