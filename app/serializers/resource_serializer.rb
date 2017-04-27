@@ -2,7 +2,7 @@
 
 class ResourceSerializer < ActiveModel::Serializer
   type 'resource'
-  attributes :id, :name, :abbreviation, :onesky_project_id
+  attributes :id, :name, :abbreviation, :description, :onesky_project_id
 
   belongs_to :system
 

@@ -14,29 +14,57 @@ class S3Util
     upload
 
     PageUtil.delete_temp_pages
-    File.delete(@zip_file_name)
+  rescue StandardError => e
+    PageUtil.delete_temp_pages
+    raise e
   end
 
   private
 
   def build_zip
-    Zip::File.open(@zip_file_name, Zip::File::CREATE) do |zip_file|
+    @document = Nokogiri::XML::Document.new
+    root_node = Nokogiri::XML::Node.new('pages', @document)
+    @document.root = root_node
+
+    Zip::File.open("pages/#{@zip_file_name}", Zip::File::CREATE) do |zip_file|
       @translation.resource.pages.each do |page|
-        update_page(page)
+        sha_filename = write_page_to_file(page)
+        zip_file.add(sha_filename, "pages/#{sha_filename}")
 
-        temp_file = File.open("pages/#{page.filename}", 'w')
-        temp_file.puts page.structure
-        temp_file.close
-
-        zip_file.add(page.filename, "pages/#{page.filename}")
+        add_page_node(root_node, page.filename, sha_filename)
       end
+      manifest_filename = write_manifest_to_file
+      zip_file.add(manifest_filename, "pages/#{manifest_filename}")
     end
   end
 
-  def update_page(page)
-    result = @translation.download_translated_page(page.filename)
-    page.structure = result
-    page.save
+  def write_page_to_file(page)
+    translated_page = @translation.build_translated_page(page.id)
+    sha_filename = "#{Digest::SHA256.hexdigest(translated_page)}.xml"
+
+    temp_file = File.open("pages/#{sha_filename}", 'w')
+    temp_file.puts(translated_page)
+    temp_file.close
+
+    sha_filename
+  end
+
+  def write_manifest_to_file
+    filename = "#{Digest::SHA256.hexdigest(@document.to_s)}.xml"
+    @translation.manifest_name = filename
+
+    file = File.open("pages/#{filename}", 'w')
+    @document.write_to(file)
+    file.close
+
+    filename
+  end
+
+  def add_page_node(parent, filename, sha_filename)
+    node = Nokogiri::XML::Node.new('page', @document)
+    node['filename'] = filename
+    node['src'] = sha_filename
+    parent.add_child(node)
   end
 
   def upload
@@ -44,6 +72,6 @@ class S3Util
     bucket = s3.bucket(ENV['MOBILE_CONTENT_API_BUCKET'])
     obj = bucket.object("#{@translation.resource.system.name}/#{@translation.resource.abbreviation}"\
                         "/#{@translation.language.code}/#{@zip_file_name}")
-    obj.upload_file(@zip_file_name, acl: 'public-read')
+    obj.upload_file("pages/#{@zip_file_name}", acl: 'public-read')
   end
 end

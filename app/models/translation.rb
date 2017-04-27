@@ -19,7 +19,21 @@ class Translation < ActiveRecord::Base
     "#{resource.system.name}/#{resource.abbreviation}/#{language.code}/version_#{version}.zip"
   end
 
-  def download_translated_page(page_filename)
+  def build_translated_page(page_id)
+    page = Page.find(page_id)
+    xml = page_structure(page_id)
+
+    phrases = download_translated_phrases(page.filename)
+    JSON.parse(phrases).each do |key, value|
+      node = xml.xpath("//content:text[@i18n-id=#{key}]")
+      node.first.content = value
+    end
+
+    xml.to_s
+  end
+
+  # TODO: parse JSON here?
+  def download_translated_phrases(page_filename)
     RestClient.get "https://platform.api.onesky.io/1/projects/#{resource.onesky_project_id}/translations",
                    params: { api_key: ENV['ONESKY_API_KEY'], timestamp: AuthUtil.epoch_time_seconds,
                              dev_hash: AuthUtil.dev_hash, locale: language.code,
@@ -30,17 +44,17 @@ class Translation < ActiveRecord::Base
     update(params.permit(:is_published))
   end
 
-  def translated_pages
-    resource.pages.map do |resource_page|
-      custom_pages.find_by(page_id: resource_page.id) || resource_page
-    end
-  end
-
   def self.latest_translation(resource_id, language_id)
     order(version: :desc).find_by(resource_id: resource_id, language_id: language_id)
   end
 
   private
+
+  def page_structure(page_id)
+    custom_page = custom_pages.find_by(page_id: page_id)
+    structure = custom_page.nil? ? Page.find(page_id).structure : custom_page.structure
+    Nokogiri::XML(structure)
+  end
 
   def prevent_destroy_published
     raise Error::TranslationError, 'Cannot delete published drafts.' if is_published
@@ -49,7 +63,7 @@ class Translation < ActiveRecord::Base
   def push_published_to_s3
     return unless is_published
 
-    p = JSON.parse(download_translated_page('name_description.xml'))
+    p = JSON.parse(download_translated_phrases('name_description.xml'))
     self.translated_name = p['name']
     self.translated_description = p['description']
 

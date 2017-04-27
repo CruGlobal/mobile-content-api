@@ -11,6 +11,9 @@ class PageUtil
   def push_new_onesky_translation
     push_all_pages
     self.class.delete_temp_pages
+  rescue StandardError => e
+    self.class.delete_temp_pages
+    raise e
   end
 
   def self.delete_temp_pages
@@ -41,7 +44,7 @@ class PageUtil
     page.translation_elements.each { |element| page_to_upload[element.id] = element.text }
 
     temp_file = File.open("pages/#{page.filename}", 'w')
-    temp_file.puts page_to_upload.to_json
+    temp_file.puts(page_to_upload.to_json)
     temp_file.close
   end
 end

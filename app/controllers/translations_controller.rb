@@ -21,7 +21,8 @@ class TranslationsController < ApplicationController
   end
 
   def render_not_found
-    @translation.errors.add(:message, 'Translation not found.')
+    @translation.errors.add(:message,
+                            'Translation not found.  Use drafts/ if you\'re looking for an unpublished translation.')
     render json: @translation,
            status: :not_found,
            adapter: :json_api,

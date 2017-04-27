@@ -2,7 +2,7 @@
 
 class TranslationSerializer < ActiveModel::Serializer
   type 'translation'
-  attributes :id, :is_published, :version
+  attributes :id, :is_published, :version, :manifest_name, :translated_name, :translated_description
 
   belongs_to :resource
   belongs_to :language
