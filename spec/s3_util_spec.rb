@@ -37,6 +37,22 @@ describe S3Util do
     expect(File).to_not exist('version_1.zip')
   end
 
+  it 'zip file contains all pages' do
+    allow(File).to receive(:delete)
+    mock_s3(double(upload_file: true))
+
+    push
+
+    zip = Zip::File.open('version_1.zip')
+    expect(zip.get_entry('790a2170adb13955e67dee0261baff93cc7f045b22a35ad434435bdbdcec036a.xml')).to_not be_nil
+    expect(zip.get_entry('5ce1cd1be598eb31a76c120724badc90e1e9bafa4b03c33ce40f80ccff756444.xml')).to_not be_nil
+    allow(File).to receive(:delete).and_call_original
+    File.delete('version_1.zip')
+  end
+
+  it 'zip file contains manifest' do
+  end
+
   it 'builds a manifest with names of all pages' do
     mock_s3(double(upload_file: true))
     allow(PageUtil).to receive(:delete_temp_pages)
