@@ -38,6 +38,13 @@ describe Translation do
     expect(result.include?('<content:text i18n-id="2">another phrase in German</content:text>')).to be_truthy
   end
 
+  it 'error is raised if translated phrase not found' do
+    mock_onesky('13_FinalPage.xml', '{ "1":"This is a German phrase" }')
+    translation = Translation.find(translations::German2::ID)
+
+    expect { translation.build_translated_page(1) }.to raise_error('Translated phrase not found.')
+  end
+
   it 'increments version by one' do
     translation = Translation.find(translations::English::ID)
     new_translation = translation.create_new_version

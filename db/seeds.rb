@@ -26,7 +26,7 @@ page_13 = Page.find_or_create_by(filename: '13_FinalPage.xml',
     </heading>
 
     <base_xml_element>
-      <content:text i18n-id="{{uuid}}">These four points explain how to enter into a personal relationship with God and
+      <content:text>These four points explain how to enter into a personal relationship with God and
         experience the life for which you were created.
       </content:text>
     </base_xml_element>
@@ -44,7 +44,7 @@ page_4 = Page.find_or_create_by(filename: '04_ThirdPoint.xml',
     </heading>
 
     <base_xml_element>
-      <content:text i18n-id="{{uuid}}">We are sinful and separated from God because of our sin.
+      <content:text>We are sinful and separated from God because of our sin.
       </content:text>
     </base_xml_element>
   </hero>
@@ -110,7 +110,7 @@ CustomPage.find_or_create_by(translation: german_kgp,
     </heading>
 
     <custom_xml_element>
-      <content:text i18n-id="{{uuid}}">These four points explain how to enter into a personal relationship with God and
+      <content:text>These four points explain how to enter into a personal relationship with God and
         experience the life for which you were created.
       </content:text>
     </custom_xml_element>

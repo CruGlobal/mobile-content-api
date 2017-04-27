@@ -21,12 +21,12 @@ class Translation < ActiveRecord::Base
 
   def build_translated_page(page_id)
     page = Page.find(page_id)
-    xml = page_structure(page_id)
+    phrases = JSON.parse(download_translated_phrases(page.filename))
 
-    phrases = download_translated_phrases(page.filename)
-    JSON.parse(phrases).each do |key, value|
-      node = xml.xpath("//content:text[@i18n-id=#{key}]")
-      node.first.content = value
+    xml = page_structure(page_id)
+    xml.xpath('//content:text[@i18n-id]').each do |node|
+      translated_phrase = phrases[node['i18n-id']]
+      node.content = translated_phrase ? translated_phrase : (raise 'Translated phrase not found.')
     end
 
     xml.to_s
