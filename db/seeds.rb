@@ -130,4 +130,6 @@ AccessCode.find_or_create_by(code: 123_456)
 Attribute.find_or_create_by(resource: kgp, key: 'Banner Image', value: 'this is a location')
 attribute = Attribute.find_or_create_by(resource: kgp, key: 'translate me', value: 'base language', is_translatable: true)
 
+Attribute.find_or_create_by(resource: satisfied, key: 'Another Attribute', value: 'blah blah blah')
+
 TranslatedAttribute.find_or_create_by(parent_attribute: attribute, translation: german_kgp, value: 'german attribute')

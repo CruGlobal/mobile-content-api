@@ -47,5 +47,15 @@ resource 'Resources' do
       expect(status).to be(200)
       expect(JSON.parse(response_body)['included'].count).to be(3)
     end
+
+    it 'has custom attributes', document: false do
+      do_request
+
+      expect(status).to be(200)
+      attrs = JSON.parse(response_body)['data']['attributes']
+      expect(attrs.size).to be(6)
+      expect(attrs['attr-banner image']).to eq('this is a location')
+      expect(attrs['attr-translate me']).to eq('base language')
+    end
   end
 end
