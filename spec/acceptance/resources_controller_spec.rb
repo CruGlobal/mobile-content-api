@@ -54,8 +54,8 @@ resource 'Resources' do
       expect(status).to be(200)
       attrs = JSON.parse(response_body)['data']['attributes']
       expect(attrs.size).to be(6)
-      expect(attrs['attr-banner image']).to eq('this is a location')
-      expect(attrs['attr-translate me']).to eq('base language')
+      expect(attrs['attr-banner-image']).to eq('this is a location')
+      expect(attrs['attr-translate-me']).to eq('base language')
     end
   end
 end
