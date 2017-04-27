@@ -34,6 +34,7 @@ gem 'jbuilder', '~> 2.5'
 
 gem 'active_model_serializers', '~> 0.10.3'
 gem 'aws-sdk-rails'
+gem 'nokogiri'
 gem 'oj', '~> 2.12.14'
 gem 'pg'
 gem 'raddocs', git: 'https://github.com/krim/raddocs.git', branch: 'rails_5_support'
