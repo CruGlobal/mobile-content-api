@@ -43,13 +43,13 @@ describe S3Util do
 
     push
 
-    manifest = Nokogiri::XML(File.open('pages/manifest.xml')) do |config|
+    manifest = Nokogiri::XML(File.open("pages/#{@translation.manifest_name}")) do |config|
       config.options = Nokogiri::XML::ParseOptions::STRICT
     end
     expect(manifest.to_s).to eq('<?xml version="1.0"?>
 <pages>
-  <page src="13_FinalPage.xml"/>
-  <page src="04_ThirdPoint.xml"/>
+  <page filename="13_FinalPage.xml" src="790a2170adb13955e67dee0261baff93cc7f045b22a35ad434435bdbdcec036a.xml"/>
+  <page filename="04_ThirdPoint.xml" src="5ce1cd1be598eb31a76c120724badc90e1e9bafa4b03c33ce40f80ccff756444.xml"/>
 </pages>
 ')
     allow(PageUtil).to receive(:delete_temp_pages).and_call_original
@@ -77,9 +77,10 @@ describe S3Util do
   end
 
   def push
-    translation = Translation.find(godtools::Translations::English::ID)
-    allow(translation).to receive(:build_translated_page).and_return('this is a translated page')
-    s3_util = S3Util.new(translation)
+    @translation = Translation.find(godtools::Translations::English::ID)
+    allow(@translation).to receive(:build_translated_page).and_return('this is a translated page',
+                                                                      'here is another translated page')
+    s3_util = S3Util.new(@translation)
     s3_util.push_translation
   end
 end

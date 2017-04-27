@@ -33,10 +33,10 @@ class S3Util
 
     Zip::File.open(@zip_file_name, Zip::File::CREATE) do |zip_file|
       @translation.resource.pages.each do |page|
-        write_page_to_file(page)
-        zip_file.add(page.filename, "pages/#{page.filename}")
+        sha_filename = write_page_to_file(page)
+        zip_file.add(sha_filename, "pages/#{sha_filename}")
 
-        add_page_node(root_node, page.filename)
+        add_page_node(root_node, page.filename, sha_filename)
       end
     end
 
@@ -44,20 +44,30 @@ class S3Util
   end
 
   def write_page_to_file(page)
-    temp_file = File.open("pages/#{page.filename}", 'w')
-    temp_file.puts(@translation.build_translated_page(page.id))
+    translated_page = @translation.build_translated_page(page.id)
+    sha_filename = "#{Digest::SHA256.hexdigest(translated_page)}.xml"
+
+    temp_file = File.open("pages/#{sha_filename}", 'w')
+    temp_file.puts(translated_page)
     temp_file.close
+
+    sha_filename
   end
 
   def write_manifest_to_file
-    file = File.open('pages/manifest.xml', 'w')
+    filename = "#{Digest::SHA256.hexdigest(@document.to_s)}.xml"
+
+    file = File.open("pages/#{filename}", 'w')
     @document.write_to(file)
     file.close
+
+    @translation.manifest_name = filename
   end
 
-  def add_page_node(parent, filename)
+  def add_page_node(parent, filename, sha_filename)
     node = Nokogiri::XML::Node.new('page', @document)
-    node['src'] = filename
+    node['filename'] = filename
+    node['src'] = sha_filename
     parent.add_child(node)
   end
 
