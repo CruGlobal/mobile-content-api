@@ -13,25 +13,20 @@ class S3Util
     build_zip
     upload
 
-    delete_temp_files
+    PageUtil.delete_temp_pages
   rescue StandardError => e
-    delete_temp_files
+    PageUtil.delete_temp_pages
     raise e
   end
 
   private
-
-  def delete_temp_files
-    PageUtil.delete_temp_pages
-    File.delete(@zip_file_name)
-  end
 
   def build_zip
     @document = Nokogiri::XML::Document.new
     root_node = Nokogiri::XML::Node.new('pages', @document)
     @document.root = root_node
 
-    Zip::File.open(@zip_file_name, Zip::File::CREATE) do |zip_file|
+    Zip::File.open("pages/#{@zip_file_name}", Zip::File::CREATE) do |zip_file|
       @translation.resource.pages.each do |page|
         sha_filename = write_page_to_file(page)
         zip_file.add(sha_filename, "pages/#{sha_filename}")

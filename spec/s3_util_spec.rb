@@ -18,15 +18,7 @@ describe S3Util do
     pages_dir_empty
   end
 
-  it 'deletes zip file after successful request' do
-    mock_s3(double(upload_file: true))
-
-    push
-
-    expect(File).to_not exist('version_1.zip')
-  end
-
-  it 'deletes temp files and zip file if error is raised' do
+  it 'deletes temp files if error is raised' do
     object = double
     allow(object).to receive(:upload_file).and_raise(StandardError)
     mock_s3(object)
@@ -34,32 +26,29 @@ describe S3Util do
     expect { push }.to raise_error(StandardError)
 
     pages_dir_empty
-    expect(File).to_not exist('version_1.zip')
   end
 
   it 'zip file contains all pages' do
-    allow(File).to receive(:delete)
+    allow(PageUtil).to receive(:delete_temp_pages)
     mock_s3(double(upload_file: true))
 
     push
 
-    zip = Zip::File.open('version_1.zip')
+    zip = Zip::File.open('pages/version_1.zip')
     expect(zip.get_entry('790a2170adb13955e67dee0261baff93cc7f045b22a35ad434435bdbdcec036a.xml')).to_not be_nil
     expect(zip.get_entry('5ce1cd1be598eb31a76c120724badc90e1e9bafa4b03c33ce40f80ccff756444.xml')).to_not be_nil
-    allow(File).to receive(:delete).and_call_original
-    File.delete('version_1.zip')
+    delete_pages_dir
   end
 
   it 'zip file contains manifest' do
-    allow(File).to receive(:delete)
+    allow(PageUtil).to receive(:delete_temp_pages)
     mock_s3(double(upload_file: true))
 
     push
 
-    zip = Zip::File.open('version_1.zip')
+    zip = Zip::File.open('pages/version_1.zip')
     expect(zip.get_entry(@translation.manifest_name)).to_not be_nil
-    allow(File).to receive(:delete).and_call_original
-    File.delete('version_1.zip')
+    delete_pages_dir
   end
 
   it 'builds a manifest with names of all pages' do
@@ -77,11 +66,15 @@ describe S3Util do
   <page filename="04_ThirdPoint.xml" src="5ce1cd1be598eb31a76c120724badc90e1e9bafa4b03c33ce40f80ccff756444.xml"/>
 </pages>
 ')
-    allow(PageUtil).to receive(:delete_temp_pages).and_call_original
-    PageUtil.delete_temp_pages
+    delete_pages_dir
   end
 
   private
+
+  def delete_pages_dir
+    allow(PageUtil).to receive(:delete_temp_pages).and_call_original
+    PageUtil.delete_temp_pages
+  end
 
   def pages_dir_empty
     pages_dir = Dir.glob('pages/*')
