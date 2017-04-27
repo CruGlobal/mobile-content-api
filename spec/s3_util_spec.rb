@@ -51,6 +51,15 @@ describe S3Util do
   end
 
   it 'zip file contains manifest' do
+    allow(File).to receive(:delete)
+    mock_s3(double(upload_file: true))
+
+    push
+
+    zip = Zip::File.open('version_1.zip')
+    expect(zip.get_entry(@translation.manifest_name)).to_not be_nil
+    allow(File).to receive(:delete).and_call_original
+    File.delete('version_1.zip')
   end
 
   it 'builds a manifest with names of all pages' do

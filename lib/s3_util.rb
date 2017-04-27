@@ -38,9 +38,9 @@ class S3Util
 
         add_page_node(root_node, page.filename, sha_filename)
       end
+      manifest_filename = write_manifest_to_file
+      zip_file.add(manifest_filename, "pages/#{manifest_filename}")
     end
-
-    write_manifest_to_file
   end
 
   def write_page_to_file(page)
@@ -56,12 +56,13 @@ class S3Util
 
   def write_manifest_to_file
     filename = "#{Digest::SHA256.hexdigest(@document.to_s)}.xml"
+    @translation.manifest_name = filename
 
     file = File.open("pages/#{filename}", 'w')
     @document.write_to(file)
     file.close
 
-    @translation.manifest_name = filename
+    filename
   end
 
   def add_page_node(parent, filename, sha_filename)
