@@ -72,6 +72,6 @@ class S3Util
     bucket = s3.bucket(ENV['MOBILE_CONTENT_API_BUCKET'])
     obj = bucket.object("#{@translation.resource.system.name}/#{@translation.resource.abbreviation}"\
                         "/#{@translation.language.code}/#{@zip_file_name}")
-    obj.upload_file(@zip_file_name, acl: 'public-read')
+    obj.upload_file("pages/#{@zip_file_name}", acl: 'public-read')
   end
 end
