@@ -15,7 +15,7 @@ resource 'Attributes' do
     it 'does not allow unauthorized requests', document: false do
       header 'Authorization', nil
 
-      do_request attribute: { key: 'foo', value: 'bar', resource_id: godtools::ID }
+      do_request data: { type: :attribute, attributes: { key: 'foo', value: 'bar', resource_id: godtools::ID } }
 
       expect(status).to be(401)
     end
@@ -23,7 +23,7 @@ resource 'Attributes' do
     it 'create an Attribute' do
       header 'Authorization', :authorization
 
-      do_request attribute: { key: 'foo', value: 'bar', resource_id: godtools::ID }
+      do_request data: { type: :attribute, attributes: { key: 'foo', value: 'bar', resource_id: godtools::ID } }
 
       expect(status).to be(201)
       expect(response_headers['Location']).to match(%r{attributes\/\d+})
@@ -35,7 +35,7 @@ resource 'Attributes' do
     let(:id) { godtools::Attributes::BannerImage::ID }
 
     it 'update an Attribute' do
-      do_request attribute: { key: 'foo', value: 'new value', resource_id: godtools::ID }
+      do_request data: { type: :attribute, attributes: { key: 'foo', value: 'new value', resource_id: godtools::ID } }
 
       expect(status).to be(204)
     end
