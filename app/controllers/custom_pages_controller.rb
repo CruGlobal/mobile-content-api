@@ -13,11 +13,13 @@ class CustomPagesController < SecureController
   private
 
   def upsert_custom_page
-    CustomPage.create!(params.permit(:translation_id, :page_id, :structure))
+    attrs = params[:data][:attributes]
+
+    CustomPage.create!(attrs.permit(:translation_id, :page_id, :structure))
     return :created
   rescue ActiveRecord::RecordNotUnique
-    existing = CustomPage.find_by(translation_id: params[:translation_id], page_id: params[:page_id])
-    existing.update(params.permit(:structure))
+    existing = CustomPage.find_by(translation_id: attrs[:translation_id], page_id: attrs[:page_id])
+    existing.update(attrs.permit(:structure))
     return :no_content
   end
 end
