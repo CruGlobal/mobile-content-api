@@ -8,9 +8,11 @@ describe S3Util do
 
   before(:each) do
     mock_onesky
+    @translation = Translation.find(godtools::Translations::English::ID)
   end
 
   it 'deletes temp files after successful request' do
+    mock_translation_build
     mock_s3(double(upload_file: true))
 
     push
@@ -19,6 +21,7 @@ describe S3Util do
   end
 
   it 'deletes temp files if error is raised' do
+    mock_translation_build
     object = double
     allow(object).to receive(:upload_file).and_raise(StandardError)
     mock_s3(object)
@@ -29,6 +32,7 @@ describe S3Util do
   end
 
   it 'zip file contains all pages' do
+    mock_translation_build
     allow(PageUtil).to receive(:delete_temp_pages)
     mock_s3(double(upload_file: true))
 
@@ -41,6 +45,7 @@ describe S3Util do
   end
 
   it 'zip file contains manifest' do
+    mock_translation_build
     allow(PageUtil).to receive(:delete_temp_pages)
     mock_s3(double(upload_file: true))
 
@@ -52,6 +57,7 @@ describe S3Util do
   end
 
   it 'builds a manifest with names of all pages' do
+    mock_translation_build
     mock_s3(double(upload_file: true))
     allow(PageUtil).to receive(:delete_temp_pages)
 
@@ -67,6 +73,16 @@ describe S3Util do
 </pages>
 ')
     delete_pages_dir
+  end
+
+  it 'always uses strict mode' do
+    mock_s3(double(upload_file: true))
+    allow(@translation).to(
+      receive(:build_translated_page).with(any_args, true)
+        .and_return('this is a translated page', 'here is another translated page')
+    )
+
+    push
   end
 
   private
@@ -94,10 +110,14 @@ describe S3Util do
       .and_return('{ "1":"value" }')
   end
 
+  def mock_translation_build
+    allow(@translation).to(
+      receive(:build_translated_page)
+        .and_return('this is a translated page', 'here is another translated page')
+    )
+  end
+
   def push
-    @translation = Translation.find(godtools::Translations::English::ID)
-    allow(@translation).to receive(:build_translated_page).and_return('this is a translated page',
-                                                                      'here is another translated page')
     s3_util = S3Util.new(@translation)
     s3_util.push_translation
   end
