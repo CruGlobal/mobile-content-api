@@ -3,10 +3,10 @@
 require 'rails_helper'
 
 describe Attribute do
-  it 'resource/key combination must be unique' do
+  it 'resource/key combination must be unique and is not case sensitive' do
     expect do
       Attribute.create!(resource_id: 1,
-                        key: 'Banner_Image',
+                        key: 'baNNer_IMage',
                         value: 'bar')
     end.to raise_error(ActiveRecord::RecordNotUnique)
   end
