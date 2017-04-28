@@ -2,7 +2,7 @@
 
 class DraftsController < SecureController
   def show
-    render json: load_translation.build_translated_page(params[:page_id])
+    render json: load_translation.build_translated_page(params[:page_id], false)
   end
 
   def create

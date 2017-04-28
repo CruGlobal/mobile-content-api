@@ -28,7 +28,7 @@ describe Translation do
     mock_onesky(page_name, phrases)
     translation = Translation.find(translations::German1::ID)
 
-    result = translation.build_translated_page(1)
+    result = translation.build_translated_page(1, true)
 
     expect(result.include?('base_xml_element')).to be_truthy
     expect(result.include?(phrase_one_element)).to be_truthy
@@ -39,18 +39,25 @@ describe Translation do
     mock_onesky(page_name, phrases)
     translation = Translation.find(translations::German2::ID)
 
-    result = translation.build_translated_page(1)
+    result = translation.build_translated_page(1, true)
 
     expect(result.include?('custom_xml_element')).to be_truthy
     expect(result.include?(phrase_one_element)).to be_truthy
     expect(result.include?(phrase_two_element)).to be_truthy
   end
 
-  it 'error is raised if translated phrase not found' do
+  it 'error is raised if strict mode and translated phrase not found' do
     mock_onesky(page_name, "{ \"#{element_one_id}\":\"#{phrase_one}\" }")
     translation = Translation.find(translations::German2::ID)
 
-    expect { translation.build_translated_page(1) }.to raise_error('Translated phrase not found.')
+    expect { translation.build_translated_page(1, true) }.to raise_error('Translated phrase not found.')
+  end
+
+  it 'error not raised raised if not strict mode and translated phrase not found' do
+    mock_onesky('13_FinalPage.xml', '{ "1":"This is a German phrase" }')
+    translation = Translation.find(translations::German2::ID)
+
+    expect { translation.build_translated_page(1, false) }.to raise_error('Translated phrase not found.')
   end
 
   it 'increments version by one' do
