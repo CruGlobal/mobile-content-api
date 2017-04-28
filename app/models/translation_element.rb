@@ -2,4 +2,12 @@
 
 class TranslationElement < ActiveRecord::Base
   belongs_to :page
+
+  before_create :set_onesky_phrase_id
+
+  private
+
+  def set_onesky_phrase_id
+    self.onesky_phrase_id = SecureRandom.uuid unless onesky_phrase_id.present?
+  end
 end

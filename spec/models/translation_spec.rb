@@ -4,42 +4,50 @@ require 'rails_helper'
 
 describe Translation do
   let(:translations) { TestConstants::GodTools::Translations }
+  let(:page_name) { '13_FinalPage.xml' }
+  let(:element_one_id) { 'f9894df9-df1d-4831-9782-345028c6c9a2' }
+  let(:element_two_id) { '9deda19f-c3ee-42ed-a1eb-92423e543352' }
+  let(:phrase_one) { 'This is a German phrase' }
+  let(:phrase_two) { 'another phrase in German' }
+  let(:phrases) { "{ \"#{element_one_id}\":\"#{phrase_one}\", \"#{element_two_id}\":\"#{phrase_two}\" }" }
+  let(:phrase_one_element) { "<content:text i18n-id=\"#{element_one_id}\">#{phrase_one}</content:text>" }
+  let(:phrase_two_element) { "<content:text i18n-id=\"#{element_two_id}\">#{phrase_two}</content:text>" }
 
   it 'downloads translated phrases from OneSky' do
-    mock_onesky('13_FinalPage.xml', '{ "1":"This is a German phrase", "2":"another phrase in German" }')
+    mock_onesky(page_name, phrases)
     translation = Translation.find(translations::German1::ID)
 
-    result = translation.download_translated_phrases('13_FinalPage.xml')
+    result = translation.download_translated_phrases(page_name)
 
     values = JSON.parse(result)
-    expect(values['1']).to eq('This is a German phrase')
-    expect(values['2']).to eq('another phrase in German')
+    expect(values[element_one_id]).to eq(phrase_one)
+    expect(values[element_two_id]).to eq(phrase_two)
   end
 
   it 'builds a translated page from resource page' do
-    mock_onesky('13_FinalPage.xml', '{ "1":"This is a German phrase", "2":"another phrase in German" }')
+    mock_onesky(page_name, phrases)
     translation = Translation.find(translations::German1::ID)
 
     result = translation.build_translated_page(1)
 
     expect(result.include?('base_xml_element')).to be_truthy
-    expect(result.include?('<content:text i18n-id="1">This is a German phrase</content:text>')).to be_truthy
-    expect(result.include?('<content:text i18n-id="2">another phrase in German</content:text>')).to be_truthy
+    expect(result.include?(phrase_one_element)).to be_truthy
+    expect(result.include?(phrase_two_element)).to be_truthy
   end
 
   it 'builds a translated page from custom page' do
-    mock_onesky('13_FinalPage.xml', '{ "1":"This is a German phrase", "2":"another phrase in German" }')
+    mock_onesky(page_name, phrases)
     translation = Translation.find(translations::German2::ID)
 
     result = translation.build_translated_page(1)
 
     expect(result.include?('custom_xml_element')).to be_truthy
-    expect(result.include?('<content:text i18n-id="1">This is a German phrase</content:text>')).to be_truthy
-    expect(result.include?('<content:text i18n-id="2">another phrase in German</content:text>')).to be_truthy
+    expect(result.include?(phrase_one_element)).to be_truthy
+    expect(result.include?(phrase_two_element)).to be_truthy
   end
 
   it 'error is raised if translated phrase not found' do
-    mock_onesky('13_FinalPage.xml', '{ "1":"This is a German phrase" }')
+    mock_onesky(page_name, "{ \"#{element_one_id}\":\"#{phrase_one}\" }")
     translation = Translation.find(translations::German2::ID)
 
     expect { translation.build_translated_page(1) }.to raise_error('Translated phrase not found.')
@@ -107,8 +115,9 @@ describe Translation do
   private
 
   def mock_onesky(filename, result)
-    allow(RestClient).to receive(:get).with(any_args,
-                                            hash_including(params: hash_including(source_file_name: filename)))
-      .and_return(result)
+    allow(RestClient).to(
+      receive(:get).with(any_args, hash_including(params: hash_including(source_file_name: filename)))
+        .and_return(result)
+    )
   end
 end

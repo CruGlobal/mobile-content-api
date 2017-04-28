@@ -21,8 +21,8 @@ page_13 = Page.find_or_create_by(filename: '13_FinalPage.xml',
       xmlns:content="https://mobile-content-api.cru.org/xmlns/content">
   <hero>
     <heading>
-      <content:text i18n-id="1">one un-translated phrase</content:text>
-      <content:text i18n-id="2">two un-translated phrase</content:text>
+      <content:text i18n-id="f9894df9-df1d-4831-9782-345028c6c9a2">one un-translated phrase</content:text>
+      <content:text i18n-id="9deda19f-c3ee-42ed-a1eb-92423e543352">two un-translated phrase</content:text>
     </heading>
 
     <base_xml_element>
@@ -39,8 +39,8 @@ page_4 = Page.find_or_create_by(filename: '04_ThirdPoint.xml',
       xmlns:content="https://mobile-content-api.cru.org/xmlns/content">
   <hero>
     <heading>
-      <content:text i18n-id="14">fourteen un-translated phrase</content:text>
-      <content:text i18n-id="15">fifteen un-translated phrase</content:text>
+      <content:text i18n-id="1373aa60-6c3f-4c69-b5ad-acfa2c0e4540">one un-translated phrase</content:text>
+      <content:text i18n-id="e68a67da-df02-493f-b138-661bfe120663">two un-translated phrase</content:text>
     </heading>
 
     <base_xml_element>
@@ -49,9 +49,9 @@ page_4 = Page.find_or_create_by(filename: '04_ThirdPoint.xml',
     </base_xml_element>
   </hero>
 </page>')
+TranslationElement.find_or_create_by(page: page_13, text: 'WEBSITES TO ASSIST YOU', onesky_phrase_id: 'f9894df9-df1d-4831-9782-345028c6c9a2')
+TranslationElement.find_or_create_by(page: page_13, text: 'Still not sure who Jesus is?', onesky_phrase_id: '9deda19f-c3ee-42ed-a1eb-92423e543352')
 page_13_elements = []
-page_13_elements.push('WEBSITES TO ASSIST YOU')
-page_13_elements.push('Still not sure who Jesus is?')
 page_13_elements.push('everystudent.com')
 page_13_elements.push('Read the Bible')
 page_13_elements.push('bible.com/bible/59/mrk.1')
@@ -105,8 +105,8 @@ CustomPage.find_or_create_by(translation: german_kgp,
       xmlns:content="https://mobile-content-api.cru.org/xmlns/content">
   <hero>
     <heading>
-      <content:text i18n-id="1">one un-translated phrase</content:text>
-      <content:text i18n-id="2">two un-translated phrase</content:text>
+      <content:text i18n-id="f9894df9-df1d-4831-9782-345028c6c9a2">one un-translated phrase</content:text>
+      <content:text i18n-id="9deda19f-c3ee-42ed-a1eb-92423e543352">two un-translated phrase</content:text>
     </heading>
 
     <custom_xml_element>
