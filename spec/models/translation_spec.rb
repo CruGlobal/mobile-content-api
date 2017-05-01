@@ -57,7 +57,7 @@ describe Translation do
     mock_onesky('13_FinalPage.xml', '{ "1":"This is a German phrase" }')
     translation = Translation.find(translations::German2::ID)
 
-    expect { translation.build_translated_page(1, false) }.to raise_error('Translated phrase not found.')
+    translation.build_translated_page(1, false)
   end
 
   it 'increments version by one' do

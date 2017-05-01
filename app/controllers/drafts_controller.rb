@@ -50,7 +50,17 @@ class DraftsController < SecureController
   end
 
   def edit
-    load_translation.update_draft(params)
+    translation = load_translation
+    begin
+      translation.update_draft(params)
+      head :no_content
+    rescue Error::PhraseNotFoundError => e
+      translation.errors.add(:id, e.message)
+      render json: translation,
+             status: :conflict,
+             adapter: :json_api,
+             serializer: ActiveModel::Serializer::ErrorSerializer
+    end
   end
 
   def load_translation

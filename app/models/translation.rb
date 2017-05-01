@@ -26,7 +26,12 @@ class Translation < ActiveRecord::Base
     xml = page_structure(page_id)
     xml.xpath('//content:text[@i18n-id]').each do |node|
       translated_phrase = phrases[node['i18n-id']]
-      node.content = (strict && translated_phrase ? translated_phrase : (raise 'Translated phrase not found.'))
+
+      if translated_phrase.present?
+        node.content = translated_phrase
+      elsif strict
+        raise Error::PhraseNotFoundError, 'Translated phrase not found.' if strict
+      end
     end
 
     xml.to_s

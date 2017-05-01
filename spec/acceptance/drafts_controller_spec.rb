@@ -96,6 +96,16 @@ resource 'Drafts' do
 
       expect(status).to be(204)
     end
+
+    it 'update draft without translating all phrases' do
+      translation = Translation.find(1)
+      allow(translation).to receive(:update_draft).and_raise(Error::PhraseNotFoundError, 'Translated phrase not found.')
+      allow(Translation).to receive(:find).with(godtools::Translations::German2::ID.to_s).and_return(translation)
+
+      do_request is_published: true
+
+      expect(status).to be(409)
+    end
   end
 
   delete 'drafts/:id' do
