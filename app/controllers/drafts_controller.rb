@@ -2,7 +2,7 @@
 
 class DraftsController < SecureController
   def show
-    render json: load_translation.build_translated_page(params[:page_id])
+    render json: load_translation.build_translated_page(params[:page_id], false)
   end
 
   def create
@@ -50,7 +50,15 @@ class DraftsController < SecureController
   end
 
   def edit
-    load_translation.update_draft(params)
+    translation = load_translation
+    translation.update_draft(params)
+    head :no_content
+  rescue Error::PhraseNotFoundError => e
+    translation.errors.add(:id, e.message)
+    render json: translation,
+           status: :conflict,
+           adapter: :json_api,
+           serializer: ActiveModel::Serializer::ErrorSerializer
   end
 
   def load_translation

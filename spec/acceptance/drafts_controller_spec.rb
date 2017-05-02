@@ -21,7 +21,9 @@ resource 'Drafts' do
       result = '{ \"1\": \"phrase\" }'
       translation = double
       allow(Translation).to receive(:find).with(godtools::Translations::German2::ID.to_s).and_return(translation)
-      allow(translation).to receive(:build_translated_page).with(godtools::Pages::Page13::ID.to_s).and_return(result)
+      allow(translation).to(
+        receive(:build_translated_page).with(godtools::Pages::Page13::ID.to_s, false).and_return(result)
+      )
 
       do_request page_id: godtools::Pages::Page13::ID
 
@@ -93,6 +95,16 @@ resource 'Drafts' do
       do_request data: { type: :translation, attributes: { is_published: true } }
 
       expect(status).to be(204)
+    end
+
+    it 'update draft without translating all phrases' do
+      translation = Translation.find(1)
+      allow(translation).to receive(:update_draft).and_raise(Error::PhraseNotFoundError, 'Translated phrase not found.')
+      allow(Translation).to receive(:find).with(godtools::Translations::German2::ID.to_s).and_return(translation)
+
+      do_request is_published: true
+
+      expect(status).to be(409)
     end
   end
 
