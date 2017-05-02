@@ -62,8 +62,8 @@ page_4_structure = '<?xml version="1.0" encoding="UTF-8" ?>
 </page>'
 
 page_4_elements = ['JESUS IS GOD\'S ONLY SOLUTION FOR OUR SIN. ONLY THROUGH HIM CAN WE KNOW GOD AND RECEIVE HIS LOVE AND FORGIVENESS.',
-                   'Jesus is God', 'Christ is the visible image of the invisible God. He existed before anything was created and is supreme over all creation.',
-                   '- Colossians 1:15', 'Jesus Died In Our Place', 'Christ suffered for our sins once for all time. He never sinned, but he died for sinners to bring you home safely to God.',
+                   'Christ is the visible image of the invisible God. He existed before anything was created and is supreme over all creation.',
+                   '- Colossians 1:15', 'Christ suffered for our sins once for all time. He never sinned, but he died for sinners to bring you home safely to God.',
                    '- 1 Peter 3:18a', 'Jesus Came Back to Life', 'During the forty days after his crucifixion, he appeared to the apostles ... and he proved to them in many ways he was actually alive.   - Acts 1:3a',
                    'His resurrection proved that he was God and that he had suffered the punishment we deserved in our place.', 'Jesus is the Only Way...',
                    'Jesus said, "I am the way, the truth and the life. No-one can come to the Father except through me."', '- John 14:6',
@@ -88,6 +88,9 @@ TranslationElement.find_or_create_by(page: page_13, text: 'Still not sure who Je
 page_13_elements.each do |e|
   TranslationElement.find_or_create_by(page: page_13, text: e)
 end
+
+TranslationElement.find_or_create_by(page: page_4, text: 'Jesus is God', onesky_phrase_id: '1373aa60-6c3f-4c69-b5ad-acfa2c0e4540')
+TranslationElement.find_or_create_by(page: page_4, text: 'Jesus Died In Our Place', onesky_phrase_id: 'e68a67da-df02-493f-b138-661bfe120663')
 
 page_4_elements.each do |e|
   TranslationElement.find_or_create_by(page: page_4, text: e)

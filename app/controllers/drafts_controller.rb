@@ -51,7 +51,7 @@ class DraftsController < SecureController
 
   def edit
     translation = load_translation
-    translation.update_draft(params)
+    translation.update_draft(params[:data][:attributes])
     head :no_content
   rescue Error::PhraseNotFoundError => e
     translation.errors.add(:id, e.message)
