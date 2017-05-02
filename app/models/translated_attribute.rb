@@ -6,7 +6,7 @@ class TranslatedAttribute < ActiveRecord::Base
 
   validates :value, presence: true
   validates :parent_attribute, presence: true
-  validates :translation, presence: true
+  validates :translation, presence: true, uniqueness: { scope: :parent_attribute }
 
   before_validation :parent_must_be_translatable
 

@@ -7,7 +7,7 @@ class Resource < ActiveRecord::Base
   has_many :resource_attributes, class_name: 'Attribute'
 
   validates :name, presence: true
-  validates :abbreviation, presence: true
+  validates :abbreviation, presence: true, uniqueness: true
   validates :system, presence: true
 
   scope :system_name, lambda { |name|

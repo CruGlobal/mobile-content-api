@@ -8,7 +8,7 @@ describe Attribute do
       Attribute.create!(resource_id: 1,
                         key: 'baNNer_IMage',
                         value: 'bar')
-    end.to raise_error(ActiveRecord::RecordNotUnique)
+    end.to raise_error(ActiveRecord::RecordInvalid, 'Validation failed: Resource has already been taken')
   end
 
   it 'key cannot end in underscore' do

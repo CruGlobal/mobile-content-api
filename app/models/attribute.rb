@@ -7,7 +7,7 @@ class Attribute < ActiveRecord::Base
 
   validates :key, presence: true, format: { with: /\A[[:alpha:]]+(_[[:alpha:]]+)*\z/ }
   validates :value, presence: true
-  validates :resource, presence: true
+  validates :resource, presence: true, uniqueness: { scope: :key }
   validates :is_translatable, inclusion: { in: [true, false] }
 
   before_validation :key_to_lower

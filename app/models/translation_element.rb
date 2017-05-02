@@ -5,7 +5,7 @@ class TranslationElement < ActiveRecord::Base
 
   validates :text, presence: true
   validates :page, presence: true
-  validates :onesky_phrase_id, presence: true
+  validates :onesky_phrase_id, presence: true, uniqueness: true
 
   before_validation :set_onesky_phrase_id, on: :create
 
