@@ -53,7 +53,7 @@ resource 'Drafts' do
       allow(Translation).to receive(:latest_translation).with(resource_id, language_id).and_return(nil)
       allow(resource).to receive(:create_new_draft).with(language_id)
 
-      do_request data: { resource_id: resource_id, language_id: language_id }
+      do_request data: { type: :translation, attributes: { resource_id: resource_id, language_id: language_id } }
 
       expect(status).to be(204)
     end
@@ -64,7 +64,7 @@ resource 'Drafts' do
       allow(Translation).to receive(:latest_translation).with(resource_id, language_id).and_return(existing_translation)
       allow(existing_translation).to receive(:create_new_version)
 
-      do_request data: { resource_id: resource_id, language_id: language_id }
+      do_request data: { type: :translation, attributes: { resource_id: resource_id, language_id: language_id } }
 
       expect(status).to be(204)
     end
@@ -73,7 +73,7 @@ resource 'Drafts' do
       language_id = languages::German::ID
       allow(Translation).to receive(:latest_translation).with(resource_id, language_id).and_return(Translation.find(3))
 
-      do_request data: { resource_id: resource_id, language_id: language_id }
+      do_request data: { type: :translation, attributes: { resource_id: resource_id, language_id: language_id } }
 
       expect(status).to be(400)
       expect(JSON.parse(response_body)['errors'][0]['detail']).to(
@@ -90,7 +90,7 @@ resource 'Drafts' do
       translation = double(update_draft: true)
       allow(Translation).to receive(:find).with(godtools::Translations::German2::ID.to_s).and_return(translation)
 
-      do_request is_published: true
+      do_request data: { type: :translation, attributes: { is_published: true } }
 
       expect(status).to be(204)
     end

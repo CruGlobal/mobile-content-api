@@ -9,13 +9,13 @@ resource 'Auth' do
 
   post 'auth/' do
     it 'create a token with valid code' do
-      do_request code: 123_456
+      do_request data: { type: :auth_token, attributes: { code: 123_456 } }
 
       expect(status).to be(201)
     end
 
     it 'create a token with invalid code' do
-      do_request code: 223_456
+      do_request data: { type: :auth_token, attributes: { code: 999_999 } }
 
       expect(status).to be(400)
     end

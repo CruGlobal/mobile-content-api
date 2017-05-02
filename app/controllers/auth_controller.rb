@@ -15,6 +15,6 @@ class AuthController < ApplicationController
   end
 
   def access_code
-    AccessCode.find_by(code: params[:code])
+    AccessCode.find_by(code: params[:data][:attributes][:code])
   end
 end

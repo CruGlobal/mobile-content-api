@@ -26,7 +26,6 @@ class DraftsController < SecureController
 
   def create_new_draft
     resource = load_resource
-    language_id = params[:data][:language_id]
     existing_translation = Translation.latest_translation(resource.id, language_id)
 
     if existing_translation.nil?
@@ -43,7 +42,11 @@ class DraftsController < SecureController
   end
 
   def load_resource
-    Resource.find(params[:data][:resource_id])
+    Resource.find(params[:data][:attributes][:resource_id])
+  end
+
+  def language_id
+    params[:data][:attributes][:language_id]
   end
 
   def edit
