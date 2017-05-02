@@ -8,6 +8,6 @@ class TranslationElement < ActiveRecord::Base
   private
 
   def set_onesky_phrase_id
-    self.onesky_phrase_id = SecureRandom.uuid unless onesky_phrase_id.present?
+    self.onesky_phrase_id ||= SecureRandom.uuid
   end
 end
