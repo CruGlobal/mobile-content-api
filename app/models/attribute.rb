@@ -5,7 +5,9 @@ class Attribute < ActiveRecord::Base
 
   has_many :translated_attributes
 
-  validates :key, format: { with: /\A[[:alpha:]]+(_[[:alpha:]]+)*\z/ }
+  validates :key, presence: true, format: { with: /\A[[:alpha:]]+(_[[:alpha:]]+)*\z/ }
+  validates :value, presence: true
+  validates :resource, presence: true
 
   before_validation :key_to_lower
 

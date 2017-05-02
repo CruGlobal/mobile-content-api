@@ -7,6 +7,10 @@ class Translation < ActiveRecord::Base
   belongs_to :language
   has_many :custom_pages
 
+  validates :version, presence: true
+  validates :resource, presence: true
+  validates :language, presence: true
+
   before_destroy :prevent_destroy_published
   before_update :push_published_to_s3
 

@@ -3,7 +3,11 @@
 class TranslationElement < ActiveRecord::Base
   belongs_to :page
 
-  before_create :set_onesky_phrase_id
+  validates :text, presence: true
+  validates :page, presence: true
+  validates :onesky_phrase_id, presence: true
+
+  before_validation :set_onesky_phrase_id, on: :create
 
   private
 
