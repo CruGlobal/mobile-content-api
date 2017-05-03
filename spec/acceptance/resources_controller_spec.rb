@@ -63,7 +63,7 @@ resource 'Resources' do
 
       expect(status).to be(200)
       attrs = JSON.parse(response_body)['data']['attributes']
-      expect(attrs['total-stats']).to be(1268)
+      expect(attrs['total-views']).to be(1268)
     end
   end
 end

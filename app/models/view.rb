@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Stat < ActiveRecord::Base
+class View < ActiveRecord::Base
   belongs_to :resource
 
   validates :quantity, presence: true

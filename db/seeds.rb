@@ -123,5 +123,5 @@ Attribute.find_or_create_by!(resource: satisfied, key: 'Another_Attribute', valu
 
 TranslatedAttribute.find_or_create_by!(parent_attribute: attribute, translation: german_kgp, value: 'german attribute')
 
-Stat.find_or_create_by!(quantity: 550, resource: kgp)
-Stat.find_or_create_by!(quantity: 718, resource: kgp)
+View.find_or_create_by!(quantity: 550, resource: kgp)
+View.find_or_create_by!(quantity: 718, resource: kgp)

@@ -5,7 +5,7 @@ class Resource < ActiveRecord::Base
   has_many :translations
   has_many :pages
   has_many :resource_attributes, class_name: 'Attribute'
-  has_many :stats
+  has_many :views
 
   validates :name, presence: true
   validates :abbreviation, presence: true, uniqueness: true
@@ -33,7 +33,7 @@ class Resource < ActiveRecord::Base
                             T.language_id = max_table.language_id and T.resource_id = max_table.resource_id")
   end
 
-  def total_stats
-    stats.all.sum(:quantity)
+  def total_views
+    views.all.sum(:quantity)
   end
 end
