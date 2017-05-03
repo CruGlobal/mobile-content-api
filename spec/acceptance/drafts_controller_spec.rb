@@ -102,7 +102,7 @@ resource 'Drafts' do
       allow(translation).to receive(:update_draft).and_raise(Error::PhraseNotFoundError, 'Translated phrase not found.')
       allow(Translation).to receive(:find).with(godtools::Translations::German2::ID.to_s).and_return(translation)
 
-      do_request is_published: true
+      do_request data: { type: :translation, attributes: { is_published: true } }
 
       expect(status).to be(409)
     end
