@@ -8,13 +8,23 @@ class AuthController < ApplicationController
   private
 
   def create_auth_token
-    token = AuthToken.create!(access_code: access_code)
+    code = AccessCode.find_by(code: params[:data][:attributes][:code])
+
+    if code.nil?
+      render plain: 'Access code not found', status: :bad_request
+      return
+    end
+
+    if expired(code)
+      render plain: 'Access code expired', status: :bad_request
+      return
+    end
+
+    token = AuthToken.create!(access_code: code)
     render json: token, status: :created
-  rescue
-    render plain: 'Access code not found', status: :bad_request
   end
 
-  def access_code
-    AccessCode.find_by(code: params[:data][:attributes][:code])
+  def expired(code)
+    code.expiration < DateTime.now.utc - 7.days
   end
 end

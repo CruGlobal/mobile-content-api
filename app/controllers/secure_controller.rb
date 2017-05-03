@@ -6,14 +6,18 @@ class SecureController < ApplicationController
   private
 
   def authorize!
-    authorization = AuthToken.find_by(token: request.headers['Authorization'])
-    return unless authorization.nil?
+    token = AuthToken.find_by(token: request.headers['Authorization'])
+    return unless token.nil? || expired(token)
 
-    authorization = AuthToken.new
-    authorization.errors.add(:id, 'Unauthorized')
-    render json: authorization,
+    token = AuthToken.new
+    token.errors.add(:id, 'Unauthorized')
+    render json: token,
            status: :unauthorized,
            adapter: :json_api,
            serializer: ActiveModel::Serializer::ErrorSerializer
+  end
+
+  def expired(token)
+    token.expiration < DateTime.now.utc - 24.hours
   end
 end

@@ -19,5 +19,16 @@ resource 'Auth' do
 
       expect(status).to be(400)
     end
+
+    it 'create a token with expired code' do
+      code = 123_456
+      allow(AccessCode).to(
+        receive(:find_by).with(code: code).and_return(AccessCode.new(expiration: DateTime.now.utc - 8.days))
+      )
+
+      do_request data: { type: :auth_token, attributes: { code: code } }
+
+      expect(status).to be(400)
+    end
   end
 end
