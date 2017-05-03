@@ -9,9 +9,17 @@ resource 'Views' do
   let(:raw_post) { params.to_json }
 
   post 'views/' do
-    header 'Authorization', AuthToken.create(access_code: AccessCode.find(1)).token
+    it 'does not allow unauthorized requests', document: false do
+      header 'Authorization', nil
+
+      do_request data: { type: :view, attributes: { resource_id: 1, quantity: 257 } }
+
+      expect(status).to be(401)
+    end
 
     it 'add views' do
+      header 'Authorization', AuthToken.create(access_code: AccessCode.find(1)).token
+
       do_request data: { type: :view, attributes: { resource_id: 1, quantity: 257 } }
 
       expect(status).to be(201)
