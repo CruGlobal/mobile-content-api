@@ -122,3 +122,6 @@ attribute = Attribute.find_or_create_by!(resource: kgp, key: 'translate_me', val
 Attribute.find_or_create_by!(resource: satisfied, key: 'Another_Attribute', value: 'blah blah blah')
 
 TranslatedAttribute.find_or_create_by!(parent_attribute: attribute, translation: german_kgp, value: 'german attribute')
+
+Stat.find_or_create_by!(quantity: 550, resource: kgp)
+Stat.find_or_create_by!(quantity: 718, resource: kgp)
