@@ -15,6 +15,7 @@ resource 'TranslatedAttributes' do
   post 'translated_attributes' do
     it 'does not allow unauthorized requests', document: false do
       header 'Authorization', nil
+
       do_request data: { type: :translated_attribute,
                          attributes: { attribute_id: 'foo',
                                        translation_id: godtools::Translations::English::ID,

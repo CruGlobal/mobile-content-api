@@ -5,6 +5,7 @@ class Resource < ActiveRecord::Base
   has_many :translations
   has_many :pages
   has_many :resource_attributes, class_name: 'Attribute'
+  has_many :views
 
   validates :name, presence: true
   validates :abbreviation, presence: true, uniqueness: true
@@ -30,5 +31,9 @@ class Resource < ActiveRecord::Base
                             max_version from translations where is_published = true and resource_id = #{id} group
                             by language_id, resource_id) as max_table on T.version = max_table.max_version and
                             T.language_id = max_table.language_id and T.resource_id = max_table.resource_id")
+  end
+
+  def total_views
+    views.all.sum(:quantity)
   end
 end

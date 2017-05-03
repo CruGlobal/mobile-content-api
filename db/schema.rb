@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170428202612) do
+ActiveRecord::Schema.define(version: 20170503204517) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -99,6 +99,12 @@ ActiveRecord::Schema.define(version: 20170428202612) do
     t.string  "manifest_name"
     t.index ["language_id"], name: "index_translations_on_language_id", using: :btree
     t.index ["resource_id"], name: "index_translations_on_resource_id", using: :btree
+  end
+
+  create_table "views", force: :cascade do |t|
+    t.integer "quantity",    null: false
+    t.integer "resource_id", null: false
+    t.index ["resource_id"], name: "index_views_on_resource_id", using: :btree
   end
 
 end
