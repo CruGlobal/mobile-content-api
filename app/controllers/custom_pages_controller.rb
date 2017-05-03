@@ -17,7 +17,7 @@ class CustomPagesController < SecureController
 
     CustomPage.create!(attrs.permit(:translation_id, :page_id, :structure))
     return :created
-  rescue ActiveRecord::RecordNotUnique
+  rescue ActiveRecord::RecordInvalid
     existing = CustomPage.find_by(translation_id: attrs[:translation_id], page_id: attrs[:page_id])
     existing.update(attrs.permit(:structure))
     return :no_content

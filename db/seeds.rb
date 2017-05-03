@@ -72,53 +72,53 @@ page_4_elements = ['JESUS IS GOD\'S ONLY SOLUTION FOR OUR SIN. ONLY THROUGH HIM 
                    'Through Jesus, God has bridged the gap that separates us from him, and provided a way for us to be forgiven and restored to relationship with him.', 'It\'s not enough just to know these points...']
 
 
-godtools = System.find_or_create_by(name: 'GodTools')
-every_student = System.find_or_create_by(name: 'EveryStudent')
+godtools = System.find_or_create_by!(name: 'GodTools')
+every_student = System.find_or_create_by!(name: 'EveryStudent')
 
-kgp = Resource.find_or_create_by(name: 'Knowing God Personally', abbreviation: 'kgp', onesky_project_id: 148_314, system: godtools)
-satisfied = Resource.find_or_create_by(name: 'Satisfied?', abbreviation: 'sat', onesky_project_id: 123_456, system: godtools)
-is_there_god = Resource.find_or_create_by(name: 'Is There A God?', abbreviation: 'God?', onesky_project_id: 223_456, system: every_student)
+kgp = Resource.find_or_create_by!(name: 'Knowing God Personally', abbreviation: 'kgp', onesky_project_id: 148_314, system: godtools)
+satisfied = Resource.find_or_create_by!(name: 'Satisfied?', abbreviation: 'sat', onesky_project_id: 123_456, system: godtools)
+is_there_god = Resource.find_or_create_by!(name: 'Is There A God?', abbreviation: 'God?', onesky_project_id: 223_456, system: every_student)
 
-page_13 = Page.find_or_create_by(filename: '13_FinalPage.xml', resource: kgp, structure: page_13_structure)
-page_4 = Page.find_or_create_by(filename: '04_ThirdPoint.xml', resource: kgp, structure: page_4_structure)
+page_13 = Page.find_or_create_by!(filename: '13_FinalPage.xml', resource: kgp, structure: page_13_structure)
+page_4 = Page.find_or_create_by!(filename: '04_ThirdPoint.xml', resource: kgp, structure: page_4_structure)
 
-TranslationElement.find_or_create_by(page: page_13, text: 'WEBSITES TO ASSIST YOU', onesky_phrase_id: 'f9894df9-df1d-4831-9782-345028c6c9a2')
-TranslationElement.find_or_create_by(page: page_13, text: 'Still not sure who Jesus is?', onesky_phrase_id: '9deda19f-c3ee-42ed-a1eb-92423e543352')
+TranslationElement.find_or_create_by!(page: page_13, text: 'WEBSITES TO ASSIST YOU', onesky_phrase_id: 'f9894df9-df1d-4831-9782-345028c6c9a2')
+TranslationElement.find_or_create_by!(page: page_13, text: 'Still not sure who Jesus is?', onesky_phrase_id: '9deda19f-c3ee-42ed-a1eb-92423e543352')
 
 page_13_elements.each do |e|
-  TranslationElement.find_or_create_by(page: page_13, text: e)
+  TranslationElement.find_or_create_by!(page: page_13, text: e)
 end
 
 TranslationElement.find_or_create_by(page: page_4, text: 'Jesus is God', onesky_phrase_id: '1373aa60-6c3f-4c69-b5ad-acfa2c0e4540')
 TranslationElement.find_or_create_by(page: page_4, text: 'Jesus Died In Our Place', onesky_phrase_id: 'e68a67da-df02-493f-b138-661bfe120663')
 
 page_4_elements.each do |e|
-  TranslationElement.find_or_create_by(page: page_4, text: e)
+  TranslationElement.find_or_create_by!(page: page_4, text: e)
 end
 
-english = Language.find_or_create_by(name: 'English', code: 'en')
-german = Language.find_or_create_by(name: 'German', code: 'de')
-Language.find_or_create_by(name: 'Slovak', code: 'sk')
+english = Language.find_or_create_by!(name: 'English', code: 'en')
+german = Language.find_or_create_by!(name: 'German', code: 'de')
+Language.find_or_create_by!(name: 'Slovak', code: 'sk')
 
-Translation.find_or_create_by(resource: kgp, language: english, version: 1, is_published: true)
-Translation.find_or_create_by(resource: kgp, language: german, version: 1, is_published: true)
-german_kgp = Translation.find_or_create_by(resource: kgp, language: german, version: 2)
+Translation.find_or_create_by!(resource: kgp, language: english, version: 1, is_published: true)
+Translation.find_or_create_by!(resource: kgp, language: german, version: 1, is_published: true)
+german_kgp = Translation.find_or_create_by!(resource: kgp, language: german, version: 2)
 
-CustomPage.find_or_create_by(translation: german_kgp, page: page_13, structure: page_13_custom_structure)
+CustomPage.find_or_create_by!(translation: german_kgp, page: page_13, structure: page_13_custom_structure)
 
-Translation.find_or_create_by(resource: satisfied, language: english, version: 1, is_published: true)
-Translation.find_or_create_by(resource: satisfied, language: english, version: 2, is_published: true)
-Translation.find_or_create_by(resource: satisfied, language: english, version: 3)
-Translation.find_or_create_by(resource: satisfied, language: german, version: 1, is_published: true)
-Translation.find_or_create_by(resource: satisfied, language: german, version: 2, is_published: true)
+Translation.find_or_create_by!(resource: satisfied, language: english, version: 1, is_published: true)
+Translation.find_or_create_by!(resource: satisfied, language: english, version: 2, is_published: true)
+Translation.find_or_create_by!(resource: satisfied, language: english, version: 3)
+Translation.find_or_create_by!(resource: satisfied, language: german, version: 1, is_published: true)
+Translation.find_or_create_by!(resource: satisfied, language: german, version: 2, is_published: true)
 
-Translation.find_or_create_by(resource: is_there_god, language: english, version: 1, is_published: true)
+Translation.find_or_create_by!(resource: is_there_god, language: english, version: 1, is_published: true)
 
-AccessCode.find_or_create_by(code: 123_456)
+AccessCode.find_or_create_by!(code: 123_456)
 
-Attribute.find_or_create_by(resource: kgp, key: 'Banner_Image', value: 'this is a location')
-attribute = Attribute.find_or_create_by(resource: kgp, key: 'translate_me', value: 'base language', is_translatable: true)
+Attribute.find_or_create_by!(resource: kgp, key: 'Banner_Image', value: 'this is a location')
+attribute = Attribute.find_or_create_by!(resource: kgp, key: 'translate_me', value: 'base language', is_translatable: true)
 
-Attribute.find_or_create_by(resource: satisfied, key: 'Another_Attribute', value: 'blah blah blah')
+Attribute.find_or_create_by!(resource: satisfied, key: 'Another_Attribute', value: 'blah blah blah')
 
-TranslatedAttribute.find_or_create_by(parent_attribute: attribute, translation: german_kgp, value: 'german attribute')
+TranslatedAttribute.find_or_create_by!(parent_attribute: attribute, translation: german_kgp, value: 'german attribute')

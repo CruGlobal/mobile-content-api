@@ -7,8 +7,14 @@ class Translation < ActiveRecord::Base
   belongs_to :language
   has_many :custom_pages
 
+  validates :version, presence: true
+  validates :resource, presence: true
+  validates :language, presence: true
+  validates :is_published, inclusion: { in: [true, false] }
+
   before_destroy :prevent_destroy_published
   before_update :push_published_to_s3
+  before_validation :set_defaults, on: :create
 
   def create_new_version
     Translation.create(resource: resource, language: language, version: version + 1)
@@ -74,5 +80,10 @@ class Translation < ActiveRecord::Base
 
     s3_util = S3Util.new(self)
     s3_util.push_translation
+  end
+
+  def set_defaults
+    self.version ||= 1
+    self.is_published ||= false
   end
 end

@@ -4,6 +4,10 @@ class TranslatedAttribute < ActiveRecord::Base
   belongs_to :parent_attribute, foreign_key: :attribute_id, class_name: 'Attribute'
   belongs_to :translation
 
+  validates :value, presence: true
+  validates :parent_attribute, presence: true
+  validates :translation, presence: true, uniqueness: { scope: :parent_attribute }
+
   before_validation :parent_must_be_translatable
 
   private
