@@ -13,10 +13,11 @@ describe TranslatedAttribute do
   end
 
   it 'attribute/translation combination must be unique' do
-    expect do
-      TranslatedAttribute.create!(attribute_id: 2,
-                                  translation_id: 3,
-                                  value: 'foo')
-    end.to raise_error(ActiveRecord::RecordInvalid, 'Validation failed: Translation has already been taken')
+    attr = TranslatedAttribute.create(attribute_id: 2,
+                                      translation_id: 3,
+                                      value: 'foo')
+
+    expect(attr).to_not be_valid
+    expect(attr.errors[:translation]).to include('has already been taken')
   end
 end

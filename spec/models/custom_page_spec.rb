@@ -4,10 +4,9 @@ require 'rails_helper'
 
 describe CustomPage do
   it 'cannot be replicated' do
-    expect do
-      CustomPage.create!(translation_id: 3,
-                         page_id: 1,
-                         structure: '{ <xml>updated structure</xml> }')
-    end.to raise_error(ActiveRecord::RecordInvalid, 'Validation failed: Translation has already been taken')
+    page = CustomPage.create(translation_id: 3, page_id: 1, structure: '{ <xml>updated structure</xml> }')
+
+    expect(page).to_not be_valid
+    expect(page.errors[:translation]).to include 'has already been taken'
   end
 end
