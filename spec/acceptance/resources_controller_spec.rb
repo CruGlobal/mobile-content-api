@@ -74,7 +74,7 @@ resource 'Resources' do
     parameter 'keep-existing-phrases',
               'Query string parameter.  If false, deprecate phrases not pushed to OneSky in this update.'
 
-    it 'requires authorization' do
+    it 'requires authorization', document: false do
       header 'Authorization', nil
       allow(PageUtil).to receive(:new).with(any_args, 'en').and_return(double(push_new_onesky_translation: nil))
 
