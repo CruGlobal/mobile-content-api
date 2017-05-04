@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170503210608) do
+ActiveRecord::Schema.define(version: 20170504142441) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -18,6 +18,7 @@ ActiveRecord::Schema.define(version: 20170503210608) do
   create_table "access_codes", force: :cascade do |t|
     t.string   "code",       null: false
     t.datetime "expiration", null: false
+    t.index ["code"], name: "index_access_codes_on_code", unique: true, using: :btree
   end
 
   create_table "attributes", force: :cascade do |t|
@@ -34,6 +35,7 @@ ActiveRecord::Schema.define(version: 20170503210608) do
     t.integer  "access_code_id", null: false
     t.datetime "expiration",     null: false
     t.index ["access_code_id"], name: "index_auth_tokens_on_access_code_id", using: :btree
+    t.index ["token"], name: "index_auth_tokens_on_token", unique: true, using: :btree
   end
 
   create_table "custom_pages", force: :cascade do |t|

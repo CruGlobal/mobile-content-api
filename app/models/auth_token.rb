@@ -4,7 +4,7 @@ class AuthToken < ActiveRecord::Base
   belongs_to :access_code
 
   validates :access_code, presence: true
-  validates :token, presence: true
+  validates :token, presence: true, uniqueness: true
   validates :expiration, presence: true
 
   before_validation :generate_token!
