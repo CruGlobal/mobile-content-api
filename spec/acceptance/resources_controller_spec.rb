@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'acceptance_helper'
+require 'page_util'
 
 resource 'Resources' do
   header 'Accept', 'application/vnd.api+json'
@@ -64,6 +65,28 @@ resource 'Resources' do
       expect(status).to be(200)
       attrs = JSON.parse(response_body)['data']['attributes']
       expect(attrs['total-views']).to be(1268)
+    end
+  end
+
+  put 'resources/:id' do
+    let(:id) { 1 }
+
+    it 'requires authorization' do
+      header 'Authorization', nil
+      allow(PageUtil).to receive(:new).with(any_args, 'en').and_return(double(push_new_onesky_translation: nil))
+
+      do_request
+
+      expect(status).to be(401)
+    end
+
+    it 'updates translation elements in OneSky' do
+      header 'Authorization', AuthToken.create(access_code: AccessCode.find(1)).token
+      allow(PageUtil).to receive(:new).with(any_args, 'en').and_return(double(push_new_onesky_translation: nil))
+
+      do_request
+
+      expect(status).to be(204)
     end
   end
 end

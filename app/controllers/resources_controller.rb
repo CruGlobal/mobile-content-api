@@ -1,12 +1,24 @@
 # frozen_string_literal: true
 
+require 'page_util'
+
 class ResourcesController < ApplicationController
   def index
     render json: all_resources, include: params[:include], status: :ok
   end
 
   def show
-    resource
+    render json: load_resource, include: params[:include], status: :ok
+  end
+
+  def update
+    a = authorize!
+    return a unless a.nil?
+
+    page_util = PageUtil.new(load_resource, 'en')
+    page_util.push_new_onesky_translation
+
+    head :no_content
   end
 
   private
@@ -19,7 +31,7 @@ class ResourcesController < ApplicationController
     end
   end
 
-  def resource
-    render json: Resource.find(params[:id]), include: params[:include], status: :ok
+  def load_resource
+    Resource.find(params[:id])
   end
 end
