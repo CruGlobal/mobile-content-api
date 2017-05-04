@@ -71,6 +71,9 @@ resource 'Resources' do
   put 'resources/:id' do
     let(:id) { 1 }
 
+    parameter 'keep-existing-phrases',
+              'Query string parameter.  If false, deprecate phrases not pushed to OneSky in this update.'
+
     it 'requires authorization' do
       header 'Authorization', nil
       allow(PageUtil).to receive(:new).with(any_args, 'en').and_return(double(push_new_onesky_translation: nil))
@@ -80,7 +83,7 @@ resource 'Resources' do
       expect(status).to be(401)
     end
 
-    it 'updates translation elements in OneSky' do
+    it 'update resource in OneSky' do
       header 'Authorization', AuthToken.create(access_code: AccessCode.find(1)).token
       page_util = double
       allow(page_util).to receive(:push_new_onesky_translation).with(false)
