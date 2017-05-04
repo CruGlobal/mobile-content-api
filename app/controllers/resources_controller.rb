@@ -15,8 +15,7 @@ class ResourcesController < ApplicationController
     a = authorize!
     return a unless a.nil?
 
-    page_util = PageUtil.new(load_resource, 'en')
-    page_util.push_new_onesky_translation(params['keep-existing-phrases'])
+    PageUtil.new(load_resource, 'en').push_new_onesky_translation(params['keep-existing-phrases'])
 
     head :no_content
   end
