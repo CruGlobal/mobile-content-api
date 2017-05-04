@@ -82,9 +82,11 @@ resource 'Resources' do
 
     it 'updates translation elements in OneSky' do
       header 'Authorization', AuthToken.create(access_code: AccessCode.find(1)).token
-      allow(PageUtil).to receive(:new).with(any_args, 'en').and_return(double(push_new_onesky_translation: nil))
+      page_util = double
+      allow(page_util).to receive(:push_new_onesky_translation).with(false)
+      allow(PageUtil).to receive(:new).with(any_args, 'en').and_return(page_util)
 
-      do_request
+      do_request 'keep-existing-phrases': false
 
       expect(status).to be(204)
     end
