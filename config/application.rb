@@ -15,6 +15,7 @@ module MobileContentApi
 
     config.paperclip_defaults = {
       storage: :s3,
+      s3_protocol: 'https',
       s3_credentials: {
         bucket: ENV['MOBILE_CONTENT_API_BUCKET'],
         s3_region: ENV['AWS_REGION']
