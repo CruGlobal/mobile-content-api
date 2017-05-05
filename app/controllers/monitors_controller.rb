@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 class MonitorsController < ActionController::Base
+  protect_from_forgery with: :exception
   layout nil
 
   def lb
