@@ -18,6 +18,6 @@ class SecureController < ApplicationController
   end
 
   def expired(token)
-    token.expiration < DateTime.now.utc - 24.hours
+    token.expiration < DateTime.now.utc
   end
 end

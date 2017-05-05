@@ -12,7 +12,7 @@ class AuthController < ApplicationController
   private
 
   def expired(code)
-    code.expiration < DateTime.now.utc - 7.days
+    code.expiration < DateTime.now.utc
   end
 
   def render_bad_request(message)

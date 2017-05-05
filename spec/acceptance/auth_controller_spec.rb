@@ -23,7 +23,7 @@ resource 'Auth' do
     it 'create a token with expired code' do
       code = 123_456
       allow(AccessCode).to(
-        receive(:find_by).with(code: code).and_return(AccessCode.new(expiration: DateTime.now.utc - 8.days))
+        receive(:find_by).with(code: code).and_return(AccessCode.new(expiration: DateTime.now.utc - 1.second))
       )
 
       do_request data: { type: :auth_token, attributes: { code: code } }

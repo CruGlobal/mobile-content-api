@@ -27,7 +27,7 @@ describe SecureController do
     token = 'b0a0faef-2851-4b24-b53f-cf136ba22f78'
     @request.headers['Authorization'] = token
     allow(AuthToken).to(
-      receive(:find_by).with(token: token).and_return(AuthToken.new(expiration: DateTime.now.utc - 25.hours))
+      receive(:find_by).with(token: token).and_return(AuthToken.new(expiration: DateTime.now.utc - 1.second))
     )
 
     get :index
