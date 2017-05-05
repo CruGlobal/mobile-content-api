@@ -27,4 +27,9 @@ describe Attribute do
     expect(attr).to_not be_valid
     expect(attr.errors[:key]).to include 'is invalid'
   end
+
+  it 'may not have the same key and resource id as an Attachment' do
+    expect { Attribute.create(resource_id: 2, key: 'banner_image', value: 'test') }
+      .to(raise_error('Key is current used by an Attachment.'))
+  end
 end

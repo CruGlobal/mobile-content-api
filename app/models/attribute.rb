@@ -12,6 +12,7 @@ class Attribute < ActiveRecord::Base
 
   before_validation :key_to_lower
   before_validation :set_defaults, on: :create
+  after_validation :duplicate_keys
 
   private
 
@@ -21,5 +22,10 @@ class Attribute < ActiveRecord::Base
 
   def set_defaults
     self.is_translatable ||= false
+  end
+
+  def duplicate_keys
+    return unless Attachment.find_by(resource_id: resource_id, key: key).present?
+    raise 'Key is current used by an Attachment.'
   end
 end
