@@ -1,7 +1,9 @@
 # frozen_string_literal: true
 
+require 'key_util'
+
 class Attachment < ActiveRecord::Base
-  validates :key, presence: true, format: { with: /\A[[:alpha:]]+(_[[:alpha:]]+)*\z/ }
+  validates :key, presence: true, format: { with: KeyUtil.format }
   validates :file, presence: true
   validates :resource, uniqueness: { scope: :key }
   validates :translation, uniqueness: { scope: :key }
@@ -12,14 +14,10 @@ class Attachment < ActiveRecord::Base
   has_attached_file :file
   validates_attachment :file, content_type: { content_type: %w(image/jpg image/jpeg image/png image/gif) }
 
-  before_validation :key_to_lower, :resource_or_translation
+  before_validation -> { KeyUtil.lower_key(self) }, :resource_or_translation
   after_validation :duplicate_keys
 
   private
-
-  def key_to_lower
-    self.key = key.downcase if key.present?
-  end
 
   def resource_or_translation
     raise 'Attachment must be related to Resource or Translation.' if resource_id.nil? && translation_id.nil?
