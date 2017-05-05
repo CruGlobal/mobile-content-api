@@ -26,7 +26,7 @@ class Attachment < ActiveRecord::Base
     raise 'Attachment can be related to Resource OR Translation, not both.'
   end
 
-  def duplicate_keys
+  def duplicate_keys # TODO: would be nice to enforce this in the DB
     return unless resource.present? && resource.resource_attributes.find_by(resource_id: resource_id, key: key).present?
     raise 'Key is currently used by an Attribute.'
   end

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170505140754) do
+ActiveRecord::Schema.define(version: 20170505214355) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -29,6 +29,8 @@ ActiveRecord::Schema.define(version: 20170505140754) do
     t.datetime "file_updated_at",   null: false
     t.integer  "resource_id"
     t.integer  "translation_id"
+    t.index ["key", "resource_id"], name: "index_attachments_on_key_and_resource_id", unique: true, using: :btree
+    t.index ["key", "translation_id"], name: "index_attachments_on_key_and_translation_id", unique: true, using: :btree
     t.index ["resource_id"], name: "index_attachments_on_resource_id", using: :btree
     t.index ["translation_id"], name: "index_attachments_on_translation_id", using: :btree
   end

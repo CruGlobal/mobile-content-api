@@ -22,7 +22,7 @@ class Attribute < ActiveRecord::Base
     self.is_translatable ||= false
   end
 
-  def duplicate_keys
+  def duplicate_keys # see note on same method in attachment.rb
     return unless resource.attachments.find_by(key: key).present?
     raise 'Key is current used by an Attachment.'
   end
