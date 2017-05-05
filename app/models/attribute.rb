@@ -23,7 +23,7 @@ class Attribute < ActiveRecord::Base
   end
 
   def duplicate_keys
-    return unless Attachment.find_by(resource_id: resource_id, key: key).present?
+    return unless resource.attachments.find_by(key: key).present?
     raise 'Key is current used by an Attachment.'
   end
 end

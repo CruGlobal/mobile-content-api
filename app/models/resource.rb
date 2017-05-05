@@ -6,6 +6,7 @@ class Resource < ActiveRecord::Base
   has_many :pages
   has_many :resource_attributes, class_name: 'Attribute'
   has_many :views
+  has_many :attachments
 
   validates :name, presence: true
   validates :abbreviation, presence: true, uniqueness: true
