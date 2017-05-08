@@ -3,5 +3,14 @@
 class AccessCode < ActiveRecord::Base
   has_many :auth_tokens
 
-  validates :code, presence: true
+  validates :code, presence: true, uniqueness: true
+  validates :expiration, presence: true
+
+  before_validation :set_expiration, on: :create
+
+  private
+
+  def set_expiration
+    self.expiration = DateTime.now.utc + 7.days
+  end
 end
