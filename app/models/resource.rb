@@ -19,8 +19,7 @@ class Resource < ActiveRecord::Base
   def create_new_draft(language_id)
     language = Language.find(language_id)
 
-    page_util = PageUtil.new(self, language.code)
-    page_util.push_new_onesky_translation
+    PageUtil.new(self, language.code).push_new_onesky_translation
     Translation.create(resource: self, language: language)
   end
 

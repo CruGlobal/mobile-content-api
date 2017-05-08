@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'acceptance_helper'
+require 'page_util'
 
 resource 'Resources' do
   header 'Accept', 'application/vnd.api+json'
@@ -65,5 +66,38 @@ resource 'Resources' do
       attrs = JSON.parse(response_body)['data']['attributes']
       expect(attrs['total-views']).to be(1268)
     end
+  end
+
+  put 'resources/:id' do
+    let(:id) { 1 }
+
+    parameter 'keep-existing-phrases',
+              'Query string parameter.  If false, deprecate phrases not pushed to OneSky in this update.'
+
+    it 'requires authorization', document: false do
+      header 'Authorization', nil
+      allow(PageUtil).to receive(:new).with(resource_id(1), 'en').and_return(double(push_new_onesky_translation: nil))
+
+      do_request
+
+      expect(status).to be(401)
+    end
+
+    it 'update resource in OneSky' do
+      header 'Authorization', AuthToken.create(access_code: AccessCode.find(1)).token
+      page_util = double
+      allow(page_util).to receive(:push_new_onesky_translation).with(false)
+      allow(PageUtil).to receive(:new).with(resource_id(1), 'en').and_return(page_util)
+
+      do_request 'keep-existing-phrases': false
+
+      expect(status).to be(204)
+    end
+  end
+
+  private
+
+  RSpec::Matchers.define :resource_id do |id|
+    match { |actual| (actual.id == id) }
   end
 end

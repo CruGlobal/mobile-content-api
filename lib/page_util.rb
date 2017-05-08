@@ -8,8 +8,8 @@ class PageUtil
     @language_code = language_code
   end
 
-  def push_new_onesky_translation
-    push_all_pages
+  def push_new_onesky_translation(keep_existing_phrases = true)
+    push_all_pages(keep_existing_phrases)
     self.class.delete_temp_pages
   rescue StandardError => e
     self.class.delete_temp_pages
@@ -23,7 +23,7 @@ class PageUtil
 
   private
 
-  def push_all_pages
+  def push_all_pages(keep_existing_phrases = true)
     @resource.pages.each do |page|
       write_temp_file(page)
 
@@ -35,7 +35,8 @@ class PageUtil
                       timestamp: AuthUtil.epoch_time_seconds,
                       locale: @language_code,
                       dev_hash: AuthUtil.dev_hash,
-                      multipart: true
+                      multipart: true,
+                      is_keeping_all_strings: keep_existing_phrases
     end
   end
 
