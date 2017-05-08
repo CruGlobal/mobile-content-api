@@ -4,6 +4,7 @@ class MonitorsController < ActionController::Base
   layout nil
 
   def lb
+    ActiveRecord::Migration.check_pending!
     ActiveRecord::Base.connection.select_values('select id from systems limit 1')
     render plain: File.read(Rails.public_path.join('lb.txt'))
   end
