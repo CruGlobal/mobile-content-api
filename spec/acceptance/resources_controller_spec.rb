@@ -64,7 +64,9 @@ resource 'Resources' do
 
       expect(status).to be(200)
       attrs = JSON.parse(response_body)['data']['attributes']
-      expect(attrs['attr-kgp-logo']).to_not be_nil
+      expect(attrs['attr-kgp-logo']).to(
+        match(%r{\A\/system\/attachments\/files\/000\/000\/002\/original\/wall.jpg\?\d+\z})
+      )
     end
 
     it 'has total shares', document: false do
