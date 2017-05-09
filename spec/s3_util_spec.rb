@@ -9,6 +9,7 @@ describe S3Util do
   before(:each) do
     mock_onesky
     @translation = Translation.find(godtools::Translations::English::ID)
+    allow_any_instance_of(Paperclip::Attachment).to receive(:url).and_return('public/wall.jpg')
   end
 
   it 'deletes temp files after successful request' do
@@ -53,6 +54,18 @@ describe S3Util do
 
     zip = Zip::File.open('pages/version_1.zip')
     expect(zip.get_entry(@translation.manifest_name)).to_not be_nil
+    delete_pages_dir
+  end
+
+  it 'zip file contains all attachments' do
+    mock_translation_build
+    allow(PageUtil).to receive(:delete_temp_pages)
+    mock_s3(double(upload_file: true))
+
+    push
+
+    zip = Zip::File.open('pages/version_1.zip')
+    expect(zip.get_entry('kgp_logo')).to_not be_nil
     delete_pages_dir
   end
 

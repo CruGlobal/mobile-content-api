@@ -27,14 +27,20 @@ class S3Util
     @document.root = root_node
 
     Zip::File.open("pages/#{@zip_file_name}", Zip::File::CREATE) do |zip_file|
-      @translation.resource.pages.each do |page|
-        sha_filename = write_page_to_file(page)
-        zip_file.add(sha_filename, "pages/#{sha_filename}")
+      add_pages(zip_file, root_node)
+      add_attachments(zip_file)
 
-        add_page_node(root_node, page.filename, sha_filename)
-      end
       manifest_filename = write_manifest_to_file
       zip_file.add(manifest_filename, "pages/#{manifest_filename}")
+    end
+  end
+
+  def add_pages(zip_file, root_node)
+    @translation.resource.pages.each do |page|
+      sha_filename = write_page_to_file(page)
+      zip_file.add(sha_filename, "pages/#{sha_filename}")
+
+      add_page_node(root_node, page.filename, sha_filename)
     end
   end
 
@@ -47,6 +53,22 @@ class S3Util
     temp_file.close
 
     sha_filename
+  end
+
+  def add_attachments(zip_file)
+    @translation.resource.attachments.each do |a|
+      file = Tempfile.new
+      url = a.file.url
+      string_io = open(url)
+      file.binmode
+      file.write(string_io.read)
+      file.close
+      path = file.path
+      zip_file.add(a.key, path)
+      # TODO: need to delete
+      # TODO: need to add to manifest
+      # TODO: need to sha
+    end
   end
 
   def write_manifest_to_file
