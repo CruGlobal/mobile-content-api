@@ -19,9 +19,17 @@ describe Translation do
 
     result = translation.download_translated_phrases(page_name)
 
-    values = JSON.parse(result)
-    expect(values[element_one_id]).to eq(phrase_one)
-    expect(values[element_two_id]).to eq(phrase_two)
+    expect(result[element_one_id]).to eq(phrase_one)
+    expect(result[element_two_id]).to eq(phrase_two)
+  end
+
+  it 'PhraseNotFound error is raised if there is no phrases returned from OneSky' do
+    mock_onesky(page_name, '')
+    translation = Translation.find(translations::German1::ID)
+
+    expect { translation.download_translated_phrases(page_name) }.to(
+      raise_error(Error::PhraseNotFoundError, 'No translated phrases found for this language.')
+    )
   end
 
   it 'builds a translated page from resource page' do
@@ -50,7 +58,9 @@ describe Translation do
     mock_onesky(page_name, "{ \"#{element_one_id}\":\"#{phrase_one}\" }")
     translation = Translation.find(translations::German2::ID)
 
-    expect { translation.build_translated_page(1, true) }.to raise_error('Translated phrase not found.')
+    expect { translation.build_translated_page(1, true) }.to(
+      raise_error(Error::PhraseNotFoundError, 'Translated phrase not found.')
+    )
   end
 
   it 'error not raised raised if not strict mode and translated phrase not found' do
