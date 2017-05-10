@@ -27,11 +27,13 @@ class S3Util
     @document.root = root_node
 
     pages_node = Nokogiri::XML::Node.new('pages', @document)
+    resources_node = Nokogiri::XML::Node.new('resources', @document)
     root_node.add_child(pages_node)
+    root_node.add_child(resources_node)
 
     Zip::File.open("pages/#{@zip_file_name}", Zip::File::CREATE) do |zip_file|
       add_pages(zip_file, pages_node)
-      add_attachments(zip_file)
+      add_attachments(zip_file, resources_node)
 
       manifest_filename = write_manifest_to_file
       zip_file.add(manifest_filename, "pages/#{manifest_filename}")
@@ -51,24 +53,20 @@ class S3Util
     translated_page = @translation.build_translated_page(page.id, true)
     sha_filename = "#{Digest::SHA256.hexdigest(translated_page)}.xml"
 
-    temp_file = File.open("pages/#{sha_filename}", 'w')
-    temp_file.puts(translated_page)
-    temp_file.close
+    File.write("pages/#{sha_filename}", translated_page)
 
     sha_filename
   end
 
-  def add_attachments(zip_file)
+  def add_attachments(zip_file, resources_node)
     @translation.resource.attachments.each do |a|
       string_io_bytes = open(a.file.url).read
       filename = Digest::SHA256.hexdigest(string_io_bytes)
 
-      file = File.open("pages/#{filename}", 'w').binmode
-      file.write(string_io_bytes)
-      file.close
+      File.binwrite("pages/#{filename}", string_io_bytes)
 
-      zip_file.add(filename, file.path)
-      # TODO: need to add to manifest
+      zip_file.add(filename, "pages/#{filename}")
+      add_resource_node(resources_node, a.file.original_filename, filename)
     end
   end
 
@@ -85,6 +83,13 @@ class S3Util
 
   def add_page_node(parent, filename, sha_filename)
     node = Nokogiri::XML::Node.new('page', @document)
+    node['filename'] = filename
+    node['src'] = sha_filename
+    parent.add_child(node)
+  end
+
+  def add_resource_node(parent, filename, sha_filename)
+    node = Nokogiri::XML::Node.new('resource', @document)
     node['filename'] = filename
     node['src'] = sha_filename
     parent.add_child(node)

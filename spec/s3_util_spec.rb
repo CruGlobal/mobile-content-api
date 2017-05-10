@@ -10,6 +10,7 @@ describe S3Util do
     mock_onesky
     @translation = Translation.find(godtools::Translations::English::ID)
     allow_any_instance_of(Paperclip::Attachment).to receive(:url).and_return('public/wall.jpg')
+    allow_any_instance_of(Paperclip::Attachment).to receive(:original_filename).and_return('wall.jpg')
   end
 
   it 'deletes temp files after successful request' do
@@ -85,6 +86,9 @@ describe S3Util do
     <page filename="13_FinalPage.xml" src="790a2170adb13955e67dee0261baff93cc7f045b22a35ad434435bdbdcec036a.xml"/>
     <page filename="04_ThirdPoint.xml" src="5ce1cd1be598eb31a76c120724badc90e1e9bafa4b03c33ce40f80ccff756444.xml"/>
   </pages>
+  <resources>
+    <resource filename="wall.jpg" src="073d78ef4dc421f10d2db375414660d3983f506fabdaaff0887f6ee955aa3bdd"/>
+  </resources>
 </manifest>
 ')
     delete_pages_dir
