@@ -45,7 +45,7 @@ class S3Util
       sha_filename = write_page_to_file(page)
       zip_file.add(sha_filename, "pages/#{sha_filename}")
 
-      add_page_node(pages_node, page.filename, sha_filename)
+      add_node('page', pages_node, page.filename, sha_filename)
     end
   end
 
@@ -61,12 +61,12 @@ class S3Util
   def add_attachments(zip_file, resources_node)
     @translation.resource.attachments.each do |a|
       string_io_bytes = open(a.file.url).read
-      filename = Digest::SHA256.hexdigest(string_io_bytes)
+      sha_filename = Digest::SHA256.hexdigest(string_io_bytes)
 
-      File.binwrite("pages/#{filename}", string_io_bytes)
+      File.binwrite("pages/#{sha_filename}", string_io_bytes)
 
-      zip_file.add(filename, "pages/#{filename}")
-      add_resource_node(resources_node, a.file.original_filename, filename)
+      zip_file.add(sha_filename, "pages/#{sha_filename}")
+      add_node('resource', resources_node, a.file.original_filename, sha_filename)
     end
   end
 
@@ -81,15 +81,8 @@ class S3Util
     filename
   end
 
-  def add_page_node(parent, filename, sha_filename)
-    node = Nokogiri::XML::Node.new('page', @document)
-    node['filename'] = filename
-    node['src'] = sha_filename
-    parent.add_child(node)
-  end
-
-  def add_resource_node(parent, filename, sha_filename)
-    node = Nokogiri::XML::Node.new('resource', @document)
+  def add_node(type, parent, filename, sha_filename)
+    node = Nokogiri::XML::Node.new(type, @document)
     node['filename'] = filename
     node['src'] = sha_filename
     parent.add_child(node)
