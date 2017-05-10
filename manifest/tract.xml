@@ -14,7 +14,7 @@
   background-color:        tract:page background color
                             DEFAULT( rgba(255, 255, 255, 0) ) /* transparent */
 
-  background-image:       tract:page background image.
+  background-image:       tract:page background image, references a resource listed in the manifest
                             DEFAULT( none )
 
   background-image-align: (top|bottom|left|right|center|repeat)
@@ -23,7 +23,7 @@
 <page xmlns="http://mobile-content-api.cru.org/xmlns/tract"
       xmlns:content="https://mobile-content-api.cru.org/xmlns/content"
       background-color="{{rgba}}"
-      background-image="{{image reference}}"
+      background-image="{{resource_id}}"
       background-image-align="center">
 
   <!--
