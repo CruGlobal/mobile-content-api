@@ -8,3 +8,4 @@
     * AWS_REGION
     * ONESKY_API_KEY
     * ONESKY_API_SECRET
+* You will also need to set AWS credentials.
