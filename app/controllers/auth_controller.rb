@@ -19,9 +19,6 @@ class AuthController < ApplicationController
     code = AccessCode.new
     code.errors.add(:code, message)
 
-    render json: code,
-           status: :bad_request,
-           adapter: :json_api,
-           serializer: ActiveModel::Serializer::ErrorSerializer
+    render_error(code, :bad_request)
   end
 end

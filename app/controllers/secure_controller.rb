@@ -11,10 +11,7 @@ class SecureController < ApplicationController
 
     token = AuthToken.new
     token.errors.add(:id, 'Unauthorized')
-    render json: token,
-           status: :unauthorized,
-           adapter: :json_api,
-           serializer: ActiveModel::Serializer::ErrorSerializer
+    render_error(token, :unauthorized)
   end
 
   def expired(token)
