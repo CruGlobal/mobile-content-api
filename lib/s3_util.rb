@@ -57,17 +57,15 @@ class S3Util
 
   def add_attachments(zip_file)
     @translation.resource.attachments.each do |a|
-      file = Tempfile.new
-      url = a.file.url
-      string_io = open(url)
-      file.binmode
-      file.write(string_io.read)
+      string_io_bytes = open(a.file.url).read
+      filename = Digest::SHA256.hexdigest(string_io_bytes)
+
+      file = File.open("pages/#{filename}", 'w').binmode
+      file.write(string_io_bytes)
       file.close
-      path = file.path
-      zip_file.add(a.key, path)
-      # TODO: need to delete
+
+      zip_file.add(filename, file.path)
       # TODO: need to add to manifest
-      # TODO: need to sha
     end
   end
 

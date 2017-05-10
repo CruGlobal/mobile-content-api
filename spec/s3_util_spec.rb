@@ -65,7 +65,7 @@ describe S3Util do
     push
 
     zip = Zip::File.open('pages/version_1.zip')
-    expect(zip.get_entry('kgp_logo')).to_not be_nil
+    expect(zip.get_entry('073d78ef4dc421f10d2db375414660d3983f506fabdaaff0887f6ee955aa3bdd')).to_not be_nil
     delete_pages_dir
   end
 
