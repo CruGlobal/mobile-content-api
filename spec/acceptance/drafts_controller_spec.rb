@@ -13,6 +13,17 @@ resource 'Drafts' do
     AuthToken.create(access_code: AccessCode.find(1)).token
   end
 
+  get 'drafts/' do
+    header 'Authorization', :authorization
+
+    it 'get all drafts ' do
+      do_request
+
+      expect(status).to be(200)
+      expect(JSON.parse(response_body)['data'].size).to be(2)
+    end
+  end
+
   get 'drafts/:id' do
     let(:id) { godtools::Translations::German2::ID }
 
