@@ -49,4 +49,12 @@
     <page id="{{event_id}}" src="{{page_xml_uri}}"/>
     <page id="{{event_id}}" src="{{page_xml_uri}}"/>
   </pages>
+
+  <!--
+    Resources - REQUIRED
+      list of all resources used within this tract
+  -->
+  <resources>
+    <resource id="{{id_or_filename}}" src="{{sha256.jpg}}" />
+  </resources>
 </manifest>
