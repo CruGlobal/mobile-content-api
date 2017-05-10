@@ -27,7 +27,7 @@ class Translation < ActiveRecord::Base
 
   def build_translated_page(page_id, strict)
     page = Page.find(page_id)
-    phrases = JSON.parse(download_translated_phrases(page.filename))
+    phrases = download_translated_phrases(page.filename)
 
     xml = page_structure(page_id)
     xml.xpath('//content:text[@i18n-id]').each do |node|
@@ -43,12 +43,14 @@ class Translation < ActiveRecord::Base
     xml.to_s
   end
 
-  # TODO: parse JSON here?
   def download_translated_phrases(page_filename)
-    RestClient.get "https://platform.api.onesky.io/1/projects/#{resource.onesky_project_id}/translations",
-                   params: { api_key: ENV['ONESKY_API_KEY'], timestamp: AuthUtil.epoch_time_seconds,
-                             dev_hash: AuthUtil.dev_hash, locale: language.code,
-                             source_file_name: page_filename, export_file_name: page_filename }
+    response = RestClient.get "https://platform.api.onesky.io/1/projects/#{resource.onesky_project_id}/translations",
+                              params: { api_key: ENV['ONESKY_API_KEY'], timestamp: AuthUtil.epoch_time_seconds,
+                                        dev_hash: AuthUtil.dev_hash, locale: language.code,
+                                        source_file_name: page_filename, export_file_name: page_filename }
+
+    raise Error::PhraseNotFoundError, 'No translated phrases found for this language.' if response.code == 204
+    JSON.parse(response.body)
   end
 
   def update_draft(params)
@@ -74,7 +76,7 @@ class Translation < ActiveRecord::Base
   def push_published_to_s3
     return unless is_published
 
-    p = JSON.parse(download_translated_phrases('name_description.xml'))
+    p = download_translated_phrases('name_description.xml')
     self.translated_name = p['name']
     self.translated_description = p['description']
 
