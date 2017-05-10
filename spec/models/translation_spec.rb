@@ -24,7 +24,7 @@ describe Translation do
   end
 
   it 'PhraseNotFound error is raised if there is no phrases returned from OneSky' do
-    mock_onesky(page_name, '')
+    mock_onesky(page_name, nil, 204)
     translation = Translation.find(translations::German1::ID)
 
     expect { translation.download_translated_phrases(page_name) }.to(
@@ -131,10 +131,10 @@ describe Translation do
 
   private
 
-  def mock_onesky(filename, result)
+  def mock_onesky(filename, body, code = 200)
     allow(RestClient).to(
       receive(:get).with(any_args, hash_including(params: hash_including(source_file_name: filename)))
-        .and_return(result)
+        .and_return(double(body: body, code: code))
     )
   end
 end

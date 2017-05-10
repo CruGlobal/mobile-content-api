@@ -48,9 +48,9 @@ class Translation < ActiveRecord::Base
                               params: { api_key: ENV['ONESKY_API_KEY'], timestamp: AuthUtil.epoch_time_seconds,
                                         dev_hash: AuthUtil.dev_hash, locale: language.code,
                                         source_file_name: page_filename, export_file_name: page_filename }
-    return JSON.parse(response)
-  rescue JSON::ParserError
-    raise Error::PhraseNotFoundError, 'No translated phrases found for this language.'
+
+    raise Error::PhraseNotFoundError, 'No translated phrases found for this language.' if response.code == 204
+    JSON.parse(response.body)
   end
 
   def update_draft(params)
