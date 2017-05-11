@@ -13,6 +13,17 @@ resource 'Drafts' do
     AuthToken.create(access_code: AccessCode.find(1)).token
   end
 
+  get 'drafts/' do
+    header 'Authorization', :authorization
+
+    it 'get all drafts ' do
+      do_request
+
+      expect(status).to be(200)
+      expect(JSON.parse(response_body)['data'].size).to be(2)
+    end
+  end
+
   get 'drafts/:id' do
     let(:id) { godtools::Translations::German2::ID }
 
@@ -53,22 +64,24 @@ resource 'Drafts' do
     it 'create draft with new resource/language combination' do
       language_id = languages::Slovak::ID
       allow(Translation).to receive(:latest_translation).with(resource_id, language_id).and_return(nil)
-      allow(resource).to receive(:create_new_draft).with(language_id)
+      allow(resource).to receive(:create_new_draft).with(language_id).and_return(Translation.new(id: 100))
 
       do_request data: { type: :translation, attributes: { resource_id: resource_id, language_id: language_id } }
 
       expect(status).to be(204)
+      expect(response_headers['Location']).to eq('drafts/100')
     end
 
     it 'create draft with existing resource/language combination' do
       existing_translation = double(is_published: true)
       language_id = languages::Slovak::ID
       allow(Translation).to receive(:latest_translation).with(resource_id, language_id).and_return(existing_translation)
-      allow(existing_translation).to receive(:create_new_version)
+      allow(existing_translation).to receive(:create_new_version).and_return(Translation.new(id: 101))
 
       do_request data: { type: :translation, attributes: { resource_id: resource_id, language_id: language_id } }
 
       expect(status).to be(204)
+      expect(response_headers['Location']).to eq('drafts/101')
     end
 
     it 'create draft with resource/language combination for an existing draft' do

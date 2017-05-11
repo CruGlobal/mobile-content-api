@@ -17,6 +17,7 @@ class Translation < ActiveRecord::Base
   before_validation :set_defaults, on: :create
 
   def create_new_version
+    raise Error::MultipleDraftsError unless is_published
     Translation.create(resource: resource, language: language, version: version + 1)
   end
 

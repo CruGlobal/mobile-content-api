@@ -11,6 +11,7 @@ resource 'Translations' do
       do_request
 
       expect(status).to be(200)
+      expect(JSON.parse(response_body)['data'].size).to be(7)
     end
   end
 

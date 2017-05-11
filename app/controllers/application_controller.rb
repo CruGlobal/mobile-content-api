@@ -11,7 +11,7 @@ class ApplicationController < ActionController::Base
     super
   end
 
-  protected
+  private
 
   def authorize!
     authorization = AuthToken.find_by(token: request.headers['Authorization'])
@@ -19,13 +19,12 @@ class ApplicationController < ActionController::Base
 
     authorization = AuthToken.new
     authorization.errors.add(:id, 'Unauthorized')
-    render json: authorization,
-           status: :unauthorized,
-           adapter: :json_api,
-           serializer: ActiveModel::Serializer::ErrorSerializer
+    render_error(authorization, :unauthorized)
   end
 
-  private
+  def render_error(json, status)
+    render json: json, status: status, adapter: :json_api, serializer: ActiveModel::Serializer::ErrorSerializer
+  end
 
   def decode_json_api
     return if request.headers['REQUEST_METHOD'] == 'GET' ||
