@@ -13,6 +13,15 @@ module MobileContentApi
     ActiveModelSerializers.config.adapter = :json_api
     FileUtils.mkdir_p('pages')
 
+    config.paperclip_defaults = {
+      storage: :s3,
+      s3_protocol: 'https',
+      s3_credentials: {
+        bucket: ENV['MOBILE_CONTENT_API_BUCKET'],
+        s3_region: ENV['AWS_REGION']
+      }
+    }
+
     # Settings in config/environments/* take precedence over those specified here.
     # Application configuration should go into files in config/initializers
     # -- all .rb files in that directory are automatically loaded.

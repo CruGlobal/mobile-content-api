@@ -39,7 +39,7 @@ resource 'Resources' do
       do_request
 
       expect(status).to be(200)
-      expect(JSON.parse(response_body)['data']['attributes'].size).to be(7)
+      expect(JSON.parse(response_body)['data']['attributes'].size).to be(8)
       expect(JSON.parse(response_body)['included']).to be(nil)
     end
 
@@ -57,6 +57,16 @@ resource 'Resources' do
       attrs = JSON.parse(response_body)['data']['attributes']
       expect(attrs['attr-banner-image']).to eq('this is a location')
       expect(attrs['attr-translate-me']).to eq('base language')
+    end
+
+    it 'has custom attachments', document: false do
+      do_request
+
+      expect(status).to be(200)
+      attrs = JSON.parse(response_body)['data']['attributes']
+      expect(attrs['attr-kgp-logo']).to(
+        match(%r{\A\/system\/attachments\/files\/000\/000\/002\/original\/wall.jpg\?\d+\z})
+      )
     end
 
     it 'has total shares', document: false do

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170504142441) do
+ActiveRecord::Schema.define(version: 20170505214355) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -19,6 +19,20 @@ ActiveRecord::Schema.define(version: 20170504142441) do
     t.string   "code",                                       null: false
     t.datetime "expiration", default: '2016-01-01 01:00:00', null: false
     t.index ["code"], name: "index_access_codes_on_code", unique: true, using: :btree
+  end
+
+  create_table "attachments", force: :cascade do |t|
+    t.string   "key",               null: false
+    t.string   "file_file_name",    null: false
+    t.string   "file_content_type", null: false
+    t.integer  "file_file_size",    null: false
+    t.datetime "file_updated_at",   null: false
+    t.integer  "resource_id"
+    t.integer  "translation_id"
+    t.index ["key", "resource_id"], name: "index_attachments_on_key_and_resource_id", unique: true, using: :btree
+    t.index ["key", "translation_id"], name: "index_attachments_on_key_and_translation_id", unique: true, using: :btree
+    t.index ["resource_id"], name: "index_attachments_on_resource_id", using: :btree
+    t.index ["translation_id"], name: "index_attachments_on_translation_id", using: :btree
   end
 
   create_table "attributes", force: :cascade do |t|

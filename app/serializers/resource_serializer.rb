@@ -12,7 +12,8 @@ class ResourceSerializer < ActiveModel::Serializer
 
   def attributes(*args)
     hash = super
-    object.resource_attributes.each { |r| hash["attr_#{r.key}"] = r.value }
+    object.resource_attributes.each { |attribute| hash["attr_#{attribute.key}"] = attribute.value }
+    object.attachments.each { |attachment| hash["attr_#{attachment.key}"] = attachment.file.url }
     hash
   end
 end

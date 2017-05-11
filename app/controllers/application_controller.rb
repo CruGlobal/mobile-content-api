@@ -3,6 +3,8 @@
 class ApplicationController < ActionController::Base
   before_action :decode_json_api
 
+  rescue_from ActiveRecord::RecordNotFound, with: :render_not_found
+
   def render(**args)
     if args.key? :json
       response.headers['Content-Type'] = 'application/vnd.api+json'
@@ -12,6 +14,12 @@ class ApplicationController < ActionController::Base
   end
 
   private
+
+  def render_not_found(_exception)
+    a = NotFoundError.new
+    a.errors.add(:id, 'Not found.')
+    render_error(a, :not_found)
+  end
 
   def authorize!
     authorization = AuthToken.find_by(token: request.headers['Authorization'])
@@ -30,5 +38,9 @@ class ApplicationController < ActionController::Base
     return if request.headers['REQUEST_METHOD'] == 'GET' ||
               request.headers['Content-Type'] != 'application/vnd.api+json'
     params.merge!(ActiveSupport::JSON.decode(request.body.string))
+  end
+
+  class NotFoundError
+    include ActiveModel::Model
   end
 end
