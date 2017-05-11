@@ -102,6 +102,7 @@ resource 'Resources' do
       do_request 'keep-existing-phrases': false
 
       expect(status).to be(204)
+      expect(response_body).to be_empty
     end
   end
 

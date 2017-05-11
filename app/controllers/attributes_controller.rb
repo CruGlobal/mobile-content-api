@@ -16,8 +16,8 @@ class AttributesController < SecureController
   private
 
   def create_attribute
-    attribute = Attribute.create(params[:data][:attributes].permit(permitted_params))
-    head :created, location: "attributes/#{attribute.id}"
+    Attribute.create(params[:data][:attributes].permit(permitted_params))
+    head :no_content # TODO: location header?
   end
 
   def update_attr

@@ -3,6 +3,6 @@
 class ViewsController < SecureController
   def create
     View.create!(params[:data][:attributes].permit(:quantity, :resource_id))
-    head :created
+    head :no_content
   end
 end

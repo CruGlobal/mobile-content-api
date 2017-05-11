@@ -33,8 +33,8 @@ resource 'TranslatedAttributes' do
                                        translation_id: godtools::Translations::German1::ID,
                                        value: 'translated attr' } }
 
-      expect(status).to be(201)
-      expect(response_headers['Location']).to eq('translated_attributes/100')
+      expect(status).to be(204)
+      expect(response_body).to be_empty
     end
   end
 
@@ -54,6 +54,7 @@ resource 'TranslatedAttributes' do
                                        value: 'updated translation' } }
 
       expect(status).to be(204)
+      expect(response_body).to be_empty
     end
   end
 
@@ -70,6 +71,7 @@ resource 'TranslatedAttributes' do
       do_request
 
       expect(status).to be(204)
+      expect(response_body).to be_empty
     end
   end
 end

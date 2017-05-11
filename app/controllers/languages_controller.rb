@@ -13,7 +13,8 @@ class LanguagesController < ApplicationController
 
   def create
     language = Language.create!(params.require(:data).require(:attributes).permit([:name, :code]))
-    head :created, location: "languages/#{language.id}"
+    response.headers['Location'] = "languages/#{language.id}"
+    render json: language, status: :created
   end
 
   def destroy

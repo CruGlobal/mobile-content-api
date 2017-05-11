@@ -16,8 +16,8 @@ class TranslatedAttributesController < SecureController
   private
 
   def create_translated_attr
-    attribute = TranslatedAttribute.create(params[:data][:attributes].permit(permitted_params))
-    head :created, location: "translated_attributes/#{attribute.id}"
+    TranslatedAttribute.create(params[:data][:attributes].permit(permitted_params))
+    head :no_content # TODO: location header?
   end
 
   def update_translated_attr

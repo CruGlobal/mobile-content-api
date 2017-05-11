@@ -68,7 +68,8 @@ resource 'Drafts' do
 
       do_request data: { type: :translation, attributes: { resource_id: resource_id, language_id: language_id } }
 
-      expect(status).to be(204)
+      expect(status).to be(201)
+      expect(response_body['data']).to_not be_nil
       expect(response_headers['Location']).to eq('drafts/100')
     end
 
@@ -80,7 +81,8 @@ resource 'Drafts' do
 
       do_request data: { type: :translation, attributes: { resource_id: resource_id, language_id: language_id } }
 
-      expect(status).to be(204)
+      expect(status).to be(201)
+      expect(response_body['data']).to_not be_nil
       expect(response_headers['Location']).to eq('drafts/101')
     end
 
@@ -102,12 +104,15 @@ resource 'Drafts' do
     header 'Authorization', :authorization
 
     it 'update draft' do
-      translation = double(update_draft: true)
+      translation = Translation.find(3)
       allow(Translation).to receive(:find).with(godtools::Translations::German2::ID.to_s).and_return(translation)
+      params = { is_published: true }
+      allow(translation).to receive(:update_draft).with(ActionController::Parameters.new(params))
 
-      do_request data: { type: :translation, attributes: { is_published: true } }
+      do_request data: { type: :translation, attributes: params }
 
-      expect(status).to be(204)
+      expect(status).to be(200)
+      expect(response_body['data']).to_not be_nil
     end
 
     it 'update draft without translating all phrases' do

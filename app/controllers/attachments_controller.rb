@@ -3,7 +3,7 @@
 class AttachmentsController < SecureController
   def create
     Attachment.create!(params.permit(permitted_params))
-    head :created
+    head :no_content # TODO: location header?
   end
 
   def update
