@@ -21,7 +21,7 @@ class Resource < ActiveRecord::Base
     language = Language.find(language_id)
 
     PageUtil.new(self, language.code).push_new_onesky_translation
-    Translation.create(resource: self, language: language)
+    Translation.create!(resource: self, language: language)
   end
 
   # Returns the latest translation for each language.  In more detailed terms, the inner query returns the highest

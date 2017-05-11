@@ -18,7 +18,7 @@ class Translation < ActiveRecord::Base
 
   def create_new_version
     raise Error::MultipleDraftsError unless is_published
-    Translation.create(resource: resource, language: language, version: version + 1)
+    Translation.create!(resource: resource, language: language, version: version + 1)
   end
 
   def s3_uri
@@ -55,7 +55,7 @@ class Translation < ActiveRecord::Base
   end
 
   def update_draft(params)
-    update(params.permit(:is_published))
+    update!(params.permit(:is_published))
   end
 
   def self.latest_translation(resource_id, language_id)

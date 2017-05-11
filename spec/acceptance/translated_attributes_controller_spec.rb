@@ -46,7 +46,7 @@ resource 'TranslatedAttributes' do
     it 'update a Translated Attribute' do
       attribute = double
       allow(TranslatedAttribute).to receive(:find).and_return(attribute)
-      allow(attribute).to receive(:update)
+      allow(attribute).to receive(:update!)
 
       do_request data: { type: :translated_attribute,
                          attributes: { attribute_id: godtools::Attributes::TranslatableAttr::ID,
@@ -66,7 +66,7 @@ resource 'TranslatedAttributes' do
     it 'delete a Translated Attribute' do
       attribute = double
       allow(TranslatedAttribute).to receive(:find).and_return(attribute)
-      allow(attribute).to receive(:destroy)
+      allow(attribute).to receive(:destroy!)
 
       do_request
 

@@ -7,12 +7,12 @@ class AttachmentsController < SecureController
   end
 
   def update
-    load_attachment.update(params.permit(permitted_params))
+    load_attachment.update!(params.permit(permitted_params))
     head :no_content
   end
 
   def destroy
-    load_attachment.destroy
+    load_attachment.destroy!
     head :no_content
   end
 

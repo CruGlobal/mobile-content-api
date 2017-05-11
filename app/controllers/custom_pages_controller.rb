@@ -9,7 +9,7 @@ class CustomPagesController < SecureController
 
   def destroy
     custom_page = CustomPage.find(params[:id])
-    custom_page.destroy
+    custom_page.destroy!
     head :no_content
   end
 
@@ -23,7 +23,7 @@ class CustomPagesController < SecureController
 
   def update_custom_page
     existing = CustomPage.find_by(translation_id: attrs[:translation_id], page_id: attrs[:page_id])
-    existing.update(attrs.permit(:structure))
+    existing.update!(attrs.permit(:structure))
     render json: existing, status: :ok
   end
 
