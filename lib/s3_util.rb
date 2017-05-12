@@ -59,7 +59,7 @@ class S3Util
   end
 
   def add_attachments(zip_file, resources_node)
-    @translation.resource.attachments.each do |a|
+    @translation.resource.attachments.where(is_zipped: true).each do |a|
       string_io_bytes = open(a.file.url).read
       sha_filename = Digest::SHA256.hexdigest(string_io_bytes)
 

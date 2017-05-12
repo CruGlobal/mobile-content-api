@@ -128,4 +128,5 @@ View.find_or_create_by!(quantity: 718, resource: kgp)
 
 test_file = Rack::Test::UploadedFile.new('public/wall.jpg', 'image/png')
 Attachment.create!(key: 'Banner_Image', resource: satisfied, file: test_file)
-Attachment.create!(key: 'kgp_logo', resource: kgp, file: test_file)
+Attachment.create!(key: 'kgp_logo', resource: kgp, file: test_file, is_zipped: false)
+Attachment.create!(key: 'page_one_image', resource: kgp, file: test_file, is_zipped: true)

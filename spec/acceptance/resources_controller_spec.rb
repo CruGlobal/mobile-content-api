@@ -39,7 +39,7 @@ resource 'Resources' do
       do_request
 
       expect(status).to be(200)
-      expect(JSON.parse(response_body)['data']['attributes'].size).to be(8)
+      expect(JSON.parse(response_body)['data']['attributes'].size).to be(9)
       expect(JSON.parse(response_body)['included']).to be(nil)
     end
 
