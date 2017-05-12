@@ -7,7 +7,7 @@ describe AccessCode do
     time = DateTime.current
     allow(DateTime).to receive(:now).and_return(time)
 
-    result = AccessCode.create(code: 111_111)
+    result = AccessCode.create!(code: 111_111)
 
     expect(result.expiration).to eq(time + 7.days)
   end

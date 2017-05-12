@@ -9,7 +9,7 @@ resource 'TranslatedAttributes' do
   let(:raw_post) { params.to_json }
   let(:godtools) { TestConstants::GodTools }
   let(:authorization) do
-    AuthToken.create(access_code: AccessCode.find(1)).token
+    AuthToken.create!(access_code: AccessCode.find(1)).token
   end
 
   post 'translated_attributes' do
@@ -33,8 +33,9 @@ resource 'TranslatedAttributes' do
                                        translation_id: godtools::Translations::German1::ID,
                                        value: 'translated attr' } }
 
-      expect(status).to be(201)
-      expect(response_headers['Location']).to eq('translated_attributes/100')
+      expect(status).to be(204)
+      expect(response_headers['Location']).to match(%r{translated_attributes\/\d+})
+      expect(response_body).to be_empty
     end
   end
 
@@ -46,7 +47,7 @@ resource 'TranslatedAttributes' do
     it 'update a Translated Attribute' do
       attribute = double
       allow(TranslatedAttribute).to receive(:find).and_return(attribute)
-      allow(attribute).to receive(:update)
+      allow(attribute).to receive(:update!)
 
       do_request data: { type: :translated_attribute,
                          attributes: { attribute_id: godtools::Attributes::TranslatableAttr::ID,
@@ -54,6 +55,7 @@ resource 'TranslatedAttributes' do
                                        value: 'updated translation' } }
 
       expect(status).to be(204)
+      expect(response_body).to be_empty
     end
   end
 
@@ -65,11 +67,12 @@ resource 'TranslatedAttributes' do
     it 'delete a Translated Attribute' do
       attribute = double
       allow(TranslatedAttribute).to receive(:find).and_return(attribute)
-      allow(attribute).to receive(:destroy)
+      allow(attribute).to receive(:destroy!)
 
       do_request
 
       expect(status).to be(204)
+      expect(response_body).to be_empty
     end
   end
 end

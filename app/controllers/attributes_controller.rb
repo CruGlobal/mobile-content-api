@@ -16,17 +16,17 @@ class AttributesController < SecureController
   private
 
   def create_attribute
-    attribute = Attribute.create(params[:data][:attributes].permit(permitted_params))
-    head :created, location: "attributes/#{attribute.id}"
+    a = Attribute.create!(params[:data][:attributes].permit(permitted_params))
+    head :no_content, location: "attributes/#{a.id}"
   end
 
   def update_attr
-    load_attribute.update(params[:data][:attributes].permit(permitted_params))
+    load_attribute.update!(params[:data][:attributes].permit(permitted_params))
     head :no_content
   end
 
   def destroy_attribute
-    load_attribute.destroy
+    load_attribute.destroy!
     head :no_content
   end
 

@@ -3,7 +3,11 @@
 class ApplicationController < ActionController::Base
   before_action :decode_json_api
 
-  rescue_from ActiveRecord::RecordNotFound, with: :render_not_found
+  rescue_from ActiveRecord::RecordNotFound do |_exception|
+    a = NotFoundError.new
+    a.errors.add(:id, 'Not found.')
+    render_error(a, :not_found)
+  end
 
   def render(**args)
     if args.key? :json
@@ -14,12 +18,6 @@ class ApplicationController < ActionController::Base
   end
 
   private
-
-  def render_not_found(_exception)
-    a = NotFoundError.new
-    a.errors.add(:id, 'Not found.')
-    render_error(a, :not_found)
-  end
 
   def authorize!
     authorization = AuthToken.find_by(token: request.headers['Authorization'])

@@ -21,11 +21,12 @@ resource 'Pages' do
     end
 
     it 'edit page' do
-      header 'Authorization', AuthToken.create(access_code: AccessCode.find(1)).token
+      header 'Authorization', AuthToken.create!(access_code: AccessCode.find(1)).token
 
       do_request data: { type: :page, attributes: { structure: :updated_structure } }
 
-      expect(status).to eq(204)
+      expect(status).to eq(200)
+      expect(response_body['data']).to_not be_nil
     end
   end
 end

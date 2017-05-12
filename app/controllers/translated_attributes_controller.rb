@@ -16,17 +16,17 @@ class TranslatedAttributesController < SecureController
   private
 
   def create_translated_attr
-    attribute = TranslatedAttribute.create(params[:data][:attributes].permit(permitted_params))
-    head :created, location: "translated_attributes/#{attribute.id}"
+    a = TranslatedAttribute.create!(params[:data][:attributes].permit(permitted_params))
+    head :no_content, location: "translated_attributes/#{a.id}"
   end
 
   def update_translated_attr
-    load_translated_attr.update(params[:data][:attributes].permit(permitted_params))
+    load_translated_attr.update!(params[:data][:attributes].permit(permitted_params))
     head :no_content
   end
 
   def destroy_translated_attr
-    load_translated_attr.destroy
+    load_translated_attr.destroy!
     head :no_content
   end
 

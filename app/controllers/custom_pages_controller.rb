@@ -2,24 +2,32 @@
 
 class CustomPagesController < SecureController
   def create
-    head(upsert_custom_page)
+    create_custom_page
+  rescue ActiveRecord::RecordInvalid
+    update_custom_page
   end
 
   def destroy
     custom_page = CustomPage.find(params[:id])
-    custom_page.destroy
+    custom_page.destroy!
+    head :no_content
   end
 
   private
 
-  def upsert_custom_page
-    attrs = params[:data][:attributes]
+  def create_custom_page
+    created = CustomPage.create!(attrs.permit(:translation_id, :page_id, :structure))
+    response.headers['Location'] = "custom_pages/#{created.id}"
+    render json: created, status: :created
+  end
 
-    CustomPage.create!(attrs.permit(:translation_id, :page_id, :structure))
-    return :created
-  rescue ActiveRecord::RecordInvalid
+  def update_custom_page
     existing = CustomPage.find_by(translation_id: attrs[:translation_id], page_id: attrs[:page_id])
-    existing.update(attrs.permit(:structure))
-    return :no_content
+    existing.update!(attrs.permit(:structure))
+    render json: existing, status: :ok
+  end
+
+  def attrs
+    params[:data][:attributes]
   end
 end

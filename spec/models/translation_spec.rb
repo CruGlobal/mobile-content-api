@@ -122,7 +122,7 @@ describe Translation do
       s3_util = double.as_null_object
       allow(S3Util).to receive(:new).and_return(s3_util)
 
-      translation.update(is_published: true)
+      translation.update!(is_published: true)
 
       expect(translation.translated_name).to eq('kgp german')
       expect(translation.translated_description).to eq('german description')

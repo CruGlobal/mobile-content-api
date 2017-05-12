@@ -2,17 +2,17 @@
 
 class AttachmentsController < SecureController
   def create
-    Attachment.create!(params.permit(permitted_params))
-    head :created
+    a = Attachment.create!(params.permit(permitted_params))
+    head :no_content, location: "attachments/#{a.id}"
   end
 
   def update
-    load_attachment.update(params.permit(permitted_params))
+    load_attachment.update!(params.permit(permitted_params))
     head :no_content
   end
 
   def destroy
-    load_attachment.destroy
+    load_attachment.destroy!
     head :no_content
   end
 

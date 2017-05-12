@@ -7,7 +7,7 @@ resource 'Languages' do
   header 'Content-Type', 'application/vnd.api+json'
 
   let(:raw_post) { params.to_json }
-  let(:authorization) { AuthToken.create(access_code: AccessCode.find(1)).token }
+  let(:authorization) { AuthToken.create!(access_code: AccessCode.find(1)).token }
 
   get 'languages' do
     it 'get all languages' do
@@ -43,6 +43,7 @@ resource 'Languages' do
 
       expect(status).to be(201)
       expect(response_headers['Location']).to match(%r{languages\/\d+})
+      expect(response_body['data']).to_not be_nil
     end
   end
 
@@ -63,6 +64,7 @@ resource 'Languages' do
       do_request
 
       expect(status).to be(204)
+      expect(response_body).to be_empty
     end
   end
 end

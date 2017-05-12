@@ -10,7 +10,7 @@ resource 'CustomPages' do
   let(:pages) { TestConstants::GodTools::Pages }
   let(:german_2) { TestConstants::GodTools::Translations::German2::ID }
   let(:authorization) do
-    AuthToken.create(access_code: AccessCode.find(1)).token
+    AuthToken.create!(access_code: AccessCode.find(1)).token
   end
 
   post 'custom_pages/' do
@@ -33,6 +33,8 @@ resource 'CustomPages' do
                                        structure: '<custom>This is some custom xml for one translation</custom>' } }
 
       expect(status).to be(201)
+      expect(response_headers['Location']).to match(%r{custom_pages\/\d+})
+      expect(response_body['data']).to_not be_nil
     end
 
     it 'update a custom page' do
@@ -43,7 +45,8 @@ resource 'CustomPages' do
                                        page_id: pages::Page13::ID,
                                        structure: '<custom>This is some custom xml for one translation</custom>' } }
 
-      expect(status).to be(204)
+      expect(status).to be(200)
+      expect(response_body['data']).to_not be_nil
     end
   end
 
@@ -55,6 +58,7 @@ resource 'CustomPages' do
       do_request
 
       expect(status).to be(204)
+      expect(response_body).to be_empty
     end
   end
 end

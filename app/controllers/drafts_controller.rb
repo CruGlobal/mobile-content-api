@@ -37,7 +37,8 @@ class DraftsController < SecureController
     existing_translation = Translation.latest_translation(resource.id, language_id)
 
     d = existing_translation.nil? ? resource.create_new_draft(language_id) : existing_translation.create_new_version
-    head :no_content, location: "drafts/#{d.id}"
+    response.headers['Location'] = "drafts/#{d.id}"
+    render json: d, status: :created
   end
 
   def load_resource
@@ -51,7 +52,7 @@ class DraftsController < SecureController
   def edit
     translation = load_translation
     translation.update_draft(params[:data][:attributes])
-    head :no_content
+    render json: translation, status: :ok
   rescue Error::PhraseNotFoundError => e
     translation.errors.add(:id, e.message)
     render_error(translation, :conflict)

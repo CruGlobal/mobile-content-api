@@ -94,7 +94,7 @@ resource 'Resources' do
     end
 
     it 'update resource in OneSky' do
-      header 'Authorization', AuthToken.create(access_code: AccessCode.find(1)).token
+      header 'Authorization', AuthToken.create!(access_code: AccessCode.find(1)).token
       page_util = double
       allow(page_util).to receive(:push_new_onesky_translation).with(false)
       allow(PageUtil).to receive(:new).with(resource_id(1), 'en').and_return(page_util)
@@ -102,6 +102,7 @@ resource 'Resources' do
       do_request 'keep-existing-phrases': false
 
       expect(status).to be(204)
+      expect(response_body).to be_empty
     end
   end
 
