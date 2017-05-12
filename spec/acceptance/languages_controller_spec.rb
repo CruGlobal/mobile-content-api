@@ -47,7 +47,7 @@ resource 'Languages' do
   end
 
   delete 'languages/:id' do
-    let(:id) { 1 }
+    let(:id) { 3 }
 
     it 'requires authorization', document: false do
       header 'Authorization', nil

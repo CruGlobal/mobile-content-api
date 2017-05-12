@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170505214355) do
+ActiveRecord::Schema.define(version: 20170511202920) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -125,4 +125,18 @@ ActiveRecord::Schema.define(version: 20170505214355) do
     t.index ["resource_id"], name: "index_views_on_resource_id", using: :btree
   end
 
+  add_foreign_key "attachments", "resources"
+  add_foreign_key "attachments", "translations"
+  add_foreign_key "attributes", "resources"
+  add_foreign_key "auth_tokens", "access_codes"
+  add_foreign_key "custom_pages", "pages"
+  add_foreign_key "custom_pages", "translations"
+  add_foreign_key "pages", "resources"
+  add_foreign_key "resources", "systems"
+  add_foreign_key "translated_attributes", "attributes"
+  add_foreign_key "translated_attributes", "translations"
+  add_foreign_key "translation_elements", "pages"
+  add_foreign_key "translations", "languages"
+  add_foreign_key "translations", "resources"
+  add_foreign_key "views", "resources"
 end
