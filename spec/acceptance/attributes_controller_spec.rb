@@ -26,6 +26,7 @@ resource 'Attributes' do
       do_request data: { type: :attribute, attributes: { key: 'foo', value: 'bar', resource_id: godtools::ID } }
 
       expect(status).to be(204)
+      expect(response_headers['Location']).to match(%r{attributes\/\d+})
       expect(response_body).to be_empty
     end
   end

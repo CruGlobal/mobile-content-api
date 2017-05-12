@@ -21,6 +21,7 @@ resource 'Attachments' do
       do_request file: test_file, key: 'test_image', multipart: true, resource_id: 1
 
       expect(status).to be(204)
+      expect(response_headers['Location']).to match(%r{attachments\/\d+})
       expect(response_body).to be_empty
     end
   end

@@ -34,6 +34,7 @@ resource 'TranslatedAttributes' do
                                        value: 'translated attr' } }
 
       expect(status).to be(204)
+      expect(response_headers['Location']).to match(%r{translated_attributes\/\d+})
       expect(response_body).to be_empty
     end
   end

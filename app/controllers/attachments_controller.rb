@@ -2,8 +2,8 @@
 
 class AttachmentsController < SecureController
   def create
-    Attachment.create!(params.permit(permitted_params))
-    head :no_content # TODO: location header?
+    a = Attachment.create!(params.permit(permitted_params))
+    head :no_content, location: "attachments/#{a.id}"
   end
 
   def update
