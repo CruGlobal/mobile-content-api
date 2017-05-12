@@ -1,20 +1,17 @@
 # frozen_string_literal: true
 
-require 'key_util'
-
 class Attribute < ActiveRecord::Base
   belongs_to :resource
 
   has_many :translated_attributes
 
-  validates :key, presence: true, format: { with: KeyUtil.format }
+  validates :key, presence: true, format: { with: /\A[[:alpha:]]+(_[[:alpha:]]+)*\z/ }
   validates :value, presence: true
   validates :resource, presence: true, uniqueness: { scope: :key }
   validates :is_translatable, inclusion: { in: [true, false] }
 
-  before_validation -> { KeyUtil.lower_key(self) }
+  before_validation :lower_key
   before_validation :set_defaults, on: :create
-  after_validation :duplicate_keys
 
   private
 
@@ -22,8 +19,7 @@ class Attribute < ActiveRecord::Base
     self.is_translatable ||= false
   end
 
-  def duplicate_keys # see note on same method in attachment.rb
-    return unless resource.attachments.find_by(key: key).present?
-    raise 'Key is current used by an Attachment.'
+  def lower_key
+    self.key = key.downcase if key.present?
   end
 end

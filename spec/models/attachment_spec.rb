@@ -9,15 +9,10 @@ describe Attachment do
     allow_any_instance_of(Paperclip::Attachment).to receive(:save).and_return(true)
   end
 
-  it 'may not have the same key and resource id as an Attribute' do
-    expect { Attachment.create!(key: 'banner_image', file: test_file, resource_id: 1) }
-      .to(raise_error('Key is currently used by an Attribute.'))
-  end
+  it 'is not zipped unless specified' do
+    result = Attachment.create(resource_id: 1, file: test_file)
 
-  it 'may not duplicate key and resource id and is not case sensitive' do
-    result = Attachment.create(key: 'banner_IMAge', file: test_file, resource_id: 2)
-
-    expect(result).to_not be_valid
-    expect(result.errors[:resource]).to include 'has already been taken'
+    expect(result).to be_valid
+    expect(result.is_zipped).to be_falsey
   end
 end

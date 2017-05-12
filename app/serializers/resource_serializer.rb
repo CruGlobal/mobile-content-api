@@ -9,11 +9,11 @@ class ResourceSerializer < ActiveModel::Serializer
   has_many :translations
   has_many :latest_translations, key: 'latest-translations'
   has_many :pages
+  has_many :attachments
 
   def attributes(*args)
     hash = super
     object.resource_attributes.each { |attribute| hash["attr_#{attribute.key}"] = attribute.value }
-    object.attachments.each { |attachment| hash["attr_#{attachment.key}"] = attachment.file.url }
     hash
   end
 end

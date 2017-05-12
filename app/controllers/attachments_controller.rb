@@ -23,6 +23,6 @@ class AttachmentsController < SecureController
   end
 
   def permitted_params
-    [:key, :resource_id, :translation_id, :file]
+    [:resource_id, :file, :is_zipped]
   end
 end
