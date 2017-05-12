@@ -18,7 +18,7 @@ resource 'Views' do
     end
 
     it 'add views' do
-      header 'Authorization', AuthToken.create(access_code: AccessCode.find(1)).token
+      header 'Authorization', AuthToken.create!(access_code: AccessCode.find(1)).token
 
       do_request data: { type: :view, attributes: { resource_id: 1, quantity: 257 } }
 

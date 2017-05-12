@@ -21,7 +21,7 @@ resource 'Pages' do
     end
 
     it 'edit page' do
-      header 'Authorization', AuthToken.create(access_code: AccessCode.find(1)).token
+      header 'Authorization', AuthToken.create!(access_code: AccessCode.find(1)).token
 
       do_request data: { type: :page, attributes: { structure: :updated_structure } }
 

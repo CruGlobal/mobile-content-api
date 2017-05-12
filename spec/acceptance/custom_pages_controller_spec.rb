@@ -10,7 +10,7 @@ resource 'CustomPages' do
   let(:pages) { TestConstants::GodTools::Pages }
   let(:german_2) { TestConstants::GodTools::Translations::German2::ID }
   let(:authorization) do
-    AuthToken.create(access_code: AccessCode.find(1)).token
+    AuthToken.create!(access_code: AccessCode.find(1)).token
   end
 
   post 'custom_pages/' do

@@ -10,7 +10,7 @@ resource 'Drafts' do
   let(:languages) { TestConstants::Languages }
   let(:godtools) { TestConstants::GodTools }
   let(:authorization) do
-    AuthToken.create(access_code: AccessCode.find(1)).token
+    AuthToken.create!(access_code: AccessCode.find(1)).token
   end
 
   get 'drafts/' do

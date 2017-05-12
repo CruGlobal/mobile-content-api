@@ -13,6 +13,11 @@ AllCops:
 Rails:
   Enabled: true
 
+Rails/SaveBang:
+  Enabled: true
+  Exclude:
+    - spec/**/*
+
 Documentation:
   Enabled: false
 

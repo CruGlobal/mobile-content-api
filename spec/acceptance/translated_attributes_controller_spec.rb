@@ -9,7 +9,7 @@ resource 'TranslatedAttributes' do
   let(:raw_post) { params.to_json }
   let(:godtools) { TestConstants::GodTools }
   let(:authorization) do
-    AuthToken.create(access_code: AccessCode.find(1)).token
+    AuthToken.create!(access_code: AccessCode.find(1)).token
   end
 
   post 'translated_attributes' do
