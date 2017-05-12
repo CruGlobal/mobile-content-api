@@ -3,7 +3,7 @@
 class Attachment < ActiveRecord::Base
   validates :file, presence: true
   validates :is_zipped, inclusion: { in: [true, false] }
-  validates :resource, presence: true
+  validates :resource, presence: true, uniqueness: { scope: :file_file_name }
 
   belongs_to :resource
 

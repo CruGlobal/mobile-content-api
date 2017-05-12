@@ -20,7 +20,7 @@ resource 'Attachments' do
     it 'does not allow unauthorized POSTs', document: false do
       header 'Authorization', nil
 
-      do_request file: test_file, key: 'test_image', multipart: true, resource_id: 1
+      do_request file: test_file, multipart: true, resource_id: 2
 
       expect(status).to be(401)
     end
@@ -28,7 +28,7 @@ resource 'Attachments' do
     it 'create an Attachment' do
       header 'Authorization', :authorization
 
-      do_request file: test_file, multipart: true, resource_id: 1
+      do_request file: test_file, multipart: true, resource_id: 2
 
       expect(status).to be(204)
       expect(response_headers['Location']).to match(%r{attachments\/\d+})
@@ -42,7 +42,7 @@ resource 'Attachments' do
     it 'does not allow unauthorized PUTs', document: false do
       header 'Authorization', nil
 
-      do_request file: test_file, multipart: true, resource_id: 1
+      do_request file: test_file, multipart: true, resource_id: 2
 
       expect(status).to be(401)
     end
@@ -50,7 +50,7 @@ resource 'Attachments' do
     it 'update an Attachment' do
       header 'Authorization', :authorization
 
-      do_request file: test_file, multipart: true, resource_id: 1
+      do_request file: test_file, multipart: true, resource_id: 2
 
       expect(status).to be(204)
       expect(response_body).to be_empty

@@ -10,9 +10,15 @@ describe Attachment do
   end
 
   it 'is not zipped unless specified' do
-    result = Attachment.create(resource_id: 1, file: test_file)
+    result = Attachment.create(resource_id: 2, file: test_file)
 
     expect(result).to be_valid
     expect(result.is_zipped).to be_falsey
+  end
+
+  it 'cannot duplicate file name and resource' do
+    result = Attachment.create(resource_id: 1, file: test_file)
+
+    expect(result).to_not be_valid
   end
 end
