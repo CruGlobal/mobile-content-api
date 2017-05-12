@@ -10,9 +10,17 @@ class Attachment < ActiveRecord::Base
   has_attached_file :file
   validates_attachment :file, content_type: { content_type: %w(image/jpg image/jpeg image/png image/gif) }
 
+  before_validation :set_defaults
+  before_save :save_sha256
+
   private
 
   def set_defaults
     self.is_zipped ||= false
+  end
+
+  def save_sha256
+    path = file.queued_for_write[:original].path
+    self.sha256 = Digest::SHA256.hexdigest(open(path).read)
   end
 end

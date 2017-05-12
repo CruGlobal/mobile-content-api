@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170512160324) do
+ActiveRecord::Schema.define(version: 20170512194739) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -28,6 +28,7 @@ ActiveRecord::Schema.define(version: 20170512160324) do
     t.datetime "file_updated_at",                   null: false
     t.integer  "resource_id"
     t.boolean  "is_zipped",         default: false, null: false
+    t.string   "sha256"
     t.index ["resource_id"], name: "index_attachments_on_resource_id", using: :btree
   end
 
