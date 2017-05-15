@@ -6,11 +6,21 @@ resource 'Attachments' do
   let(:test_file) { Rack::Test::UploadedFile.new('public/wall.jpg', 'image/png') }
   let(:authorization) { AuthToken.create!(access_code: AccessCode.find(1)).token }
 
+  get 'attachments/:id/download' do
+    let(:id) { 1 }
+
+    it 'download an Attachment' do
+      do_request
+
+      expect(status).to be(302)
+    end
+  end
+
   post 'attachments/' do
-    it 'does not allow unauthorized requests', document: false do
+    it 'does not allow unauthorized POSTs', document: false do
       header 'Authorization', nil
 
-      do_request file: test_file, key: 'test_image', multipart: true, resource_id: 1
+      do_request file: test_file, multipart: true, resource_id: 2
 
       expect(status).to be(401)
     end
@@ -18,7 +28,7 @@ resource 'Attachments' do
     it 'create an Attachment' do
       header 'Authorization', :authorization
 
-      do_request file: test_file, key: 'test_image', multipart: true, resource_id: 1
+      do_request file: test_file, multipart: true, resource_id: 2
 
       expect(status).to be(204)
       expect(response_headers['Location']).to match(%r{attachments\/\d+})
@@ -27,13 +37,20 @@ resource 'Attachments' do
   end
 
   put 'attachments/:id' do
-    header 'Authorization', :authorization
     let(:id) { 1 }
 
-    it 'update an Attachment' do
-      header 'Authorization', AuthToken.create!(access_code: AccessCode.find(1)).token
+    it 'does not allow unauthorized PUTs', document: false do
+      header 'Authorization', nil
 
-      do_request file: test_file, key: 'test_image', multipart: true, resource_id: 1
+      do_request file: test_file, multipart: true, resource_id: 2
+
+      expect(status).to be(401)
+    end
+
+    it 'update an Attachment' do
+      header 'Authorization', :authorization
+
+      do_request file: test_file, multipart: true, resource_id: 2
 
       expect(status).to be(204)
       expect(response_body).to be_empty
@@ -41,11 +58,18 @@ resource 'Attachments' do
   end
 
   delete 'attachments/:id' do
-    header 'Authorization', :authorization
     let(:id) { 1 }
 
+    it 'does not allow unauthorized DELETEs' do
+      header 'Authorization', nil
+
+      do_request
+
+      expect(status).to be(401)
+    end
+
     it 'delete an Attachment' do
-      header 'Authorization', AuthToken.create!(access_code: AccessCode.find(1)).token
+      header 'Authorization', :authorization
 
       do_request
 

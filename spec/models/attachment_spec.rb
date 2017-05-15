@@ -9,45 +9,29 @@ describe Attachment do
     allow_any_instance_of(Paperclip::Attachment).to receive(:save).and_return(true)
   end
 
-  it 'may not have nil for Resource and Translation' do
-    expect { Attachment.create(key: 'test', file: test_file, resource_id: nil, translation_id: nil) }.to(
-      raise_error('Attachment must be related to Resource or Translation.')
-    )
-  end
-
-  it 'may have nil for Resource and value for Translation' do
-    result = Attachment.create(key: 'test', file: test_file, resource_id: nil, translation_id: 1)
+  it 'is not zipped unless specified' do
+    result = Attachment.create(resource_id: 2, file: test_file)
 
     expect(result).to be_valid
+    expect(result.is_zipped).to be_falsey
   end
 
-  it 'may have value for Resource and nil for Translation' do
-    result = Attachment.create(key: 'test', file: test_file, resource_id: 1, translation_id: nil)
-
-    expect(result).to be_valid
-  end
-
-  it 'may not have value for Resource and value for Translation' do
-    expect { Attachment.create(key: 'test', file: test_file, resource_id: 1, translation_id: 1) }
-      .to(raise_error('Attachment can be related to Resource OR Translation, not both.'))
-  end
-
-  it 'may not have the same key and resource id as an Attribute' do
-    expect { Attachment.create!(key: 'banner_image', file: test_file, resource_id: 1) }
-      .to(raise_error('Key is currently used by an Attribute.'))
-  end
-
-  it 'may not duplicate key and resource id and is not case sensitive' do
-    result = Attachment.create(key: 'banner_IMAge', file: test_file, resource_id: 2)
+  it 'cannot duplicate file name and resource' do
+    result = Attachment.create(resource_id: 1, file: test_file)
 
     expect(result).to_not be_valid
-    expect(result.errors[:resource]).to include 'has already been taken'
   end
 
-  it 'may not duplicate key and translation id' do
-    result = Attachment.create(key: 'german_KGP_logo', file: test_file, translation_id: 3)
+  it 'sha256 is saved on create' do
+    result = Attachment.create(resource_id: 2, file: test_file)
 
-    expect(result).to_not be_valid
-    expect(result.errors[:translation]).to include 'has already been taken'
+    expect(result.sha256).to eq('073d78ef4dc421f10d2db375414660d3983f506fabdaaff0887f6ee955aa3bdd')
+  end
+
+  it 'sha256 is saved on update' do
+    attachment = Attachment.find(1)
+    attachment.update(resource_id: 2, file: Rack::Test::UploadedFile.new('public/beal.jpg', 'image/png'))
+
+    expect(attachment.sha256).to eq('398ddaf37848344632c44bd9c057b7e092e19f93c825f6bc4737f885f517a2ce')
   end
 end

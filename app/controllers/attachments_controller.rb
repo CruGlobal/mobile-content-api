@@ -1,6 +1,12 @@
 # frozen_string_literal: true
 
-class AttachmentsController < SecureController
+class AttachmentsController < ApplicationController
+  before_action :authorize!, only: [:create, :update, :destroy]
+
+  def download
+    redirect_to load_attachment.file.url, status: :found
+  end
+
   def create
     a = Attachment.create!(params.permit(permitted_params))
     head :no_content, location: "attachments/#{a.id}"
@@ -23,6 +29,6 @@ class AttachmentsController < SecureController
   end
 
   def permitted_params
-    [:key, :resource_id, :translation_id, :file]
+    [:resource_id, :file, :is_zipped]
   end
 end

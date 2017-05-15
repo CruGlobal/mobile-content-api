@@ -23,18 +23,29 @@ class S3Util
 
   def build_zip
     @document = Nokogiri::XML::Document.new
-    root_node = Nokogiri::XML::Node.new('pages', @document)
+    root_node = Nokogiri::XML::Node.new('manifest', @document)
     @document.root = root_node
 
-    Zip::File.open("pages/#{@zip_file_name}", Zip::File::CREATE) do |zip_file|
-      @translation.resource.pages.each do |page|
-        sha_filename = write_page_to_file(page)
-        zip_file.add(sha_filename, "pages/#{sha_filename}")
+    pages_node = Nokogiri::XML::Node.new('pages', @document)
+    resources_node = Nokogiri::XML::Node.new('resources', @document)
+    root_node.add_child(pages_node)
+    root_node.add_child(resources_node)
 
-        add_page_node(root_node, page.filename, sha_filename)
-      end
+    Zip::File.open("pages/#{@zip_file_name}", Zip::File::CREATE) do |zip_file|
+      add_pages(zip_file, pages_node)
+      add_attachments(zip_file, resources_node)
+
       manifest_filename = write_manifest_to_file
       zip_file.add(manifest_filename, "pages/#{manifest_filename}")
+    end
+  end
+
+  def add_pages(zip_file, pages_node)
+    @translation.resource.pages.each do |page|
+      sha_filename = write_page_to_file(page)
+      zip_file.add(sha_filename, "pages/#{sha_filename}")
+
+      add_node('page', pages_node, page.filename, sha_filename)
     end
   end
 
@@ -42,11 +53,21 @@ class S3Util
     translated_page = @translation.build_translated_page(page.id, true)
     sha_filename = "#{Digest::SHA256.hexdigest(translated_page)}.xml"
 
-    temp_file = File.open("pages/#{sha_filename}", 'w')
-    temp_file.puts(translated_page)
-    temp_file.close
+    File.write("pages/#{sha_filename}", translated_page)
 
     sha_filename
+  end
+
+  def add_attachments(zip_file, resources_node)
+    @translation.resource.attachments.where(is_zipped: true).each do |a|
+      string_io_bytes = open(a.file.url).read
+      sha_filename = a.sha256
+
+      File.binwrite("pages/#{sha_filename}", string_io_bytes)
+
+      zip_file.add(sha_filename, "pages/#{sha_filename}")
+      add_node('resource', resources_node, a.file.original_filename, sha_filename)
+    end
   end
 
   def write_manifest_to_file
@@ -60,8 +81,8 @@ class S3Util
     filename
   end
 
-  def add_page_node(parent, filename, sha_filename)
-    node = Nokogiri::XML::Node.new('page', @document)
+  def add_node(type, parent, filename, sha_filename)
+    node = Nokogiri::XML::Node.new(type, @document)
     node['filename'] = filename
     node['src'] = sha_filename
     parent.add_child(node)

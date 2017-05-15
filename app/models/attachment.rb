@@ -1,33 +1,26 @@
 # frozen_string_literal: true
 
-require 'key_util'
-
 class Attachment < ActiveRecord::Base
-  validates :key, presence: true, format: { with: KeyUtil.format }
   validates :file, presence: true
-  validates :resource, uniqueness: { scope: :key }
-  validates :translation, uniqueness: { scope: :key }
+  validates :is_zipped, inclusion: { in: [true, false] }
+  validates :resource, presence: true, uniqueness: { scope: :file_file_name }
 
-  belongs_to :resource, optional: true
-  belongs_to :translation, optional: true
+  belongs_to :resource
 
   has_attached_file :file
   validates_attachment :file, content_type: { content_type: %w(image/jpg image/jpeg image/png image/gif) }
 
-  before_validation -> { KeyUtil.lower_key(self) }, :resource_or_translation
-  after_validation :duplicate_keys
+  before_validation :set_defaults
+  before_save :save_sha256
 
   private
 
-  def resource_or_translation
-    raise 'Attachment must be related to Resource or Translation.' if resource_id.nil? && translation_id.nil?
-
-    return unless resource_id.present? && translation_id.present?
-    raise 'Attachment can be related to Resource OR Translation, not both.'
+  def set_defaults
+    self.is_zipped ||= false
   end
 
-  def duplicate_keys # TODO: would be nice to enforce this in the DB
-    return unless resource.present? && resource.resource_attributes.find_by(resource_id: resource_id, key: key).present?
-    raise 'Key is currently used by an Attribute.'
+  def save_sha256
+    path = file.queued_for_write[:original].path
+    self.sha256 = Digest::SHA256.hexdigest(open(path).read)
   end
 end

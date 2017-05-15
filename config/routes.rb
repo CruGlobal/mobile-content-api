@@ -8,5 +8,7 @@ Rails.application.routes.draw do
   get 'monitors/lb'
   get 'monitors/commit'
 
+  get 'attachments/:id/download', to: 'attachments#download'
+
   mount Raddocs::App => '/docs'
 end
