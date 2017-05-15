@@ -13,6 +13,25 @@ resource 'Pages' do
     header 'Authorization', :authorization
   end
 
+  post 'pages' do
+    let(:attrs) { { filename: 'test.xml', structure: :updated_structure, resource_id: 2, position: 1 } }
+
+    requires_authorization
+
+    it 'create page' do
+      do_request data: { type: :page, attributes: attrs }
+
+      expect(status).to eq(201)
+      expect(response_body['data']).not_to be_nil
+    end
+
+    it 'sets location header', document: false do
+      do_request data: { type: :page, attributes: attrs }
+
+      expect(response_headers['Location']).to match(%r{pages\/\d+})
+    end
+  end
+
   put 'pages/:id' do
     let(:id) { 1 }
     let(:updated_structure) { '<?xml version="1.0" encoding="UTF-8" ?><page> new page </page>' }
