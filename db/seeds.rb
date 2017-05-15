@@ -92,7 +92,6 @@ end
 page_4_elements.each do |e|
   TranslationElement.find_or_create_by!(page: page_4, text: e)
 end
-
 =end
 
 english = Language.find_or_create_by!(name: 'English', code: 'en')
