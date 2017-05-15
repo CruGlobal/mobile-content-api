@@ -16,10 +16,10 @@ Rails:
   Enabled: true
 
 RSpec/MultipleExpectations:
-  Max: 3
+  Max: 3 # TODO Would be nice to fix offending specs
 
 RSpec/ExampleLength:
-  Max: 10
+  Max: 10 # TODO Would be nice to fix offending specs
 
 Rails/SaveBang:
   Enabled: true
