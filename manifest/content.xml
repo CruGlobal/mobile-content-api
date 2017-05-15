@@ -80,16 +80,18 @@
       The number of tab elements should be the same of the number of option element
   -->
   <tabs>
-    <options>
-      <option><content:text i18n-id="{{uuid}}">Option A</content:text></option>
-      <option><content:text i18n-id="{{uuid}}">Option B</content:text></option>
-    </options>
     <tab-content>
       <tab>
+        <label>
+          <text i18n-id="{{uuid}}">Option A</text>
+        </label>
         <image />
         <text />
       </tab>
       <tab>
+        <label>
+          <text i18n-id="{{uuid}}">Option B</text>
+        </label>
         <image />
         <text />
       </tab>
