@@ -34,7 +34,7 @@ resource 'CustomPages' do
 
       expect(status).to be(201)
       expect(response_headers['Location']).to match(%r{custom_pages\/\d+})
-      expect(response_body['data']).to_not be_nil
+      expect(response_body['data']).not_to be_nil
     end
 
     it 'update a custom page' do
@@ -46,7 +46,7 @@ resource 'CustomPages' do
                                        structure: '<custom>This is some custom xml for one translation</custom>' } }
 
       expect(status).to be(200)
-      expect(response_body['data']).to_not be_nil
+      expect(response_body['data']).not_to be_nil
     end
   end
 

@@ -56,7 +56,7 @@ resource 'Drafts' do
     let(:resource) { double }
     let(:resource_id) { godtools::ID }
 
-    before(:each) do
+    before do
       allow(Resource).to receive(:find).with(resource_id).and_return(resource)
       allow(resource).to receive(:id).and_return(resource_id)
     end
@@ -69,12 +69,12 @@ resource 'Drafts' do
       do_request data: { type: :translation, attributes: { resource_id: resource_id, language_id: language_id } }
 
       expect(status).to be(201)
-      expect(response_body['data']).to_not be_nil
+      expect(response_body['data']).not_to be_nil
       expect(response_headers['Location']).to eq('drafts/100')
     end
 
     it 'create draft with existing resource/language combination' do
-      existing_translation = double(is_published: true)
+      existing_translation = instance_double(Translation, is_published: true)
       language_id = languages::Slovak::ID
       allow(Translation).to receive(:latest_translation).with(resource_id, language_id).and_return(existing_translation)
       allow(existing_translation).to receive(:create_new_version).and_return(Translation.new(id: 101))
@@ -82,7 +82,7 @@ resource 'Drafts' do
       do_request data: { type: :translation, attributes: { resource_id: resource_id, language_id: language_id } }
 
       expect(status).to be(201)
-      expect(response_body['data']).to_not be_nil
+      expect(response_body['data']).not_to be_nil
       expect(response_headers['Location']).to eq('drafts/101')
     end
 
@@ -101,6 +101,7 @@ resource 'Drafts' do
 
   put 'drafts/:id' do
     let(:id) { godtools::Translations::German2::ID }
+
     header 'Authorization', :authorization
 
     it 'update draft' do
@@ -112,7 +113,7 @@ resource 'Drafts' do
       do_request data: { type: :translation, attributes: params }
 
       expect(status).to be(200)
-      expect(response_body['data']).to_not be_nil
+      expect(response_body['data']).not_to be_nil
     end
 
     it 'update draft without translating all phrases' do
@@ -131,7 +132,7 @@ resource 'Drafts' do
     let(:id) { 1 }
     let(:translation) { double }
 
-    before(:each) do
+    before do
       allow(Translation).to receive(:find).with(id.to_s).and_return(translation)
     end
 

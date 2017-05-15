@@ -43,7 +43,7 @@ resource 'Languages' do
 
       expect(status).to be(201)
       expect(response_headers['Location']).to match(%r{languages\/\d+})
-      expect(response_body['data']).to_not be_nil
+      expect(response_body['data']).not_to be_nil
     end
   end
 

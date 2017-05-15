@@ -23,9 +23,11 @@ describe PageUtil do
   end
 
   it 'posts to OneSky' do
-    expect(RestClient).to receive(:post).with('https://platform.api.onesky.io/1/projects/1/files', anything)
+    allow(RestClient).to receive(:post)
 
     push
+
+    expect(RestClient).to have_received(:post).with('https://platform.api.onesky.io/1/projects/1/files', anything)
   end
 
   private def push
