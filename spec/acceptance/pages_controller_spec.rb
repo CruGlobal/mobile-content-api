@@ -8,13 +8,19 @@ resource 'Pages' do
 
   let(:raw_post) { params.to_json }
   let(:authorization) { AuthToken.create!(access_code: AccessCode.find(1)).token }
+  let(:test_structure) { '<?xml version="1.0" encoding="UTF-8" ?><page> new page </page>' }
 
   before do
     header 'Authorization', :authorization
   end
 
   post 'pages' do
-    let(:attrs) { { filename: 'test.xml', structure: :updated_structure, resource_id: 2, position: 1 } }
+    let(:attrs) { { filename: 'test.xml', structure: test_structure, resource_id: 2, position: 1 } }
+
+    before do
+      allow(Page).to(receive(:create!).with(ActionController::Parameters.new(attrs).permit!)
+                         .and_return(Page.new(id: 12_345)))
+    end
 
     requires_authorization
 
@@ -28,18 +34,17 @@ resource 'Pages' do
     it 'sets location header', document: false do
       do_request data: { type: :page, attributes: attrs }
 
-      expect(response_headers['Location']).to match(%r{pages\/\d+})
+      expect(response_headers['Location']).to eq('pages/12345')
     end
   end
 
   put 'pages/:id' do
     let(:id) { 1 }
-    let(:updated_structure) { '<?xml version="1.0" encoding="UTF-8" ?><page> new page </page>' }
 
     requires_authorization
 
     it 'edit page' do
-      do_request data: { type: :page, attributes: { structure: :updated_structure } }
+      do_request data: { type: :page, attributes: { structure: test_structure } }
 
       expect(status).to eq(200)
       expect(response_body['data']).not_to be_nil

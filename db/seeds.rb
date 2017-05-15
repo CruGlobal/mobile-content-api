@@ -82,6 +82,7 @@ is_there_god = Resource.find_or_create_by!(name: 'Is There A God?', abbreviation
 page_13 = Page.find_or_create_by!(filename: '13_FinalPage.xml', resource: kgp, structure: page_13_structure, position: 1)
 page_4 = Page.find_or_create_by!(filename: '04_ThirdPoint.xml', resource: kgp, structure: page_4_structure, position: 0)
 
+=begin
 TranslationElement.find_or_create_by!(page: page_13, text: 'WEBSITES TO ASSIST YOU', onesky_phrase_id: 'f9894df9-df1d-4831-9782-345028c6c9a2')
 TranslationElement.find_or_create_by!(page: page_13, text: 'Still not sure who Jesus is?', onesky_phrase_id: '9deda19f-c3ee-42ed-a1eb-92423e543352')
 
@@ -95,6 +96,7 @@ TranslationElement.find_or_create_by(page: page_4, text: 'Jesus Died In Our Plac
 page_4_elements.each do |e|
   TranslationElement.find_or_create_by!(page: page_4, text: e)
 end
+=end
 
 english = Language.find_or_create_by!(name: 'English', code: 'en')
 german = Language.find_or_create_by!(name: 'German', code: 'de')
