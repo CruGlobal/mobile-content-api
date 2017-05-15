@@ -20,6 +20,6 @@ class Attribute < ActiveRecord::Base
   end
 
   def lower_key
-    self.key = key.downcase if key.present?
+    self.key = key&.downcase
   end
 end
