@@ -73,4 +73,26 @@
     <button />
   </form>
 
+  <!--
+    Tabs
+      Required child elements: options, option, tab-content, tab
+      Each option element requires a single content:text children object
+  -->
+  <tabs>
+    <options>
+      <option><content:text i18n-id="{{uuid}}">Option A</content:text></option>
+      <option><content:text i18n-id="{{uuid}}">Option B</content:text></option>
+    </options>
+    <tab-content>
+      <tab>
+        <image />
+        <text />
+      </tab>
+      <tab>
+        <image />
+        <text />
+      </tab>
+    </tab-content>
+  </tabs>
+
 </content-types>
