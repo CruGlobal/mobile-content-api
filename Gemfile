@@ -43,6 +43,7 @@ gem 'raddocs', git: 'https://github.com/krim/raddocs.git', branch: 'rails_5_supp
 gem 'rest-client', '~> 2.0.1'
 gem 'rollbar'
 gem 'rspec_api_documentation'
+gem 'rubocop-rspec'
 gem 'rubyzip', '>= 1.0.0'
 
 # Use Capistrano for deployment
