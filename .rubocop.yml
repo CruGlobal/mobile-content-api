@@ -15,6 +15,12 @@ AllCops:
 Rails:
   Enabled: true
 
+RSpec/MultipleExpectations:
+  Max: 3
+
+RSpec/ExampleLength:
+  Max: 10
+
 Rails/SaveBang:
   Enabled: true
   Exclude:

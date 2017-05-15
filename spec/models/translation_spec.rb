@@ -15,7 +15,7 @@ describe Translation do
 
   it 'downloads translated phrases from OneSky' do
     mock_onesky(page_name, phrases)
-    translation = Translation.find(translations::German1::ID)
+    translation = described_class.find(translations::German1::ID)
 
     result = translation.download_translated_phrases(page_name)
 
@@ -25,7 +25,7 @@ describe Translation do
 
   it 'PhraseNotFound error is raised if there is no phrases returned from OneSky' do
     mock_onesky(page_name, nil, 204)
-    translation = Translation.find(translations::German1::ID)
+    translation = described_class.find(translations::German1::ID)
 
     expect { translation.download_translated_phrases(page_name) }.to(
       raise_error(Error::PhraseNotFoundError, 'No translated phrases found for this language.')
@@ -34,7 +34,7 @@ describe Translation do
 
   it 'builds a translated page from resource page' do
     mock_onesky(page_name, phrases)
-    translation = Translation.find(translations::German1::ID)
+    translation = described_class.find(translations::German1::ID)
 
     result = translation.build_translated_page(1, true)
 
@@ -45,7 +45,7 @@ describe Translation do
 
   it 'builds a translated page from custom page' do
     mock_onesky(page_name, phrases)
-    translation = Translation.find(translations::German2::ID)
+    translation = described_class.find(translations::German2::ID)
 
     result = translation.build_translated_page(1, true)
 
@@ -56,7 +56,7 @@ describe Translation do
 
   it 'error is raised if strict mode and translated phrase not found' do
     mock_onesky(page_name, "{ \"#{element_one_id}\":\"#{phrase_one}\" }")
-    translation = Translation.find(translations::German2::ID)
+    translation = described_class.find(translations::German2::ID)
 
     expect { translation.build_translated_page(1, true) }.to(
       raise_error(Error::PhraseNotFoundError, 'Translated phrase not found.')
@@ -65,13 +65,13 @@ describe Translation do
 
   it 'error not raised raised if not strict mode and translated phrase not found' do
     mock_onesky('13_FinalPage.xml', '{ "1":"This is a German phrase" }')
-    translation = Translation.find(translations::German2::ID)
+    translation = described_class.find(translations::German2::ID)
 
     translation.build_translated_page(1, false)
   end
 
   it 'increments version by one' do
-    translation = Translation.find(translations::English::ID)
+    translation = described_class.find(translations::English::ID)
     new_translation = translation.create_new_version
 
     expect(new_translation.version).to be(2)
@@ -79,12 +79,14 @@ describe Translation do
 
   context 'latest translation' do
     it 'returns latest version for resource/language combination' do
-      translation = Translation.latest_translation(TestConstants::GodTools::ID, TestConstants::Languages::German::ID)
+      translation = described_class.latest_translation(TestConstants::GodTools::ID,
+                                                       TestConstants::Languages::German::ID)
       expect(translation.version).to be(2)
     end
 
     it 'returns nil for resource/language combination that does not exist' do
-      translation = Translation.latest_translation(TestConstants::GodTools::ID, TestConstants::Languages::Slovak::ID)
+      translation = described_class.latest_translation(TestConstants::GodTools::ID,
+                                                       TestConstants::Languages::Slovak::ID)
       expect(translation).to be_nil
     end
   end
@@ -93,20 +95,20 @@ describe Translation do
     bucket = 'test_bucket'
     stub_const('ENV', 'MOBILE_CONTENT_API_BUCKET' => bucket)
 
-    uri = Translation.find(translations::English::ID).s3_uri
+    uri = described_class.find(translations::English::ID).s3_uri
     expect(uri).to eq("https://s3.amazonaws.com/#{bucket}/GodTools/kgp/en/version_1.zip")
   end
 
   it 'raises an error if deletion of a translation is attempted' do
-    translation = Translation.find(translations::English::ID)
+    translation = described_class.find(translations::English::ID)
 
     expect { translation.destroy! }.to raise_error(Error::TranslationError, 'Cannot delete published drafts.')
   end
 
   context 'is_published set to true' do
-    let(:translation) { Translation.find(translations::German2::ID) }
+    let(:translation) { described_class.find(translations::German2::ID) }
 
-    before(:each) do
+    before do
       mock_onesky('name_description.xml', '{ "name":"kgp german", "description":"german description" }')
     end
 
@@ -134,7 +136,7 @@ describe Translation do
   def mock_onesky(filename, body, code = 200)
     allow(RestClient).to(
       receive(:get).with(any_args, hash_including(params: hash_including(source_file_name: filename)))
-        .and_return(double(body: body, code: code))
+        .and_return(instance_double(RestClient::Response, body: body, code: code))
     )
   end
 end

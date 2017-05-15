@@ -8,16 +8,16 @@ describe TranslatedAttribute do
     translation = Translation.find(1)
 
     expect do
-      TranslatedAttribute.create!(parent_attribute: attribute, value: 'default', translation: translation)
+      described_class.create!(parent_attribute: attribute, value: 'default', translation: translation)
     end.to raise_error('Parent attribute is not translatable.')
   end
 
   it 'attribute/translation combination must be unique' do
-    attr = TranslatedAttribute.create(attribute_id: 2,
-                                      translation_id: 3,
-                                      value: 'foo')
+    attr = described_class.create(attribute_id: 2,
+                                  translation_id: 3,
+                                  value: 'foo')
 
-    expect(attr).to_not be_valid
+    expect(attr).not_to be_valid
     expect(attr.errors[:translation]).to include('has already been taken')
   end
 end

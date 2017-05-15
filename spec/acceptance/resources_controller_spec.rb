@@ -76,7 +76,8 @@ resource 'Resources' do
 
     it 'requires authorization', document: false do
       header 'Authorization', nil
-      allow(PageUtil).to receive(:new).with(resource_id(1), 'en').and_return(double(push_new_onesky_translation: nil))
+      allow(PageUtil).to(receive(:new).with(resource_id(1), 'en')
+                           .and_return(instance_double(PageUtil, push_new_onesky_translation: nil)))
 
       do_request
 

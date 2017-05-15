@@ -20,7 +20,7 @@ resource 'Translations' do
       id = 1
       translation = Translation.find(id)
       allow(Translation).to receive(:find).with(id.to_s).and_return(translation)
-      expect(translation).to receive(:s3_uri).and_return('google.com')
+      allow(translation).to receive(:s3_uri).and_return('google.com')
 
       do_request id: id
 

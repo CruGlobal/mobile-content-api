@@ -4,14 +4,14 @@ require 'rails_helper'
 require 'page_util'
 
 describe Resource do
-  let(:resource) { Resource.find(TestConstants::Satisfied::ID) }
+  let(:resource) { described_class.find(TestConstants::Satisfied::ID) }
 
   context 'creating a new draft' do
     let(:language) { Language.find(1) }
 
     it 'pushes to OneSky' do
-      allow(PageUtil).to receive(:new).with(resource, language.code)
-        .and_return(double(push_new_onesky_translation: :created))
+      allow(PageUtil).to(receive(:new).with(resource, language.code)
+                           .and_return(instance_double(PageUtil, push_new_onesky_translation: :created)))
 
       resource.create_new_draft(language.id)
     end
@@ -21,7 +21,7 @@ describe Resource do
 
       result = resource.create_new_draft(language.id)
 
-      expect(result).to_not be_nil
+      expect(result).not_to be_nil
     end
   end
 

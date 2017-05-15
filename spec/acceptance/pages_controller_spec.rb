@@ -26,7 +26,7 @@ resource 'Pages' do
       do_request data: { type: :page, attributes: { structure: :updated_structure } }
 
       expect(status).to eq(200)
-      expect(response_body['data']).to_not be_nil
+      expect(response_body['data']).not_to be_nil
     end
   end
 end
