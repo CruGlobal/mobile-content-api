@@ -75,9 +75,7 @@
 
   <!--
     Tabs
-      Required childr elements: options, option, tab-content, tab
-      Each option element requires a single content:text child element
-      The number of tab elements should be the same of the number of option element
+      Required children elements: tab
   -->
   <tabs>
     <tab>
