@@ -40,11 +40,18 @@ resource 'Pages' do
 
   put 'pages/:id' do
     let(:id) { 1 }
+    let(:attrs) { { structure: test_structure } }
+
+    before do
+      p = Page.find(1)
+      allow(Page).to receive(:find).and_return(p)
+      allow(p).to receive(:update!).with(ActionController::Parameters.new(attrs).permit!)
+    end
 
     requires_authorization
 
     it 'edit page' do
-      do_request data: { type: :page, attributes: { structure: test_structure } }
+      do_request data: { type: :page, attributes: attrs }
 
       expect(status).to eq(200)
       expect(response_body['data']).not_to be_nil
