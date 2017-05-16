@@ -126,14 +126,27 @@ describe Translation do
       translation.update(is_published: true)
     end
 
-    it 'downloads translated name and description' do
-      s3_util = double.as_null_object
-      allow(S3Util).to receive(:new).and_return(s3_util)
+    context 'translated name and description' do
+      before do
+        s3_util = double.as_null_object
+        allow(S3Util).to receive(:new).and_return(s3_util)
+      end
 
-      translation.update!(is_published: true)
+      it 'updates from OneSky' do
+        translation.update!(is_published: true)
 
-      expect(translation.translated_name).to eq('kgp german')
-      expect(translation.translated_description).to eq('german description')
+        expect(translation.translated_name).to eq('kgp german')
+        expect(translation.translated_description).to eq('german description')
+      end
+
+      it 'does not update from OneSky for projects not using it' do
+        t = described_class.find(9)
+
+        t.update!(id: 9, is_published: true)
+
+        expect(t.translated_name).to be_nil
+        expect(t.translated_description).to be_nil
+      end
     end
   end
 

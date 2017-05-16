@@ -86,12 +86,16 @@ class Translation < ActiveRecord::Base
   def push_published_to_s3
     return unless is_published
 
-    p = download_translated_phrases('name_description.xml')
-    self.translated_name = p['name']
-    self.translated_description = p['description']
+    name_desc_onesky if resource.uses_onesky?
 
     s3_util = S3Util.new(self)
     s3_util.push_translation
+  end
+
+  def name_desc_onesky
+    p = download_translated_phrases('name_description.xml')
+    self.translated_name = p['name']
+    self.translated_description = p['description']
   end
 
   def set_defaults
