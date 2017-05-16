@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170515171542) do
+ActiveRecord::Schema.define(version: 20170516190223) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -98,7 +98,6 @@ ActiveRecord::Schema.define(version: 20170515171542) do
   end
 
   create_table "translation_elements", force: :cascade do |t|
-    t.integer "page_order"
     t.string  "text",             null: false
     t.integer "page_id",          null: false
     t.string  "onesky_phrase_id", null: false

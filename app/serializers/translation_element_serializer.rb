@@ -2,7 +2,7 @@
 
 class TranslationElementSerializer < ActiveModel::Serializer
   type 'translation-element'
-  attributes :id, :page_order, :text
+  attributes :id, :text
 
   belongs_to :page
 end
