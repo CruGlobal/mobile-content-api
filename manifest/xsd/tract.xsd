@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<xs:schema xmlns:content="https://mobile-content-api.cru.org/xmlns/content"
+    xmlns:tract="http://mobile-content-api.cru.org/xmlns/tract" xmlns:xs="http://www.w3.org/2001/XMLSchema"
+    attributeFormDefault="unqualified" elementFormDefault="qualified"
+    targetNamespace="http://mobile-content-api.cru.org/xmlns/tract">
+
+    <xs:import namespace="https://mobile-content-api.cru.org/xmlns/content" schemaLocation="content.xsd" />
+
+    <!-- Value definitions -->
+
+    <!-- element nodes -->
+    <!--
+        Page node
+            primary-color:          tract:header background, tract:card title font color,
+                                    event button background, input field border/highlight.
+                                    Renderer may lighten/darken to create highlight/hover colors
+                                    DEFAULT( inherited from manifest )
+
+            primary-text-color:     Color used for text inside primary-color background, for contrast.
+                                    DEFAULT( inherited from manifest )
+
+            text-color:             Color used for content:text fields
+                                    DEFAULT( inherited from manifest )
+
+            background-color:       tract:page background color
+                                    DEFAULT( rgba(255, 255, 255, 0) ) /* transparent */
+
+            background-image:       tract:page background image.
+                                    DEFAULT( none )
+
+            background-image-align: (top|bottom|left|right|center|repeat)
+                                    DEFAULT( center )
+    -->
+    <xs:complexType name="page">
+        <xs:sequence>
+            <xs:element name="header" maxOccurs="1" minOccurs="0" />
+            <xs:element name="hero" maxOccurs="1" minOccurs="0" />
+            <xs:element name="cards" maxOccurs="1" minOccurs="0" />
+            <xs:element name="call-to-action" maxOccurs="1" minOccurs="0" />
+        </xs:sequence>
+        <xs:attribute name="primary-color" type="content:colorValue" use="optional" />
+        <xs:attribute name="primary-text-color" type="content:colorValue" use="optional" />
+        <xs:attribute name="text-color" type="content:colorValue" use="optional" />
+        <xs:attribute name="background-color" type="content:colorValue" use="optional" />
+        <xs:attribute name="background-image" type="xs:string" use="optional" />
+        <xs:attribute name="background-image-align" type="content:fullAlignValue" use="optional" />
+    </xs:complexType>
+
+    <!-- base elements -->
+    <xs:element name="page" type="tract:page" />
+</xs:schema>
