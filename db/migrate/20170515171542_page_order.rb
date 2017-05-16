@@ -3,7 +3,7 @@ class PageOrder < ActiveRecord::Migration[5.0]
     add_column :pages, :position, :integer, null: true
 
     Page.all.each do |p|
-      p.position = p.id #assign it a value we know is unique
+      p.update!(position: p.id) #assign it a value we know is unique
     end
 
     change_column_null :pages, :position, false
