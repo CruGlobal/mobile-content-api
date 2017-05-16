@@ -33,7 +33,7 @@
     -->
     <xs:complexType name="page">
         <xs:sequence>
-            <xs:element name="header" maxOccurs="1" minOccurs="0" />
+            <xs:element name="header" maxOccurs="1" minOccurs="0" type="tract:pageHeader" />
             <xs:element name="hero" maxOccurs="1" minOccurs="0" />
             <xs:element name="cards" maxOccurs="1" minOccurs="0" />
             <xs:element name="call-to-action" maxOccurs="1" minOccurs="0" />
@@ -44,6 +44,18 @@
         <xs:attribute name="background-color" type="content:colorValue" use="optional" />
         <xs:attribute name="background-image" type="xs:string" use="optional" />
         <xs:attribute name="background-image-align" type="content:fullAlignValue" use="optional" />
+    </xs:complexType>
+
+    <!--
+        Page Header
+            background-color: DEFAULT( primary-color )
+    -->
+    <xs:complexType name="pageHeader">
+        <xs:sequence>
+            <xs:element name="number" maxOccurs="1" minOccurs="0" />
+            <xs:element name="title" />
+        </xs:sequence>
+        <xs:attribute name="background-color" type="content:colorValue" use="optional" />
     </xs:complexType>
 
     <!-- base elements -->
