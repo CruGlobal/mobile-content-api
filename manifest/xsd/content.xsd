@@ -37,4 +37,26 @@
             </xs:simpleContent>
         </xs:complexType>
     </xs:element>
+
+    <!--
+        Button
+            type:    REQUIRED - (url|event) DEFAULT( url )
+            value:   REQUIRED - URL or Event value
+    -->
+    <xs:element name="button">
+        <xs:complexType>
+            <xs:all>
+                <xs:element name="text" type="content:translatableTextType" />
+            </xs:all>
+            <xs:attribute name="type">
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:enumeration value="event" />
+                        <xs:enumeration value="url" />
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:attribute>
+            <xs:attribute name="value" type="xs:string" />
+        </xs:complexType>
+    </xs:element>
 </xs:schema>
