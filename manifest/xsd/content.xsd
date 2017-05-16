@@ -3,7 +3,13 @@
     attributeFormDefault="unqualified" elementFormDefault="qualified"
     targetNamespace="https://mobile-content-api.cru.org/xmlns/content">
 
-    <xs:simpleType name="alignType">
+    <xs:simpleType name="color">
+        <xs:restriction base="xs:string">
+            <xs:pattern value="rgba\([0-9]{1,3},\s*[0-9]{1,3},\s*[0-9]{1,3},\s*([01]|0?\.[0-9]*)\)" />
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="align">
         <xs:restriction base="xs:string">
             <xs:enumeration value="start" />
             <xs:enumeration value="end" />
@@ -30,9 +36,9 @@
         <xs:complexType>
             <xs:simpleContent>
                 <xs:extension base="content:translatableTextType">
-                    <xs:attribute name="text-color" type="xs:string" use="optional" />
+                    <xs:attribute name="text-color" type="content:color" use="optional" />
                     <xs:attribute name="text-scale" type="xs:float" use="optional" />
-                    <xs:attribute name="text-align" type="content:alignType" use="optional" />
+                    <xs:attribute name="text-align" type="content:align" use="optional" />
                 </xs:extension>
             </xs:simpleContent>
         </xs:complexType>
