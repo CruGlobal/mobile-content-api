@@ -94,7 +94,7 @@ es_content = Resource.find_or_create_by!(name: 'EveryStudent content', abbreviat
 page_13 = Page.find_or_create_by!(filename: '13_FinalPage.xml', resource: kgp, structure: page_13_structure, position: 1)
 page_4 = Page.find_or_create_by!(filename: '04_ThirdPoint.xml', resource: kgp, structure: page_4_structure, position: 0)
 
-Page.find_or_create_by!(filename: 'Is_There_A_God.xml', resource: es_content, structure: is_there_god_structure, position: 0)
+is_there_god = Page.find_or_create_by!(filename: 'Is_There_A_God.xml', resource: es_content, structure: is_there_god_structure, position: 0)
 Page.find_or_create_by!(filename: 'Beyond_Blind_Faith.xml', resource: es_content, structure: beyond_blind_faith_structure, position: 1)
 
 =begin
@@ -126,6 +126,9 @@ Translation.find_or_create_by!(resource: satisfied, language: german, version: 1
 Translation.find_or_create_by!(resource: satisfied, language: german, version: 2, is_published: true)
 
 Translation.find_or_create_by!(resource: es_content, language: english, version: 1, is_published: true)
+german_es = Translation.find_or_create_by!(resource: es_content, language: german, version: 1, is_published: true)
+
+TranslatedPage.find_or_create_by!(value: 'German translation of article Is There A God?', translation: german_es, page: is_there_god)
 
 AccessCode.find_or_create_by!(code: 123_456)
 

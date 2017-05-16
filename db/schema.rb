@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170516190223) do
+ActiveRecord::Schema.define(version: 20170516213954) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -95,6 +95,15 @@ ActiveRecord::Schema.define(version: 20170516190223) do
     t.index ["attribute_id", "translation_id"], name: "index_translated_attributes_on_attribute_id_and_translation_id", unique: true, using: :btree
     t.index ["attribute_id"], name: "index_translated_attributes_on_attribute_id", using: :btree
     t.index ["translation_id"], name: "index_translated_attributes_on_translation_id", using: :btree
+  end
+
+  create_table "translated_pages", force: :cascade do |t|
+    t.string  "value",          null: false
+    t.integer "page_id",        null: false
+    t.integer "translation_id", null: false
+    t.index ["page_id", "translation_id"], name: "index_translated_pages_on_page_id_and_translation_id", unique: true, using: :btree
+    t.index ["page_id"], name: "index_translated_pages_on_page_id", using: :btree
+    t.index ["translation_id"], name: "index_translated_pages_on_translation_id", using: :btree
   end
 
   create_table "translation_elements", force: :cascade do |t|
