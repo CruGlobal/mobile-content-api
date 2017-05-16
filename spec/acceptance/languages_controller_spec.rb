@@ -28,10 +28,12 @@ resource 'Languages' do
   end
 
   post 'languages' do
+    let(:data) { { type: :language, attributes: { name: 'Elvish', code: 'ev' } } }
+
     it 'requires authorization', document: false do
       header 'Authorization', nil
 
-      do_request data: { type: :language, attributes: { name: 'Elvish', code: 'ev' } }
+      do_request data: data
 
       expect(status).to be(401)
     end
@@ -39,11 +41,18 @@ resource 'Languages' do
     it 'create a language' do
       header 'Authorization', authorization
 
-      do_request data: { type: :language, attributes: { name: 'Elvish', code: 'ev' } }
+      do_request data: data
 
       expect(status).to be(201)
-      expect(response_headers['Location']).to match(%r{languages\/\d+})
       expect(response_body['data']).not_to be_nil
+    end
+
+    it 'sets location header', document: false do
+      header 'Authorization', authorization
+
+      do_request data: data
+
+      expect(response_headers['Location']).to match(%r{languages\/\d+})
     end
   end
 

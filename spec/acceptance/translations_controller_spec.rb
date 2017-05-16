@@ -18,9 +18,6 @@ resource 'Translations' do
   get 'translations/:id' do
     it 'get a translation' do
       id = 1
-      translation = Translation.find(id)
-      allow(Translation).to receive(:find).with(id.to_s).and_return(translation)
-      allow(translation).to receive(:s3_uri).and_return('google.com')
 
       do_request id: id
 

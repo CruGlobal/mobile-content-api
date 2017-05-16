@@ -32,26 +32,32 @@ describe Translation do
     )
   end
 
-  it 'builds a translated page from resource page' do
-    mock_onesky(page_name, phrases)
-    translation = described_class.find(translations::German1::ID)
+  context 'builds a translated page from resource page' do
+    let(:result) do
+      translated_page(translations::German1::ID)
+    end
 
-    result = translation.build_translated_page(1, true)
+    it 'includes base element' do
+      expect(result.include?('base_xml_element')).to be_truthy
+    end
 
-    expect(result.include?('base_xml_element')).to be_truthy
-    expect(result.include?(phrase_one_element)).to be_truthy
-    expect(result.include?(phrase_two_element)).to be_truthy
+    it 'includes translated phrases' do
+      includes_translated_phrases
+    end
   end
 
-  it 'builds a translated page from custom page' do
-    mock_onesky(page_name, phrases)
-    translation = described_class.find(translations::German2::ID)
+  context 'builds a translated page from custom page' do
+    let(:result) do
+      translated_page(translations::German2::ID)
+    end
 
-    result = translation.build_translated_page(1, true)
+    it 'includes custom xml element' do
+      expect(result.include?('custom_xml_element')).to be_truthy
+    end
 
-    expect(result.include?('custom_xml_element')).to be_truthy
-    expect(result.include?(phrase_one_element)).to be_truthy
-    expect(result.include?(phrase_two_element)).to be_truthy
+    it 'includes translated phrases' do
+      includes_translated_phrases
+    end
   end
 
   it 'error is raised if strict mode and translated phrase not found' do
@@ -133,10 +139,21 @@ describe Translation do
 
   private
 
+  def translated_page(translation_id)
+    mock_onesky(page_name, phrases)
+    translation = described_class.find(translation_id)
+    translation.build_translated_page(1, true)
+  end
+
   def mock_onesky(filename, body, code = 200)
     allow(RestClient).to(
       receive(:get).with(any_args, hash_including(params: hash_including(source_file_name: filename)))
         .and_return(instance_double(RestClient::Response, body: body, code: code))
     )
+  end
+
+  def includes_translated_phrases
+    expect(result.include?(phrase_one_element)).to be_truthy
+    expect(result.include?(phrase_two_element)).to be_truthy
   end
 end

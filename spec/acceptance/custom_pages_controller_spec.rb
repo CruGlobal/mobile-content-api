@@ -9,6 +9,7 @@ resource 'CustomPages' do
   let(:raw_post) { params.to_json }
   let(:pages) { TestConstants::GodTools::Pages }
   let(:german_2) { TestConstants::GodTools::Translations::German2::ID }
+  let(:structure) { '<custom>This is some custom xml for one translation</custom>' }
   let(:authorization) do
     AuthToken.create!(access_code: AccessCode.find(1)).token
   end
@@ -24,26 +25,32 @@ resource 'CustomPages' do
       expect(status).to be(401)
     end
 
-    it 'create a custom page' do
-      header 'Authorization', :authorization
+    context 'creating' do
+      let(:attrs) { { translation_id: german_2, page_id: pages::Page4::ID, structure: structure } }
 
-      do_request data: { type: :custom_page,
-                         attributes: { translation_id: german_2,
-                                       page_id: pages::Page4::ID,
-                                       structure: '<custom>This is some custom xml for one translation</custom>' } }
+      it 'create a custom page' do
+        header 'Authorization', :authorization
 
-      expect(status).to be(201)
-      expect(response_headers['Location']).to match(%r{custom_pages\/\d+})
-      expect(response_body['data']).not_to be_nil
+        do_request data: { type: :custom_page, attributes: attrs }
+
+        expect(status).to be(201)
+        expect(response_body['data']).not_to be_nil
+      end
+
+      it 'creating sets location header', document: false do
+        header 'Authorization', :authorization
+
+        do_request data: { type: :custom_page, attributes: attrs }
+
+        expect(response_headers['Location']).to match(%r{custom_pages\/\d+})
+      end
     end
 
     it 'update a custom page' do
       header 'Authorization', :authorization
 
       do_request data: { type: :custom_page,
-                         attributes: { translation_id: german_2,
-                                       page_id: pages::Page13::ID,
-                                       structure: '<custom>This is some custom xml for one translation</custom>' } }
+                         attributes: { translation_id: german_2, page_id: pages::Page13::ID, structure: structure } }
 
       expect(status).to be(200)
       expect(response_body['data']).not_to be_nil

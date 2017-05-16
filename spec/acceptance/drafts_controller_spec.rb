@@ -61,29 +61,48 @@ resource 'Drafts' do
       allow(resource).to receive(:id).and_return(resource_id)
     end
 
-    it 'create draft with new resource/language combination' do
-      language_id = languages::Slovak::ID
-      allow(Translation).to receive(:latest_translation).with(resource_id, language_id).and_return(nil)
-      allow(resource).to receive(:create_new_draft).with(language_id).and_return(Translation.new(id: 100))
+    context 'new resource/language combination' do
+      let(:id) { 100 }
 
-      do_request data: { type: :translation, attributes: { resource_id: resource_id, language_id: language_id } }
+      before do
+        language_id = languages::Slovak::ID
+        allow(Translation).to receive(:latest_translation).with(resource_id, language_id).and_return(nil)
+        allow(resource).to receive(:create_new_draft).with(language_id).and_return(Translation.new(id: id))
 
-      expect(status).to be(201)
-      expect(response_body['data']).not_to be_nil
-      expect(response_headers['Location']).to eq('drafts/100')
+        do_request data: { type: :translation, attributes: { resource_id: resource_id, language_id: language_id } }
+      end
+
+      it 'create draft with new resource/language combination' do
+        expect(status).to be(201)
+        expect(response_body['data']).not_to be_nil
+      end
+
+      it 'returns location header', document: false do
+        expect(status).to be(201)
+        expect(response_body['data']).not_to be_nil
+      end
     end
 
-    it 'create draft with existing resource/language combination' do
-      existing_translation = instance_double(Translation, is_published: true)
-      language_id = languages::Slovak::ID
-      allow(Translation).to receive(:latest_translation).with(resource_id, language_id).and_return(existing_translation)
-      allow(existing_translation).to receive(:create_new_version).and_return(Translation.new(id: 101))
+    context 'existing resource/language combination' do
+      let(:id) { 101 }
 
-      do_request data: { type: :translation, attributes: { resource_id: resource_id, language_id: language_id } }
+      before do
+        existing = instance_double(Translation, is_published: true)
+        language_id = languages::Slovak::ID
+        allow(Translation).to receive(:latest_translation).with(resource_id, language_id).and_return(existing)
+        allow(existing).to receive(:create_new_version).and_return(Translation.new(id: id))
 
-      expect(status).to be(201)
-      expect(response_body['data']).not_to be_nil
-      expect(response_headers['Location']).to eq('drafts/101')
+        do_request data: { type: :translation, attributes: { resource_id: resource_id, language_id: language_id } }
+      end
+
+      it 'create draft with existing resource/language combination' do
+        expect(status).to be(201)
+        expect(response_body['data']).not_to be_nil
+      end
+
+      it 'returns location header', document: false do
+        expect(response_headers['Location']).to eq("drafts/#{id}")
+      end
     end
 
     it 'create draft with resource/language combination for an existing draft' do

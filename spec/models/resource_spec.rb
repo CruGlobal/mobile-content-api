@@ -25,11 +25,16 @@ describe Resource do
     end
   end
 
-  it 'returns latest published translation for each language' do
-    latest_translations = resource.latest_translations
+  context 'returns latest published translation for each language' do
+    let(:latest_translations) { resource.latest_translations }
 
-    expect(latest_translations.count).to be(2)
-    expect(latest_translations[0][:id]).to eq(5)
-    expect(latest_translations[1][:id]).to eq(8)
+    it 'resource has 2 translations' do
+      expect(latest_translations.count).to be(2)
+    end
+
+    it 'returns highest version for each language' do
+      expect(latest_translations[0][:id]).to eq(5)
+      expect(latest_translations[1][:id]).to eq(8)
+    end
   end
 end
