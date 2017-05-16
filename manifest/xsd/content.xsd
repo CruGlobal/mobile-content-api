@@ -20,7 +20,7 @@
     <xs:complexType name="translatableText">
         <xs:simpleContent>
             <xs:extension base="xs:string">
-                <xs:attribute name="i18n-id" type="xs:string" use="required" />
+                <xs:attribute name="i18n-id" type="xs:string" use="optional" />
             </xs:extension>
         </xs:simpleContent>
     </xs:complexType>
