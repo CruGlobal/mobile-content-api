@@ -42,6 +42,7 @@ describe Page do
                                       .with(page: p, onesky_phrase_id: id_2, text: p_2)
                                       .with(page: p, onesky_phrase_id: id_3, text: p_3))
     end
+
     it 'cannot duplicate Resource ID and Page position' do
       result = described_class.create(filename: 'blahblah.xml',
                                       resource_id: 1,
@@ -49,6 +50,12 @@ describe Page do
                                       position: 1)
 
       expect(result).not_to be_valid
+    end
+
+    it 'does not create Pages for Resources not using OneSky' do
+      allow(TranslationElement).to receive(:create!).exactly(0).times
+
+      described_class.create!(structure: structure, filename: 'testing.xml', resource_id: 3, position: 3)
     end
   end
 

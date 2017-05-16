@@ -10,9 +10,13 @@ class Page < ActiveRecord::Base
   validates :resource, presence: true
   validates :position, presence: true, uniqueness: { scope: :resource }
 
-  after_save :upsert_translation_elements
+  after_save :upsert_translation_elements, if: :resource_uses_onesky
 
   private
+
+  def resource_uses_onesky
+    resource.uses_onesky?
+  end
 
   def upsert_translation_elements
     Nokogiri::XML(structure).xpath('//content:text[@i18n-id]').each do |node|

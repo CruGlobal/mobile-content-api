@@ -17,6 +17,10 @@ class Resource < ActiveRecord::Base
     where system: System.find_by(t[:name].matches(name))
   }
 
+  def uses_onesky?
+    onesky_project_id.present?
+  end
+
   def create_new_draft(language_id)
     language = Language.find(language_id)
 
