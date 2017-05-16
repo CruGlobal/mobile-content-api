@@ -13,10 +13,10 @@
 
   <!--
     Image Content - WIP
-      resource:  REQUIRED - image source
+      resource:  REQUIRED - the resource id listed in the manifest
       alignment: - (left|right|center) DEFAULT( center )
   -->
-  <image resource="{{image_uri}}" align="center"/>
+  <image resource="{{resource_id}}" align="center"/>
 
   <!--
     Button - WIP

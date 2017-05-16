@@ -18,7 +18,7 @@
   background-color:        Application background color, tract:page background color
                             DEFAULT( rgba(255, 255, 255, 1) )
 
-  background-image:       Application background image
+  background-image:       Application background image, references a resource listed in the manifest
                             DEFAULT( none )
 
   background-image-align: (top|bottom|left|right|center)
@@ -27,7 +27,7 @@
 <manifest xmlns="https://mobile-content-api.cru.org/xmlns/manifest"
           xmlns:content="https://mobile-content-api.cru.org/xmlns/content"
           background-color="{{rgba}}"
-          background-image="{{image reference}}"
+          background-image="{{resource_id}}"
           background-image-align="repeat"
           primary-color="{{rgba}}"
           primary-text-color="{{rgba}}"
@@ -49,4 +49,12 @@
     <page id="{{event_id}}" src="{{page_xml_uri}}"/>
     <page id="{{event_id}}" src="{{page_xml_uri}}"/>
   </pages>
+
+  <!--
+    Resources - REQUIRED
+      list of all resources used within this tract
+  -->
+  <resources>
+    <resource id="{{filename.jpg}}" src="{{sha256.jpg}}" />
+  </resources>
 </manifest>
