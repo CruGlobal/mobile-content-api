@@ -14,6 +14,11 @@ resource 'Resources' do
 
       expect(status).to be(200)
       expect(JSON.parse(response_body)['data'].count).to be(3)
+    end
+
+    it 'includes no objects by default', document: false do
+      do_request
+
       expect(JSON.parse(response_body)['included']).to be(nil)
     end
 
@@ -40,6 +45,11 @@ resource 'Resources' do
 
       expect(status).to be(200)
       expect(JSON.parse(response_body)['data']['attributes'].size).to be(7)
+    end
+
+    it 'includes no objects by default', document: false do
+      do_request
+
       expect(JSON.parse(response_body)['included']).to be(nil)
     end
 
@@ -53,7 +63,6 @@ resource 'Resources' do
     it 'has custom attributes', document: false do
       do_request
 
-      expect(status).to be(200)
       attrs = JSON.parse(response_body)['data']['attributes']
       expect(attrs['attr-banner-image']).to eq('this is a location')
       expect(attrs['attr-translate-me']).to eq('base language')
@@ -62,7 +71,6 @@ resource 'Resources' do
     it 'has total shares', document: false do
       do_request
 
-      expect(status).to be(200)
       attrs = JSON.parse(response_body)['data']['attributes']
       expect(attrs['total-views']).to be(1268)
     end
@@ -86,9 +94,7 @@ resource 'Resources' do
 
     it 'update resource in OneSky' do
       header 'Authorization', AuthToken.create!(access_code: AccessCode.find(1)).token
-      page_util = double
-      allow(page_util).to receive(:push_new_onesky_translation).with(false)
-      allow(PageUtil).to receive(:new).with(resource_id(1), 'en').and_return(page_util)
+      mock_page_util(id)
 
       do_request 'keep-existing-phrases': false
 
@@ -98,6 +104,12 @@ resource 'Resources' do
   end
 
   private
+
+  def mock_page_util(resource_id)
+    page_util = double
+    allow(page_util).to receive(:push_new_onesky_translation).with(false)
+    allow(PageUtil).to receive(:new).with(resource_id(resource_id), 'en').and_return(page_util)
+  end
 
   RSpec::Matchers.define :resource_id do |id|
     match { |actual| (actual.id == id) }

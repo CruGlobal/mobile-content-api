@@ -12,10 +12,12 @@ resource 'Attributes' do
   end
 
   post 'attributes/' do
+    let(:data) { { type: :attribute, attributes: { key: 'foo', value: 'bar', resource_id: godtools::ID } } }
+
     it 'does not allow unauthorized requests', document: false do
       header 'Authorization', nil
 
-      do_request data: { type: :attribute, attributes: { key: 'foo', value: 'bar', resource_id: godtools::ID } }
+      do_request data: data
 
       expect(status).to be(401)
     end
@@ -23,11 +25,18 @@ resource 'Attributes' do
     it 'create an Attribute' do
       header 'Authorization', :authorization
 
-      do_request data: { type: :attribute, attributes: { key: 'foo', value: 'bar', resource_id: godtools::ID } }
+      do_request data: data
 
       expect(status).to be(204)
-      expect(response_headers['Location']).to match(%r{attributes\/\d+})
       expect(response_body).to be_empty
+    end
+
+    it 'sets location header', document: false do
+      header 'Authorization', :authorization
+
+      do_request data: data
+
+      expect(response_headers['Location']).to match(%r{attributes\/\d+})
     end
   end
 

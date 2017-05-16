@@ -92,9 +92,7 @@ describe S3Util do
 
       push
 
-      manifest = Nokogiri::XML(File.open("pages/#{translation.manifest_name}")) do |config|
-        config.options = Nokogiri::XML::ParseOptions::STRICT
-      end
+      manifest = Nokogiri::XML(File.open("pages/#{translation.manifest_name}"))
       expect(manifest.to_s).to eq(expected)
     end
   end

@@ -31,8 +31,15 @@ resource 'Attachments' do
       do_request file: test_file, multipart: true, resource_id: 2
 
       expect(status).to be(204)
-      expect(response_headers['Location']).to match(%r{attachments\/\d+})
       expect(response_body).to be_empty
+    end
+
+    it 'sets location header', document: false do
+      header 'Authorization', :authorization
+
+      do_request file: test_file, multipart: true, resource_id: 2
+
+      expect(response_headers['Location']).to match(%r{attachments\/\d+})
     end
   end
 
