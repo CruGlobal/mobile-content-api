@@ -46,7 +46,7 @@
 
     <!--
         Image
-            resource:  REQUIRED - image source
+            resource:  REQUIRED - the resource id listed in the manifest
             align:     (start|end|center) DEFAULT( center )
     -->
     <xs:complexType name="image">
