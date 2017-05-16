@@ -10,8 +10,19 @@
         </xs:restriction>
     </xs:simpleType>
 
-    <xs:simpleType name="alignValue">
+    <xs:simpleType name="fullAlignValue">
         <xs:restriction base="xs:string">
+            <xs:enumeration value="start" />
+            <xs:enumeration value="end" />
+            <xs:enumeration value="center" />
+            <xs:enumeration value="top" />
+            <xs:enumeration value="bottom" />
+            <xs:enumeration value="repeat" />
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="horizontalAlignValue">
+        <xs:restriction base="content:fullAlignValue">
             <xs:enumeration value="start" />
             <xs:enumeration value="end" />
             <xs:enumeration value="center" />
@@ -39,7 +50,7 @@
             <xs:extension base="content:translatableString">
                 <xs:attribute name="text-color" type="content:colorValue" use="optional" />
                 <xs:attribute name="text-scale" type="xs:float" use="optional" />
-                <xs:attribute name="text-align" type="content:alignValue" use="optional" />
+                <xs:attribute name="text-align" type="content:horizontalAlignValue" use="optional" />
             </xs:extension>
         </xs:simpleContent>
     </xs:complexType>
@@ -51,7 +62,7 @@
     -->
     <xs:complexType name="image">
         <xs:attribute name="resource" type="xs:string" use="required" />
-        <xs:attribute name="align" type="content:alignValue" use="optional" />
+        <xs:attribute name="align" type="content:horizontalAlignValue" use="optional" />
     </xs:complexType>
 
     <!--
