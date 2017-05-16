@@ -3,13 +3,14 @@
     attributeFormDefault="unqualified" elementFormDefault="qualified"
     targetNamespace="https://mobile-content-api.cru.org/xmlns/content">
 
-    <xs:simpleType name="color">
+    <!-- Value definitions -->
+    <xs:simpleType name="colorValue">
         <xs:restriction base="xs:string">
             <xs:pattern value="rgba\([0-9]{1,3},\s*[0-9]{1,3},\s*[0-9]{1,3},\s*([01]|0?\.[0-9]*)\)" />
         </xs:restriction>
     </xs:simpleType>
 
-    <xs:simpleType name="align">
+    <xs:simpleType name="alignValue">
         <xs:restriction base="xs:string">
             <xs:enumeration value="start" />
             <xs:enumeration value="end" />
@@ -17,7 +18,7 @@
         </xs:restriction>
     </xs:simpleType>
 
-    <xs:complexType name="translatableText">
+    <xs:complexType name="translatableString">
         <xs:simpleContent>
             <xs:extension base="xs:string">
                 <xs:attribute name="i18n-id" type="xs:string" use="optional" />
@@ -25,6 +26,7 @@
         </xs:simpleContent>
     </xs:complexType>
 
+    <!-- element nodes -->
     <!--
         Text Content
             i18n-id:    REQUIRED - OneSky translation id
@@ -32,49 +34,48 @@
             text-scale: DEFAULT( inherit text-scale )
             text-align: (center|start|end) DEFAULT( start )
     -->
-    <xs:element name="text">
-        <xs:complexType>
-            <xs:simpleContent>
-                <xs:extension base="content:translatableText">
-                    <xs:attribute name="text-color" type="content:color" use="optional" />
-                    <xs:attribute name="text-scale" type="xs:float" use="optional" />
-                    <xs:attribute name="text-align" type="content:align" use="optional" />
-                </xs:extension>
-            </xs:simpleContent>
-        </xs:complexType>
-    </xs:element>
+    <xs:complexType name="text">
+        <xs:simpleContent>
+            <xs:extension base="content:translatableString">
+                <xs:attribute name="text-color" type="content:colorValue" use="optional" />
+                <xs:attribute name="text-scale" type="xs:float" use="optional" />
+                <xs:attribute name="text-align" type="content:alignValue" use="optional" />
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
 
     <!--
         Image
             resource:  REQUIRED - image source
             align:     (start|end|center) DEFAULT( center )
     -->
-    <xs:element name="image">
-        <xs:complexType>
-            <xs:attribute name="resource" type="xs:string" use="required" />
-            <xs:attribute name="align" type="content:align" use="optional" />
-        </xs:complexType>
-    </xs:element>
+    <xs:complexType name="image">
+        <xs:attribute name="resource" type="xs:string" use="required" />
+        <xs:attribute name="align" type="content:alignValue" use="optional" />
+    </xs:complexType>
 
     <!--
         Button
             type:    REQUIRED - (url|event) DEFAULT( url )
             value:   REQUIRED - URL or Event value
     -->
-    <xs:element name="button">
-        <xs:complexType>
-            <xs:all>
-                <xs:element name="text" type="content:translatableText" />
-            </xs:all>
-            <xs:attribute name="type">
-                <xs:simpleType>
-                    <xs:restriction base="xs:string">
-                        <xs:enumeration value="event" />
-                        <xs:enumeration value="url" />
-                    </xs:restriction>
-                </xs:simpleType>
-            </xs:attribute>
-            <xs:attribute name="value" type="xs:string" />
-        </xs:complexType>
-    </xs:element>
+    <xs:complexType name="button">
+        <xs:all>
+            <xs:element name="text" type="content:translatableString" />
+        </xs:all>
+        <xs:attribute name="type">
+            <xs:simpleType>
+                <xs:restriction base="xs:string">
+                    <xs:enumeration value="event" />
+                    <xs:enumeration value="url" />
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:attribute>
+        <xs:attribute name="value" type="xs:string" />
+    </xs:complexType>
+
+    <!-- base elements -->
+    <xs:element name="text" type="content:text" />
+    <xs:element name="image" type="content:image" />
+    <xs:element name="button" type="content:button" />
 </xs:schema>
