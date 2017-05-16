@@ -1,13 +1,38 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
-    xmlns:content="https://mobile-content-api.cru.org/xmlns/content"
+<xs:schema xmlns:content="https://mobile-content-api.cru.org/xmlns/content" xmlns:xs="http://www.w3.org/2001/XMLSchema"
     attributeFormDefault="unqualified" elementFormDefault="qualified"
     targetNamespace="https://mobile-content-api.cru.org/xmlns/content">
+
+    <xs:simpleType name="alignType">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="start" />
+            <xs:enumeration value="end" />
+            <xs:enumeration value="center" />
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:complexType name="translatableTextType">
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute name="i18n-id" type="xs:string" use="required" />
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+
+    <!--
+        Text Content
+            i18n-id:    REQUIRED - OneSky translation id
+            text-color: DEFAULT( inherit text-color )
+            text-scale: DEFAULT( inherit text-scale )
+            text-align: (center|start|end) DEFAULT( start )
+    -->
     <xs:element name="text">
         <xs:complexType>
             <xs:simpleContent>
-                <xs:extension base="xs:string">
-                    <xs:attribute name="i18n-id" type="xs:string" use="required" />
+                <xs:extension base="content:translatableTextType">
+                    <xs:attribute name="text-color" type="xs:string" use="optional" />
+                    <xs:attribute name="text-scale" type="xs:float" use="optional" />
+                    <xs:attribute name="text-align" type="content:alignType" use="optional" />
                 </xs:extension>
             </xs:simpleContent>
         </xs:complexType>
