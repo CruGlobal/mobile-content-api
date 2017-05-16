@@ -41,7 +41,7 @@ class S3Util
   end
 
   def add_pages(zip_file, pages_node)
-    @translation.resource.pages.each do |page|
+    @translation.resource.pages.order(position: :asc).each do |page|
       sha_filename = write_page_to_file(page)
       zip_file.add(sha_filename, "pages/#{sha_filename}")
 

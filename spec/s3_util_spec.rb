@@ -77,8 +77,8 @@ describe S3Util do
       '<?xml version="1.0"?>
 <manifest>
   <pages>
-    <page filename="13_FinalPage.xml" src="790a2170adb13955e67dee0261baff93cc7f045b22a35ad434435bdbdcec036a.xml"/>
-    <page filename="04_ThirdPoint.xml" src="5ce1cd1be598eb31a76c120724badc90e1e9bafa4b03c33ce40f80ccff756444.xml"/>
+    <page filename="04_ThirdPoint.xml" src="790a2170adb13955e67dee0261baff93cc7f045b22a35ad434435bdbdcec036a.xml"/>
+    <page filename="13_FinalPage.xml" src="5ce1cd1be598eb31a76c120724badc90e1e9bafa4b03c33ce40f80ccff756444.xml"/>
   </pages>
   <resources>
     <resource filename="wall.jpg" src="073d78ef4dc421f10d2db375414660d3983f506fabdaaff0887f6ee955aa3bdd"/>
@@ -87,7 +87,7 @@ describe S3Util do
 '
     end
 
-    it 'builds a manifest with names of all pages' do
+    it 'builds a manifest with names of all pages in order' do
       allow(PageUtil).to receive(:delete_temp_pages)
 
       push
