@@ -71,16 +71,31 @@ page_4_elements = ['JESUS IS GOD\'S ONLY SOLUTION FOR OUR SIN. ONLY THROUGH HIM 
                    '▲ - God  |  † - Jesus  |  ★ - Man', 'Although we deserve to be cut off from God forever, in his love God sent Jesus to pay the penalty for our sins by dying on the cross.',
                    'Through Jesus, God has bridged the gap that separates us from him, and provided a way for us to be forgiven and restored to relationship with him.', 'It\'s not enough just to know these points...']
 
+is_there_god_structure = '<item name="Is There a God?">Does God exist? Here are six straight-forward reasons to believe that God is really there.
+By Marilyn Adamson at EveryStudent.com
+Just once wouldn\'t you love for someone to simply show you the evidence for God\'s existence? No arm-twisting. No statements of, ' \
+'"You just have to believe." Well, here is an attempt to candidly offer some of the reasons which suggest that God exists.</item>'
+
+
+beyond_blind_faith_structure = '<item name="Beyond Blind Faith">
+ Is Jesus God? Here is a picture of the life of Jesus Christ and why it\'s not blind faith to believe in him...
+  By Paul E. Little
+It is impossible for us to know conclusively whether God exists and what He is like unless He takes the initiative and reveals '\
+'Himself. We must scan the horizon of history to see if there is any clue to God\'s revelation. There is one clear clue. In an '\
+'obscure village in Palestine, 2,000 years ago, a Child was born in a stable. Today the entire world is still celebrating the birth of Jesus.</item>'
 
 godtools = System.find_or_create_by!(name: 'GodTools')
 every_student = System.find_or_create_by!(name: 'EveryStudent')
 
 kgp = Resource.find_or_create_by!(name: 'Knowing God Personally', abbreviation: 'kgp', onesky_project_id: 148_314, system: godtools)
 satisfied = Resource.find_or_create_by!(name: 'Satisfied?', abbreviation: 'sat', onesky_project_id: 123_456, system: godtools)
-is_there_god = Resource.find_or_create_by!(name: 'Is There A God?', abbreviation: 'God?', system: every_student)
+es_content = Resource.find_or_create_by!(name: 'EveryStudent content', abbreviation: 'esc', system: every_student)
 
 page_13 = Page.find_or_create_by!(filename: '13_FinalPage.xml', resource: kgp, structure: page_13_structure, position: 1)
 page_4 = Page.find_or_create_by!(filename: '04_ThirdPoint.xml', resource: kgp, structure: page_4_structure, position: 0)
+
+Page.find_or_create_by!(filename: 'Is_There_A_God.xml', resource: es_content, structure: is_there_god_structure, position: 0)
+Page.find_or_create_by!(filename: 'Beyond_Blind_Faith.xml', resource: es_content, structure: beyond_blind_faith_structure, position: 1)
 
 =begin
 
@@ -110,7 +125,7 @@ Translation.find_or_create_by!(resource: satisfied, language: english, version: 
 Translation.find_or_create_by!(resource: satisfied, language: german, version: 1, is_published: true)
 Translation.find_or_create_by!(resource: satisfied, language: german, version: 2, is_published: true)
 
-Translation.find_or_create_by!(resource: is_there_god, language: english, version: 1, is_published: true)
+Translation.find_or_create_by!(resource: es_content, language: english, version: 1, is_published: true)
 
 AccessCode.find_or_create_by!(code: 123_456)
 
