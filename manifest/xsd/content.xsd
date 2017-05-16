@@ -17,7 +17,7 @@
         </xs:restriction>
     </xs:simpleType>
 
-    <xs:complexType name="translatableTextType">
+    <xs:complexType name="translatableText">
         <xs:simpleContent>
             <xs:extension base="xs:string">
                 <xs:attribute name="i18n-id" type="xs:string" use="required" />
@@ -35,12 +35,24 @@
     <xs:element name="text">
         <xs:complexType>
             <xs:simpleContent>
-                <xs:extension base="content:translatableTextType">
+                <xs:extension base="content:translatableText">
                     <xs:attribute name="text-color" type="content:color" use="optional" />
                     <xs:attribute name="text-scale" type="xs:float" use="optional" />
                     <xs:attribute name="text-align" type="content:align" use="optional" />
                 </xs:extension>
             </xs:simpleContent>
+        </xs:complexType>
+    </xs:element>
+
+    <!--
+        Image
+            resource:  REQUIRED - image source
+            align:     (start|end|center) DEFAULT( center )
+    -->
+    <xs:element name="image">
+        <xs:complexType>
+            <xs:attribute name="resource" type="xs:string" use="required" />
+            <xs:attribute name="align" type="content:align" use="optional" />
         </xs:complexType>
     </xs:element>
 
@@ -52,7 +64,7 @@
     <xs:element name="button">
         <xs:complexType>
             <xs:all>
-                <xs:element name="text" type="content:translatableTextType" />
+                <xs:element name="text" type="content:translatableText" />
             </xs:all>
             <xs:attribute name="type">
                 <xs:simpleType>
