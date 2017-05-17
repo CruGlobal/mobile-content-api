@@ -157,14 +157,13 @@
     <!-- Tabbed content -->
     <xs:complexType name="tabs">
         <xs:sequence>
-            <xs:element name="tab" maxOccurs="unbounded" minOccurs="1" type="tract:tab" />
+            <xs:element name="tab" minOccurs="1" maxOccurs="unbounded" type="tract:tab" />
         </xs:sequence>
     </xs:complexType>
-
     <xs:complexType name="tab">
         <xs:sequence>
             <xs:element name="label" type="content:textChild" />
-            <xs:choice maxOccurs="unbounded" minOccurs="0">
+            <xs:choice minOccurs="0" maxOccurs="unbounded">
                 <xs:group ref="content:elements" />
             </xs:choice>
         </xs:sequence>
