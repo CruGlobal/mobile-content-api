@@ -40,7 +40,7 @@
             </content:text>
         </paragraph>
         <paragraph>
-            <content:button>
+            <content:button type="event" value="kgp-6">
                 <content:text i18n-id="{{uuid}}">Not Ready</content:text>
             </content:button>
             <content:button type="event" value="followup-form">
@@ -90,6 +90,7 @@
               <content:text i18n-id="{{uuid}}">Thank You
               </content:text>
           </title>
+
           <paragraph>
               <content:text i18n-id="{{uuid}}">Check your email soon for your first study in following Jesus Christ.
               </content:text>
@@ -98,13 +99,13 @@
               <content:text i18n-id="{{uuid}}">If you don’t receive it, please check your spam folder.
               </content:text>
           </paragraph>
-          <form>
-              <button>
+          <paragraph>
+              <content:button type="event" value="kgp-6">
                   <content:text i18n-id="{{uuid}}">
                       Done
                   </content:text>
-              </button>
-          </form>
+              </content:button>
+          </paragraph>
           <paragraph>
               <content:text i18n-id="{{uuid}}">If this sign up occurs offline, you will need to reopen the app while on Wifi to have the signup automatically submit.
               </content:text>
