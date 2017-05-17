@@ -52,8 +52,20 @@
     -->
     <xs:complexType name="pageHeader">
         <xs:sequence>
-            <xs:element name="number" maxOccurs="1" minOccurs="0" />
-            <xs:element name="title" />
+            <xs:element name="number" maxOccurs="1" minOccurs="0">
+                <xs:complexType>
+                    <xs:all>
+                        <xs:element ref="content:text" />
+                    </xs:all>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="title">
+                <xs:complexType>
+                    <xs:all>
+                        <xs:element ref="content:text" />
+                    </xs:all>
+                </xs:complexType>
+            </xs:element>
         </xs:sequence>
         <xs:attribute name="background-color" type="content:colorValue" use="optional" />
     </xs:complexType>
