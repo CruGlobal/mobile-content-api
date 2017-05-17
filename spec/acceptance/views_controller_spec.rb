@@ -7,19 +7,18 @@ resource 'Views' do
   header 'Content-Type', 'application/vnd.api+json'
 
   let(:raw_post) { params.to_json }
+  let(:authorization) do
+    AuthToken.create!(access_code: AccessCode.find(1)).token
+  end
+
+  before do
+    header 'Authorization', :authorization
+  end
 
   post 'views/' do
-    it 'does not allow unauthorized requests', document: false do
-      header 'Authorization', nil
-
-      do_request data: { type: :view, attributes: { resource_id: 1, quantity: 257 } }
-
-      expect(status).to be(401)
-    end
+    requires_authorization
 
     it 'add views' do
-      header 'Authorization', AuthToken.create!(access_code: AccessCode.find(1)).token
-
       do_request data: { type: :view, attributes: { resource_id: 1, quantity: 257 } }
 
       expect(status).to be(204)

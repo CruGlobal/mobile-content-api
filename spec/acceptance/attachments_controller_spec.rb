@@ -17,17 +17,13 @@ resource 'Attachments' do
   end
 
   post 'attachments/' do
-    it 'does not allow unauthorized POSTs', document: false do
-      header 'Authorization', nil
-
-      do_request file: test_file, multipart: true, resource_id: 2
-
-      expect(status).to be(401)
+    before do
+      header 'Authorization', :authorization
     end
 
-    it 'create an Attachment' do
-      header 'Authorization', :authorization
+    requires_authorization
 
+    it 'create an Attachment' do
       do_request file: test_file, multipart: true, resource_id: 2
 
       expect(status).to be(204)
@@ -35,8 +31,6 @@ resource 'Attachments' do
     end
 
     it 'sets location header', document: false do
-      header 'Authorization', :authorization
-
       do_request file: test_file, multipart: true, resource_id: 2
 
       expect(response_headers['Location']).to match(%r{attachments\/\d+})
@@ -46,17 +40,13 @@ resource 'Attachments' do
   put 'attachments/:id' do
     let(:id) { 1 }
 
-    it 'does not allow unauthorized PUTs', document: false do
-      header 'Authorization', nil
-
-      do_request file: test_file, multipart: true, resource_id: 2
-
-      expect(status).to be(401)
+    before do
+      header 'Authorization', :authorization
     end
 
-    it 'update an Attachment' do
-      header 'Authorization', :authorization
+    requires_authorization
 
+    it 'update an Attachment' do
       do_request file: test_file, multipart: true, resource_id: 2
 
       expect(status).to be(204)
@@ -67,17 +57,13 @@ resource 'Attachments' do
   delete 'attachments/:id' do
     let(:id) { 1 }
 
-    it 'does not allow unauthorized DELETEs' do
-      header 'Authorization', nil
-
-      do_request
-
-      expect(status).to be(401)
+    before do
+      header 'Authorization', :authorization
     end
 
-    it 'delete an Attachment' do
-      header 'Authorization', :authorization
+    requires_authorization
 
+    it 'delete an Attachment' do
       do_request
 
       expect(status).to be(204)

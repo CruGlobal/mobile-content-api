@@ -14,23 +14,17 @@ resource 'CustomPages' do
     AuthToken.create!(access_code: AccessCode.find(1)).token
   end
 
+  before do
+    header 'Authorization', :authorization
+  end
+
   post 'custom_pages/' do
-    it 'does not allow unauthorized requests', document: false do
-      header 'Authorization', nil
-
-      do_request data: { type: :custom_page, attributes: { translation_id: german_2,
-                                                           page_id: pages::Page4::ID,
-                                                           structure: '<custom>xml</custom>' } }
-
-      expect(status).to be(401)
-    end
+    requires_authorization
 
     context 'creating' do
       let(:attrs) { { translation_id: german_2, page_id: pages::Page4::ID, structure: structure } }
 
       it 'create a custom page' do
-        header 'Authorization', :authorization
-
         do_request data: { type: :custom_page, attributes: attrs }
 
         expect(status).to be(201)
@@ -38,8 +32,6 @@ resource 'CustomPages' do
       end
 
       it 'creating sets location header', document: false do
-        header 'Authorization', :authorization
-
         do_request data: { type: :custom_page, attributes: attrs }
 
         expect(response_headers['Location']).to match(%r{custom_pages\/\d+})
@@ -47,8 +39,6 @@ resource 'CustomPages' do
     end
 
     it 'update a custom page' do
-      header 'Authorization', :authorization
-
       do_request data: { type: :custom_page,
                          attributes: { translation_id: german_2, page_id: pages::Page13::ID, structure: structure } }
 
@@ -58,8 +48,9 @@ resource 'CustomPages' do
   end
 
   delete 'custom_pages/:id' do
-    header 'Authorization', :authorization
     let(:id) { 1 }
+
+    requires_authorization
 
     it 'delete a custom page' do
       do_request

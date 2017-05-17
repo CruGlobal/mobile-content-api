@@ -7,6 +7,7 @@ resource 'Resources' do
   header 'Accept', 'application/vnd.api+json'
   header 'Content-Type', 'application/vnd.api+json'
   let(:raw_post) { params.to_json }
+  let(:authorization) { AuthToken.create!(access_code: AccessCode.find(1)).token }
 
   get 'resources/' do
     it 'get all resources' do
@@ -79,21 +80,16 @@ resource 'Resources' do
   put 'resources/:id' do
     let(:id) { 1 }
 
+    before do
+      header 'Authorization', :authorization
+    end
+
     parameter 'keep-existing-phrases',
               'Query string parameter.  If false, deprecate phrases not pushed to OneSky in this update.'
 
-    it 'requires authorization', document: false do
-      header 'Authorization', nil
-      allow(PageUtil).to(receive(:new).with(resource_id(1), 'en')
-                           .and_return(instance_double(PageUtil, push_new_onesky_translation: nil)))
-
-      do_request
-
-      expect(status).to be(401)
-    end
+    requires_authorization
 
     it 'update resource in OneSky' do
-      header 'Authorization', AuthToken.create!(access_code: AccessCode.find(1)).token
       mock_page_util(id)
 
       do_request 'keep-existing-phrases': false

@@ -12,6 +12,10 @@ resource 'TranslatedAttributes' do
     AuthToken.create!(access_code: AccessCode.find(1)).token
   end
 
+  before do
+    header 'Authorization', :authorization
+  end
+
   post 'translated_attributes' do
     let(:attrs) do
       { attribute_id: godtools::Attributes::TranslatableAttr::ID,
@@ -24,17 +28,9 @@ resource 'TranslatedAttributes' do
       allow(TranslatedAttribute).to receive(:create!).and_return(TranslatedAttribute.new(id: id))
     end
 
-    it 'does not allow unauthorized requests', document: false do
-      header 'Authorization', nil
-
-      do_request data: { type: :translated_attribute, attributes: attrs }
-
-      expect(status).to be(401)
-    end
+    requires_authorization
 
     it 'create a Translated Attribute' do
-      header 'Authorization', :authorization
-
       do_request data: { type: :translated_attribute, attributes: attrs }
 
       expect(status).to be(204)
@@ -42,8 +38,6 @@ resource 'TranslatedAttributes' do
     end
 
     it 'sets location header', document: false do
-      header 'Authorization', :authorization
-
       do_request data: { type: :translated_attribute, attributes: attrs }
 
       expect(response_headers['Location']).to eq("translated_attributes/#{id}")
@@ -51,14 +45,14 @@ resource 'TranslatedAttributes' do
   end
 
   put 'translated_attributes/:id' do
-    header 'Authorization', :authorization
-
     let(:id) { 1 }
     let(:attrs) do
       { attribute_id: godtools::Attributes::TranslatableAttr::ID,
         translation_id: godtools::Translations::German2::ID,
         value: 'updated translation' }
     end
+
+    requires_authorization
 
     it 'update a Translated Attribute' do
       attribute = instance_double(TranslatedAttribute, update!: nil)
@@ -72,9 +66,9 @@ resource 'TranslatedAttributes' do
   end
 
   delete 'translated_attributes/:id' do
-    header 'Authorization', :authorization
-
     let(:id) { 1 }
+
+    requires_authorization
 
     it 'delete a Translated Attribute' do
       attribute = instance_double(TranslatedAttribute, destroy!: nil)

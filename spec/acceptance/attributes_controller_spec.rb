@@ -11,20 +11,16 @@ resource 'Attributes' do
     AuthToken.create!(access_code: AccessCode.find(1)).token
   end
 
+  before do
+    header 'Authorization', :authorization
+  end
+
   post 'attributes/' do
     let(:data) { { type: :attribute, attributes: { key: 'foo', value: 'bar', resource_id: godtools::ID } } }
 
-    it 'does not allow unauthorized requests', document: false do
-      header 'Authorization', nil
-
-      do_request data: data
-
-      expect(status).to be(401)
-    end
+    requires_authorization
 
     it 'create an Attribute' do
-      header 'Authorization', :authorization
-
       do_request data: data
 
       expect(status).to be(204)
@@ -32,8 +28,6 @@ resource 'Attributes' do
     end
 
     it 'sets location header', document: false do
-      header 'Authorization', :authorization
-
       do_request data: data
 
       expect(response_headers['Location']).to match(%r{attributes\/\d+})
@@ -41,8 +35,9 @@ resource 'Attributes' do
   end
 
   put 'attributes/:id' do
-    header 'Authorization', :authorization
     let(:id) { godtools::Attributes::BannerImage::ID }
+
+    requires_authorization
 
     it 'update an Attribute' do
       do_request data: { type: :attribute, attributes: { key: 'foo', value: 'new value', resource_id: godtools::ID } }
@@ -53,8 +48,9 @@ resource 'Attributes' do
   end
 
   delete 'attributes/:id' do
-    header 'Authorization', :authorization
     let(:id) { godtools::Attributes::BannerImage::ID }
+
+    requires_authorization
 
     it 'delete an Attribute' do
       do_request
