@@ -58,7 +58,12 @@
     -->
     <xs:complexType name="pageHeader">
         <xs:sequence>
-            <xs:element name="number" maxOccurs="1" minOccurs="0" type="content:textChild" />
+            <!--
+                Page number, displayed in page header - OPTIONAL
+                    text-color: DEFAULT( primary-text-color )
+                    text-scale: DEFAULT( 3.0 )
+            -->
+            <xs:element name="number" minOccurs="0" maxOccurs="1" type="content:textChild" />
             <xs:element name="title" type="content:textChild" />
         </xs:sequence>
         <xs:attribute name="background-color" type="content:colorValue" use="optional" />
