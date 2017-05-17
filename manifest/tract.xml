@@ -103,6 +103,29 @@
         </content:text>
 
         <content:button i18n-id="{{uuid}}"></content:button>
+
+        <!--
+          Tabs
+            Required children elements: tab
+        -->
+        <tabs>
+          <!--
+            Tab - This is an individual tab of content.
+              The recommended maximum number of tabs for usability is 3.
+          -->
+          <tab>
+            <!--
+              Tab label - REQUIRED
+            -->
+            <label>
+              <content:text i18n-id="{{uuid}}">Option A</content:text>
+            </label>
+
+            <!-- Content to be displayed when this tab is active -->
+            <content:image />
+            <content:text />
+          </tab>
+        </tabs>
       </paragraph>
     </card>
   </cards>

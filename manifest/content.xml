@@ -73,25 +73,4 @@
     <button />
   </form>
 
-  <!--
-    Tabs
-      Required children elements: tab
-  -->
-  <tabs>
-    <tab>
-      <label>
-        <text i18n-id="{{uuid}}">Option A</text>
-      </label>
-      <image />
-      <text />
-    </tab>
-    <tab>
-      <label>
-        <text i18n-id="{{uuid}}">Option B</text>
-      </label>
-      <image />
-      <text />
-    </tab>
-  </tabs>
-
 </content-types>
