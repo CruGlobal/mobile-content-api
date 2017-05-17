@@ -29,6 +29,23 @@
         </xs:restriction>
     </xs:simpleType>
 
+    <xs:simpleType name="uri">
+        <xs:restriction base="xs:anyURI">
+            <xs:pattern value="https?://.*" />
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="eventIdValue">
+        <xs:restriction base="xs:string">
+            <xs:pattern value="([a-zA-Z]+:)?[a-zA-Z_\-]+" />
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="eventIdValues">
+        <xs:restriction base="xs:string">
+            <xs:pattern value="([a-zA-Z]+:)?[a-zA-Z_\-]+(,([a-zA-Z]+:)?[a-zA-Z_\-]+)*" />
+        </xs:restriction>
+    </xs:simpleType>
+
     <!-- element nodes -->
     <!--
         Text Content
@@ -61,7 +78,7 @@
     <!--
         Button
             type:    REQUIRED - (url|event) DEFAULT( url )
-            value:   REQUIRED - URL or Event value
+            value:   REQUIRED - URL or Event values
     -->
     <xs:complexType name="button">
         <xs:complexContent>
@@ -74,7 +91,11 @@
                         </xs:restriction>
                     </xs:simpleType>
                 </xs:attribute>
-                <xs:attribute name="value" type="xs:string" />
+                <xs:attribute name="value">
+                    <xs:simpleType>
+                        <xs:union memberTypes="content:uri content:eventIdValues" />
+                    </xs:simpleType>
+                </xs:attribute>
             </xs:extension>
         </xs:complexContent>
     </xs:complexType>
