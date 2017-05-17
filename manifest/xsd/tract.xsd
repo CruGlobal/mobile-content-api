@@ -64,6 +64,10 @@
                     text-scale: DEFAULT( 3.0 )
             -->
             <xs:element name="number" minOccurs="0" maxOccurs="1" type="content:textChild" />
+            <!--
+                Page title, displayed in page header - REQUIRED
+                    text-color: DEFAULT( primary-text-color )
+            -->
             <xs:element name="title" type="content:textChild" />
         </xs:sequence>
         <xs:attribute name="background-color" type="content:colorValue" use="optional" />
@@ -75,7 +79,16 @@
     -->
     <xs:complexType name="pageHero">
         <xs:sequence>
+            <!--
+                Hero heading - OPTIONAL
+                    text-color: DEFAULT( primary-color )
+                    text-scale: DEFAULT( 3.0 ) (3 times default text size)
+            -->
             <xs:element name="heading" maxOccurs="1" minOccurs="0" type="content:textChild" />
+            <!--
+                Content section - OPTIONAL
+                    text-scale: DEFAULT( 1.0 )
+            -->
             <xs:choice maxOccurs="unbounded" minOccurs="0">
                 <xs:element name="paragraph" type="tract:paragraph" />
                 <xs:element name="form" type="tract:form" />
@@ -95,8 +108,16 @@
     -->
     <xs:complexType name="card">
         <xs:sequence>
+            <!--
+                Card label - REQUIRED
+                    text-color: DEFAULT( primary-text-color )
+            -->
             <xs:element name="label" type="content:textChild" />
-            <xs:choice minOccurs="1" maxOccurs="unbounded">
+            <!--
+                Content section - OPTIONAL
+                    text-scale: DEFAULT( 1.0 )
+            -->
+            <xs:choice minOccurs="0" maxOccurs="unbounded">
                 <xs:element ref="tract:paragraph" />
                 <xs:element ref="tract:form" />
             </xs:choice>
