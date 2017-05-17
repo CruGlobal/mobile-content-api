@@ -37,12 +37,12 @@
 
     <xs:simpleType name="eventIdValue">
         <xs:restriction base="xs:string">
-            <xs:pattern value="([a-zA-Z]+:)?[a-zA-Z_\-]+" />
+            <xs:pattern value="([a-zA-Z0-9]+:)?[a-zA-Z0-9_\-]+" />
         </xs:restriction>
     </xs:simpleType>
     <xs:simpleType name="eventIdValues">
         <xs:restriction base="xs:string">
-            <xs:pattern value="([a-zA-Z]+:)?[a-zA-Z_\-]+(,([a-zA-Z]+:)?[a-zA-Z_\-]+)*" />
+            <xs:pattern value="([a-zA-Z0-9]+:)?[a-zA-Z0-9_\-]+(,([a-zA-Z0-9]+:)?[a-zA-Z0-9_\-]+)*" />
         </xs:restriction>
     </xs:simpleType>
 
@@ -83,7 +83,7 @@
     <xs:complexType name="button">
         <xs:complexContent>
             <xs:extension base="content:textChild">
-                <xs:attribute name="type">
+                <xs:attribute name="type" use="required">
                     <xs:simpleType>
                         <xs:restriction base="xs:string">
                             <xs:enumeration value="event" />
@@ -91,7 +91,7 @@
                         </xs:restriction>
                     </xs:simpleType>
                 </xs:attribute>
-                <xs:attribute name="value">
+                <xs:attribute name="value" use="required">
                     <xs:simpleType>
                         <xs:union memberTypes="content:uri content:eventIdValues" />
                     </xs:simpleType>
