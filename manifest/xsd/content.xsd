@@ -72,7 +72,7 @@
     -->
     <xs:complexType name="button">
         <xs:all>
-            <xs:element name="text" type="content:translatableString" />
+            <xs:element ref="content:text" />
         </xs:all>
         <xs:attribute name="type">
             <xs:simpleType>
@@ -83,18 +83,6 @@
             </xs:simpleType>
         </xs:attribute>
         <xs:attribute name="value" type="xs:string" />
-    </xs:complexType>
-
-    <!--
-        Paragraph - Vertical stack of content with margin/padding between each item
-            Valid child elements: text, image, button
-    -->
-    <xs:complexType name="paragraph">
-        <xs:choice maxOccurs="unbounded">
-            <xs:element name="text" type="content:text" />
-            <xs:element name="image" type="content:image" />
-            <xs:element name="button" type="content:button" />
-        </xs:choice>
     </xs:complexType>
 
     <!--
@@ -124,58 +112,25 @@
 
     <!--
         Input label
-            text-color: DEFAULT( inherit text-color )
     -->
     <xs:complexType name="inputLabel">
         <xs:all>
-            <xs:element name="text">
-                <xs:complexType>
-                    <xs:simpleContent>
-                        <xs:extension base="content:translatableString">
-                            <xs:attribute name="text-color" type="content:colorValue" use="optional" />
-                        </xs:extension>
-                    </xs:simpleContent>
-                </xs:complexType>
-            </xs:element>
+            <xs:element ref="content:text" />
         </xs:all>
     </xs:complexType>
 
     <!--
         Input Placeholder label
-            text-color: DEFAULT( inherit text-color )
     -->
     <xs:complexType name="inputPlaceholder">
         <xs:all>
-            <xs:element name="text">
-                <xs:complexType>
-                    <xs:simpleContent>
-                        <xs:extension base="content:translatableString">
-                            <xs:attribute name="text-color" type="content:colorValue" use="optional" />
-                        </xs:extension>
-                    </xs:simpleContent>
-                </xs:complexType>
-            </xs:element>
+            <xs:element ref="content:text" />
         </xs:all>
     </xs:complexType>
 
-    <!--
-        Form Content - vertical stacked content with input fields
-            Valid child elements: text, image, button, input
-    -->
-    <xs:complexType name="form">
-        <xs:choice maxOccurs="unbounded">
-            <xs:element name="text" type="content:text" />
-            <xs:element name="input" type="content:input" />
-            <xs:element name="image" type="content:image" />
-            <xs:element name="button" type="content:button" />
-        </xs:choice>
-    </xs:complexType>
-
-    <!-- base elements -->
+    <!-- Content Elements -->
     <xs:element name="text" type="content:text" />
     <xs:element name="image" type="content:image" />
     <xs:element name="button" type="content:button" />
     <xs:element name="input" type="content:input" />
-    <xs:element name="paragraph" type="content:paragraph" />
-    <xs:element name="form" type="content:form" />
 </xs:schema>

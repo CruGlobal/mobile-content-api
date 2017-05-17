@@ -58,6 +58,31 @@
         <xs:attribute name="background-color" type="content:colorValue" use="optional" />
     </xs:complexType>
 
+    <!--
+        Paragraph - Vertical stack of content with margin/padding between each item
+            Valid child elements: text, image, button
+    -->
+    <xs:complexType name="paragraph">
+        <xs:choice maxOccurs="unbounded">
+            <xs:element ref="content:text" />
+            <xs:element ref="content:image" />
+            <xs:element ref="content:button" />
+        </xs:choice>
+    </xs:complexType>
+
+    <!--
+        Form Content - vertical stacked content with input fields
+            Valid child elements: text, image, button, input
+    -->
+    <xs:complexType name="form">
+        <xs:choice maxOccurs="unbounded">
+            <xs:element ref="content:text" />
+            <xs:element ref="content:image" />
+            <xs:element ref="content:button" />
+            <xs:element ref="content:input" />
+        </xs:choice>
+    </xs:complexType>
+
     <!-- base elements -->
     <xs:element name="page" type="tract:page" />
 </xs:schema>
