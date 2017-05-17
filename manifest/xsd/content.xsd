@@ -29,25 +29,18 @@
         </xs:restriction>
     </xs:simpleType>
 
-    <xs:complexType name="translatableString">
-        <xs:simpleContent>
-            <xs:extension base="xs:string">
-                <xs:attribute name="i18n-id" type="xs:string" use="optional" />
-            </xs:extension>
-        </xs:simpleContent>
-    </xs:complexType>
-
     <!-- element nodes -->
     <!--
         Text Content
-            i18n-id:    REQUIRED - OneSky translation id
+            i18n-id:    OPTIONAL - OneSky translation id
             text-color: DEFAULT( inherit text-color )
             text-scale: DEFAULT( inherit text-scale )
             text-align: (center|start|end) DEFAULT( start )
     -->
     <xs:complexType name="text">
         <xs:simpleContent>
-            <xs:extension base="content:translatableString">
+            <xs:extension base="xs:string">
+                <xs:attribute name="i18n-id" type="xs:string" use="optional" />
                 <xs:attribute name="text-color" type="content:colorValue" use="optional" />
                 <xs:attribute name="text-scale" type="xs:float" use="optional" />
                 <xs:attribute name="text-align" type="content:horizontalAlignValue" use="optional" />
