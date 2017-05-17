@@ -28,7 +28,7 @@ describe Translation do
     translation = described_class.find(translations::German1::ID)
 
     expect { translation.download_translated_phrases(page_name) }.to(
-      raise_error(Error::PhraseNotFoundError, 'No translated phrases found for language locale: de')
+      raise_error(Error::TextNotFoundError, 'No translated phrases found for language locale: de')
     )
   end
 
@@ -64,7 +64,7 @@ describe Translation do
     translation = described_class.find(translations::German2::ID)
 
     expect { translation.translated_page(1, true) }
-      .to(raise_error(Error::PhraseNotFoundError,
+      .to(raise_error(Error::TextNotFoundError,
                       "Translated phrase not found: ID: #{element_two_id}, base text: two un-translated phrase"))
   end
 
@@ -81,6 +81,14 @@ describe Translation do
     result = translation.translated_page(3, false)
 
     expect(result).to eq('German translation of article Is There A God?')
+  end
+
+  it 'error raised if translated page not found' do
+    translation = described_class.find(9)
+
+    expect { translation.translated_page(3, false) }.to(
+      raise_error(Error::TextNotFoundError, 'Translated page not found for this language.')
+    )
   end
 
   it 'increments version by one' do

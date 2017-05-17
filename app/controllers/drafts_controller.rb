@@ -53,7 +53,7 @@ class DraftsController < SecureController
     translation = load_translation
     translation.update_draft(data_attrs)
     render json: translation, status: :ok
-  rescue Error::PhraseNotFoundError => e
+  rescue Error::TextNotFoundError => e
     translation.errors.add(:id, e.message)
     render_error(translation, :conflict)
   end

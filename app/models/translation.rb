@@ -36,7 +36,7 @@ class Translation < ActiveRecord::Base
       onesky_translated_page(page_id, strict)
     else
       t = translated_pages.find_by(page_id: page_id)
-      raise Error::PhraseNotFoundError, "Translated page not found: Page ID: #{page_id}" if t.nil? # TODO: test error
+      raise Error::TextNotFoundError, 'Translated page not found for this language.' if t.nil?
       t.value
     end
   end
@@ -50,7 +50,7 @@ class Translation < ActiveRecord::Base
                                         source_file_name: page_filename, export_file_name: page_filename }
 
     if response.code == 204
-      raise Error::PhraseNotFoundError,
+      raise Error::TextNotFoundError,
             "No translated phrases found for language locale: #{locale}"
     end
     JSON.parse(response.body)
@@ -79,7 +79,7 @@ class Translation < ActiveRecord::Base
         node.content = translated_phrase
       elsif strict
         if strict
-          raise Error::PhraseNotFoundError,
+          raise Error::TextNotFoundError,
                 "Translated phrase not found: ID: #{phrase_id}, base text: #{node.content}"
         end
       end

@@ -135,7 +135,7 @@ resource 'Drafts' do
 
     it 'update draft without translating all phrases' do
       translation = Translation.find(1)
-      allow(translation).to receive(:update_draft).and_raise(Error::PhraseNotFoundError, 'Translated phrase not found.')
+      allow(translation).to receive(:update_draft).and_raise(Error::TextNotFoundError, 'Translated phrase not found.')
       allow(Translation).to receive(:find).with(godtools::Translations::German2::ID.to_s).and_return(translation)
 
       do_request data: { type: :translation, attributes: { is_published: true } }
