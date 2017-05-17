@@ -8,9 +8,12 @@ class Resource < ActiveRecord::Base
   has_many :views
   has_many :attachments
 
+  enum content_type: { tract: 0, article: 1 }
+
   validates :name, presence: true
   validates :abbreviation, presence: true, uniqueness: true
   validates :system, presence: true
+  validates :content_type, presence: true
 
   scope :system_name, lambda { |name|
     t = System.arel_table

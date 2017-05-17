@@ -45,7 +45,7 @@ resource 'Resources' do
       do_request
 
       expect(status).to be(200)
-      expect(JSON.parse(response_body)['data']['attributes'].size).to be(7)
+      expect(JSON.parse(response_body)['data']['attributes'].size).to be(8)
     end
 
     it 'includes no objects by default', document: false do

@@ -87,9 +87,9 @@ It is impossible for us to know conclusively whether God exists and what He is l
 godtools = System.find_or_create_by!(name: 'GodTools')
 every_student = System.find_or_create_by!(name: 'EveryStudent')
 
-kgp = Resource.find_or_create_by!(name: 'Knowing God Personally', abbreviation: 'kgp', onesky_project_id: 148_314, system: godtools)
-satisfied = Resource.find_or_create_by!(name: 'Satisfied?', abbreviation: 'sat', onesky_project_id: 123_456, system: godtools)
-es_content = Resource.find_or_create_by!(name: 'EveryStudent content', abbreviation: 'esc', system: every_student)
+kgp = Resource.find_or_create_by!(name: 'Knowing God Personally', content_type: :tract, abbreviation: 'kgp', onesky_project_id: 148_314, system: godtools)
+satisfied = Resource.find_or_create_by!(name: 'Satisfied?', content_type: :tract, abbreviation: 'sat', onesky_project_id: 123_456, system: godtools)
+es_content = Resource.find_or_create_by!(name: 'EveryStudent content', content_type: :article, abbreviation: 'esc', system: every_student)
 
 page_13 = Page.find_or_create_by!(filename: '13_FinalPage.xml', resource: kgp, structure: page_13_structure, position: 1)
 page_4 = Page.find_or_create_by!(filename: '04_ThirdPoint.xml', resource: kgp, structure: page_4_structure, position: 0)
