@@ -2,7 +2,7 @@
 
 class AuthController < ApplicationController
   def create
-    code = AccessCode.find_by(code: params[:data][:attributes][:code])
+    code = AccessCode.find_by(code: data_attrs[:code])
 
     return render_bad_request('Access code not found.') if code.nil?
     return render_bad_request('Access code expired.') if expired(code)

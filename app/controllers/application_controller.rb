@@ -19,6 +19,10 @@ class ApplicationController < ActionController::Base
 
   private
 
+  def data_attrs
+    params.require(:data).require(:attributes)
+  end
+
   def authorize!
     authorization = AuthToken.find_by(token: request.headers['Authorization'])
     return unless authorization.nil?

@@ -42,16 +42,16 @@ class DraftsController < SecureController
   end
 
   def load_resource
-    Resource.find(params[:data][:attributes][:resource_id])
+    Resource.find(data_attrs[:resource_id])
   end
 
   def language_id
-    params[:data][:attributes][:language_id]
+    data_attrs[:language_id]
   end
 
   def edit
     translation = load_translation
-    translation.update_draft(params[:data][:attributes])
+    translation.update_draft(data_attrs)
     render json: translation, status: :ok
   rescue Error::PhraseNotFoundError => e
     translation.errors.add(:id, e.message)

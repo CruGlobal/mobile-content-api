@@ -12,7 +12,7 @@ class LanguagesController < ApplicationController
   end
 
   def create
-    language = Language.create!(params.require(:data).require(:attributes).permit([:name, :code]))
+    language = Language.create!(data_attrs.permit([:name, :code]))
     response.headers['Location'] = "languages/#{language.id}"
     render json: language, status: :created
   end
