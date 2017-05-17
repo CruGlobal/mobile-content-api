@@ -119,8 +119,10 @@
         <xs:attribute name="background-image" type="xs:string" use="optional" />
         <!-- background-image-align: (top|bottom|left|right|center|repeat) DEFAULT( center ) -->
         <xs:attribute name="background-image-align" type="content:fullAlignValue" use="optional" />
+        <!-- hidden: DEFAULT( false ) whether this card is hidden. hidden cards can still be displayed if they have a listener that is triggered. -->
+        <xs:attribute name="hidden" type="xs:boolean" use="optional" />
         <!-- listener: an event_id that triggers display of this card -->
-        <xs:attribute name="listener" type="content:eventIdValue" />
+        <xs:attribute name="listener" type="content:eventIdValue" use="optional" />
     </xs:complexType>
 
     <!-- Call to Action (next page arrow / text) -->
