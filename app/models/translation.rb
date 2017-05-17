@@ -6,6 +6,7 @@ class Translation < ActiveRecord::Base
   belongs_to :resource
   belongs_to :language
   has_many :custom_pages
+  has_many :translated_pages
 
   validates :version, presence: true
   validates :resource, presence: true
@@ -30,25 +31,17 @@ class Translation < ActiveRecord::Base
     "#{resource.system.name}/#{resource.abbreviation}/#{language.code}/version_#{version}.zip"
   end
 
-  def build_translated_page(page_id, strict)
-    page = Page.find(page_id)
-    phrases = download_translated_phrases(page.filename)
-
-    xml = page_structure(page_id)
-    xml.xpath('//content:text[@i18n-id]').each do |node|
-      id = node['i18n-id']
-      translated_phrase = phrases[id]
-
-      if translated_phrase.present?
-        node.content = translated_phrase
-      elsif strict
-        raise Error::PhraseNotFoundError, "Translated phrase not found: ID: #{id}, base text: #{node.content}" if strict
-      end
+  def translated_page(page_id, strict)
+    if resource.uses_onesky?
+      onesky_translated_page(page_id, strict)
+    else
+      t = translated_pages.find_by(page_id: page_id)
+      raise Error::PhraseNotFoundError, "Translated page not found: Page ID: #{page_id}" if t.nil? # TODO: test error
+      t.value
     end
-
-    xml.to_s
   end
 
+  # TODO: i think i can make this private
   def download_translated_phrases(page_filename)
     locale = language.code
     response = RestClient.get "https://platform.api.onesky.io/1/projects/#{resource.onesky_project_id}/translations",
@@ -72,6 +65,28 @@ class Translation < ActiveRecord::Base
   end
 
   private
+
+  def onesky_translated_page(page_id, strict)
+    page = Page.find(page_id)
+    phrases = download_translated_phrases(page.filename)
+
+    xml = page_structure(page_id)
+    xml.xpath('//content:text[@i18n-id]').each do |node|
+      phrase_id = node['i18n-id']
+      translated_phrase = phrases[phrase_id]
+
+      if translated_phrase.present?
+        node.content = translated_phrase
+      elsif strict
+        if strict
+          raise Error::PhraseNotFoundError,
+                "Translated phrase not found: ID: #{phrase_id}, base text: #{node.content}"
+        end
+      end
+    end
+
+    xml.to_s
+  end
 
   def page_structure(page_id)
     custom_page = custom_pages.find_by(page_id: page_id)

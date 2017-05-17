@@ -38,7 +38,7 @@ resource 'Drafts' do
       translation = double
       allow(Translation).to receive(:find).with(godtools::Translations::German2::ID.to_s).and_return(translation)
       allow(translation).to(
-        receive(:build_translated_page).with(godtools::Pages::Page13::ID.to_s, false).and_return(result)
+        receive(:translated_page).with(godtools::Pages::Page13::ID.to_s, false).and_return(result)
       )
 
       do_request page_id: godtools::Pages::Page13::ID

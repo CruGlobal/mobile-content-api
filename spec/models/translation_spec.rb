@@ -54,7 +54,6 @@ describe Translation do
     it 'includes custom xml element' do
       expect(result.include?('custom_xml_element')).to be_truthy
     end
-
     it 'includes translated phrases' do
       includes_translated_phrases
     end
@@ -64,7 +63,7 @@ describe Translation do
     mock_onesky(page_name, "{ \"#{element_one_id}\":\"#{phrase_one}\" }")
     translation = described_class.find(translations::German2::ID)
 
-    expect { translation.build_translated_page(1, true) }
+    expect { translation.translated_page(1, true) }
       .to(raise_error(Error::PhraseNotFoundError,
                       "Translated phrase not found: ID: #{element_two_id}, base text: two un-translated phrase"))
   end
@@ -73,7 +72,15 @@ describe Translation do
     mock_onesky('13_FinalPage.xml', '{ "1":"This is a German phrase" }')
     translation = described_class.find(translations::German2::ID)
 
-    translation.build_translated_page(1, false)
+    translation.translated_page(1, false)
+  end
+
+  it 'uses existing translated pages for non-OneSky projects' do
+    translation = described_class.find(10)
+
+    result = translation.translated_page(3, false)
+
+    expect(result).to eq('German translation of article Is There A God?')
   end
 
   it 'increments version by one' do
@@ -155,7 +162,7 @@ describe Translation do
   def translated_page(translation_id)
     mock_onesky(page_name, phrases)
     translation = described_class.find(translation_id)
-    translation.build_translated_page(1, true)
+    translation.translated_page(1, true)
   end
 
   def mock_onesky(filename, body, code = 200)

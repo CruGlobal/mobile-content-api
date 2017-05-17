@@ -50,7 +50,7 @@ class S3Util
   end
 
   def write_page_to_file(page)
-    translated_page = @translation.build_translated_page(page.id, true)
+    translated_page = @translation.translated_page(page.id, true)
     sha_filename = "#{Digest::SHA256.hexdigest(translated_page)}.xml"
 
     File.write("pages/#{sha_filename}", translated_page)
