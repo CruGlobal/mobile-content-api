@@ -15,5 +15,6 @@ def requires_authorization
     do_request
 
     expect(status).to be(401)
+    expect(JSON.parse(response_body)['data']).to be(nil)
   end
 end
