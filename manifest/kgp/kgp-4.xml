@@ -60,7 +60,7 @@
             </content:text>
             <content:text>Titus 3:5
             </content:text>
-            <image resource="tract_test_hands" align="center" />
+            <content:image resource="tract_test_hands" align="center" />
         </paragraph>
     </card>
     <card>
@@ -75,17 +75,17 @@
             <tabs>
                 <tab>
                     <label>
-                        <text i18n-id="{{uuid}}">Self-Directed</text>
+                        <content:text i18n-id="{{uuid}}">Self-Directed</content:text>
                     </label>
-                    <image resource="tab_self_selected" align="center" />
+                    <content:image resource="tab_self_selected" align="center" />
                     <content:text i18n-id="{{uuid}}">People like this have never received Jesus into their lives. They remain guilty and cut off from God by their sins.
                     </content:text>
                 </tab>
                 <tab>
                     <label>
-                        <text i18n-id="{{uuid}}">Christ-Directed</text>
+                        <content:text i18n-id="{{uuid}}">Christ-Directed</content:text>
                     </label>
-                    <image resource="tab_christ_selected" align="center" />
+                    <content:image resource="tab_christ_selected" align="center" />
                     <content:text i18n-id="{{uuid}}">People like this have received Jesus into their lives. They have been forgiven an experience God’s love.
                     </content:text>
                 </tab>
