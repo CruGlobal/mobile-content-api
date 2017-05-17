@@ -119,6 +119,8 @@
         <xs:attribute name="background-image" type="xs:string" use="optional" />
         <!-- background-image-align: (top|bottom|left|right|center|repeat) DEFAULT( center ) -->
         <xs:attribute name="background-image-align" type="content:fullAlignValue" use="optional" />
+        <!-- listener: an event_id that triggers display of this card -->
+        <xs:attribute name="listener" type="content:eventIdValue" />
     </xs:complexType>
 
     <!-- Call to Action (next page arrow / text) -->
