@@ -96,16 +96,7 @@
         </xs:sequence>
     </xs:complexType>
 
-    <!--
-        Tract Card
-            background-color:       DEFAULT( inherited from page )
-
-            background-image:       tract:card background image.
-                                    DEFAULT( none )
-
-            background-image-align: (top|bottom|left|right|center|repeat)
-                                    DEFAULT( center )
-    -->
+    <!-- Tract Card -->
     <xs:complexType name="card">
         <xs:sequence>
             <!--
@@ -122,29 +113,27 @@
                 <xs:element ref="tract:form" />
             </xs:choice>
         </xs:sequence>
+        <!-- background-color: DEFAULT( inherited from page ) -->
         <xs:attribute name="background-color" type="content:colorValue" use="optional" />
+        <!-- background-image: DEFAULT( none ) -->
         <xs:attribute name="background-image" type="xs:string" use="optional" />
+        <!-- background-image-align: (top|bottom|left|right|center|repeat) DEFAULT( center ) -->
         <xs:attribute name="background-image-align" type="content:fullAlignValue" use="optional" />
     </xs:complexType>
 
-    <!--
-        Call to Action (next page arrow / text)
-            event: OPTIONAL - Event name
-    -->
+    <!-- Call to Action (next page arrow / text) -->
     <xs:complexType name="callToAction">
         <xs:complexContent>
             <xs:extension base="content:textChild">
+                <!-- event: OPTIONAL - Event name -->
                 <xs:attribute name="event" type="xs:string" use="optional" />
             </xs:extension>
         </xs:complexContent>
     </xs:complexType>
 
-    <!--
-        Paragraph - Vertical stack of content with margin/padding between each item
-            Valid child elements: text, image, button, tabs
-    -->
+    <!-- Paragraph - Vertical stack of content with margin/padding between each item -->
     <xs:complexType name="paragraph">
-        <xs:choice maxOccurs="unbounded">
+        <xs:choice minOccurs="1" maxOccurs="unbounded">
             <xs:element ref="content:text" />
             <xs:element ref="content:image" />
             <xs:element ref="content:button" />
