@@ -13,25 +13,6 @@ describe Translation do
   let(:phrase_one_element) { "<content:text i18n-id=\"#{element_one_id}\">#{phrase_one}</content:text>" }
   let(:phrase_two_element) { "<content:text i18n-id=\"#{element_two_id}\">#{phrase_two}</content:text>" }
 
-  it 'downloads translated phrases from OneSky' do
-    mock_onesky(page_name, phrases)
-    translation = described_class.find(translations::German1::ID)
-
-    result = translation.download_translated_phrases(page_name)
-
-    expect(result[element_one_id]).to eq(phrase_one)
-    expect(result[element_two_id]).to eq(phrase_two)
-  end
-
-  it 'PhraseNotFound error is raised if there is no phrases returned from OneSky' do
-    mock_onesky(page_name, nil, 204)
-    translation = described_class.find(translations::German1::ID)
-
-    expect { translation.download_translated_phrases(page_name) }.to(
-      raise_error(Error::TextNotFoundError, 'No translated phrases found for language locale: de')
-    )
-  end
-
   context 'builds a translated page from resource page' do
     let(:result) do
       translated_page(translations::German1::ID)
@@ -57,6 +38,15 @@ describe Translation do
     it 'includes translated phrases' do
       includes_translated_phrases
     end
+  end
+
+  it 'error is raised if there is no phrases returned from OneSky' do
+    mock_onesky(page_name, nil, 204)
+    translation = described_class.find(translations::German1::ID)
+
+    expect { translation.translated_page(1, false) }.to(
+      raise_error(Error::TextNotFoundError, 'No translated phrases found for this language.')
+    )
   end
 
   it 'error is raised if strict mode and translated phrase not found' do

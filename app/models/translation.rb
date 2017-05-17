@@ -41,21 +41,6 @@ class Translation < ActiveRecord::Base
     end
   end
 
-  # TODO: i think i can make this private
-  def download_translated_phrases(page_filename)
-    locale = language.code
-    response = RestClient.get "https://platform.api.onesky.io/1/projects/#{resource.onesky_project_id}/translations",
-                              params: { api_key: ENV['ONESKY_API_KEY'], timestamp: AuthUtil.epoch_time_seconds,
-                                        dev_hash: AuthUtil.dev_hash, locale: locale,
-                                        source_file_name: page_filename, export_file_name: page_filename }
-
-    if response.code == 204
-      raise Error::TextNotFoundError,
-            "No translated phrases found for language locale: #{locale}"
-    end
-    JSON.parse(response.body)
-  end
-
   def update_draft(params)
     update!(params.permit(:is_published))
   end
@@ -111,6 +96,16 @@ class Translation < ActiveRecord::Base
     p = download_translated_phrases('name_description.xml')
     self.translated_name = p['name']
     self.translated_description = p['description']
+  end
+
+  def download_translated_phrases(page_filename)
+    response = RestClient.get "https://platform.api.onesky.io/1/projects/#{resource.onesky_project_id}/translations",
+                              params: { api_key: ENV['ONESKY_API_KEY'], timestamp: AuthUtil.epoch_time_seconds,
+                                        dev_hash: AuthUtil.dev_hash, locale: language.code,
+                                        source_file_name: page_filename, export_file_name: page_filename }
+
+    raise Error::TextNotFoundError, 'No translated phrases found for this language.' if response.code == 204
+    JSON.parse(response.body)
   end
 
   def set_defaults
