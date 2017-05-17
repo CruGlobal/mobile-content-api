@@ -43,6 +43,13 @@
                 </xs:complexType>
             </xs:element>
             <xs:element name="call-to-action" maxOccurs="1" minOccurs="0" type="tract:callToAction" />
+            <xs:element name="modals" minOccurs="0" maxOccurs="1">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="modal" minOccurs="1" maxOccurs="unbounded" type="tract:modal" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
         </xs:sequence>
         <xs:attribute name="primary-color" type="content:colorValue" use="optional" />
         <xs:attribute name="primary-text-color" type="content:colorValue" use="optional" />
@@ -133,6 +140,25 @@
                 <xs:attribute name="event" type="xs:string" use="optional" />
             </xs:extension>
         </xs:complexContent>
+    </xs:complexType>
+
+    <!-- Modal - a Modal that is displayed when it's listener is triggered -->
+    <xs:complexType name="modal">
+        <xs:sequence>
+            <!--
+                Modal title - OPTIONAL
+                    text-scale: DEFAULT( 3.0 ) (3 times default text size)
+            -->
+            <xs:element name="title" minOccurs="0" maxOccurs="1" type="content:textChild" />
+            <!--
+                Content section - OPTIONAL
+                    text-scale: DEFAULT( 1.0 )
+            -->
+            <xs:choice minOccurs="0" maxOccurs="unbounded">
+                <xs:element ref="tract:paragraph" />
+            </xs:choice>
+        </xs:sequence>
+        <xs:attribute name="listener" type="content:listenerValue" use="required" />
     </xs:complexType>
 
     <!-- Paragraph - Vertical stack of content with margin/padding between each item -->
