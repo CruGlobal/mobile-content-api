@@ -34,7 +34,7 @@
     <xs:complexType name="page">
         <xs:sequence>
             <xs:element name="header" maxOccurs="1" minOccurs="0" type="tract:pageHeader" />
-            <xs:element name="hero" maxOccurs="1" minOccurs="0" type="tract:hero" />
+            <xs:element name="hero" maxOccurs="1" minOccurs="0" type="tract:pageHero" />
             <xs:element name="cards" maxOccurs="1" minOccurs="0" />
             <xs:element name="call-to-action" maxOccurs="1" minOccurs="0" />
         </xs:sequence>
@@ -74,7 +74,7 @@
       HERO - Page content - OPTIONAL
         content directly in the page, primarily used when no cards exist
     -->
-    <xs:complexType name="hero">
+    <xs:complexType name="pageHero">
         <xs:choice maxOccurs="unbounded" minOccurs="0">
             <xs:element name="heading">
                 <xs:complexType>
