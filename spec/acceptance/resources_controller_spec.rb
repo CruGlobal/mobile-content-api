@@ -20,7 +20,7 @@ resource 'Resources' do
     it 'includes no objects by default', document: false do
       do_request
 
-      expect(JSON.parse(response_body)['included']).to be(nil)
+      expect(JSON.parse(response_body)['included']).to be_nil
     end
 
     it 'get all resources with system name' do
@@ -51,7 +51,7 @@ resource 'Resources' do
     it 'includes no objects by default', document: false do
       do_request
 
-      expect(JSON.parse(response_body)['included']).to be(nil)
+      expect(JSON.parse(response_body)['included']).to be_nil
     end
 
     it 'get resource, include translations' do
