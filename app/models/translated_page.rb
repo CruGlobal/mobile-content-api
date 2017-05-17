@@ -8,5 +8,11 @@ class TranslatedPage < ActiveRecord::Base
   validates :page, presence: true
   validates :translation, presence: true, uniqueness: { scope: :page }
 
-  # TODO: don't allow this to be created if Resource.uses_onesky? is false
+  before_save :only_non_onesky
+
+  private
+
+  def only_non_onesky
+    raise 'Cannot be created for projects using OneSky.' if page.resource.uses_onesky?
+  end
 end
