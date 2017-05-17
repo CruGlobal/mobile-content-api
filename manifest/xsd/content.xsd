@@ -64,18 +64,19 @@
             value:   REQUIRED - URL or Event value
     -->
     <xs:complexType name="button">
-        <xs:all>
-            <xs:element ref="content:text" />
-        </xs:all>
-        <xs:attribute name="type">
-            <xs:simpleType>
-                <xs:restriction base="xs:string">
-                    <xs:enumeration value="event" />
-                    <xs:enumeration value="url" />
-                </xs:restriction>
-            </xs:simpleType>
-        </xs:attribute>
-        <xs:attribute name="value" type="xs:string" />
+        <xs:complexContent>
+            <xs:extension base="content:textChild">
+                <xs:attribute name="type">
+                    <xs:simpleType>
+                        <xs:restriction base="xs:string">
+                            <xs:enumeration value="event" />
+                            <xs:enumeration value="url" />
+                        </xs:restriction>
+                    </xs:simpleType>
+                </xs:attribute>
+                <xs:attribute name="value" type="xs:string" />
+            </xs:extension>
+        </xs:complexContent>
     </xs:complexType>
 
     <!--
@@ -86,8 +87,8 @@
     -->
     <xs:complexType name="input">
         <xs:all>
-            <xs:element name="label" maxOccurs="1" minOccurs="0" type="content:inputLabel" />
-            <xs:element name="placeholder" maxOccurs="1" minOccurs="0" type="content:inputPlaceholder" />
+            <xs:element name="label" maxOccurs="1" minOccurs="0" type="content:textChild" />
+            <xs:element name="placeholder" maxOccurs="1" minOccurs="0" type="content:textChild" />
         </xs:all>
         <xs:attribute name="name" type="xs:string" use="required" />
         <xs:attribute name="type" use="optional">
@@ -103,27 +104,14 @@
         <xs:attribute name="value" type="xs:string" use="optional" />
     </xs:complexType>
 
-    <!--
-        Input label
-    -->
-    <xs:complexType name="inputLabel">
-        <xs:all>
-            <xs:element ref="content:text" />
-        </xs:all>
-    </xs:complexType>
-
-    <!--
-        Input Placeholder label
-    -->
-    <xs:complexType name="inputPlaceholder">
-        <xs:all>
-            <xs:element ref="content:text" />
-        </xs:all>
-    </xs:complexType>
-
     <!-- Content Elements -->
     <xs:element name="text" type="content:text" />
     <xs:element name="image" type="content:image" />
     <xs:element name="button" type="content:button" />
     <xs:element name="input" type="content:input" />
+    <xs:complexType name="textChild">
+        <xs:all>
+            <xs:element ref="content:text" />
+        </xs:all>
+    </xs:complexType>
 </xs:schema>

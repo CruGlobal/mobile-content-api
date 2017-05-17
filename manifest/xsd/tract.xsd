@@ -52,20 +52,8 @@
     -->
     <xs:complexType name="pageHeader">
         <xs:sequence>
-            <xs:element name="number" maxOccurs="1" minOccurs="0">
-                <xs:complexType>
-                    <xs:all>
-                        <xs:element ref="content:text" />
-                    </xs:all>
-                </xs:complexType>
-            </xs:element>
-            <xs:element name="title">
-                <xs:complexType>
-                    <xs:all>
-                        <xs:element ref="content:text" />
-                    </xs:all>
-                </xs:complexType>
-            </xs:element>
+            <xs:element name="number" maxOccurs="1" minOccurs="0" type="content:textChild" />
+            <xs:element name="title" type="content:textChild" />
         </xs:sequence>
         <xs:attribute name="background-color" type="content:colorValue" use="optional" />
     </xs:complexType>
@@ -75,17 +63,13 @@
         content directly in the page, primarily used when no cards exist
     -->
     <xs:complexType name="pageHero">
-        <xs:choice maxOccurs="unbounded" minOccurs="0">
-            <xs:element name="heading">
-                <xs:complexType>
-                    <xs:all>
-                        <xs:element ref="content:text" />
-                    </xs:all>
-                </xs:complexType>
-            </xs:element>
-            <xs:element name="paragraph" type="tract:paragraph" />
-            <xs:element name="form" type="tract:form" />
-        </xs:choice>
+        <xs:sequence>
+            <xs:element name="heading" maxOccurs="1" minOccurs="0" type="content:textChild" />
+            <xs:choice maxOccurs="unbounded" minOccurs="0">
+                <xs:element name="paragraph" type="tract:paragraph" />
+                <xs:element name="form" type="tract:form" />
+            </xs:choice>
+        </xs:sequence>
     </xs:complexType>
 
     <!--
@@ -115,4 +99,7 @@
 
     <!-- base elements -->
     <xs:element name="page" type="tract:page" />
+    <xs:element name="paragraph" type="tract:paragraph" />
+    <xs:element name="form" type="tract:form" />
+    <xs:element name="tabs" type="tract:tabs" />
 </xs:schema>
