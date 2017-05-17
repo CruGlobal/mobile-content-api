@@ -134,9 +134,7 @@
     <!-- Paragraph - Vertical stack of content with margin/padding between each item -->
     <xs:complexType name="paragraph">
         <xs:choice minOccurs="1" maxOccurs="unbounded">
-            <xs:element ref="content:text" />
-            <xs:element ref="content:image" />
-            <xs:element ref="content:button" />
+            <xs:group ref="content:elements" />
             <xs:element ref="tract:tabs" />
         </xs:choice>
     </xs:complexType>
@@ -147,17 +145,12 @@
     -->
     <xs:complexType name="form">
         <xs:choice maxOccurs="unbounded">
-            <xs:element ref="content:text" />
-            <xs:element ref="content:image" />
-            <xs:element ref="content:button" />
-            <xs:element ref="content:input" />
+            <xs:group ref="content:elements" />
             <xs:element ref="tract:tabs" />
         </xs:choice>
     </xs:complexType>
 
-    <!--
-        Tabbed content
-    -->
+    <!-- Tabbed content -->
     <xs:complexType name="tabs">
         <xs:sequence>
             <xs:element name="tab" maxOccurs="unbounded" minOccurs="1" type="tract:tab" />
@@ -168,9 +161,7 @@
         <xs:sequence>
             <xs:element name="label" type="content:textChild" />
             <xs:choice maxOccurs="unbounded" minOccurs="0">
-                <xs:element ref="content:text" />
-                <xs:element ref="content:image" />
-                <xs:element ref="content:button" />
+                <xs:group ref="content:elements" />
             </xs:choice>
         </xs:sequence>
     </xs:complexType>

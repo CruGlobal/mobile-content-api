@@ -101,6 +101,19 @@
     </xs:complexType>
 
     <!--
+        Link
+            text-color: DEFAULT( inherit primary-color )
+    -->
+    <xs:complexType name="link">
+        <xs:complexContent>
+            <xs:extension base="content:textChild">
+                <!-- events: events to fire when link is pressed. -->
+                <xs:attribute name="events" type="content:eventIdValues" use="required" />
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+
+    <!--
         Input
             name:  REQUIRED - input key name
             type:  (text|email|phone|hidden) DEFAULT( text )
@@ -129,7 +142,17 @@
     <xs:element name="text" type="content:text" />
     <xs:element name="image" type="content:image" />
     <xs:element name="button" type="content:button" />
+    <xs:element name="link" type="content:link" />
     <xs:element name="input" type="content:input" />
+    <xs:group name="elements">
+        <xs:choice>
+            <xs:element ref="content:text" />
+            <xs:element ref="content:image" />
+            <xs:element ref="content:button" />
+            <xs:element ref="content:link" />
+            <xs:element ref="content:input" />
+        </xs:choice>
+    </xs:group>
     <xs:complexType name="textChild">
         <xs:all>
             <xs:element ref="content:text" />
