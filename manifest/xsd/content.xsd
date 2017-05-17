@@ -35,14 +35,14 @@
         </xs:restriction>
     </xs:simpleType>
 
-    <xs:simpleType name="eventIdValue">
-        <xs:restriction base="xs:string">
-            <xs:pattern value="([a-zA-Z0-9]+:)?[a-zA-Z0-9_\-]+" />
-        </xs:restriction>
-    </xs:simpleType>
-    <xs:simpleType name="eventIdValues">
+    <xs:simpleType name="eventIdsValue">
         <xs:restriction base="xs:string">
             <xs:pattern value="([a-zA-Z0-9]+:)?[a-zA-Z0-9_\-]+(,([a-zA-Z0-9]+:)?[a-zA-Z0-9_\-]+)*" />
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="listenerValue">
+        <xs:restriction base="xs:string">
+            <xs:pattern value="[a-zA-Z0-9_\-]+" />
         </xs:restriction>
     </xs:simpleType>
 
@@ -93,7 +93,7 @@
                 </xs:attribute>
                 <xs:attribute name="value" use="required">
                     <xs:simpleType>
-                        <xs:union memberTypes="content:uri content:eventIdValues" />
+                        <xs:union memberTypes="content:uri content:eventIdsValue" />
                     </xs:simpleType>
                 </xs:attribute>
             </xs:extension>
@@ -108,7 +108,7 @@
         <xs:complexContent>
             <xs:extension base="content:textChild">
                 <!-- events: events to fire when link is pressed. -->
-                <xs:attribute name="events" type="content:eventIdValues" use="required" />
+                <xs:attribute name="events" type="content:eventIdsValue" use="required" />
             </xs:extension>
         </xs:complexContent>
     </xs:complexType>
