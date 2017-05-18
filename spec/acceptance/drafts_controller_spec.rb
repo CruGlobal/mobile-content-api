@@ -13,8 +13,12 @@ resource 'Drafts' do
     AuthToken.create!(access_code: AccessCode.find(1)).token
   end
 
-  get 'drafts/' do
+  before do
     header 'Authorization', :authorization
+  end
+
+  get 'drafts/' do
+    requires_authorization
 
     it 'get all drafts ' do
       do_request
@@ -27,8 +31,9 @@ resource 'Drafts' do
   get 'drafts/:id' do
     let(:id) { godtools::Translations::German2::ID }
 
+    requires_authorization
+
     it 'get translated page' do
-      header 'Authorization', :authorization
       result = '{ \"1\": \"phrase\" }'
       translation = double
       allow(Translation).to receive(:find).with(godtools::Translations::German2::ID.to_s).and_return(translation)
@@ -41,18 +46,9 @@ resource 'Drafts' do
       expect(status).to be(200)
       expect(response_body).to eq(result)
     end
-
-    it 'get translation page without authorization', document: false do
-      header 'Authorization', nil
-
-      do_request page_id: godtools::Pages::Page13::ID
-
-      expect(status).to be(401)
-    end
   end
 
   post 'drafts' do
-    header 'Authorization', :authorization
     let(:resource) { double }
     let(:resource_id) { godtools::ID }
 
@@ -60,6 +56,8 @@ resource 'Drafts' do
       allow(Resource).to receive(:find).with(resource_id).and_return(resource)
       allow(resource).to receive(:id).and_return(resource_id)
     end
+
+    requires_authorization
 
     context 'new resource/language combination' do
       let(:id) { 100 }
@@ -121,7 +119,7 @@ resource 'Drafts' do
   put 'drafts/:id' do
     let(:id) { godtools::Translations::German2::ID }
 
-    header 'Authorization', :authorization
+    requires_authorization
 
     it 'update draft' do
       translation = Translation.find(3)
@@ -147,13 +145,14 @@ resource 'Drafts' do
   end
 
   delete 'drafts/:id' do
-    header 'Authorization', :authorization
     let(:id) { 1 }
     let(:translation) { double }
 
     before do
       allow(Translation).to receive(:find).with(id.to_s).and_return(translation)
     end
+
+    requires_authorization
 
     it 'delete draft' do
       allow(translation).to receive(:destroy!)
