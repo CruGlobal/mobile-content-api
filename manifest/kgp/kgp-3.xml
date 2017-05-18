@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!-- https://projects.invisionapp.com/d/main#/console/10765517/228342261/preview -->
-<page xmlns="http://mobile-content-api.cru.org/xmlns/tract"
+<page xmlns="https://mobile-content-api.cru.org/xmlns/tract"
       xmlns:content="https://mobile-content-api.cru.org/xmlns/content"
       background-image="chasm_in_between.png">
   <header>
