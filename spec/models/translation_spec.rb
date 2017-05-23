@@ -64,9 +64,9 @@ describe Translation do
     mock_onesky(page_name, "{ \"#{element_one_id}\":\"#{phrase_one}\" }")
     translation = described_class.find(translations::German2::ID)
 
-    expect { translation.build_translated_page(1, true) }.to(
-      raise_error(Error::PhraseNotFoundError, 'Translated phrase not found.')
-    )
+    expect { translation.build_translated_page(1, true) }
+      .to(raise_error(Error::PhraseNotFoundError,
+                      "Translated phrase not found: ID: #{element_two_id}, base text: two un-translated phrase"))
   end
 
   it 'error not raised raised if not strict mode and translated phrase not found' do
