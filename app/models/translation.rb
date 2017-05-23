@@ -16,8 +16,12 @@ class Translation < ActiveRecord::Base
   before_update :push_published_to_s3
   before_validation :set_defaults, on: :create
 
-  def create_new_version
-    raise Error::MultipleDraftsError unless is_published
+  def create_new_version # TODO: add test to translation_spec?
+    unless is_published
+      raise Error::MultipleDraftsError,
+            "Draft already exists for Resource ID: #{resource.id} and Language ID: #{language.id}"
+    end
+
     Translation.create!(resource: resource, language: language, version: version + 1)
   end
 
@@ -46,12 +50,16 @@ class Translation < ActiveRecord::Base
   end
 
   def download_translated_phrases(page_filename)
+    locale = language.code
     response = RestClient.get "https://platform.api.onesky.io/1/projects/#{resource.onesky_project_id}/translations",
                               params: { api_key: ENV['ONESKY_API_KEY'], timestamp: AuthUtil.epoch_time_seconds,
-                                        dev_hash: AuthUtil.dev_hash, locale: language.code,
+                                        dev_hash: AuthUtil.dev_hash, locale: locale,
                                         source_file_name: page_filename, export_file_name: page_filename }
 
-    raise Error::PhraseNotFoundError, 'No translated phrases found for this language.' if response.code == 204
+    if response.code == 204
+      raise Error::PhraseNotFoundError,
+            "No translated phrases found for language locale: #{locale}"
+    end
     JSON.parse(response.body)
   end
 
@@ -72,7 +80,7 @@ class Translation < ActiveRecord::Base
   end
 
   def prevent_destroy_published
-    raise Error::TranslationError, 'Cannot delete published drafts.' if is_published
+    raise Error::TranslationError, "Cannot delete published draft: #{id}" if is_published
   end
 
   def push_published_to_s3

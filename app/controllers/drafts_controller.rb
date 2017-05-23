@@ -11,9 +11,9 @@ class DraftsController < SecureController
 
   def create
     create_new_draft
-  rescue Error::MultipleDraftsError
+  rescue Error::MultipleDraftsError => e
     d = Translation.new
-    d.errors.add(:id, 'Draft already exists for this resource and language.')
+    d.errors.add(:id, e.message)
     render_error(d, :bad_request)
   end
 

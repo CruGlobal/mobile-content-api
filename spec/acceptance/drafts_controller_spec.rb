@@ -111,7 +111,7 @@ resource 'Drafts' do
 
       expect(status).to be(400)
       expect(JSON.parse(response_body)['errors'][0]['detail']).to(
-        eq('Draft already exists for this resource and language.')
+        eq("Draft already exists for Resource ID: #{resource_id} and Language ID: #{language_id}")
       )
     end
   end

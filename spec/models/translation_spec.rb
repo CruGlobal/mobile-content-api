@@ -28,7 +28,7 @@ describe Translation do
     translation = described_class.find(translations::German1::ID)
 
     expect { translation.download_translated_phrases(page_name) }.to(
-      raise_error(Error::PhraseNotFoundError, 'No translated phrases found for this language.')
+      raise_error(Error::PhraseNotFoundError, 'No translated phrases found for language locale: de')
     )
   end
 
@@ -108,7 +108,7 @@ describe Translation do
   it 'raises an error if deletion of a translation is attempted' do
     translation = described_class.find(translations::English::ID)
 
-    expect { translation.destroy! }.to raise_error(Error::TranslationError, 'Cannot delete published drafts.')
+    expect { translation.destroy! }.to raise_error(Error::TranslationError, 'Cannot delete published draft: 1')
   end
 
   context 'is_published set to true' do
