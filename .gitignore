@@ -28,3 +28,4 @@ vendor/ruby
 
 /.env.*
 /doc
+public/system
