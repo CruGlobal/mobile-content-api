@@ -42,7 +42,7 @@ class PageUtil
 
   def write_temp_file(page)
     page_to_upload = {}
-    page.translation_elements.each { |element| page_to_upload[element.onesky_phrase_id] = element.text }
+    page.onesky_phrases.each { |element| page_to_upload[element.onesky_id] = element.text }
 
     temp_file = File.open("pages/#{page.filename}", 'w')
     temp_file.puts(page_to_upload.to_json)

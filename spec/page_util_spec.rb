@@ -31,12 +31,8 @@ describe PageUtil do
   end
 
   private def push
-    elements = [2]
-    elements[0] = TranslationElement.new(id: 1, text: 'phrase 1')
-    elements[1] = TranslationElement.new(id: 2, text: 'phrase 2')
-
-    page = Page.new(filename: 'test_page.xml', translation_elements: elements)
-
+    elements = [OneskyPhrase.new(id: 1, text: 'phrase 1'), OneskyPhrase.new(id: 2, text: 'phrase 2')]
+    page = Page.new(filename: 'test_page.xml', onesky_phrases: elements)
     resource = Resource.new(pages: [page], onesky_project_id: 1)
 
     PageUtil.new(resource, 'de').push_new_onesky_translation
