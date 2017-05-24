@@ -13,6 +13,8 @@ class TranslatedAttribute < ActiveRecord::Base
   private
 
   def parent_must_be_translatable
-    raise 'Parent attribute is not translatable.' unless parent_attribute.is_translatable
+    return if parent_attribute.is_translatable
+
+    raise "Parent attribute with ID: #{parent_attribute.id} is not translatable."
   end
 end
