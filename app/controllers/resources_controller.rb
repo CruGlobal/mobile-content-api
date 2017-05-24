@@ -39,6 +39,6 @@ class ResourcesController < ApplicationController
   end
 
   def permitted_params
-    [:name, :abbreviation, :onesky_project_id, :system_id, :description]
+    [:name, :abbreviation, :manifest, :onesky_project_id, :system_id, :description]
   end
 end
