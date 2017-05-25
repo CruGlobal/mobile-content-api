@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!-- Content Types - content-types element is for documentation only, not a valid type -->
+<content-types xmlns="https://mobile-content-api.cru.org/xmlns/content">
+
+  <!--
+    Text Content
+      i18n-id:    REQUIRED - OneSky translation id
+      text-color: DEFAULT( inherit text-color )
+      text-scale: DEFAULT( inherit text-scale )
+      text-align: (center|start|end) DEFAULT( start )
+  -->
+  <text i18n-id="{{uuid}}">Translatable Text</text>
+
+  <!--
+    Image Content - WIP
+      resource:  REQUIRED - the resource id listed in the manifest
+      alignment: - (left|right|center) DEFAULT( center )
+  -->
+  <image resource="{{resource_id}}" align="center"/>
+
+  <!--
+    Button - WIP
+      i18n-id: REQUIRED - OneSky translation id
+      type:    REQUIRED - (url|event) DEFAULT( url )
+      value:   REQUIRED - URL or Event value
+  -->
+  <button type="url"
+          value="https://give.cru.org">
+    <text i18n-id="{{uuid}}">Label</text>
+  </button>
+
+  <!--
+    Input field - WIP
+      type:  (text|email|phone|hidden) DEFAULT( text )
+      name:  REQUIRED - input key name
+      value: OPTIONAL DEFAULT( empty_string )
+  -->
+  <input type="text" name="">
+    <!--
+      Input label - OPTIONAL
+        text-color: DEFAULT( inherit text-color )
+    -->
+    <label>
+      <text i18n-id="{{uuid}}">Label</text>
+    </label>
+    <!--
+      Placeholder label - OPTIONAL
+        text-color: DEFAULT( inherit text-color )
+    -->
+    <placeholder>
+      <text i18n-id="{{uuid}}">Placeholder</text>
+    </placeholder>
+  </input>
+
+  <!--
+    Vertical stack of content with margin/padding between each item
+      Valid child elements: text, image, button
+  -->
+  <paragraph>
+    <text />
+    <image />
+    <button />
+  </paragraph>
+
+  <!--
+    Form Content- WIP - vertical stacked content with input fields
+      Valid child elements: text, image, button, input
+  -->
+  <form>
+    <text />
+    <input />
+    <input />
+    <button />
+  </form>
+
+</content-types>

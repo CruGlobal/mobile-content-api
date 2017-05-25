@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<xs:schema xmlns:content="https://mobile-content-api.cru.org/xmlns/content"
+    xmlns:tract="https://mobile-content-api.cru.org/xmlns/tract" xmlns:xs="http://www.w3.org/2001/XMLSchema"
+    attributeFormDefault="unqualified" elementFormDefault="qualified"
+    targetNamespace="https://mobile-content-api.cru.org/xmlns/tract">
+
+    <xs:import namespace="https://mobile-content-api.cru.org/xmlns/content" schemaLocation="content.xsd" />
+
+    <!-- Value definitions -->
+
+    <!-- element nodes -->
+    <!--
+        Page node
+            primary-color:          tract:header background, tract:card title font color,
+                                    event button background, input field border/highlight.
+                                    Renderer may lighten/darken to create highlight/hover colors
+                                    DEFAULT( inherited from manifest )
+
+            primary-text-color:     Color used for text inside primary-color background, for contrast.
+                                    DEFAULT( inherited from manifest )
+
+            text-color:             Color used for content:text fields
+                                    DEFAULT( inherited from manifest )
+
+            background-color:       tract:page background color
+                                    DEFAULT( rgba(255, 255, 255, 0) ) /* transparent */
+
+            background-image:       tract:page background image.
+                                    DEFAULT( none )
+
+            background-image-align: (top|bottom|left|right|center|repeat)
+                                    DEFAULT( center )
+    -->
+    <xs:complexType name="page">
+        <xs:sequence>
+            <xs:element name="header" maxOccurs="1" minOccurs="0" type="tract:pageHeader" />
+            <xs:element name="hero" maxOccurs="1" minOccurs="0" type="tract:pageHero" />
+            <xs:element name="cards" maxOccurs="1" minOccurs="0">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="card" maxOccurs="unbounded" minOccurs="1" type="tract:card" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="call-to-action" maxOccurs="1" minOccurs="0" type="tract:callToAction" />
+            <xs:element name="modals" minOccurs="0" maxOccurs="1">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="modal" minOccurs="1" maxOccurs="unbounded" type="tract:modal" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+        </xs:sequence>
+        <xs:attribute name="primary-color" type="content:colorValue" use="optional" />
+        <xs:attribute name="primary-text-color" type="content:colorValue" use="optional" />
+        <xs:attribute name="text-color" type="content:colorValue" use="optional" />
+        <xs:attribute name="background-color" type="content:colorValue" use="optional" />
+        <xs:attribute name="background-image" type="xs:string" use="optional" />
+        <xs:attribute name="background-image-align" type="content:fullAlignValue" use="optional" />
+    </xs:complexType>
+
+    <!--
+        Page Header
+            background-color: DEFAULT( primary-color )
+    -->
+    <xs:complexType name="pageHeader">
+        <xs:sequence>
+            <!--
+                Page number, displayed in page header - OPTIONAL
+                    text-color: DEFAULT( primary-text-color )
+                    text-scale: DEFAULT( 3.0 )
+            -->
+            <xs:element name="number" minOccurs="0" maxOccurs="1" type="content:textChild" />
+            <!--
+                Page title, displayed in page header - REQUIRED
+                    text-color: DEFAULT( primary-text-color )
+            -->
+            <xs:element name="title" type="content:textChild" />
+        </xs:sequence>
+        <xs:attribute name="background-color" type="content:colorValue" use="optional" />
+    </xs:complexType>
+
+    <!--
+        HERO - Page content
+            content directly in the page, primarily used when no cards exist
+    -->
+    <xs:complexType name="pageHero">
+        <xs:sequence>
+            <!--
+                Hero heading - OPTIONAL
+                    text-color: DEFAULT( primary-color )
+                    text-scale: DEFAULT( 3.0 ) (3 times default text size)
+            -->
+            <xs:element name="heading" maxOccurs="1" minOccurs="0" type="content:textChild" />
+            <!--
+                Content section - OPTIONAL
+                    text-scale: DEFAULT( 1.0 )
+            -->
+            <xs:choice maxOccurs="unbounded" minOccurs="0">
+                <xs:element name="paragraph" type="tract:paragraph" />
+                <xs:element name="form" type="tract:form" />
+            </xs:choice>
+        </xs:sequence>
+    </xs:complexType>
+
+    <!-- Tract Card -->
+    <xs:complexType name="card">
+        <xs:sequence>
+            <!--
+                Card label - REQUIRED
+                    text-color: DEFAULT( primary-text-color )
+            -->
+            <xs:element name="label" type="content:textChild" />
+            <!--
+                Content section - OPTIONAL
+                    text-scale: DEFAULT( 1.0 )
+            -->
+            <xs:choice minOccurs="0" maxOccurs="unbounded">
+                <xs:element ref="tract:paragraph" />
+                <xs:element ref="tract:form" />
+            </xs:choice>
+        </xs:sequence>
+        <!-- background-color: DEFAULT( inherited from page ) -->
+        <xs:attribute name="background-color" type="content:colorValue" use="optional" />
+        <!-- background-image: DEFAULT( none ) -->
+        <xs:attribute name="background-image" type="xs:string" use="optional" />
+        <!-- background-image-align: (top|bottom|left|right|center|repeat) DEFAULT( center ) -->
+        <xs:attribute name="background-image-align" type="content:fullAlignValue" use="optional" />
+        <!-- hidden: DEFAULT( false ) whether this card is hidden. hidden cards can still be displayed if they have a listener that is triggered. -->
+        <xs:attribute name="hidden" type="xs:boolean" use="optional" />
+        <!-- listener: an event_id that triggers display of this card -->
+        <xs:attribute name="listener" type="content:listenerValue" use="optional" />
+    </xs:complexType>
+
+    <!-- Call to Action (next page arrow / text) -->
+    <xs:complexType name="callToAction">
+        <xs:complexContent>
+            <xs:extension base="content:textChild">
+                <!-- event: OPTIONAL - Event name -->
+                <xs:attribute name="event" type="xs:string" use="optional" />
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+
+    <!-- Modal - a Modal that is displayed when it's listener is triggered -->
+    <xs:complexType name="modal">
+        <xs:sequence>
+            <!--
+                Modal title - OPTIONAL
+                    text-scale: DEFAULT( 3.0 ) (3 times default text size)
+            -->
+            <xs:element name="title" minOccurs="0" maxOccurs="1" type="content:textChild" />
+            <!--
+                Content section - OPTIONAL
+                    text-scale: DEFAULT( 1.0 )
+            -->
+            <xs:choice minOccurs="0" maxOccurs="unbounded">
+                <xs:element ref="tract:paragraph" />
+            </xs:choice>
+        </xs:sequence>
+        <xs:attribute name="listener" type="content:listenerValue" use="required" />
+    </xs:complexType>
+
+    <!-- Paragraph - Vertical stack of content with margin/padding between each item -->
+    <xs:complexType name="paragraph">
+        <xs:choice minOccurs="1" maxOccurs="unbounded">
+            <xs:group ref="content:elements" />
+            <xs:element ref="tract:tabs" />
+        </xs:choice>
+    </xs:complexType>
+
+    <!--
+        Form Content - vertical stacked content with input fields
+    -->
+    <xs:complexType name="form">
+        <xs:choice maxOccurs="unbounded">
+            <xs:group ref="content:elements" />
+            <xs:element ref="tract:tabs" />
+        </xs:choice>
+    </xs:complexType>
+
+    <!-- Tabbed content -->
+    <xs:complexType name="tabs">
+        <xs:sequence>
+            <xs:element name="tab" minOccurs="1" maxOccurs="unbounded" type="tract:tab" />
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="tab">
+        <xs:sequence>
+            <xs:element name="label" type="content:textChild" />
+            <xs:choice minOccurs="0" maxOccurs="unbounded">
+                <xs:group ref="content:elements" />
+            </xs:choice>
+        </xs:sequence>
+    </xs:complexType>
+
+    <!-- base elements -->
+    <xs:element name="page" type="tract:page" />
+    <xs:element name="paragraph" type="tract:paragraph" />
+    <xs:element name="form" type="tract:form" />
+    <xs:element name="tabs" type="tract:tabs" />
+</xs:schema>
