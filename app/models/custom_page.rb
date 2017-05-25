@@ -18,6 +18,7 @@ class CustomPage < ActiveRecord::Base
     errors = XmlUtil.validate_xml(structure)
     return if errors.empty?
 
-    raise "Custom page with filename '#{page.filename}' for translation: #{translation.id} has invalid XML: #{errors}"
+    raise "Cannot create Custom Page, XML is invalid: #{errors}" if new_record?
+    raise "Cannot update Custom Page with ID #{id}, XML is invalid: #{errors}"
   end
 end

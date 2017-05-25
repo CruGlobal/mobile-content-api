@@ -59,7 +59,7 @@ describe Page do
       filename = 'blahblah.xml'
 
       expect { described_class.create(filename: filename, resource_id: 1, structure: 'invalid XML', position: 1) }
-        .to raise_error("Page with filename '#{filename}' has invalid XML: "\
+        .to raise_error('Cannot create Page, XML is invalid: '\
                         '[#<Nokogiri::XML::SyntaxError: The document has no document element.>]')
     end
   end
@@ -85,7 +85,7 @@ describe Page do
 
     it 'validates page XML' do
       expect { p.update!(structure: 'invalid XML') }
-        .to raise_error("Page with filename '#{p.filename}' has invalid XML: "\
+        .to raise_error('Cannot update Page with ID 1, XML is invalid: '\
                         '[#<Nokogiri::XML::SyntaxError: The document has no document element.>]')
     end
   end

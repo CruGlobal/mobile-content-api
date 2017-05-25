@@ -37,6 +37,9 @@ class Page < ActiveRecord::Base
 
   def validate_xml
     errors = XmlUtil.validate_xml(structure)
-    raise "Page with filename '#{filename}' has invalid XML: #{errors}" unless errors.empty?
+    return if errors.empty?
+
+    raise "Cannot create Page, XML is invalid: #{errors}" if new_record?
+    raise "Cannot update Page with ID #{id}, XML is invalid: #{errors}"
   end
 end
