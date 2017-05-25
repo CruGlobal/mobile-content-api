@@ -4,7 +4,7 @@ module XmlUtil
   def self.validate_xml(object)
     return unless object.structure_changed?
 
-    xsd = Nokogiri::XML::Schema(File.open('manifest/xsd/tract.xsd'))
+    xsd = Nokogiri::XML::Schema(File.open('public/xmlns/tract.xsd'))
     errors = xsd.validate(Nokogiri::XML(object.structure))
     return if errors.empty?
 
