@@ -8,36 +8,36 @@
 #   Character.create(name: 'Luke', movie: movies.first)
 
 page_13_structure = '<?xml version="1.0" encoding="UTF-8" ?>
-<page xmlns="http://mobile-content-api.cru.org/xmlns/tract"
+<page xmlns="https://mobile-content-api.cru.org/xmlns/tract"
       xmlns:content="https://mobile-content-api.cru.org/xmlns/content">
   <hero>
     <heading>
       <content:text i18n-id="f9894df9-df1d-4831-9782-345028c6c9a2">one un-translated phrase</content:text>
-      <content:text i18n-id="9deda19f-c3ee-42ed-a1eb-92423e543352">two un-translated phrase</content:text>
     </heading>
 
-    <base_xml_element>
+    <paragraph>
+      <content:text i18n-id="9deda19f-c3ee-42ed-a1eb-92423e543352">two un-translated phrase</content:text>
+    </paragraph>
+
+    <form>
       <content:text>These four points explain how to enter into a personal relationship with God and
         experience the life for which you were created.
       </content:text>
-    </base_xml_element>
+    </form>
   </hero>
 </page>'
 
 page_13_custom_structure = '<?xml version="1.0" encoding="UTF-8" ?>
-<page xmlns="http://mobile-content-api.cru.org/xmlns/tract"
+<page xmlns="https://mobile-content-api.cru.org/xmlns/tract"
       xmlns:content="https://mobile-content-api.cru.org/xmlns/content">
   <hero>
     <heading>
       <content:text i18n-id="f9894df9-df1d-4831-9782-345028c6c9a2">one un-translated phrase</content:text>
-      <content:text i18n-id="9deda19f-c3ee-42ed-a1eb-92423e543352">two un-translated phrase</content:text>
     </heading>
 
-    <custom_xml_element>
-      <content:text>These four points explain how to enter into a personal relationship with God and
-        experience the life for which you were created.
-      </content:text>
-    </custom_xml_element>
+    <paragraph>
+      <content:text i18n-id="9deda19f-c3ee-42ed-a1eb-92423e543352">two un-translated phrase</content:text>
+    </paragraph>
   </hero>
 </page>'
 
@@ -46,18 +46,21 @@ page_13_elements = ['everystudent.com', 'Read the Bible', 'bible.com/bible/59/mr
                     'Email the above links']
 
 page_4_structure = '<?xml version="1.0" encoding="UTF-8" ?>
-<page xmlns="http://mobile-content-api.cru.org/xmlns/tract"
+<page xmlns="https://mobile-content-api.cru.org/xmlns/tract"
       xmlns:content="https://mobile-content-api.cru.org/xmlns/content">
   <hero>
     <heading>
       <content:text i18n-id="1373aa60-6c3f-4c69-b5ad-acfa2c0e4540">one un-translated phrase</content:text>
-      <content:text i18n-id="e68a67da-df02-493f-b138-661bfe120663">two un-translated phrase</content:text>
     </heading>
 
-    <base_xml_element>
+    <paragraph>
+      <content:text i18n-id="e68a67da-df02-493f-b138-661bfe120663">two un-translated phrase</content:text>
+    </paragraph>
+
+    <paragraph>
       <content:text>We are sinful and separated from God because of our sin.
       </content:text>
-    </base_xml_element>
+    </paragraph>
   </hero>
 </page>'
 

@@ -11,6 +11,7 @@ class Page < ActiveRecord::Base
   validates :resource, presence: true
   validates :position, presence: true, uniqueness: { scope: :resource }
 
+  after_validation :validate_xml # TODO: if changed?
   after_save :upsert_onesky_phrases, if: :resource_uses_onesky
 
   private
@@ -30,5 +31,13 @@ class Page < ActiveRecord::Base
         OneskyPhrase.create!(page: self, onesky_id: onesky_id, text: node.content)
       end
     end
+  end
+
+  def validate_xml # TODO: need to do this for custom pages also
+    xsd = Nokogiri::XML::Schema(File.open('manifest/xsd/tract.xsd'))
+    doc = Nokogiri::XML(structure)
+
+    errors = xsd.validate(doc)
+    raise "Page with filename '#{filename}' has invalid XML: #{errors}" unless errors.empty?
   end
 end
