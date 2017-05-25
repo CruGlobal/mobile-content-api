@@ -54,6 +54,14 @@ describe Page do
 
       described_class.create!(structure: structure, filename: 'testing.xml', resource_id: 3, position: 3)
     end
+
+    it 'validates page XML' do
+      filename = 'blahblah.xml'
+
+      expect { described_class.create(filename: filename, resource_id: 1, structure: 'invalid XML', position: 1) }
+        .to raise_error("Page with filename '#{filename}' has invalid XML: "\
+                        '[#<Nokogiri::XML::SyntaxError: The document has no document element.>]')
+    end
   end
 
   context 'updating' do
@@ -73,6 +81,12 @@ describe Page do
 
       element = OneskyPhrase.find_by!(page: p, onesky_id: id_3)
       expect(element.text).to eq(p_3)
+    end
+
+    it 'validates page XML' do
+      expect { p.update!(structure: 'invalid XML') }
+        .to raise_error("Page with filename '#{p.filename}' has invalid XML: "\
+                        '[#<Nokogiri::XML::SyntaxError: The document has no document element.>]')
     end
   end
 end
