@@ -11,7 +11,7 @@ class Page < ActiveRecord::Base
   validates :resource, presence: true
   validates :position, presence: true, uniqueness: { scope: :resource }
 
-  after_validation :validate_xml # TODO: if changed?
+  after_validation :validate_xml, if: :structure_changed?
   after_save :upsert_onesky_phrases, if: :resource_uses_onesky
 
   private
