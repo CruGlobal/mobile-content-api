@@ -8,8 +8,8 @@ module XmlUtil
     errors = xsd.validate(Nokogiri::XML(object.structure))
     return if errors.empty?
 
-    raise "Cannot create #{page_type(object)}, XML is invalid: #{errors}" if object.new_record?
-    raise "Cannot update #{page_type(object)} with ID #{object.id}, XML is invalid: #{errors}"
+    raise Error::XmlError, "Cannot create #{page_type(object)}, XML is invalid: #{errors}" if object.new_record?
+    raise Error::XmlError, "Cannot update #{page_type(object)} with ID #{object.id}, XML is invalid: #{errors}"
   end
 
   def self.page_type(object)
