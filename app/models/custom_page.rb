@@ -10,15 +10,11 @@ class CustomPage < ActiveRecord::Base
   validates :page, presence: true
   validates :translation, presence: true, uniqueness: { scope: :page }
 
-  after_validation :validate_xml, if: :structure_changed?
+  after_validation :validate_xml
 
   private
 
   def validate_xml
-    errors = XmlUtil.validate_xml(structure)
-    return if errors.empty?
-
-    raise "Cannot create Custom Page, XML is invalid: #{errors}" if new_record?
-    raise "Cannot update Custom Page with ID #{id}, XML is invalid: #{errors}"
+    XmlUtil.validate_xml(self)
   end
 end

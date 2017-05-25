@@ -13,7 +13,7 @@ class Page < ActiveRecord::Base
   validates :resource, presence: true
   validates :position, presence: true, uniqueness: { scope: :resource }
 
-  after_validation :validate_xml, if: :structure_changed?
+  after_validation :validate_xml
   after_save :upsert_onesky_phrases, if: :resource_uses_onesky
 
   private
@@ -36,10 +36,6 @@ class Page < ActiveRecord::Base
   end
 
   def validate_xml
-    errors = XmlUtil.validate_xml(structure)
-    return if errors.empty?
-
-    raise "Cannot create Page, XML is invalid: #{errors}" if new_record?
-    raise "Cannot update Page with ID #{id}, XML is invalid: #{errors}"
+    XmlUtil.validate_xml(self)
   end
 end
