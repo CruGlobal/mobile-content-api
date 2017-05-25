@@ -9,7 +9,12 @@ resource 'CustomPages' do
   let(:raw_post) { params.to_json }
   let(:pages) { TestConstants::GodTools::Pages }
   let(:german_2) { TestConstants::GodTools::Translations::German2::ID }
-  let(:structure) { '<custom>This is some custom xml for one translation</custom>' }
+  let(:structure) do
+    '<?xml version="1.0" encoding="UTF-8" ?>
+<page xmlns="https://mobile-content-api.cru.org/xmlns/tract"
+      xmlns:content="https://mobile-content-api.cru.org/xmlns/content">
+</page>'
+  end
   let(:authorization) do
     AuthToken.create!(access_code: AccessCode.find(1)).token
   end

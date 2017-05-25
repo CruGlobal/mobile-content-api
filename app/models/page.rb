@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'xml_util'
+
 class Page < ActiveRecord::Base
   belongs_to :resource
   has_many :onesky_phrases
@@ -33,11 +35,8 @@ class Page < ActiveRecord::Base
     end
   end
 
-  def validate_xml # TODO: need to do this for custom pages also
-    xsd = Nokogiri::XML::Schema(File.open('manifest/xsd/tract.xsd'))
-    doc = Nokogiri::XML(structure)
-
-    errors = xsd.validate(doc)
+  def validate_xml
+    errors = XmlUtil.validate_xml(structure)
     raise "Page with filename '#{filename}' has invalid XML: #{errors}" unless errors.empty?
   end
 end
