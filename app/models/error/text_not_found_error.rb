@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
 module Error
-  class PhraseNotFoundError < StandardError
+  class TextNotFoundError < StandardError
   end
 end

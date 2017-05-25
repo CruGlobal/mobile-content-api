@@ -13,25 +13,6 @@ describe Translation do
   let(:phrase_one_element) { "<content:text i18n-id=\"#{element_one_id}\">#{phrase_one}</content:text>" }
   let(:phrase_two_element) { "<content:text i18n-id=\"#{element_two_id}\">#{phrase_two}</content:text>" }
 
-  it 'downloads translated phrases from OneSky' do
-    mock_onesky(page_name, phrases)
-    translation = described_class.find(translations::German1::ID)
-
-    result = translation.download_translated_phrases(page_name)
-
-    expect(result[element_one_id]).to eq(phrase_one)
-    expect(result[element_two_id]).to eq(phrase_two)
-  end
-
-  it 'PhraseNotFound error is raised if there is no phrases returned from OneSky' do
-    mock_onesky(page_name, nil, 204)
-    translation = described_class.find(translations::German1::ID)
-
-    expect { translation.download_translated_phrases(page_name) }.to(
-      raise_error(Error::PhraseNotFoundError, 'No translated phrases found for language locale: de')
-    )
-  end
-
   context 'builds a translated page from resource page' do
     let(:result) do
       translated_page(translations::German1::ID)
@@ -54,18 +35,26 @@ describe Translation do
     it 'includes custom xml element' do
       expect(result.include?('custom_xml_element')).to be_truthy
     end
-
     it 'includes translated phrases' do
       includes_translated_phrases
     end
+  end
+
+  it 'error is raised if there is no phrases returned from OneSky' do
+    mock_onesky(page_name, nil, 204)
+    translation = described_class.find(translations::German1::ID)
+
+    expect { translation.translated_page(1, false) }.to(
+      raise_error(Error::TextNotFoundError, 'No translated phrases found for this language.')
+    )
   end
 
   it 'error is raised if strict mode and translated phrase not found' do
     mock_onesky(page_name, "{ \"#{element_one_id}\":\"#{phrase_one}\" }")
     translation = described_class.find(translations::German2::ID)
 
-    expect { translation.build_translated_page(1, true) }
-      .to(raise_error(Error::PhraseNotFoundError,
+    expect { translation.translated_page(1, true) }
+      .to(raise_error(Error::TextNotFoundError,
                       "Translated phrase not found: ID: #{element_two_id}, base text: two un-translated phrase"))
   end
 
@@ -73,7 +62,23 @@ describe Translation do
     mock_onesky('13_FinalPage.xml', '{ "1":"This is a German phrase" }')
     translation = described_class.find(translations::German2::ID)
 
-    translation.build_translated_page(1, false)
+    translation.translated_page(1, false)
+  end
+
+  it 'uses existing translated pages for non-OneSky projects' do
+    translation = described_class.find(10)
+
+    result = translation.translated_page(3, false)
+
+    expect(result).to eq('German translation of article Is There A God?')
+  end
+
+  it 'error raised if translated page not found' do
+    translation = described_class.find(9)
+
+    expect { translation.translated_page(3, false) }.to(
+      raise_error(Error::TextNotFoundError, 'Translated page not found for this language.')
+    )
   end
 
   it 'increments version by one' do
@@ -126,14 +131,27 @@ describe Translation do
       translation.update(is_published: true)
     end
 
-    it 'downloads translated name and description' do
-      s3_util = double.as_null_object
-      allow(S3Util).to receive(:new).and_return(s3_util)
+    context 'translated name and description' do
+      before do
+        s3_util = double.as_null_object
+        allow(S3Util).to receive(:new).and_return(s3_util)
+      end
 
-      translation.update!(is_published: true)
+      it 'updates from OneSky' do
+        translation.update!(is_published: true)
 
-      expect(translation.translated_name).to eq('kgp german')
-      expect(translation.translated_description).to eq('german description')
+        expect(translation.translated_name).to eq('kgp german')
+        expect(translation.translated_description).to eq('german description')
+      end
+
+      it 'does not update from OneSky for projects not using it' do
+        t = described_class.find(9)
+
+        t.update!(id: 9, is_published: true)
+
+        expect(t.translated_name).to be_nil
+        expect(t.translated_description).to be_nil
+      end
     end
   end
 
@@ -142,7 +160,7 @@ describe Translation do
   def translated_page(translation_id)
     mock_onesky(page_name, phrases)
     translation = described_class.find(translation_id)
-    translation.build_translated_page(1, true)
+    translation.translated_page(1, true)
   end
 
   def mock_onesky(filename, body, code = 200)

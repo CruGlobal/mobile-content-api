@@ -6,7 +6,7 @@ class DraftsController < SecureController
   end
 
   def show
-    render plain: load_translation.build_translated_page(params[:page_id], false), status: :ok
+    render plain: load_translation.translated_page(params[:page_id], false), status: :ok
   end
 
   def create
@@ -53,7 +53,7 @@ class DraftsController < SecureController
     translation = load_translation
     translation.update_draft(data_attrs)
     render json: translation, status: :ok
-  rescue Error::PhraseNotFoundError => e
+  rescue Error::TextNotFoundError => e
     translation.errors.add(:id, e.message)
     render_error(translation, :conflict)
   end

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170516190223) do
+ActiveRecord::Schema.define(version: 20170523170832) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -64,6 +64,14 @@ ActiveRecord::Schema.define(version: 20170516190223) do
     t.index ["code"], name: "index_languages_on_code", unique: true, using: :btree
   end
 
+  create_table "onesky_phrases", force: :cascade do |t|
+    t.string  "text",      null: false
+    t.integer "page_id",   null: false
+    t.string  "onesky_id", null: false
+    t.index ["onesky_id"], name: "index_onesky_phrases_on_onesky_id", unique: true, using: :btree
+    t.index ["page_id"], name: "index_onesky_phrases_on_page_id", using: :btree
+  end
+
   create_table "pages", force: :cascade do |t|
     t.string  "filename",    null: false
     t.string  "structure",   null: false
@@ -79,6 +87,7 @@ ActiveRecord::Schema.define(version: 20170516190223) do
     t.integer "onesky_project_id"
     t.integer "system_id",         null: false
     t.string  "description"
+    t.integer "content_type",      null: false
     t.index ["abbreviation"], name: "index_resources_on_abbreviation", unique: true, using: :btree
     t.index ["system_id"], name: "index_resources_on_system_id", using: :btree
   end
@@ -97,12 +106,13 @@ ActiveRecord::Schema.define(version: 20170516190223) do
     t.index ["translation_id"], name: "index_translated_attributes_on_translation_id", using: :btree
   end
 
-  create_table "translation_elements", force: :cascade do |t|
-    t.string  "text",             null: false
-    t.integer "page_id",          null: false
-    t.string  "onesky_phrase_id", null: false
-    t.index ["onesky_phrase_id"], name: "index_translation_elements_on_onesky_phrase_id", unique: true, using: :btree
-    t.index ["page_id"], name: "index_translation_elements_on_page_id", using: :btree
+  create_table "translated_pages", force: :cascade do |t|
+    t.string  "value",          null: false
+    t.integer "page_id",        null: false
+    t.integer "translation_id", null: false
+    t.index ["page_id", "translation_id"], name: "index_translated_pages_on_page_id_and_translation_id", unique: true, using: :btree
+    t.index ["page_id"], name: "index_translated_pages_on_page_id", using: :btree
+    t.index ["translation_id"], name: "index_translated_pages_on_translation_id", using: :btree
   end
 
   create_table "translations", force: :cascade do |t|
@@ -128,11 +138,11 @@ ActiveRecord::Schema.define(version: 20170516190223) do
   add_foreign_key "auth_tokens", "access_codes"
   add_foreign_key "custom_pages", "pages"
   add_foreign_key "custom_pages", "translations"
+  add_foreign_key "onesky_phrases", "pages"
   add_foreign_key "pages", "resources"
   add_foreign_key "resources", "systems"
   add_foreign_key "translated_attributes", "attributes"
   add_foreign_key "translated_attributes", "translations"
-  add_foreign_key "translation_elements", "pages"
   add_foreign_key "translations", "languages"
   add_foreign_key "translations", "resources"
   add_foreign_key "views", "resources"

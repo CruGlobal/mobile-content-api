@@ -9,7 +9,7 @@ describe S3Util do
   let(:translated_page_two) { 'here is another translated page' }
   let(:translation) do
     t = Translation.find(godtools::Translations::English::ID)
-    allow(t).to(receive(:build_translated_page).and_return(translated_page_one, translated_page_two))
+    allow(t).to(receive(:translated_page).and_return(translated_page_one, translated_page_two))
     t
   end
 
@@ -100,7 +100,7 @@ describe S3Util do
   it 'always uses strict mode' do
     push
 
-    expect(translation).not_to(have_received(:build_translated_page).with(any_args, false))
+    expect(translation).not_to(have_received(:translated_page).with(any_args, false))
   end
 
   private

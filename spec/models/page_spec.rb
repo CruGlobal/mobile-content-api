@@ -34,14 +34,15 @@ describe Page do
 
   context 'creating' do
     it 'creates a TranslationElement for each translatable XML element' do
-      allow(TranslationElement).to receive(:create!).exactly(3).times
+      allow(OneskyPhrase).to receive(:create!).exactly(3).times
 
       p = described_class.create!(structure: structure, filename: 'testing.xml', resource_id: 1, position: 2)
 
-      expect(TranslationElement).to(have_received(:create!).with(page: p, onesky_phrase_id: id_1, text: p_1)
-                                      .with(page: p, onesky_phrase_id: id_2, text: p_2)
-                                      .with(page: p, onesky_phrase_id: id_3, text: p_3))
+      expect(OneskyPhrase).to(have_received(:create!).with(page: p, onesky_id: id_1, text: p_1)
+                                      .with(page: p, onesky_id: id_2, text: p_2)
+                                      .with(page: p, onesky_id: id_3, text: p_3))
     end
+
     it 'cannot duplicate Resource ID and Page position' do
       result = described_class.create(filename: 'blahblah.xml',
                                       resource_id: 1,
@@ -50,24 +51,30 @@ describe Page do
 
       expect(result).not_to be_valid
     end
+
+    it 'does not create Pages for Resources not using OneSky' do
+      allow(OneskyPhrase).to receive(:create!).exactly(0).times
+
+      described_class.create!(structure: structure, filename: 'testing.xml', resource_id: 3, position: 3)
+    end
   end
 
   context 'updating' do
     let(:p) { described_class.find(1) }
 
     it 'adds new translation elements' do
-      allow(TranslationElement).to receive(:create!).exactly(2).times
+      allow(OneskyPhrase).to receive(:create!).exactly(2).times
 
       p.update!(structure: structure)
 
-      expect(TranslationElement).to(have_received(:create!).with(page: p, onesky_phrase_id: id_1, text: p_1)
-                                      .with(page: p, onesky_phrase_id: id_2, text: p_2))
+      expect(OneskyPhrase).to(have_received(:create!).with(page: p, onesky_id: id_1, text: p_1)
+                                      .with(page: p, onesky_id: id_2, text: p_2))
     end
 
     it 'updates text for existing translation elements' do
       p.update!(structure: structure)
 
-      element = TranslationElement.find_by!(page: p, onesky_phrase_id: id_3)
+      element = OneskyPhrase.find_by!(page: p, onesky_id: id_3)
       expect(element.text).to eq(p_3)
     end
   end

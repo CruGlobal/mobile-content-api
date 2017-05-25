@@ -24,6 +24,11 @@ resource 'Pages' do
 
     requires_authorization
 
+    before do
+      allow(Page).to(receive(:create!).with(ActionController::Parameters.new(attrs).permit!)
+                       .and_return(Page.new(id: 12_345)))
+    end
+
     it 'create page' do
       do_request data: { type: :page, attributes: attrs }
 
