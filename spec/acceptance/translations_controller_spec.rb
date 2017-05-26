@@ -24,11 +24,21 @@ resource 'Translations' do
       expect(status).to be(302)
     end
 
-    it 'get a draft' do
-      do_request id: 3
+    context 'get a draft' do
+      let(:id) { 3 }
 
-      expect(status).to be(404)
-      expect(JSON.parse(response_body)['data']).to be_nil
+      it 'get a draft' do
+        do_request id: id
+
+        expect(status).to be(404)
+        expect(JSON.parse(response_body)['data']).to be_nil
+      end
+
+      it 'ID is returned in error message' do
+        do_request id: id
+
+        expect(JSON.parse(response_body)['errors'][0]['detail']).to include("Translation with ID: #{id} not found")
+      end
     end
   end
 end
