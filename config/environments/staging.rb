@@ -82,6 +82,9 @@ Rails.application.configure do
     config.logger = ActiveSupport::TaggedLogging.new(logger)
   end
 
+  config.logger = ActiveSupport::TaggedLogging.new(Logger::Syslog.new("mobile-content-api-#{ENV['ENVIRONMENT']}", Syslog::LOG_LOCAL7))
+  config.log_tags = [->(request) { "ReqID:#{request.uuid}" }]
+
   # Do not dump schema after migrations.
   config.active_record.dump_schema_after_migration = false
 end
