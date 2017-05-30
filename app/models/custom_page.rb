@@ -1,20 +1,19 @@
 # frozen_string_literal: true
 
-require 'xml_util'
-
-class CustomPage < ActiveRecord::Base
+class CustomPage < AbstractPage
   belongs_to :translation
   belongs_to :page
 
-  validates :structure, presence: true
   validates :page, presence: true
   validates :translation, presence: true, uniqueness: { scope: :page }
 
-  after_validation :validate_xml
-
   private
 
-  def validate_xml
-    XmlUtil.validate_xml(self)
+  def parent_resource
+    page.resource
+  end
+
+  def page_type
+    'Custom Page'
   end
 end

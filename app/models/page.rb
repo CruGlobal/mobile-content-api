@@ -1,19 +1,15 @@
 # frozen_string_literal: true
 
-require 'xml_util'
-
-class Page < ActiveRecord::Base
+class Page < AbstractPage
   belongs_to :resource
   has_many :onesky_phrases
   has_many :custom_pages
   has_many :translated_pages
 
   validates :filename, presence: true
-  validates :structure, presence: true
   validates :resource, presence: true
   validates :position, presence: true, uniqueness: { scope: :resource }
 
-  after_validation :validate_xml
   after_save :upsert_onesky_phrases, if: :resource_uses_onesky
 
   private
@@ -35,7 +31,11 @@ class Page < ActiveRecord::Base
     end
   end
 
-  def validate_xml
-    XmlUtil.validate_xml(self)
+  def parent_resource
+    resource
+  end
+
+  def page_type
+    'Page'
   end
 end

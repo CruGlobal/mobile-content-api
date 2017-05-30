@@ -52,7 +52,7 @@ describe Page do
     it 'does not create Pages for Resources not using OneSky' do
       allow(OneskyPhrase).to receive(:create!).exactly(0).times
 
-      described_class.create!(structure: structure, filename: 'testing.xml', resource_id: 3, position: 3)
+      described_class.create!(structure: structure, filename: 'testing.xml', resource_id: 2, position: 3)
     end
 
     it 'validates page XML' do

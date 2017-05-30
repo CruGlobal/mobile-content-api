@@ -2,18 +2,17 @@
 
 class Resource < ActiveRecord::Base
   belongs_to :system
+  belongs_to :resource_type
   has_many :translations
   has_many :pages
   has_many :resource_attributes, class_name: 'Attribute'
   has_many :views
   has_many :attachments
 
-  enum content_type: { tract: 0, article: 1 }
-
   validates :name, presence: true
   validates :abbreviation, presence: true, uniqueness: true
   validates :system, presence: true
-  validates :content_type, presence: true
+  validates :resource_type, presence: true
 
   scope :system_name, lambda { |name|
     t = System.arel_table
@@ -43,4 +42,6 @@ class Resource < ActiveRecord::Base
   def total_views
     views.all.sum(:quantity)
   end
+
+  delegate :name, to: :resource_type, prefix: true
 end
