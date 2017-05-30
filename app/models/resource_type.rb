@@ -10,6 +10,6 @@ class ResourceType < ActiveRecord::Base
 
   def dtd_file_exists
     return if File.exist?("public/xmlns/#{dtd_file}")
-    raise "ResourceType with name: #{name} does not have valid DTD file in 'public/xmlns/'."
+    raise "ResourceType with name: #{name} does not have a DTD file in 'public/xmlns/'."
   end
 end

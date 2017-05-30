@@ -7,6 +7,6 @@ describe ResourceType do
     name = 'test resource type'
 
     expect { described_class.create!(name: name, dtd_file: 'blah.xsd') }
-      .to raise_error("ResourceType with name: #{name} does not have valid DTD file in 'public/xmlns/'.")
+      .to raise_error("ResourceType with name: #{name} does not have a DTD file in 'public/xmlns/'.")
   end
 end
