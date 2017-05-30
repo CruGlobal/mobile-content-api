@@ -41,10 +41,6 @@ page_13_custom_structure = '<?xml version="1.0" encoding="UTF-8" ?>
   </hero>
 </page>'
 
-page_13_elements = ['everystudent.com', 'Read the Bible', 'bible.com/bible/59/mrk.1', 'More about Christianity...',
-                    'startingwithgod.com', 'Watch a film about Jesus', 'jesusfilm.org/watch/jesus.html/english.html',
-                    'Email the above links']
-
 page_4_structure = '<?xml version="1.0" encoding="UTF-8" ?>
 <page xmlns="https://mobile-content-api.cru.org/xmlns/tract"
       xmlns:content="https://mobile-content-api.cru.org/xmlns/content">
@@ -63,16 +59,6 @@ page_4_structure = '<?xml version="1.0" encoding="UTF-8" ?>
     </paragraph>
   </hero>
 </page>'
-
-page_4_elements = ['JESUS IS GOD\'S ONLY SOLUTION FOR OUR SIN. ONLY THROUGH HIM CAN WE KNOW GOD AND RECEIVE HIS LOVE AND FORGIVENESS.',
-                   'Christ is the visible image of the invisible God. He existed before anything was created and is supreme over all creation.',
-                   '- Colossians 1:15', 'Christ suffered for our sins once for all time. He never sinned, but he died for sinners to bring you home safely to God.',
-                   '- 1 Peter 3:18a', 'Jesus Came Back to Life', 'During the forty days after his crucifixion, he appeared to the apostles ... and he proved to them in many ways he was actually alive.   - Acts 1:3a',
-                   'His resurrection proved that he was God and that he had suffered the punishment we deserved in our place.', 'Jesus is the Only Way...',
-                   'Jesus said, "I am the way, the truth and the life. No-one can come to the Father except through me."', '- John 14:6',
-                   'God Proves His Love...', 'For God loved the world so much that he gave his one and only Son, so that everyone who believes in him will not perish but have eternal life. - John 3:16',
-                   '▲ - God  |  † - Jesus  |  ★ - Man', 'Although we deserve to be cut off from God forever, in his love God sent Jesus to pay the penalty for our sins by dying on the cross.',
-                   'Through Jesus, God has bridged the gap that separates us from him, and provided a way for us to be forgiven and restored to relationship with him.', 'It\'s not enough just to know these points...']
 
 is_there_god_structure = '<item name="Is There a God?">Does God exist? Here are six straight-forward reasons to believe that God is really there.
 By Marilyn Adamson at EveryStudent.com
@@ -103,18 +89,6 @@ page_4 = Page.find_or_create_by!(filename: '04_ThirdPoint.xml', resource: kgp, s
 
 is_there_god = Page.find_or_create_by!(filename: 'Is_There_A_God.xml', resource: es_content, structure: is_there_god_structure, position: 0)
 beyond_blind_faith = Page.find_or_create_by!(filename: 'Beyond_Blind_Faith.xml', resource: es_content, structure: beyond_blind_faith_structure, position: 1)
-
-=begin
-
-page_13_elements.each do |e|
-  TranslationElement.find_or_create_by!(page: page_13, text: e)
-end
-
-
-page_4_elements.each do |e|
-  TranslationElement.find_or_create_by!(page: page_4, text: e)
-end
-=end
 
 english = Language.find_or_create_by!(name: 'English', code: 'en')
 german = Language.find_or_create_by!(name: 'German', code: 'de')

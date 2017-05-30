@@ -30,9 +30,12 @@ describe PageUtil do
     expect(RestClient).to have_received(:post).with('https://platform.api.onesky.io/1/projects/1/files', anything)
   end
 
-  private def push
-    elements = [OneskyPhrase.new(id: 1, text: 'phrase 1'), OneskyPhrase.new(id: 2, text: 'phrase 2')]
-    page = Page.new(filename: 'test_page.xml', onesky_phrases: elements)
+  private
+
+  def push
+    page = Page.new(filename: 'test_page.xml')
+    allow(page).to receive(:onesky_phrases).and_return([OneskyPhrase.new(onesky_id: 1, text: 'phrase 1'),
+                                                        OneskyPhrase.new(onesky_id: 2, text: 'phrase 2')])
     resource = Resource.new(pages: [page], onesky_project_id: 1)
 
     PageUtil.new(resource, 'de').push_new_onesky_translation
