@@ -8,15 +8,13 @@ class OneskyPhrase < ActiveRecord::Base
   validates :onesky_id, presence: true, uniqueness: true
 
   before_validation :set_onesky_id, on: :create
-  before_save :only_onesky
+  validate do
+    errors.add('page', 'Does not use OneSky.') unless page.resource.uses_onesky?
+  end
 
   private
 
   def set_onesky_id
     self.onesky_id ||= SecureRandom.uuid
-  end
-
-  def only_onesky
-    raise 'Cannot be created for projects not using OneSky.' unless page.resource.uses_onesky?
   end
 end

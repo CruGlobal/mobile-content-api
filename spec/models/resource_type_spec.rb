@@ -6,7 +6,9 @@ describe ResourceType do
   it 'must have a valid DTD file' do
     name = 'test resource type'
 
-    expect { described_class.create!(name: name, dtd_file: 'blah.xsd') }
-      .to raise_error("ResourceType with name: #{name} does not have a DTD file in 'public/xmlns/'.")
+    result = described_class.create(name: name, dtd_file: 'blah.xsd')
+
+    expect(result).not_to be_valid
+    expect(result.errors['dtd-file']).to include('Does not exist.')
   end
 end
