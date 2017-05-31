@@ -56,7 +56,7 @@ class Translation < ActiveRecord::Base
     phrases = download_translated_phrases(page.filename)
 
     xml = page_structure(page_id)
-    xml.xpath('//content:text[@i18n-id]').each do |node|
+    xml.xpath('//content:text[@i18n-id]').each do |node| # TODO: use Page.onesky_phrases here
       phrase_id = node['i18n-id']
       translated_phrase = phrases[phrase_id]
 

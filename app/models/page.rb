@@ -9,7 +9,7 @@ class Page < AbstractPage
   validates :resource, presence: true
   validates :position, presence: true, uniqueness: { scope: :resource }
 
-  def onesky_phrases # TODO: refactor this method
+  def onesky_phrases
     phrases = {}
 
     Nokogiri::XML(structure).xpath('//content:text[@i18n-id]').each do |node|
