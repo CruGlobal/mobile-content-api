@@ -13,6 +13,7 @@ class Resource < ActiveRecord::Base
   validates :abbreviation, presence: true, uniqueness: true
   validates :system, presence: true
   validates :resource_type, presence: true
+  validate :validate_manifest, if: :manifest?
 
   scope :system_name, lambda { |name|
     t = System.arel_table
@@ -44,4 +45,18 @@ class Resource < ActiveRecord::Base
   end
 
   delegate :name, to: :resource_type, prefix: true
+
+  private
+
+  def validate_manifest
+    xsd = Nokogiri::XML::Schema(File.open('public/xmlns/manifest.xsd'))
+    xml_errors = xsd.validate(Nokogiri::XML(manifest)) # TODO: refactor with abstractpage
+
+    xml_errors.each { |value| errors.add('xml', value.to_s) }
+  end
+
+  def raise_error(errors)
+    raise Error::XmlError, "Can't create Resource with name: #{name}, manifest XML is invalid: #{errors}" if new_record?
+    raise Error::XmlError, "Can't update Resource: #{id}, manifest XML is invalid: #{errors}"
+  end
 end

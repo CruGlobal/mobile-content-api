@@ -37,4 +37,14 @@ describe Resource do
       expect(latest_translations[1][:id]).to eq(8)
     end
   end
+
+  it 'validates manifest if present' do
+    attributes = { name: 'test', abbreviation: 't', system_id: 1, resource_type_id: 1, manifest: '<xml>bad xml</xml>' }
+
+    result = described_class.create(attributes)
+
+    expect(result).not_to be_valid
+    expect(result.errors['xml'])
+      .to include("Element 'xml': No matching global declaration available for the validation root.")
+  end
 end

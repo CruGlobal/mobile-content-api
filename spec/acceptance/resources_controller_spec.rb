@@ -88,7 +88,7 @@ resource 'Resources' do
       requires_authorization
 
       it 'update resource' do
-        do_request data: { type: :resource, attributes: { description: 'hello, world', manifest: 'manifest.xml' } }
+        do_request data: { type: :resource, attributes: { description: 'hello, world', manifest: '<manifest/>' } }
 
         expect(status).to be(200)
         expect(response_body).not_to be_nil
