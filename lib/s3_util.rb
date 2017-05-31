@@ -22,14 +22,14 @@ class S3Util
   private
 
   def build_zip
-    @document = Nokogiri::XML::Document.new
-    root_node = Nokogiri::XML::Node.new('manifest', @document)
-    @document.root = root_node
+    @document = Nokogiri::XML::Document.parse(@translation.resource.manifest)
+    manifest_node = @document.xpath('/manifest').first
 
     pages_node = Nokogiri::XML::Node.new('pages', @document)
     resources_node = Nokogiri::XML::Node.new('resources', @document)
-    root_node.add_child(pages_node)
-    root_node.add_child(resources_node)
+
+    manifest_node.add_child(pages_node)
+    manifest_node.add_child(resources_node)
 
     Zip::File.open("pages/#{@zip_file_name}", Zip::File::CREATE) do |zip_file|
       add_pages(zip_file, pages_node)

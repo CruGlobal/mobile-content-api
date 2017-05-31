@@ -76,6 +76,9 @@ describe S3Util do
     let(:expected) do
       '<?xml version="1.0"?>
 <manifest>
+  <title>
+    <content:text i18n-id="89a09d72-114f-4d89-a72c-ca204c796fd9">Knowing God Personally</content:text>
+  </title>
   <pages>
     <page filename="04_ThirdPoint.xml" src="790a2170adb13955e67dee0261baff93cc7f045b22a35ad434435bdbdcec036a.xml"/>
     <page filename="13_FinalPage.xml" src="5ce1cd1be598eb31a76c120724badc90e1e9bafa4b03c33ce40f80ccff756444.xml"/>
