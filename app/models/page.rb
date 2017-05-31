@@ -12,6 +12,10 @@ class Page < AbstractPage
 
   after_save :upsert_onesky_phrases, if: :resource_uses_onesky
 
+  def parent_resource
+    resource
+  end
+
   private
 
   def resource_uses_onesky
@@ -29,13 +33,5 @@ class Page < AbstractPage
         OneskyPhrase.create!(page: self, onesky_id: onesky_id, text: node.content)
       end
     end
-  end
-
-  def parent_resource
-    resource
-  end
-
-  def page_type
-    'Page'
   end
 end
