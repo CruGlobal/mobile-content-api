@@ -1,11 +1,24 @@
 # frozen_string_literal: true
 
-class XmlValidator < ActiveModel::Validator
-  def validate(record)
-    xsd = Nokogiri::XML::Schema(File.open("public/xmlns/#{record.parent_resource.resource_type.dtd_file}"))
+class XmlValidator < ActiveModel::EachValidator
+  def validate_each(record, attribute, value)
+    xml_errors = xsd(record).validate(Nokogiri::XML(value))
 
-    errors = xsd.validate(Nokogiri::XML(record.structure))
+    xml_errors.each { |e| record.errors.add(attribute, e.to_s) }
+  end
 
-    errors.each { |value| record.errors.add('xml', value.to_s) }
+  private
+
+  def xsd(record)
+    location = "public/xmlns/#{xsd_location(record)}"
+    Nokogiri::XML::Schema(File.open(location))
+  end
+
+  def xsd_location(record)
+    return 'manifest.xsd' if record.is_a?(Resource)
+    return record.resource.resource_type.dtd_file if record.is_a?(Page)
+    return record.page.resource.resource_type.dtd_file if record.is_a?(CustomPage)
+
+    raise "Object type: #{record.class} not supported."
   end
 end

@@ -12,10 +12,6 @@ class Page < AbstractPage
 
   after_save :upsert_onesky_phrases, if: :resource_uses_onesky
 
-  def parent_resource
-    resource
-  end
-
   private
 
   def resource_uses_onesky

@@ -3,6 +3,5 @@
 class AbstractPage < ActiveRecord::Base
   self.abstract_class = true
 
-  validates :structure, presence: true
-  validates_with XmlValidator, if: :structure_changed?
+  validates :structure, presence: true, xml: { if: :structure_changed? }
 end
