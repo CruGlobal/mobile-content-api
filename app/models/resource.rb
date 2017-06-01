@@ -13,6 +13,7 @@ class Resource < ActiveRecord::Base
   validates :abbreviation, presence: true, uniqueness: true
   validates :system, presence: true
   validates :resource_type, presence: true
+  validates :manifest, xml: true, if: :manifest?
 
   scope :system_name, lambda { |name|
     t = System.arel_table

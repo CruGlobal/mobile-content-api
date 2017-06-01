@@ -93,7 +93,8 @@ article = ResourceType.find_or_create_by!(name: 'article', dtd_file: 'article.xs
 godtools = System.find_or_create_by!(name: 'GodTools')
 every_student = System.find_or_create_by!(name: 'EveryStudent')
 
-kgp = Resource.find_or_create_by!(name: 'Knowing God Personally', resource_type: tract, abbreviation: 'kgp', onesky_project_id: 148_314, system: godtools)
+kgp = Resource.find_or_create_by!(name: 'Knowing God Personally', resource_type: tract, abbreviation: 'kgp', onesky_project_id: 148_314, system: godtools,
+                                  manifest: '<?xml version="1.0"?><manifest><title><content:text i18n-id="89a09d72-114f-4d89-a72c-ca204c796fd9">Knowing God Personally</content:text></title></manifest>')
 satisfied = Resource.find_or_create_by!(name: 'Satisfied?', resource_type: tract, abbreviation: 'sat', system: godtools)
 es_content = Resource.find_or_create_by!(name: 'EveryStudent content', resource_type: article, abbreviation: 'esc', system: every_student)
 

@@ -77,25 +77,38 @@ resource 'Resources' do
     end
   end
 
-  put 'resources/:id' do
+  context 'PUT do' do
     let(:id) { 1 }
 
     before do
       header 'Authorization', :authorization
     end
 
-    parameter 'keep-existing-phrases',
-              'Query string parameter.  If false, deprecate phrases not pushed to OneSky in this update.'
+    put 'resources/:id' do
+      requires_authorization
 
-    requires_authorization
+      it 'update resource' do
+        do_request data: { type: :resource, attributes: { description: 'hello, world', manifest: '<manifest/>' } }
 
-    it 'update resource in OneSky' do
-      mock_page_util(id)
+        expect(status).to be(200)
+        expect(response_body).not_to be_nil
+      end
+    end
 
-      do_request 'keep-existing-phrases': false
+    put 'resources/:id/onesky' do
+      parameter 'keep-existing-phrases',
+                'Query string parameter.  If false, deprecate phrases not pushed to OneSky in this update.'
 
-      expect(status).to be(204)
-      expect(response_body).to be_empty
+      requires_authorization
+
+      it 'update resource in OneSky' do
+        mock_page_util(id)
+
+        do_request 'keep-existing-phrases': false
+
+        expect(status).to be(204)
+        expect(response_body).to be_empty
+      end
     end
   end
 

@@ -93,6 +93,7 @@ ActiveRecord::Schema.define(version: 20170601143623) do
     t.integer "onesky_project_id"
     t.integer "system_id",         null: false
     t.string  "description"
+    t.string  "manifest"
     t.integer "resource_type_id",  null: false
     t.index ["abbreviation"], name: "index_resources_on_abbreviation", unique: true, using: :btree
     t.index ["resource_type_id"], name: "index_resources_on_resource_type_id", using: :btree

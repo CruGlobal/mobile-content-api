@@ -10,5 +10,7 @@ Rails.application.routes.draw do
 
   get 'attachments/:id/download', to: 'attachments#download'
 
+  put 'resources/:id/onesky', to: 'resources#push_to_onesky'
+
   mount Raddocs::App => '/docs'
 end

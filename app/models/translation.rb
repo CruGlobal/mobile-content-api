@@ -63,10 +63,7 @@ class Translation < ActiveRecord::Base
       if translated_phrase.present?
         node.content = translated_phrase
       elsif strict
-        if strict
-          raise Error::TextNotFoundError,
-                "Translated phrase not found: ID: #{phrase_id}, base text: #{node.content}"
-        end
+        raise Error::TextNotFoundError, "Translated phrase not found: ID: #{phrase_id}, base text: #{node.content}"
       end
     end
 

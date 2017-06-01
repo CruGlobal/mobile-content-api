@@ -6,8 +6,4 @@ class CustomPage < AbstractPage
 
   validates :page, presence: true
   validates :translation, presence: true, uniqueness: { scope: :page }
-
-  def parent_resource
-    page.resource
-  end
 end
