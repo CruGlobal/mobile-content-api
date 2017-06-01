@@ -42,13 +42,25 @@ class S3Util
   end
 
   def find_or_create_manifest_node
-    if @translation.resource.manifest.present?
-      return @document.xpath('/m:manifest', 'm' => 'https://mobile-content-api.cru.org/xmlns/manifest').first
-    end
+    return find_manifest if @translation.resource.manifest.present?
 
     manifest = Nokogiri::XML::Node.new('manifest', @document)
     @document.root = manifest
     manifest
+  end
+
+  def find_manifest
+    manifest_node = @document.xpath('/m:manifest', 'm' => 'https://mobile-content-api.cru.org/xmlns/manifest').first
+    insert_translated_name(manifest_node) # TODO: need a test for this
+    manifest_node
+  end
+
+  def insert_translated_name(manifest_node)
+    title_node = manifest_node.xpath('t:title', 't' => 'https://mobile-content-api.cru.org/xmlns/manifest').first
+    name_node = title_node.xpath('content:text[@i18n-id]').first # TODO: could this be null for non-OneSky?
+    name_node.content = @translation.translated_name
+  rescue Nokogiri::XML::XPath::SyntaxError
+    return
   end
 
   def add_pages(zip_file, pages_node)

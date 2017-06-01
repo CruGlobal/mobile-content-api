@@ -78,7 +78,7 @@ describe S3Util do
 <manifest xmlns="https://mobile-content-api.cru.org/xmlns/manifest" '\
 'xmlns:content="https://mobile-content-api.cru.org/xmlns/content">
   <title>
-    <content:text i18n-id="89a09d72-114f-4d89-a72c-ca204c796fd9">Knowing God Personally</content:text>
+    <content:text i18n-id="89a09d72-114f-4d89-a72c-ca204c796fd9">this is the kgp</content:text>
   </title>
   <pages>
     <page filename="04_ThirdPoint.xml" src="790a2170adb13955e67dee0261baff93cc7f045b22a35ad434435bdbdcec036a.xml"/>
@@ -96,6 +96,8 @@ describe S3Util do
     end
 
     it 'builds a manifest with names of all pages in order' do
+      allow(translation).to receive(:translated_name).and_return('this is the kgp') # TODO: put in separate test
+
       push
 
       manifest = Nokogiri::XML(File.open("pages/#{translation.manifest_name}"))
@@ -113,7 +115,7 @@ describe S3Util do
         push
 
         manifest = Nokogiri::XML(File.open("pages/#{translation.manifest_name}"))
-        expect(manifest.xpath('/').size).to be(1)
+        expect(manifest.xpath('/').size).to be(1) # TODO: is this correct?
       end
     end
   end
