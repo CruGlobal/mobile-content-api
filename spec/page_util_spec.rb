@@ -76,35 +76,47 @@ describe PageUtil do
   context 'POSTS to OneSky' do
     let(:file_1) { double }
     let(:file_2) { double }
+    let(:file_3) { double }
+
+    before do
+      allow(File).to receive(:new).with("pages/#{filename_1}").and_return(file_1)
+      allow(File).to receive(:new).with("pages/#{filename_2}").and_return(file_2)
+      allow(File).to receive(:new).with('pages/name_description.xml').and_return(file_3)
+    end
 
     it 'correct URL' do
       url = 'https://platform.api.onesky.io/1/projects/1/files'
 
       page_util_instance.push_new_onesky_translation
 
-      expect(RestClient).to have_received(:post).with(url, anything).twice
+      expect(RestClient).to have_received(:post).with(url, anything).exactly(3).times
     end
 
-    it 'all pages' do
-      allow(File).to receive(:new).with("pages/#{filename_1}").and_return(file_1)
-      allow(File).to receive(:new).with("pages/#{filename_2}").and_return(file_2)
-
+    it 'all resource pages' do
       page_util_instance.push_new_onesky_translation
 
       expect(RestClient).to have_received(:post).with(any_string, hash_including(file: file_1))
       expect(RestClient).to have_received(:post).with(any_string, hash_including(file: file_2))
     end
 
+    it 'name/description file' do
+      page_util_instance.push_new_onesky_translation
+
+      expect(RestClient).to have_received(:post).with(any_string, hash_including(file: file_3))
+    end
+
     it 'correct locale' do
       page_util_instance.push_new_onesky_translation
 
-      expect(RestClient).to have_received(:post).with(any_string, hash_including(locale: locale)).twice
+      expect(RestClient).to have_received(:post).with(any_string, hash_including(locale: locale)).exactly(3).times
     end
 
     it 'keeps existing strings by default' do
       page_util_instance.push_new_onesky_translation
 
-      expect(RestClient).to have_received(:post).with(any_string, hash_including(is_keeping_all_strings: true)).twice
+      expect(RestClient).to(
+        have_received(:post).with(any_string, hash_including(is_keeping_all_strings: true)).exactly(2).times
+      )
     end
   end
 

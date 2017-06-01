@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 require 'rest-client'
 require 'auth_util'
 require 'xml_util'
@@ -10,9 +11,8 @@ class PageUtil
   end
 
   def push_new_onesky_translation(keep_existing_phrases = true)
-    @resource.pages.each do |page|
-      push_page(page, keep_existing_phrases)
-    end
+    push_all_resource_pages(keep_existing_phrases)
+    push_name_description
 
     self.class.delete_temp_pages
   rescue StandardError => e
@@ -27,12 +27,28 @@ class PageUtil
 
   private
 
-  def push_page(page, keep_existing_phrases)
-    write_temp_file(page)
+  def push_name_description
+    filename = 'name_description.xml'
+    phrases = { name: @resource.name, description: @resource.description }
+
+    push_page(phrases, filename, false)
+  end
+
+  def push_all_resource_pages(keep_existing_phrases)
+    @resource.pages.each do |page|
+      phrases = {}
+      XmlUtil.translatable_nodes(Nokogiri::XML(page.structure)).each { |n| phrases[n['i18n-id']] = n.content }
+
+      push_page(phrases, page.filename, keep_existing_phrases)
+    end
+  end
+
+  def push_page(phrases, filename, keep_existing_phrases)
+    write_temp_file(phrases, filename)
 
     # TODO: we might not need to push every page when we're creating a draft for a new language
     RestClient.post "https://platform.api.onesky.io/1/projects/#{@resource.onesky_project_id}/files",
-                    file: File.new("pages/#{page.filename}"),
+                    file: File.new("pages/#{filename}"),
                     file_format: 'HIERARCHICAL_JSON',
                     api_key: ENV['ONESKY_API_KEY'],
                     timestamp: AuthUtil.epoch_time_seconds,
@@ -42,14 +58,9 @@ class PageUtil
                     is_keeping_all_strings: keep_existing_phrases
   end
 
-  def write_temp_file(page)
-    page_to_upload = {}
-    XmlUtil.translatable_nodes(Nokogiri::XML(page.structure)).each do |element|
-      page_to_upload[element['i18n-id']] = element.content
-    end
-
-    temp_file = File.open("pages/#{page.filename}", 'w')
-    temp_file.puts(page_to_upload.to_json)
+  def write_temp_file(phrases, filename)
+    temp_file = File.open("pages/#{filename}", 'w')
+    temp_file.puts(phrases.to_json)
     temp_file.close
   end
 end
