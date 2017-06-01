@@ -90,13 +90,30 @@ describe S3Util do
 '
     end
 
-    it 'builds a manifest with names of all pages in order' do
+    before do
       allow(PageUtil).to receive(:delete_temp_pages)
+    end
 
+    it 'builds a manifest with names of all pages in order' do
       push
 
       manifest = Nokogiri::XML(File.open("pages/#{translation.manifest_name}"))
       expect(manifest.to_s).to eq(expected)
+    end
+
+    context 'resource does not have a manifest file' do
+      let(:translation) do
+        t = Translation.find(10)
+        allow(t).to(receive(:translated_page).and_return(translated_page_one, translated_page_two))
+        t
+      end
+
+      it 'creates manifest node' do
+        push
+
+        manifest = Nokogiri::XML(File.open("pages/#{translation.manifest_name}"))
+        expect(manifest.xpath('/').size).to be(1)
+      end
     end
   end
 

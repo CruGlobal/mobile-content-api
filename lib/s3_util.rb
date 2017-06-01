@@ -23,7 +23,7 @@ class S3Util
 
   def build_zip
     @document = Nokogiri::XML::Document.parse(@translation.resource.manifest)
-    manifest_node = @document.xpath('/manifest').first
+    manifest_node = find_or_create_manifest_node
 
     pages_node = Nokogiri::XML::Node.new('pages', @document)
     resources_node = Nokogiri::XML::Node.new('resources', @document)
@@ -38,6 +38,14 @@ class S3Util
       manifest_filename = write_manifest_to_file
       zip_file.add(manifest_filename, "pages/#{manifest_filename}")
     end
+  end
+
+  def find_or_create_manifest_node
+    return @document.xpath('/manifest').first if @translation.resource.manifest.present?
+
+    manifest = Nokogiri::XML::Node.new('manifest', @document)
+    @document.root = manifest
+    manifest
   end
 
   def add_pages(zip_file, pages_node)
