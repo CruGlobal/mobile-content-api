@@ -1,17 +1,20 @@
 # frozen_string_literal: true
 
-class Page < ActiveRecord::Base
+class Page < AbstractPage
   belongs_to :resource
   has_many :onesky_phrases
   has_many :custom_pages
   has_many :translated_pages
 
   validates :filename, presence: true
-  validates :structure, presence: true
   validates :resource, presence: true
   validates :position, presence: true, uniqueness: { scope: :resource }
 
   after_save :upsert_onesky_phrases, if: :resource_uses_onesky
+
+  def parent_resource
+    resource
+  end
 
   private
 

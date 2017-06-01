@@ -4,9 +4,12 @@ class ApplicationController < ActionController::Base
   before_action :decode_json_api
 
   rescue_from ActiveRecord::RecordNotFound do |_exception|
-    a = NotFoundError.new
-    a.errors.add(:id, 'Not found.')
-    render_error(a, :not_found)
+    render_error(ApiError.new(:id, 'Not found.'), :not_found)
+  end
+
+  # TODO: would be good to do this with all non-runtime errors instead of catching them in controllers
+  rescue_from Error::XmlError do |exception|
+    render_error(ApiError.new(:id, exception.message), :bad_request)
   end
 
   def render(**args)
@@ -42,7 +45,11 @@ class ApplicationController < ActionController::Base
     params.merge!(ActiveSupport::JSON.decode(request.body.string))
   end
 
-  class NotFoundError
+  class ApiError
     include ActiveModel::Model
+
+    def initialize(code, message)
+      errors.add(code, message)
+    end
   end
 end

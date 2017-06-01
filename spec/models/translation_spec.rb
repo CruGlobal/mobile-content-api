@@ -18,8 +18,8 @@ describe Translation do
       translated_page(translations::German1::ID)
     end
 
-    it 'includes base element' do
-      expect(result.include?('base_xml_element')).to be_truthy
+    it 'builds from base XML' do
+      expect(result.include?('form')).to be_truthy
     end
 
     it 'includes translated phrases' do
@@ -32,8 +32,8 @@ describe Translation do
       translated_page(translations::German2::ID)
     end
 
-    it 'includes custom xml element' do
-      expect(result.include?('custom_xml_element')).to be_truthy
+    it 'builds from custom XML' do
+      expect(result.include?('form')).to be_falsey
     end
     it 'includes translated phrases' do
       includes_translated_phrases

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170523170832) do
+ActiveRecord::Schema.define(version: 20170530132530) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -81,14 +81,21 @@ ActiveRecord::Schema.define(version: 20170523170832) do
     t.index ["resource_id"], name: "index_pages_on_resource_id", using: :btree
   end
 
+  create_table "resource_types", force: :cascade do |t|
+    t.string "name",     null: false
+    t.string "dtd_file", null: false
+    t.index ["name"], name: "index_resource_types_on_name", unique: true, using: :btree
+  end
+
   create_table "resources", force: :cascade do |t|
     t.string  "name",              null: false
     t.string  "abbreviation",      null: false
     t.integer "onesky_project_id"
     t.integer "system_id",         null: false
     t.string  "description"
-    t.integer "content_type",      null: false
+    t.integer "resource_type_id"
     t.index ["abbreviation"], name: "index_resources_on_abbreviation", unique: true, using: :btree
+    t.index ["resource_type_id"], name: "index_resources_on_resource_type_id", using: :btree
     t.index ["system_id"], name: "index_resources_on_system_id", using: :btree
   end
 
@@ -140,6 +147,7 @@ ActiveRecord::Schema.define(version: 20170523170832) do
   add_foreign_key "custom_pages", "translations"
   add_foreign_key "onesky_phrases", "pages"
   add_foreign_key "pages", "resources"
+  add_foreign_key "resources", "resource_types"
   add_foreign_key "resources", "systems"
   add_foreign_key "translated_attributes", "attributes"
   add_foreign_key "translated_attributes", "translations"

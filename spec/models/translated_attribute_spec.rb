@@ -4,12 +4,12 @@ require 'rails_helper'
 
 describe TranslatedAttribute do
   it 'cannot be created with an un-translatable parent attribute' do
-    parent_attribute_id = 1
-    attribute = Attribute.find(parent_attribute_id)
-    translation = Translation.find(1)
+    result = described_class.create(parent_attribute: Attribute.find(1),
+                                    value: 'default',
+                                    translation: Translation.find(1))
 
-    expect { described_class.create!(parent_attribute: attribute, value: 'default', translation: translation) }
-      .to raise_error("Parent attribute with ID: #{parent_attribute_id} is not translatable.")
+    expect(result).not_to be_valid
+    expect(result.errors['parent-attribute']).to include('Is not translatable.')
   end
 
   it 'attribute/translation combination must be unique' do

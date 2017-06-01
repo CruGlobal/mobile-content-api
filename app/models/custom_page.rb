@@ -1,10 +1,13 @@
 # frozen_string_literal: true
 
-class CustomPage < ActiveRecord::Base
+class CustomPage < AbstractPage
   belongs_to :translation
   belongs_to :page
 
-  validates :structure, presence: true
   validates :page, presence: true
   validates :translation, presence: true, uniqueness: { scope: :page }
+
+  def parent_resource
+    page.resource
+  end
 end

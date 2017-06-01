@@ -7,14 +7,7 @@ class TranslatedAttribute < ActiveRecord::Base
   validates :value, presence: true
   validates :parent_attribute, presence: true
   validates :translation, presence: true, uniqueness: { scope: :parent_attribute }
-
-  before_validation :parent_must_be_translatable
-
-  private
-
-  def parent_must_be_translatable
-    return if parent_attribute.is_translatable
-
-    raise "Parent attribute with ID: #{parent_attribute.id} is not translatable."
+  validate do
+    errors.add('parent-attribute', 'Is not translatable.') unless parent_attribute.is_translatable
   end
 end

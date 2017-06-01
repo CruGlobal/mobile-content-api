@@ -8,36 +8,36 @@
 #   Character.create(name: 'Luke', movie: movies.first)
 
 page_13_structure = '<?xml version="1.0" encoding="UTF-8" ?>
-<page xmlns="http://mobile-content-api.cru.org/xmlns/tract"
+<page xmlns="https://mobile-content-api.cru.org/xmlns/tract"
       xmlns:content="https://mobile-content-api.cru.org/xmlns/content">
   <hero>
     <heading>
       <content:text i18n-id="f9894df9-df1d-4831-9782-345028c6c9a2">one un-translated phrase</content:text>
-      <content:text i18n-id="9deda19f-c3ee-42ed-a1eb-92423e543352">two un-translated phrase</content:text>
     </heading>
 
-    <base_xml_element>
+    <paragraph>
+      <content:text i18n-id="9deda19f-c3ee-42ed-a1eb-92423e543352">two un-translated phrase</content:text>
+    </paragraph>
+
+    <form>
       <content:text>These four points explain how to enter into a personal relationship with God and
         experience the life for which you were created.
       </content:text>
-    </base_xml_element>
+    </form>
   </hero>
 </page>'
 
 page_13_custom_structure = '<?xml version="1.0" encoding="UTF-8" ?>
-<page xmlns="http://mobile-content-api.cru.org/xmlns/tract"
+<page xmlns="https://mobile-content-api.cru.org/xmlns/tract"
       xmlns:content="https://mobile-content-api.cru.org/xmlns/content">
   <hero>
     <heading>
       <content:text i18n-id="f9894df9-df1d-4831-9782-345028c6c9a2">one un-translated phrase</content:text>
-      <content:text i18n-id="9deda19f-c3ee-42ed-a1eb-92423e543352">two un-translated phrase</content:text>
     </heading>
 
-    <custom_xml_element>
-      <content:text>These four points explain how to enter into a personal relationship with God and
-        experience the life for which you were created.
-      </content:text>
-    </custom_xml_element>
+    <paragraph>
+      <content:text i18n-id="9deda19f-c3ee-42ed-a1eb-92423e543352">two un-translated phrase</content:text>
+    </paragraph>
   </hero>
 </page>'
 
@@ -46,18 +46,21 @@ page_13_elements = ['everystudent.com', 'Read the Bible', 'bible.com/bible/59/mr
                     'Email the above links']
 
 page_4_structure = '<?xml version="1.0" encoding="UTF-8" ?>
-<page xmlns="http://mobile-content-api.cru.org/xmlns/tract"
+<page xmlns="https://mobile-content-api.cru.org/xmlns/tract"
       xmlns:content="https://mobile-content-api.cru.org/xmlns/content">
   <hero>
     <heading>
       <content:text i18n-id="1373aa60-6c3f-4c69-b5ad-acfa2c0e4540">one un-translated phrase</content:text>
-      <content:text i18n-id="e68a67da-df02-493f-b138-661bfe120663">two un-translated phrase</content:text>
     </heading>
 
-    <base_xml_element>
+    <paragraph>
+      <content:text i18n-id="e68a67da-df02-493f-b138-661bfe120663">two un-translated phrase</content:text>
+    </paragraph>
+
+    <paragraph>
       <content:text>We are sinful and separated from God because of our sin.
       </content:text>
-    </base_xml_element>
+    </paragraph>
   </hero>
 </page>'
 
@@ -84,12 +87,15 @@ It is impossible for us to know conclusively whether God exists and what He is l
 'Himself. We must scan the horizon of history to see if there is any clue to God\'s revelation. There is one clear clue. In an '\
 'obscure village in Palestine, 2,000 years ago, a Child was born in a stable. Today the entire world is still celebrating the birth of Jesus.</item>'
 
+tract = ResourceType.find_or_create_by!(name: 'tract', dtd_file: 'tract.xsd')
+article = ResourceType.find_or_create_by!(name: 'article', dtd_file: 'article.xsd')
+
 godtools = System.find_or_create_by!(name: 'GodTools')
 every_student = System.find_or_create_by!(name: 'EveryStudent')
 
-kgp = Resource.find_or_create_by!(name: 'Knowing God Personally', content_type: :tract, abbreviation: 'kgp', onesky_project_id: 148_314, system: godtools)
-satisfied = Resource.find_or_create_by!(name: 'Satisfied?', content_type: :tract, abbreviation: 'sat', onesky_project_id: 123_456, system: godtools)
-es_content = Resource.find_or_create_by!(name: 'EveryStudent content', content_type: :article, abbreviation: 'esc', system: every_student)
+kgp = Resource.find_or_create_by!(name: 'Knowing God Personally', resource_type: tract, abbreviation: 'kgp', onesky_project_id: 148_314, system: godtools)
+satisfied = Resource.find_or_create_by!(name: 'Satisfied?', resource_type: tract, abbreviation: 'sat', system: godtools)
+es_content = Resource.find_or_create_by!(name: 'EveryStudent content', resource_type: article, abbreviation: 'esc', system: every_student)
 
 page_13 = Page.find_or_create_by!(filename: '13_FinalPage.xml', resource: kgp, structure: page_13_structure, position: 1)
 page_4 = Page.find_or_create_by!(filename: '04_ThirdPoint.xml', resource: kgp, structure: page_4_structure, position: 0)

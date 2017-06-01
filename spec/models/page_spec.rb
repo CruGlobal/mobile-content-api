@@ -13,22 +13,21 @@ describe Page do
 
   let(:structure) do
     "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>
-<!-- https://projects.invisionapp.com/d/main#/console/10765517/228342261/preview -->
-<page xmlns=\"http://mobile-content-api.cru.org/xmlns/tract\"
+<page xmlns=\"https://mobile-content-api.cru.org/xmlns/tract\"
       xmlns:content=\"https://mobile-content-api.cru.org/xmlns/content\">
-  <header>
-    <number>
+  <hero>
+    <heading>
       <content:text i18n-id=\"#{id_1}\">#{p_1}</content:text>
-    </number>
-  </header>
-  <card>
-    <label>
+    </heading>
+
+    <paragraph>
       <content:text i18n-id=\"#{id_2}\">#{p_2}</content:text>
-    </label>
+    </paragraph>
+
     <paragraph>
       <content:text i18n-id=\"#{id_3}\">#{p_3}</content:text>
     </paragraph>
-  </card>
+  </hero>
 </page>"
   end
 
@@ -44,18 +43,16 @@ describe Page do
     end
 
     it 'cannot duplicate Resource ID and Page position' do
-      result = described_class.create(filename: 'blahblah.xml',
-                                      resource_id: 1,
-                                      structure: 'structure data',
-                                      position: 1)
+      result = described_class.create(filename: 'blahblah.xml', resource_id: 1, structure: structure, position: 1)
 
       expect(result).not_to be_valid
+      expect(result.errors['position']).to include('has already been taken')
     end
 
     it 'does not create Pages for Resources not using OneSky' do
       allow(OneskyPhrase).to receive(:create!).exactly(0).times
 
-      described_class.create!(structure: structure, filename: 'testing.xml', resource_id: 3, position: 3)
+      described_class.create!(structure: structure, filename: 'testing.xml', resource_id: 2, position: 3)
     end
   end
 
