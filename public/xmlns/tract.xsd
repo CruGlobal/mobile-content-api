@@ -57,6 +57,8 @@
         <xs:attribute name="background-color" type="content:colorValue" use="optional" />
         <xs:attribute name="background-image" type="xs:string" use="optional" />
         <xs:attribute name="background-image-align" type="content:fullAlignValue" use="optional" />
+        <!-- listeners: event_ids that trigger display of this page -->
+        <xs:attribute name="listeners" type="content:listenerValues" use="optional" />
     </xs:complexType>
 
     <!--
