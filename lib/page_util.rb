@@ -44,7 +44,7 @@ class PageUtil
   end
 
   def push_page(phrases, filename, keep_existing_phrases)
-    write_temp_file(phrases, filename)
+    File.write("pages/#{filename}", phrases.to_json)
 
     # TODO: we might not need to push every page when we're creating a draft for a new language
     RestClient.post "https://platform.api.onesky.io/1/projects/#{@resource.onesky_project_id}/files",
@@ -56,11 +56,5 @@ class PageUtil
                     dev_hash: AuthUtil.dev_hash,
                     multipart: true,
                     is_keeping_all_strings: keep_existing_phrases
-  end
-
-  def write_temp_file(phrases, filename)
-    temp_file = File.open("pages/#{filename}", 'w')
-    temp_file.puts(phrases.to_json)
-    temp_file.close
   end
 end

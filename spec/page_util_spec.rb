@@ -126,6 +126,6 @@ describe PageUtil do
     page_util_instance.push_new_onesky_translation
 
     file = File.new("pages/#{filename_1}")
-    expect(file.read).to eq("{\"#{id_1}\":\"#{phrase_1}\",\"#{id_2}\":\"#{phrase_2}\"}\n")
+    expect(file.read).to eq("{\"#{id_1}\":\"#{phrase_1}\",\"#{id_2}\":\"#{phrase_2}\"}")
   end
 end
