@@ -21,6 +21,7 @@
 .byebug_history
 
 vendor/ruby
+vendor/cache
 .idea
 *.iml
 /pages/*
