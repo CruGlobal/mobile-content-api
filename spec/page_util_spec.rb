@@ -2,6 +2,7 @@
 
 require 'rails_helper'
 require 'page_util'
+require 'xml_util'
 
 describe PageUtil do
   it 'deletes all temp files after successful request' do
@@ -34,8 +35,9 @@ describe PageUtil do
 
   def push
     page = Page.new(filename: 'test_page.xml')
-    allow(page).to receive(:onesky_phrases).and_return([OneskyPhrase.new(onesky_id: 1, text: 'phrase 1'),
-                                                        OneskyPhrase.new(onesky_id: 2, text: 'phrase 2')])
+    allow(XmlUtil).to receive(:translatable_nodes).with(anything).and_return(
+      [OneskyPhrase.new(onesky_id: 1, text: 'phrase 1'), OneskyPhrase.new(onesky_id: 2, text: 'phrase 2')]
+    )
     resource = Resource.new(pages: [page], onesky_project_id: 1)
 
     PageUtil.new(resource, 'de').push_new_onesky_translation

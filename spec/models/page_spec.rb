@@ -39,13 +39,4 @@ describe Page do
 
     expect(result).not_to be_valid
   end
-
-  it 'parses OneSky phrases from page structure' do
-    page = described_class.find(1)
-    allow(page).to receive(:structure).and_return(structure)
-
-    result = page.onesky_phrases
-
-    expect(result).to eq(id_1 => p_1, id_2 => p_2, id_3 => p_3)
-  end
 end

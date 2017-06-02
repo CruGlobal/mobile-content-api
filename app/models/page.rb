@@ -8,14 +8,4 @@ class Page < AbstractPage
   validates :filename, presence: true
   validates :resource, presence: true
   validates :position, presence: true, uniqueness: { scope: :resource }
-
-  def onesky_phrases
-    phrases = {}
-
-    Nokogiri::XML(structure).xpath('//content:text[@i18n-id]').each do |node|
-      phrases[node['i18n-id']] = node.content
-    end
-
-    phrases
-  end
 end
