@@ -7,16 +7,8 @@ resource 'Views' do
   header 'Content-Type', 'application/vnd.api+json'
 
   let(:raw_post) { params.to_json }
-  let(:authorization) do
-    AuthToken.create!(access_code: AccessCode.find(1)).token
-  end
-
-  before do
-    header 'Authorization', :authorization
-  end
 
   post 'views/' do
-    requires_authorization
 
     it 'add views' do
       do_request data: { type: :view, attributes: { resource_id: 1, quantity: 257 } }
