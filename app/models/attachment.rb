@@ -21,6 +21,6 @@ class Attachment < ActiveRecord::Base
 
   def save_sha256
     path = file.queued_for_write[:original].path
-    self.sha256 = Digest::SHA256.hexdigest(open(path).read)
+    self.sha256 = ApplicationHelper.generate_filename_sha(open(path).read)
   end
 end
