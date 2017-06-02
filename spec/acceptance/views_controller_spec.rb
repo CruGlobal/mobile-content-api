@@ -9,7 +9,6 @@ resource 'Views' do
   let(:raw_post) { params.to_json }
 
   post 'views/' do
-
     it 'add views' do
       do_request data: { type: :view, attributes: { resource_id: 1, quantity: 257 } }
 
