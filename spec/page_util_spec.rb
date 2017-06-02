@@ -35,11 +35,17 @@ describe PageUtil do
 
   def push
     page = Page.new(filename: 'test_page.xml')
-    allow(XmlUtil).to receive(:translatable_nodes).with(anything).and_return(
-      [OneskyPhrase.new(onesky_id: 1, text: 'phrase 1'), OneskyPhrase.new(onesky_id: 2, text: 'phrase 2')]
-    )
+    allow(XmlUtil).to receive(:translatable_nodes).with(anything).and_return([mock_xml_node(1, 'phrase 1'),
+                                                                              mock_xml_node(2, 'phrase 2')])
     resource = Resource.new(pages: [page], onesky_project_id: 1)
 
     PageUtil.new(resource, 'de').push_new_onesky_translation
+  end
+
+  def mock_xml_node(id, text)
+    node = double
+    allow(node).to receive(:[]).with('i18n-id').and_return(id)
+    allow(node).to receive(:content).and_return(text)
+    node
   end
 end

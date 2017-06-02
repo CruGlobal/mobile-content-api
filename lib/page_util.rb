@@ -44,7 +44,7 @@ class PageUtil
   def write_temp_file(page)
     page_to_upload = {}
     XmlUtil.translatable_nodes(Nokogiri::XML(page.structure)).each do |element|
-      page_to_upload[element.onesky_id] = element.text
+      page_to_upload[element['i18n-id']] = element.content
     end
 
     temp_file = File.open("pages/#{page.filename}", 'w')
