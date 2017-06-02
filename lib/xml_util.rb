@@ -1,5 +1,4 @@
 # frozen_string_literal: true
-require 'digest/md5'
 
 module XmlUtil
   def self.translatable_nodes(xml)
