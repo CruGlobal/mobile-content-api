@@ -31,48 +31,12 @@ describe Page do
 </page>"
   end
 
-  context 'creating' do
-    it 'creates a TranslationElement for each translatable XML element' do
-      allow(OneskyPhrase).to receive(:create!).exactly(3).times
+  it 'cannot duplicate Resource ID and Page position' do
+    result = described_class.create(filename: 'blahblah.xml',
+                                    resource_id: 1,
+                                    structure: structure,
+                                    position: 1)
 
-      p = described_class.create!(structure: structure, filename: 'testing.xml', resource_id: 1, position: 2)
-
-      expect(OneskyPhrase).to(have_received(:create!).with(page: p, onesky_id: id_1, text: p_1)
-                                      .with(page: p, onesky_id: id_2, text: p_2)
-                                      .with(page: p, onesky_id: id_3, text: p_3))
-    end
-
-    it 'cannot duplicate Resource ID and Page position' do
-      result = described_class.create(filename: 'blahblah.xml', resource_id: 1, structure: structure, position: 1)
-
-      expect(result).not_to be_valid
-      expect(result.errors['position']).to include('has already been taken')
-    end
-
-    it 'does not create Pages for Resources not using OneSky' do
-      allow(OneskyPhrase).to receive(:create!).exactly(0).times
-
-      described_class.create!(structure: structure, filename: 'testing.xml', resource_id: 2, position: 3)
-    end
-  end
-
-  context 'updating' do
-    let(:p) { described_class.find(1) }
-
-    it 'adds new translation elements' do
-      allow(OneskyPhrase).to receive(:create!).exactly(2).times
-
-      p.update!(structure: structure)
-
-      expect(OneskyPhrase).to(have_received(:create!).with(page: p, onesky_id: id_1, text: p_1)
-                                      .with(page: p, onesky_id: id_2, text: p_2))
-    end
-
-    it 'updates text for existing translation elements' do
-      p.update!(structure: structure)
-
-      element = OneskyPhrase.find_by!(page: p, onesky_id: id_3)
-      expect(element.text).to eq(p_3)
-    end
+    expect(result).not_to be_valid
   end
 end

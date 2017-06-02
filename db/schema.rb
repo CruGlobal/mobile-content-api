@@ -64,14 +64,6 @@ ActiveRecord::Schema.define(version: 20170601143623) do
     t.index ["code"], name: "index_languages_on_code", unique: true, using: :btree
   end
 
-  create_table "onesky_phrases", force: :cascade do |t|
-    t.string  "text",      null: false
-    t.integer "page_id",   null: false
-    t.string  "onesky_id", null: false
-    t.index ["onesky_id"], name: "index_onesky_phrases_on_onesky_id", unique: true, using: :btree
-    t.index ["page_id"], name: "index_onesky_phrases_on_page_id", using: :btree
-  end
-
   create_table "pages", force: :cascade do |t|
     t.string  "filename",    null: false
     t.string  "structure",   null: false
@@ -146,7 +138,6 @@ ActiveRecord::Schema.define(version: 20170601143623) do
   add_foreign_key "auth_tokens", "access_codes"
   add_foreign_key "custom_pages", "pages"
   add_foreign_key "custom_pages", "translations"
-  add_foreign_key "onesky_phrases", "pages"
   add_foreign_key "pages", "resources"
   add_foreign_key "resources", "resource_types"
   add_foreign_key "resources", "systems"

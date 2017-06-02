@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 require 'rest-client'
 require 'auth_util'
+require 'xml_util'
 
 class PageUtil
   def initialize(resource, language_code)
@@ -42,7 +43,9 @@ class PageUtil
 
   def write_temp_file(page)
     page_to_upload = {}
-    page.onesky_phrases.each { |element| page_to_upload[element.onesky_id] = element.text }
+    XmlUtil.translatable_nodes(Nokogiri::XML(page.structure)).each do |element|
+      page_to_upload[element['i18n-id']] = element.content
+    end
 
     temp_file = File.open("pages/#{page.filename}", 'w')
     temp_file.puts(page_to_upload.to_json)

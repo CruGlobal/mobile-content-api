@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 's3_util'
+require 'xml_util'
 
 class Translation < ActiveRecord::Base
   belongs_to :resource
@@ -55,8 +56,8 @@ class Translation < ActiveRecord::Base
     page = Page.find(page_id)
     phrases = download_translated_phrases(page.filename)
 
-    xml = page_structure(page_id)
-    xml.xpath('//content:text[@i18n-id]').each do |node|
+    xml = Nokogiri::XML(page_structure(page_id))
+    XmlUtil.translatable_nodes(xml).each do |node|
       phrase_id = node['i18n-id']
       translated_phrase = phrases[phrase_id]
 
@@ -72,8 +73,7 @@ class Translation < ActiveRecord::Base
 
   def page_structure(page_id)
     custom_page = custom_pages.find_by(page_id: page_id)
-    structure = custom_page.nil? ? Page.find(page_id).structure : custom_page.structure
-    Nokogiri::XML(structure)
+    custom_page.nil? ? Page.find(page_id).structure : custom_page.structure
   end
 
   def prevent_destroy_published
