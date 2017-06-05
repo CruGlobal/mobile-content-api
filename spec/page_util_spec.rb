@@ -77,11 +77,13 @@ describe PageUtil do
     let(:file_1) { double }
     let(:file_2) { double }
     let(:file_3) { double }
+    let(:file_4) { double }
 
     before do
       allow(File).to receive(:new).with("pages/#{filename_1}").and_return(file_1)
       allow(File).to receive(:new).with("pages/#{filename_2}").and_return(file_2)
       allow(File).to receive(:new).with('pages/name_description.xml').and_return(file_3)
+      allow(File).to receive(:new).with('pages/attributes.xml').and_return(file_4)
     end
 
     it 'correct URL' do
@@ -89,7 +91,7 @@ describe PageUtil do
 
       page_util_instance.push_new_onesky_translation
 
-      expect(RestClient).to have_received(:post).with(url, anything).exactly(3).times
+      expect(RestClient).to have_received(:post).with(url, anything).exactly(4).times
     end
 
     it 'all resource pages' do
@@ -97,6 +99,12 @@ describe PageUtil do
 
       expect(RestClient).to have_received(:post).with(any_string, hash_including(file: file_1))
       expect(RestClient).to have_received(:post).with(any_string, hash_including(file: file_2))
+    end
+
+    it 'all translatable phrases' do
+      page_util_instance.push_new_onesky_translation
+
+      expect(RestClient).to have_received(:post).with(any_string, hash_including(file: file_4))
     end
 
     it 'name/description file' do
@@ -108,14 +116,14 @@ describe PageUtil do
     it 'correct locale' do
       page_util_instance.push_new_onesky_translation
 
-      expect(RestClient).to have_received(:post).with(any_string, hash_including(locale: locale)).exactly(3).times
+      expect(RestClient).to have_received(:post).with(any_string, hash_including(locale: locale)).exactly(4).times
     end
 
     it 'keeps existing strings by default' do
       page_util_instance.push_new_onesky_translation
 
       expect(RestClient).to(
-        have_received(:post).with(any_string, hash_including(is_keeping_all_strings: true)).exactly(2).times
+        have_received(:post).with(any_string, hash_including(is_keeping_all_strings: true)).exactly(3).times
       )
     end
   end

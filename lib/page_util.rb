@@ -11,8 +11,9 @@ class PageUtil
   end
 
   def push_new_onesky_translation(keep_existing_phrases = true)
-    push_all_resource_pages(keep_existing_phrases)
+    push_resource_pages(keep_existing_phrases)
     push_name_description
+    push_translatable_attributes
 
     self.class.delete_temp_pages
   rescue StandardError => e
@@ -27,7 +28,7 @@ class PageUtil
 
   private
 
-  def push_all_resource_pages(keep_existing_phrases)
+  def push_resource_pages(keep_existing_phrases)
     @resource.pages.each do |page|
       phrases = {}
       XmlUtil.translatable_nodes(Nokogiri::XML(page.structure)).each { |n| phrases[n['i18n-id']] = n.content }
@@ -37,10 +38,15 @@ class PageUtil
   end
 
   def push_name_description
-    filename = 'name_description.xml'
     phrases = { name: @resource.name, description: @resource.description }
+    push_page(phrases, 'name_description.xml', false)
+  end
 
-    push_page(phrases, filename, false)
+  def push_translatable_attributes
+    phrases = {}
+    @resource.resource_attributes.where(is_translatable: true).each { |a| phrases[a.key] = a.value }
+
+    push_page(phrases, 'attributes.xml', true)
   end
 
   def push_page(phrases, filename, keep_existing_phrases)
