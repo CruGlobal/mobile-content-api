@@ -75,7 +75,8 @@ describe S3Util do
   context 'manifest' do
     let(:expected) do
       '<?xml version="1.0"?>
-<manifest>
+<manifest xmlns="https://mobile-content-api.cru.org/xmlns/manifest" '\
+'xmlns:content="https://mobile-content-api.cru.org/xmlns/content">
   <title>
     <content:text i18n-id="89a09d72-114f-4d89-a72c-ca204c796fd9">Knowing God Personally</content:text>
   </title>

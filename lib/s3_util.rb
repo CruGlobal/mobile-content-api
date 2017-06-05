@@ -42,7 +42,9 @@ class S3Util
   end
 
   def find_or_create_manifest_node
-    return @document.xpath('/manifest').first if @translation.resource.manifest.present?
+    if @translation.resource.manifest.present?
+      return @document.xpath('/m:manifest', 'm' => 'https://mobile-content-api.cru.org/xmlns/manifest').first
+    end
 
     manifest = Nokogiri::XML::Node.new('manifest', @document)
     @document.root = manifest
