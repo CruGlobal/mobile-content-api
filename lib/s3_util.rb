@@ -50,13 +50,13 @@ class S3Util
   end
 
   def load_manifest
-    manifest_node = @document.xpath('/m:manifest', 'm' => 'https://mobile-content-api.cru.org/xmlns/manifest').first
+    manifest_node = XmlUtil.xpath_namespace(@document, 'manifest').first
     insert_translated_name(manifest_node)
     manifest_node
   end
 
   def insert_translated_name(manifest_node)
-    title_node = manifest_node.xpath('t:title', 't' => 'https://mobile-content-api.cru.org/xmlns/manifest').first
+    title_node = XmlUtil.xpath_namespace(manifest_node, 'title').first
     return if title_node.nil?
 
     name_node = title_node.xpath('content:text[@i18n-id]').first

@@ -2,6 +2,7 @@
 
 require 'rails_helper'
 require 's3_util'
+require 'xml_util'
 
 describe S3Util do
   let(:godtools) { TestConstants::GodTools }
@@ -93,14 +94,14 @@ describe S3Util do
     it 'contains all pages in order' do
       push
 
-      result = load_xml(translation.manifest_name).xpath('//p:pages', 'p' => 'https://mobile-content-api.cru.org/xmlns/manifest').first
+      result = XmlUtil.xpath_namespace(load_xml(translation.manifest_name), 'pages').first
       expect(result.to_s).to eq(pages)
     end
 
     it 'contains all resources' do
       push
 
-      result = load_xml(translation.manifest_name).xpath('//p:resources', 'p' => 'https://mobile-content-api.cru.org/xmlns/manifest').first
+      result = XmlUtil.xpath_namespace(load_xml(translation.manifest_name), 'resources').first
       expect(result.to_s).to eq(resources)
     end
 
