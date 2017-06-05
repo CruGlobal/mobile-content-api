@@ -24,7 +24,7 @@ class S3Util
 
   def build_zip
     @document = Nokogiri::XML::Document.parse(@translation.resource.manifest)
-    manifest_node = find_or_create_manifest_node
+    manifest_node = load_or_create_manifest_node
 
     pages_node = Nokogiri::XML::Node.new('pages', @document)
     resources_node = Nokogiri::XML::Node.new('resources', @document)
@@ -41,17 +41,17 @@ class S3Util
     end
   end
 
-  def find_or_create_manifest_node
-    return find_manifest if @translation.resource.manifest.present?
+  def load_or_create_manifest_node
+    return load_manifest if @translation.resource.manifest.present?
 
     manifest = Nokogiri::XML::Node.new('manifest', @document)
     @document.root = manifest
     manifest
   end
 
-  def find_manifest
+  def load_manifest
     manifest_node = @document.xpath('/m:manifest', 'm' => 'https://mobile-content-api.cru.org/xmlns/manifest').first
-    insert_translated_name(manifest_node) # TODO: need a test for this
+    insert_translated_name(manifest_node)
     manifest_node
   end
 
