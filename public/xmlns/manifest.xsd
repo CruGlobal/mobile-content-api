@@ -1,4 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
-<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
-  <xs:element name="manifest"/>
+<xs:schema xmlns:content="https://mobile-content-api.cru.org/xmlns/content"
+    xmlns:manifest="https://mobile-content-api.cru.org/xmlns/manifest" xmlns:xs="http://www.w3.org/2001/XMLSchema"
+    attributeFormDefault="unqualified" elementFormDefault="qualified"
+    targetNamespace="https://mobile-content-api.cru.org/xmlns/manifest">
+
+    <xs:import namespace="https://mobile-content-api.cru.org/xmlns/content" schemaLocation="content.xsd" />
+
+    <xs:complexType name="manifest">
+        <xs:sequence>
+            <xs:element name="title" minOccurs="0" maxOccurs="1" type="content:textChild" />
+            <xs:element name="pages" minOccurs="0" maxOccurs="1">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="page" minOccurs="0" maxOccurs="unbounded" type="manifest:page" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="resources" minOccurs="0" maxOccurs="1">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="resource" minOccurs="0" maxOccurs="unbounded" type="manifest:resource" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+        </xs:sequence>
+        <xs:attribute name="primary-color" type="content:colorValue" use="optional" />
+        <xs:attribute name="primary-text-color" type="content:colorValue" use="optional" />
+        <xs:attribute name="text-color" type="content:colorValue" use="optional" />
+        <xs:attribute name="background-color" type="content:colorValue" use="optional" />
+        <xs:attribute name="background-image" type="xs:string" use="optional" />
+        <xs:attribute name="background-image-align" type="content:fullAlignValue" use="optional" />
+    </xs:complexType>
+
+    <xs:complexType name="page">
+        <xs:attribute name="filename" type="xs:string" use="optional" />
+        <xs:attribute name="src" type="xs:string" use="required" />
+    </xs:complexType>
+
+    <xs:complexType name="resource">
+        <xs:attribute name="filename" type="xs:string" use="optional" />
+        <xs:attribute name="src" type="xs:string" use="required" />
+    </xs:complexType>
+
+    <!-- root element -->
+    <xs:element name="manifest" type="manifest:manifest" />
 </xs:schema>
