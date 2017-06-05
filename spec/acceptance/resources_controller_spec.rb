@@ -79,6 +79,11 @@ resource 'Resources' do
 
   context 'PUT do' do
     let(:id) { 1 }
+    let(:manifest) do
+      '<manifest xmlns="https://mobile-content-api.cru.org/xmlns/manifest"
+                        xmlns:content="https://mobile-content-api.cru.org/xmlns/content">
+       </manifest>'
+    end
 
     before do
       header 'Authorization', :authorization
@@ -88,7 +93,7 @@ resource 'Resources' do
       requires_authorization
 
       it 'update resource' do
-        do_request data: { type: :resource, attributes: { description: 'hello, world', manifest: '<manifest/>' } }
+        do_request data: { type: :resource, attributes: { description: 'hello, world', manifest: manifest } }
 
         expect(status).to be(200)
         expect(response_body).not_to be_nil
