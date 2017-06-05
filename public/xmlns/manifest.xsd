@@ -7,7 +7,7 @@
     <xs:import namespace="https://mobile-content-api.cru.org/xmlns/content" schemaLocation="content.xsd" />
 
     <xs:complexType name="manifest">
-        <xs:sequence>
+        <xs:all>
             <xs:element name="title" minOccurs="0" maxOccurs="1" type="content:textChild" />
             <xs:element name="pages" minOccurs="0" maxOccurs="1">
                 <xs:complexType>
@@ -23,7 +23,7 @@
                     </xs:sequence>
                 </xs:complexType>
             </xs:element>
-        </xs:sequence>
+        </xs:all>
         <xs:attribute name="primary-color" type="content:colorValue" use="optional" />
         <xs:attribute name="primary-text-color" type="content:colorValue" use="optional" />
         <xs:attribute name="text-color" type="content:colorValue" use="optional" />
