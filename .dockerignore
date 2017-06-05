@@ -1,4 +1,6 @@
+.bundle
 .git
 vendor/cache
+vendor/ruby
 log/*
 pages/*
