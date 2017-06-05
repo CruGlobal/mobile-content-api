@@ -83,7 +83,7 @@ class Translation < ActiveRecord::Base
   def push_published_to_s3
     return unless is_published
 
-    name_desc_onesky if resource.uses_onesky? # TODO: this must be done before creating S3Util
+    name_desc_onesky if resource.uses_onesky?
 
     s3_util = S3Util.new(self)
     s3_util.push_translation
