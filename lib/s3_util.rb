@@ -2,6 +2,7 @@
 
 require 'zip'
 require 'page_util'
+require 'xml_util'
 
 class S3Util
   def initialize(translation)
@@ -59,7 +60,7 @@ class S3Util
 
   def write_page_to_file(page)
     translated_page = @translation.translated_page(page.id, true)
-    sha_filename = ApplicationHelper.generate_filename_sha(translated_page, '.xml')
+    sha_filename = XmlUtil.xml_filename_sha(translated_page)
 
     File.write("pages/#{sha_filename}", translated_page)
 
@@ -79,7 +80,7 @@ class S3Util
   end
 
   def write_manifest_to_file
-    filename = ApplicationHelper.generate_filename_sha(@document.to_s, '.xml')
+    filename = XmlUtil.xml_filename_sha(@document.to_s)
     @translation.manifest_name = filename
 
     file = File.open("pages/#{filename}", 'w')
