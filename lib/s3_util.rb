@@ -57,10 +57,10 @@ class S3Util
 
   def insert_translated_name(manifest_node)
     title_node = manifest_node.xpath('t:title', 't' => 'https://mobile-content-api.cru.org/xmlns/manifest').first
-    name_node = title_node.xpath('content:text[@i18n-id]').first # TODO: could this be null for non-OneSky?
+    return if title_node.nil?
+
+    name_node = title_node.xpath('content:text[@i18n-id]').first
     name_node.content = @translation.translated_name
-  rescue Nokogiri::XML::XPath::SyntaxError
-    return
   end
 
   def add_pages(zip_file, pages_node)
