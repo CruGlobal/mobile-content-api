@@ -27,13 +27,6 @@ class PageUtil
 
   private
 
-  def push_name_description
-    filename = 'name_description.xml'
-    phrases = { name: @resource.name, description: @resource.description }
-
-    push_page(phrases, filename, false)
-  end
-
   def push_all_resource_pages(keep_existing_phrases)
     @resource.pages.each do |page|
       phrases = {}
@@ -41,6 +34,13 @@ class PageUtil
 
       push_page(phrases, page.filename, keep_existing_phrases)
     end
+  end
+
+  def push_name_description
+    filename = 'name_description.xml'
+    phrases = { name: @resource.name, description: @resource.description }
+
+    push_page(phrases, filename, false)
   end
 
   def push_page(phrases, filename, keep_existing_phrases)
