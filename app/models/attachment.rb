@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'xml_util'
+
 class Attachment < ActiveRecord::Base
   validates :file, presence: true
   validates :is_zipped, inclusion: { in: [true, false] }
@@ -21,6 +23,6 @@ class Attachment < ActiveRecord::Base
 
   def save_sha256
     path = file.queued_for_write[:original].path
-    self.sha256 = Digest::SHA256.hexdigest(open(path).read)
+    self.sha256 = XmlUtil.filename_sha(open(path).read)
   end
 end
