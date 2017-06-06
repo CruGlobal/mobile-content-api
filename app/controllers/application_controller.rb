@@ -12,6 +12,10 @@ class ApplicationController < ActionController::Base
     render_error(ApiError.new(:id, exception.message), :bad_request)
   end
 
+  rescue_from ActiveRecord::RecordInvalid do |exception|
+    render_error(ApiError.new(:id, exception.message), :bad_request)
+  end
+
   def render(**args)
     if args.key? :json
       response.headers['Content-Type'] = 'application/vnd.api+json'
