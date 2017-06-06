@@ -10,6 +10,33 @@
         </xs:restriction>
     </xs:simpleType>
 
+    <xs:simpleType name="imageScaleType">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="fit">
+                <xs:annotation>
+                    <xs:documentation>Scale image to fit the UI size without cropping any of the image
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="fill">
+                <xs:annotation>
+                    <xs:documentation>Scale image to completely fill the UI, cropping if necessary</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="fill-x">
+                <xs:annotation>
+                    <xs:documentation>Scale image to match the width of the UI, cropping if necessary</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="fill-y">
+                <xs:annotation>
+                    <xs:documentation>Scale image to match the height of the UI, cropping if necessary
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+        </xs:restriction>
+    </xs:simpleType>
+
     <xs:simpleType name="fullAlignValue">
         <xs:restriction base="xs:string">
             <xs:enumeration value="start" />
