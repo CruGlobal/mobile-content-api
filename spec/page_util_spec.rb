@@ -7,6 +7,11 @@ require 'xml_util'
 describe PageUtil do
   let(:locale) { 'de' }
 
+  let(:name) { 'resource name' }
+  let(:description) { 'resource description' }
+  let(:attr_1) { Attribute.new(key: 'roger', value: 'test 1', is_translatable: true) }
+  let(:attr_2) { Attribute.new(key: 'thor', value: 'test 2', is_translatable: true) }
+
   let(:filename_1) { 'test_page_1.xml' }
   let(:filename_2) { 'test_page_2.xml' }
   let(:id_1) { 1 }
@@ -45,10 +50,19 @@ describe PageUtil do
   let(:any_string) { /.*/ }
 
   let(:page_util_instance) do
-    page_one = Page.new(filename: filename_1, structure: structure_1)
-    page_two = Page.new(filename: filename_2, structure: structure_2)
+    attributes = [attr_1, attr_2, Attribute.new(key: 'bill', value: 'test 3', is_translatable: false)]
 
-    resource = Resource.new(pages: [page_one, page_two], onesky_project_id: 1)
+    pages = [Page.new(filename: filename_1, structure: structure_1, position: 1),
+             Page.new(filename: filename_2, structure: structure_2, position: 2)]
+
+    resource = Resource.create!(pages: pages,
+                                abbreviation: 'test',
+                                onesky_project_id: 1,
+                                name: name,
+                                description: description,
+                                resource_attributes: attributes,
+                                resource_type_id: 1,
+                                system_id: 1)
 
     described_class.new(resource, locale)
   end
@@ -128,12 +142,32 @@ describe PageUtil do
     end
   end
 
-  it 'writes all OneSky phrases to temp file' do
-    allow(described_class).to receive(:delete_temp_pages)
+  context 'temp files created with' do
+    it 'all OneSky phrases' do
+      allow(described_class).to receive(:delete_temp_pages)
 
-    page_util_instance.push_new_onesky_translation
+      page_util_instance.push_new_onesky_translation
 
-    file = File.new("pages/#{filename_1}")
-    expect(file.read).to eq("{\"#{id_1}\":\"#{phrase_1}\",\"#{id_2}\":\"#{phrase_2}\"}")
+      file = File.new("pages/#{filename_1}")
+      expect(file.read).to eq("{\"#{id_1}\":\"#{phrase_1}\",\"#{id_2}\":\"#{phrase_2}\"}")
+    end
+
+    it 'name and description' do
+      allow(described_class).to receive(:delete_temp_pages)
+
+      page_util_instance.push_new_onesky_translation
+
+      file = File.new('pages/name_description.xml')
+      expect(file.read).to eq("{\"name\":\"#{name}\",\"description\":\"#{description}\"}")
+    end
+
+    it 'translatable attributes' do
+      allow(described_class).to receive(:delete_temp_pages)
+
+      page_util_instance.push_new_onesky_translation
+
+      file = File.new('pages/attributes.xml')
+      expect(file.read).to eq("{\"#{attr_1.key}\":\"#{attr_1.value}\",\"#{attr_2.key}\":\"#{attr_2.value}\"}")
+    end
   end
 end
