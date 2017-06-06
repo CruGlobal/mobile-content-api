@@ -45,6 +45,6 @@ describe Resource do
 
     expect(result).not_to be_valid
     expect(result.errors['manifest'])
-      .to include("Element 'xml': No matching global declaration available for the validation root.")
+      .to include("1:0: ERROR: Element 'xml': No matching global declaration available for the validation root.")
   end
 end
