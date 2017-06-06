@@ -129,8 +129,18 @@
         <xs:attribute name="background-color" type="content:colorValue" use="optional" />
         <!-- background-image: DEFAULT( none ) -->
         <xs:attribute name="background-image" type="xs:string" use="optional" />
-        <!-- background-image-align: (top|bottom|left|right|center|repeat) DEFAULT( center ) -->
-        <xs:attribute name="background-image-align" type="content:fullAlignValue" use="optional" />
+        <xs:attribute name="background-image-align" type="content:imageGravity" use="optional">
+            <xs:annotation>
+                <xs:documentation>This defines how we align the background image. This defaults to center.
+                </xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="background-image-scale-type" type="content:imageScaleType" use="optional">
+            <xs:annotation>
+                <xs:documentation>This defines how we should scale the background image. This defaults to fill-x.
+                </xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
         <!-- hidden: DEFAULT( false ) whether this card is hidden. hidden cards can still be displayed if they have a listener that is triggered. -->
         <xs:attribute name="hidden" type="xs:boolean" use="optional" />
         <!-- listeners: event_ids that trigger display of this card -->
