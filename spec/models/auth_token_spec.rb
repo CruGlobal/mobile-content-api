@@ -7,7 +7,7 @@ describe AuthToken do
 
   it 'generates a value for the token' do
     result = described_class.create!(access_code: access_code)
-    expect(result).not_to be_nil
+    expect(result.token).not_to be_nil
   end
 
   it 'sets expiration to 24 hours after creation' do
