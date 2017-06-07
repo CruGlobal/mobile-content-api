@@ -8,11 +8,7 @@ class ApplicationController < ActionController::Base
   end
 
   # TODO: would be good to do this with all non-runtime errors instead of catching them in controllers
-  rescue_from Error::XmlError do |exception|
-    render_error(ApiError.new(:id, exception.message), :bad_request)
-  end
-
-  rescue_from ActiveRecord::RecordInvalid do |exception|
+  rescue_from Error::XmlError, ActiveRecord::RecordInvalid do |exception|
     render_error(ApiError.new(:id, exception.message), :bad_request)
   end
 
