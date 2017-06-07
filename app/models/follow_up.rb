@@ -7,7 +7,7 @@ class FollowUp
 
   attr_accessor :email, :name, :language, :destination
 
-  validates :email, presence: true # TODO: validate content
+  validates :email, presence: true, email_format: { message: 'Invalid email address' }
   validates :language, presence: true
   validates :destination, presence: true
 

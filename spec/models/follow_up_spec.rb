@@ -2,6 +2,7 @@
 # frozen_string_literal: true
 
 require 'rails_helper'
+require 'validates_email_format_of/rspec_matcher'
 
 describe FollowUp do
   let(:destination) do
@@ -20,6 +21,13 @@ describe FollowUp do
 
   before do
     allow(Destination).to receive(:find).with(123).and_return(destination)
+  end
+
+  it 'validates email address' do
+    result = described_class.new('myemail', language.id, destination.id, full_name)
+
+    expect(result).not_to be_valid
+    expect(result.errors[:email]).to include('Invalid email address')
   end
 
   context 'sends correct values to api' do
