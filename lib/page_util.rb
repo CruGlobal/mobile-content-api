@@ -13,7 +13,7 @@ class PageUtil
   def push_new_onesky_translation(keep_existing_phrases = true)
     push_resource_pages(keep_existing_phrases)
     push_name_description
-    push_translatable_attributes
+    push_translatable_attributes if @resource.uses_onesky?
 
     self.class.delete_temp_pages
   rescue StandardError => e

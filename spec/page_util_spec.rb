@@ -49,21 +49,23 @@ describe PageUtil do
 
   let(:any_string) { /.*/ }
 
-  let(:page_util_instance) do
+  let(:resource) do
     attributes = [attr_1, attr_2, Attribute.new(key: 'bill', value: 'test 3', is_translatable: false)]
 
     pages = [Page.new(filename: filename_1, structure: structure_1, position: 1),
              Page.new(filename: filename_2, structure: structure_2, position: 2)]
 
-    resource = Resource.create!(pages: pages,
-                                abbreviation: 'test',
-                                onesky_project_id: 1,
-                                name: name,
-                                description: description,
-                                resource_attributes: attributes,
-                                resource_type_id: 1,
-                                system_id: 1)
+    Resource.create!(pages: pages,
+                     abbreviation: 'test',
+                     onesky_project_id: 1,
+                     name: name,
+                     description: description,
+                     resource_attributes: attributes,
+                     resource_type_id: 1,
+                     system_id: 1)
+  end
 
+  let(:page_util_instance) do
     described_class.new(resource, locale)
   end
 
@@ -115,10 +117,20 @@ describe PageUtil do
       expect(RestClient).to have_received(:post).with(any_string, hash_including(file: file_2))
     end
 
-    it 'all translatable attributes' do
-      page_util_instance.push_new_onesky_translation
+    context 'translatable attributes' do
+      it 'resource uses OneSky' do
+        page_util_instance.push_new_onesky_translation
 
-      expect(RestClient).to have_received(:post).with(any_string, hash_including(file: file_4))
+        expect(RestClient).to have_received(:post).with(any_string, hash_including(file: file_4))
+      end
+
+      it 'resource does not use OneSky' do
+        allow(resource).to receive(:uses_onesky?).and_return(false)
+
+        page_util_instance.push_new_onesky_translation
+
+        expect(RestClient).not_to have_received(:post).with(any_string, hash_including(file: file_4))
+      end
     end
 
     it 'name/description file' do
