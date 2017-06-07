@@ -136,8 +136,13 @@
     <xs:complexType name="callToAction">
         <xs:complexContent>
             <xs:extension base="content:textChild">
-                <!-- event: OPTIONAL - Event name -->
-                <xs:attribute name="event" type="xs:string" use="optional" />
+                <xs:attribute name="events" type="content:eventIdsType" use="optional">
+                    <xs:annotation>
+                        <xs:documentation>Event ids to trigger when the call to action arrow is pressed. Default
+                            behavior is to advance to the next page.
+                        </xs:documentation>
+                    </xs:annotation>
+                </xs:attribute>
             </xs:extension>
         </xs:complexContent>
     </xs:complexType>
