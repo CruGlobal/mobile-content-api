@@ -57,6 +57,11 @@
         <xs:attribute name="background-color" type="content:colorValue" use="optional" />
         <xs:attribute name="background-image" type="xs:string" use="optional" />
         <xs:attribute name="background-image-align" type="content:fullAlignValue" use="optional" />
+        <xs:attribute name="listeners" type="content:listenersType" use="optional">
+            <xs:annotation>
+                <xs:documentation>event_ids that trigger this page</xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
     </xs:complexType>
 
     <!--
@@ -128,8 +133,8 @@
         <xs:attribute name="background-image-align" type="content:fullAlignValue" use="optional" />
         <!-- hidden: DEFAULT( false ) whether this card is hidden. hidden cards can still be displayed if they have a listener that is triggered. -->
         <xs:attribute name="hidden" type="xs:boolean" use="optional" />
-        <!-- listener: an event_id that triggers display of this card -->
-        <xs:attribute name="listener" type="content:listenerValue" use="optional" />
+        <!-- listeners: event_ids that trigger display of this card -->
+        <xs:attribute name="listeners" type="content:listenersType" use="optional" />
     </xs:complexType>
 
     <!-- Call to Action (next page arrow / text) -->
@@ -163,7 +168,8 @@
                 <xs:element ref="tract:paragraph" />
             </xs:choice>
         </xs:sequence>
-        <xs:attribute name="listener" type="content:listenerValue" use="required" />
+        <xs:attribute name="listeners" type="content:listenersType" use="required" />
+        <xs:attribute name="dismiss-listeners" type="content:listenersType" use="required" />
     </xs:complexType>
 
     <!-- Paragraph - Vertical stack of content with margin/padding between each item -->
