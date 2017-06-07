@@ -52,6 +52,8 @@ class PageUtil
   def push_page(phrases, filename, keep_existing_phrases)
     File.write("pages/#{filename}", phrases.to_json)
 
+    Rails.logger.info "Pushing page with name: #{filename} to OneSky with language code: #{@language_code}"
+
     RestClient.post "https://platform.api.onesky.io/1/projects/#{@resource.onesky_project_id}/files",
                     file: File.new("pages/#{filename}"),
                     file_format: 'HIERARCHICAL_JSON',

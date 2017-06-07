@@ -11,6 +11,8 @@ class S3Util
   end
 
   def push_translation
+    Rails.logger.info "Starting build of translation with id: #{@translation.id}"
+
     build_zip
     upload
 
@@ -65,6 +67,8 @@ class S3Util
 
   def add_pages(zip_file, pages_node)
     @translation.resource.pages.order(position: :asc).each do |page|
+      Rails.logger.info("Adding page with id: #{page.id} to package for translation with id: #{@translation.id}")
+
       sha_filename = write_page_to_file(page)
       zip_file.add(sha_filename, "pages/#{sha_filename}")
 
@@ -83,14 +87,20 @@ class S3Util
 
   def add_attachments(zip_file, resources_node)
     @translation.resource.attachments.where(is_zipped: true).each do |a|
-      string_io_bytes = open(a.file.url).read
-      sha_filename = a.sha256
+      Rails.logger.info("Adding attachment with id: #{a.id} to package for translation with id: #{@translation.id}")
 
-      File.binwrite("pages/#{sha_filename}", string_io_bytes)
-
+      sha_filename = save_attachment_to_file(a)
       zip_file.add(sha_filename, "pages/#{sha_filename}")
       add_node('resource', resources_node, a.file.original_filename, sha_filename)
     end
+  end
+
+  def save_attachment_to_file(attachment)
+    string_io_bytes = open(attachment.file.url).read
+    sha_filename = attachment.sha256
+
+    File.binwrite("pages/#{sha_filename}", string_io_bytes)
+    sha_filename
   end
 
   def write_manifest_to_file
@@ -112,10 +122,16 @@ class S3Util
   end
 
   def upload
+    Rails.logger.info("Uploading zip to OneSky for translation with id: #{@translation.id}")
+
     s3 = Aws::S3::Resource.new(region: ENV['AWS_REGION'])
     bucket = s3.bucket(ENV['MOBILE_CONTENT_API_BUCKET'])
-    obj = bucket.object("#{@translation.resource.system.name}/#{@translation.resource.abbreviation}"\
-                        "/#{@translation.language.code}/#{@zip_file_name}")
+    obj = bucket.object(object_name)
     obj.upload_file("pages/#{@zip_file_name}", acl: 'public-read')
+  end
+
+  def object_name
+    "#{@translation.resource.system.name}/#{@translation.resource.abbreviation}"\
+    "/#{@translation.language.code}/#{@zip_file_name}"
   end
 end
