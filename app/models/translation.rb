@@ -100,14 +100,17 @@ class Translation < ActiveRecord::Base
   def download_translated_phrases(page_filename)
     lam = lambda do
       RestClient.get "https://platform.api.onesky.io/1/projects/#{resource.onesky_project_id}/translations",
-                     params: { api_key: ENV['ONESKY_API_KEY'], timestamp: AuthUtil.epoch_time_seconds,
-                               dev_hash: AuthUtil.dev_hash, locale: language.code,
-                               source_file_name: page_filename, export_file_name: page_filename }
+                     params: headers(page_filename)
     end
 
     response = OneskyUtil.handle(lam)
     raise Error::TextNotFoundError, 'No translated phrases found for this language.' if response.code == 204
     JSON.parse(response.body)
+  end
+
+  def headers(page_filename)
+    { api_key: ENV['ONESKY_API_KEY'], timestamp: AuthUtil.epoch_time_seconds, dev_hash: AuthUtil.dev_hash,
+      locale: language.code, source_file_name: page_filename, export_file_name: page_filename }
   end
 
   def set_defaults
