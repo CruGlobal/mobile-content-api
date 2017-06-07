@@ -41,14 +41,12 @@
         </xs:restriction>
     </xs:simpleType>
     <xs:simpleType name="listenerValue">
-        <xs:restriction base="xs:string">
+        <xs:restriction base="xs:token">
             <xs:pattern value="[a-zA-Z0-9_\-]+" />
         </xs:restriction>
     </xs:simpleType>
-    <xs:simpleType name="listenerValues">
-        <xs:restriction base="xs:string">
-            <xs:pattern value="[a-zA-Z0-9_\-]+(,[a-zA-Z0-9_\-]+)*" />
-        </xs:restriction>
+    <xs:simpleType name="listenersType">
+        <xs:list itemType="content:listenerValue" />
     </xs:simpleType>
 
     <!-- element nodes -->
