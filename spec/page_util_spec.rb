@@ -47,8 +47,6 @@ describe PageUtil do
 </page>"
   end
 
-  let(:any_string) { /.*/ }
-
   let(:resource) do
     attributes = [attr_1, attr_2, Attribute.new(key: 'bill', value: 'test 3', is_translatable: false)]
 
