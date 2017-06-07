@@ -115,7 +115,7 @@ describe PageUtil do
       expect(RestClient).to have_received(:post).with(any_string, hash_including(file: file_2))
     end
 
-    it 'all translatable phrases' do
+    it 'all translatable attributes' do
       page_util_instance.push_new_onesky_translation
 
       expect(RestClient).to have_received(:post).with(any_string, hash_including(file: file_4))
