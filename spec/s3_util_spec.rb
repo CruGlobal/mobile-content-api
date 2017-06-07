@@ -2,6 +2,7 @@
 
 require 'rails_helper'
 require 's3_util'
+require 'xml_util'
 
 describe S3Util do
   let(:godtools) { TestConstants::GodTools }
@@ -73,33 +74,45 @@ describe S3Util do
   end
 
   context 'manifest' do
-    let(:expected) do
-      '<?xml version="1.0"?>
-<manifest xmlns="https://mobile-content-api.cru.org/xmlns/manifest" '\
-'xmlns:content="https://mobile-content-api.cru.org/xmlns/content">
-  <title>
-    <content:text i18n-id="89a09d72-114f-4d89-a72c-ca204c796fd9">Knowing God Personally</content:text>
-  </title>
-  <pages>
+    let(:pages) do
+      '<pages>
     <page filename="04_ThirdPoint.xml" src="790a2170adb13955e67dee0261baff93cc7f045b22a35ad434435bdbdcec036a.xml"/>
     <page filename="13_FinalPage.xml" src="5ce1cd1be598eb31a76c120724badc90e1e9bafa4b03c33ce40f80ccff756444.xml"/>
-  </pages>
-  <resources>
-    <resource filename="wall.jpg" src="073d78ef4dc421f10d2db375414660d3983f506fabdaaff0887f6ee955aa3bdd"/>
-  </resources>
-</manifest>
-'
+  </pages>'
     end
+    let(:resources) do
+      '<resources>
+    <resource filename="wall.jpg" src="073d78ef4dc421f10d2db375414660d3983f506fabdaaff0887f6ee955aa3bdd"/>
+  </resources>'
+    end
+    let(:title) { 'this is the kgp' }
 
     before do
       allow(PageUtil).to receive(:delete_temp_pages)
     end
 
-    it 'builds a manifest with names of all pages in order' do
+    it 'contains all pages in order' do
       push
 
-      manifest = Nokogiri::XML(File.open("pages/#{translation.manifest_name}"))
-      expect(manifest.to_s).to eq(expected)
+      result = XmlUtil.xpath_namespace(load_xml(translation.manifest_name), 'pages').first
+      expect(result.to_s).to eq(pages)
+    end
+
+    it 'contains all resources' do
+      push
+
+      result = XmlUtil.xpath_namespace(load_xml(translation.manifest_name), 'resources').first
+      expect(result.to_s).to eq(resources)
+    end
+
+    it 'contains translated title' do
+      allow(translation).to receive(:translated_name).and_return(title)
+
+      push
+
+      manifest = load_xml(translation.manifest_name)
+      result = manifest.xpath('//content:text[@i18n-id=\'89a09d72-114f-4d89-a72c-ca204c796fd9\']').first
+      expect(result.content).to eq(title)
     end
 
     context 'resource does not have a manifest file' do
@@ -112,8 +125,8 @@ describe S3Util do
       it 'creates manifest node' do
         push
 
-        manifest = Nokogiri::XML(File.open("pages/#{translation.manifest_name}"))
-        expect(manifest.xpath('/').size).to be(1)
+        manifest = load_xml(translation.manifest_name)
+        expect(manifest.xpath('//manifest').size).to be(1)
       end
     end
   end
@@ -125,6 +138,10 @@ describe S3Util do
   end
 
   private
+
+  def load_xml(name)
+    Nokogiri::XML(File.open("pages/#{name}"))
+  end
 
   def pages_dir_empty
     pages_dir = Dir.glob('pages/*')

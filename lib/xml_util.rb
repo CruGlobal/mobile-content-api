@@ -12,4 +12,8 @@ module XmlUtil
   def self.filename_sha(data)
     Digest::SHA256.hexdigest(data)
   end
+
+  def self.xpath_namespace(xml, string)
+    xml.xpath("//m:#{string}", 'm' => 'https://mobile-content-api.cru.org/xmlns/manifest')
+  end
 end

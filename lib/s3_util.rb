@@ -24,7 +24,7 @@ class S3Util
 
   def build_zip
     @document = Nokogiri::XML::Document.parse(@translation.resource.manifest)
-    manifest_node = find_or_create_manifest_node
+    manifest_node = load_or_create_manifest_node
 
     pages_node = Nokogiri::XML::Node.new('pages', @document)
     resources_node = Nokogiri::XML::Node.new('resources', @document)
@@ -41,14 +41,26 @@ class S3Util
     end
   end
 
-  def find_or_create_manifest_node
-    if @translation.resource.manifest.present?
-      return @document.xpath('/m:manifest', 'm' => 'https://mobile-content-api.cru.org/xmlns/manifest').first
-    end
+  def load_or_create_manifest_node
+    return load_manifest if @translation.resource.manifest.present?
 
     manifest = Nokogiri::XML::Node.new('manifest', @document)
     @document.root = manifest
     manifest
+  end
+
+  def load_manifest
+    manifest_node = XmlUtil.xpath_namespace(@document, 'manifest').first
+    insert_translated_name(manifest_node)
+    manifest_node
+  end
+
+  def insert_translated_name(manifest_node)
+    title_node = XmlUtil.xpath_namespace(manifest_node, 'title').first
+    return if title_node.nil?
+
+    name_node = title_node.xpath('content:text[@i18n-id]').first
+    name_node.content = @translation.translated_name
   end
 
   def add_pages(zip_file, pages_node)

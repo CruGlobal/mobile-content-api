@@ -132,8 +132,9 @@ describe Translation do
     end
 
     context 'translated name and description' do
+      let(:s3_util) { double.as_null_object }
+
       before do
-        s3_util = double.as_null_object
         allow(S3Util).to receive(:new).and_return(s3_util)
       end
 
@@ -142,6 +143,24 @@ describe Translation do
 
         expect(translation.translated_name).to eq('kgp german')
         expect(translation.translated_description).to eq('german description')
+      end
+
+      it 'translated name is updated prior to building zip' do # S3Util needs the translated name/description
+        allow(translation).to receive(:translated_name=)
+
+        translation.update!(is_published: true)
+
+        expect(translation).to have_received(:translated_name=).ordered
+        expect(s3_util).to have_received(:push_translation).ordered
+      end
+
+      it 'translated description is updated prior to building zip' do
+        allow(translation).to receive(:translated_description=)
+
+        translation.update!(is_published: true)
+
+        expect(translation).to have_received(:translated_description=).ordered
+        expect(s3_util).to have_received(:push_translation).ordered
       end
 
       it 'does not update from OneSky for projects not using it' do
