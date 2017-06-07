@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 require 's3_util'
+require 'rest-client'
+require 'onesky_util'
 require 'xml_util'
 
 class Translation < ActiveRecord::Base
@@ -96,11 +98,14 @@ class Translation < ActiveRecord::Base
   end
 
   def download_translated_phrases(page_filename)
-    response = RestClient.get "https://platform.api.onesky.io/1/projects/#{resource.onesky_project_id}/translations",
-                              params: { api_key: ENV['ONESKY_API_KEY'], timestamp: AuthUtil.epoch_time_seconds,
-                                        dev_hash: AuthUtil.dev_hash, locale: language.code,
-                                        source_file_name: page_filename, export_file_name: page_filename }
+    lam = lambda do
+      RestClient.get "https://platform.api.onesky.io/1/projects/#{resource.onesky_project_id}/translations",
+                     params: { api_key: ENV['ONESKY_API_KEY'], timestamp: AuthUtil.epoch_time_seconds,
+                               dev_hash: AuthUtil.dev_hash, locale: language.code,
+                               source_file_name: page_filename, export_file_name: page_filename }
+    end
 
+    response = OneskyUtil.handle(lam)
     raise Error::TextNotFoundError, 'No translated phrases found for this language.' if response.code == 204
     JSON.parse(response.body)
   end
