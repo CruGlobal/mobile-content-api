@@ -30,11 +30,26 @@ describe FollowUp do
     expect(result.errors[:email]).to include('Invalid email address')
   end
 
+  it 'returns remote response code if request failed' do
+    code = 404
+    follow_up = described_class.new(email, language.id, destination.id, full_name)
+    mock_rest_client(code)
+
+    expect { follow_up.send_to_api }
+      .to raise_error("Received response code: #{code} from destination: #{destination.id}")
+  end
+
+  it 'does not send if record is invalid' do
+    follow_up = described_class.new(nil, language.id, destination.id, full_name)
+
+    expect { follow_up.send_to_api }.to raise_error("Email can't be blank, Email Invalid email address")
+  end
+
   context 'sends correct values to api' do
     let(:follow_up) { described_class.new(email, language.id, destination.id, full_name) }
 
     before do
-      allow(RestClient).to receive(:post).and_return(double.as_null_object)
+      mock_rest_client(201)
     end
 
     it 'url' do
@@ -45,7 +60,7 @@ describe FollowUp do
 
     it 'body' do
       expected = "subscriber[route_id]=#{destination.route_id}&subscriber[language_code]=#{language.code}"\
-                 "&subscriber[first_name]=#{first_name}&subscriber[last_name]=#{last_name}&subscriber[email]=#{email}"
+                 "&subscriber[email]=#{email}&subscriber[first_name]=#{first_name}&subscriber[last_name]=#{last_name}"
 
       follow_up.send_to_api
 
@@ -67,5 +82,13 @@ describe FollowUp do
                                                       anything,
                                                       hash_including('Access-Secret': destination.access_key_secret))
     end
+  end
+
+  private
+
+  def mock_rest_client(code)
+    allow(RestClient).to(
+      receive(:post).and_return(double.as_null_object).and_return(instance_double(RestClient::Response, code: code))
+    )
   end
 end
