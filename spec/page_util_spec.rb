@@ -154,7 +154,6 @@ describe PageUtil do
     end
   end
 
-  # TODO: would be nice to test this data is uploaded to OneSky instead of testing that it is written to a file
   context 'temp files created with' do
     it 'all OneSky phrases' do
       allow(described_class).to receive(:delete_temp_pages)

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
 module Error
-  class TranslationError < StandardError # TODO: rename
+  class TranslationError < StandardError
   end
 end

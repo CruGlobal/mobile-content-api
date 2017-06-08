@@ -18,7 +18,7 @@ class ResourcesController < ApplicationController
     render json: r, status: :ok
   end
 
-  def push_to_onesky # TODO: this should be part of update via a callback
+  def push_to_onesky # TODO: this could be done for individual pages when their structure is updated
     PageUtil.new(load_resource, 'en').push_new_onesky_translation(params['keep-existing-phrases'])
 
     head :no_content

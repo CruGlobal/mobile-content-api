@@ -10,6 +10,8 @@ class PageUtil
     @language_code = language_code
   end
 
+  # I don't think it's critical to push all these files every time a new language is added, but we might as well do so
+  # because that will help keep OneSky up to date with the pages and phrases stored in the database.
   def push_new_onesky_translation(keep_existing_phrases = true)
     push_resource_pages(keep_existing_phrases)
     push_name_description
@@ -50,7 +52,6 @@ class PageUtil
   def push_page(phrases, filename, keep_existing_phrases)
     File.write("pages/#{filename}", phrases.to_json)
 
-    # TODO: we might not need to push every page when we're creating a draft for a new language
     RestClient.post "https://platform.api.onesky.io/1/projects/#{@resource.onesky_project_id}/files",
                     file: File.new("pages/#{filename}"),
                     file_format: 'HIERARCHICAL_JSON',
