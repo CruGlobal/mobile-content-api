@@ -4,11 +4,11 @@ class ApplicationController < ActionController::Base
   before_action :decode_json_api
 
   rescue_from ActiveRecord::RecordNotFound do |_exception|
-    render_error(ApiError.new(:id, 'Not found.'), :not_found)
+    render_api_error('Not found.', :not_found)
   end
 
   rescue_from Error::NotFoundError do |exception|
-    render_error(ApiError.new(:id, exception.message), :not_found)
+    render_api_error(exception.message, :not_found)
   end
 
   rescue_from Error::BadRequestError,
@@ -17,11 +17,11 @@ class ApplicationController < ActionController::Base
               Error::MultipleDraftsError,
               Error::TranslationError do |exception|
 
-    render_error(ApiError.new(:id, exception.message), :bad_request)
+    render_api_error(exception.message, :bad_request)
   end
 
   rescue_from Error::TextNotFoundError do |exception|
-    render_error(ApiError.new(:id, exception.message), :conflict)
+    render_api_error(exception.message, :conflict)
   end
 
   def render(**args)
@@ -45,6 +45,10 @@ class ApplicationController < ActionController::Base
     authorization = AuthToken.new
     authorization.errors.add(:id, 'Unauthorized')
     render_error(authorization, :unauthorized)
+  end
+
+  def render_api_error(message, status)
+    render_error(ApiError.new(:id, message), status)
   end
 
   def render_error(json, status)
