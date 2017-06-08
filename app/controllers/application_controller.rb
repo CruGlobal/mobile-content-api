@@ -7,9 +7,17 @@ class ApplicationController < ActionController::Base
     render_error(ApiError.new(:id, 'Not found.'), :not_found)
   end
 
-  # TODO: would be good to do this with all non-runtime errors instead of catching them in controllers
-  rescue_from Error::BadRequestError, Error::XmlError, ActiveRecord::RecordInvalid do |exception|
+  rescue_from Error::BadRequestError,
+              Error::XmlError,
+              ActiveRecord::RecordInvalid,
+              Error::MultipleDraftsError,
+              Error::TranslationError do |exception|
+
     render_error(ApiError.new(:id, exception.message), :bad_request)
+  end
+
+  rescue_from Error::TextNotFoundError do |exception|
+    render_error(ApiError.new(:id, exception.message), :conflict)
   end
 
   def render(**args)
