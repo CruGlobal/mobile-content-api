@@ -63,6 +63,13 @@
                 </xs:documentation>
             </xs:annotation>
         </xs:attribute>
+        <xs:attribute name="card-text-color" type="content:colorValue" use="optional">
+            <xs:annotation>
+                <xs:documentation>This attribute defines the text color for cards on this page. This will default to the
+                    text-color set for the page.
+                </xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
         <xs:attribute name="card-background-color" type="content:colorValue" use="optional">
             <xs:annotation>
                 <xs:documentation>This defines the default background color for any card that appears on this page. This
@@ -138,7 +145,6 @@
                 <xs:element ref="tract:form" />
             </xs:choice>
         </xs:sequence>
-        <!-- background-color: DEFAULT( inherited from page ) -->
         <xs:attribute name="background-color" type="content:colorValue" use="optional">
             <xs:annotation>
                 <xs:documentation>This sets the background color of this card. This will default to the
@@ -157,6 +163,13 @@
         <xs:attribute name="background-image-scale-type" type="content:imageScaleType" use="optional" default="fill-x">
             <xs:annotation>
                 <xs:documentation>This defines how we should scale the background image. This defaults to fill-x.
+                </xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="text-color" type="content:colorValue" use="optional">
+            <xs:annotation>
+                <xs:documentation>This attribute defines the text-color for this card. This will default to the
+                    card-text-color set for the page.
                 </xs:documentation>
             </xs:annotation>
         </xs:attribute>
