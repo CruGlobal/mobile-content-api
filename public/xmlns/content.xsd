@@ -90,11 +90,26 @@
     <xs:complexType name="button">
         <xs:complexContent>
             <xs:extension base="content:textChild">
-                <xs:attribute name="type" use="required">
+                <xs:attribute name="type" use="optional" default="url">
+                    <xs:annotation>
+                        <xs:documentation>This attribute determines what type of button this is.</xs:documentation>
+                    </xs:annotation>
                     <xs:simpleType>
                         <xs:restriction base="xs:string">
-                            <xs:enumeration value="event" />
-                            <xs:enumeration value="url" />
+                            <xs:enumeration value="event">
+                                <xs:annotation>
+                                    <xs:documentation>"event" type buttons will trigger the events specified within the
+                                        value.
+                                    </xs:documentation>
+                                </xs:annotation>
+                            </xs:enumeration>
+                            <xs:enumeration value="url">
+                                <xs:annotation>
+                                    <xs:documentation>"url" type buttons will launch the url specified within the
+                                        value.
+                                    </xs:documentation>
+                                </xs:annotation>
+                            </xs:enumeration>
                         </xs:restriction>
                     </xs:simpleType>
                 </xs:attribute>
