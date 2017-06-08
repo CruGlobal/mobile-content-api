@@ -82,44 +82,55 @@
         <xs:attribute name="align" type="content:horizontalAlignValue" use="optional" />
     </xs:complexType>
 
-    <!--
-        Button
-            type:    REQUIRED - (url|event) DEFAULT( url )
-            value:   REQUIRED - URL or Event values
-    -->
+    <!-- Button -->
     <xs:complexType name="button">
-        <xs:complexContent>
-            <xs:extension base="content:textChild">
-                <xs:attribute name="type" use="optional" default="url">
-                    <xs:annotation>
-                        <xs:documentation>This attribute determines what type of button this is.</xs:documentation>
-                    </xs:annotation>
-                    <xs:simpleType>
-                        <xs:restriction base="xs:string">
-                            <xs:enumeration value="event">
-                                <xs:annotation>
-                                    <xs:documentation>"event" type buttons will trigger the events specified within the
-                                        value.
-                                    </xs:documentation>
-                                </xs:annotation>
-                            </xs:enumeration>
-                            <xs:enumeration value="url">
-                                <xs:annotation>
-                                    <xs:documentation>"url" type buttons will launch the url specified within the
-                                        value.
-                                    </xs:documentation>
-                                </xs:annotation>
-                            </xs:enumeration>
-                        </xs:restriction>
-                    </xs:simpleType>
-                </xs:attribute>
-                <xs:attribute name="value" use="required">
-                    <xs:simpleType>
-                        <xs:union memberTypes="content:uri content:eventIdsType" />
-                    </xs:simpleType>
-                </xs:attribute>
-            </xs:extension>
-        </xs:complexContent>
+        <xs:all>
+            <xs:element ref="content:text">
+                <xs:annotation>
+                    <xs:documentation>This element is the text content of this button. The text-color attribute defaults
+                        to the primary-text-color of the closest ancestor container.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+        </xs:all>
+        <xs:attribute name="type" default="url" use="optional">
+            <xs:annotation>
+                <xs:documentation>This attribute determines what type of button this is.</xs:documentation>
+            </xs:annotation>
+            <xs:simpleType>
+                <xs:restriction base="xs:string">
+                    <xs:enumeration value="event">
+                        <xs:annotation>
+                            <xs:documentation>"event" type buttons will trigger the events specified within the value.
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:enumeration>
+                    <xs:enumeration value="url">
+                        <xs:annotation>
+                            <xs:documentation>"url" type buttons will launch the url specified within the value.
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:enumeration>
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:attribute>
+        <xs:attribute name="value" use="required">
+            <xs:annotation>
+                <xs:documentation>This attribute defines either the url to open for "url" buttons, or the events to
+                    trigger for "event" buttons.
+                </xs:documentation>
+            </xs:annotation>
+            <xs:simpleType>
+                <xs:union memberTypes="content:uri content:eventIdsType" />
+            </xs:simpleType>
+        </xs:attribute>
+        <xs:attribute name="color" type="content:colorValue" use="optional">
+            <xs:annotation>
+                <xs:documentation>This attribute determines the color of the button. This defaults to the primary-color
+                    of the closest ancestor container.
+                </xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
     </xs:complexType>
 
     <!--
