@@ -10,6 +10,81 @@
         </xs:restriction>
     </xs:simpleType>
 
+    <xs:simpleType name="imageScaleType">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="fit">
+                <xs:annotation>
+                    <xs:documentation>Scale image to fit the UI size without cropping any of the image
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="fill">
+                <xs:annotation>
+                    <xs:documentation>Scale image to completely fill the UI, cropping if necessary</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="fill-x">
+                <xs:annotation>
+                    <xs:documentation>Scale image to match the width of the UI, cropping if necessary</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="fill-y">
+                <xs:annotation>
+                    <xs:documentation>Scale image to match the height of the UI, cropping if necessary
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="imageGravity">
+        <xs:annotation>
+            <xs:documentation>This type defines align attributes for how an image should be aligned before applying the
+                scale type. It is possible to have 1 align type specified for each axis (e.g. "start top").
+            </xs:documentation>
+        </xs:annotation>
+        <xs:list>
+            <xs:simpleType>
+                <xs:restriction base="xs:token">
+                    <xs:enumeration value="center">
+                        <xs:annotation>
+                            <xs:documentation>The image should be centered in it's container.</xs:documentation>
+                        </xs:annotation>
+                    </xs:enumeration>
+                    <xs:enumeration value="start">
+                        <xs:annotation>
+                            <xs:documentation>The start edge of the image should be aligned to the start edge of the
+                                container. The start edge is the left edge if left to right languages, and right edge in
+                                right to left languages.
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:enumeration>
+                    <xs:enumeration value="end">
+                        <xs:annotation>
+                            <xs:documentation>The end edge of the image should be aligned to the end edge of the
+                                container. The end edge is the right edge if left to right languages, and left edge in
+                                right to left languages.
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:enumeration>
+                    <xs:enumeration value="top">
+                        <xs:annotation>
+                            <xs:documentation>The top edge of the image should be aligned to the top edge of the
+                                container.
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:enumeration>
+                    <xs:enumeration value="bottom">
+                        <xs:annotation>
+                            <xs:documentation>The bottom edge of the image should be aligned to the bottom edge of the
+                                container.
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:enumeration>
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:list>
+    </xs:simpleType>
+
     <xs:simpleType name="fullAlignValue">
         <xs:restriction base="xs:string">
             <xs:enumeration value="start" />
@@ -75,11 +150,15 @@
     <!--
         Image
             resource:  REQUIRED - the resource id listed in the manifest
-            align:     (start|end|center) DEFAULT( center )
     -->
     <xs:complexType name="image">
+        <xs:annotation>
+            <xs:documentation>This is an image content type. The image is rendered with a width matching the width of
+                whatever container it is contained in. This is done to provide the most consistent image size experience
+                across devices of varying screen sizes and densities.
+            </xs:documentation>
+        </xs:annotation>
         <xs:attribute name="resource" type="xs:string" use="required" />
-        <xs:attribute name="align" type="content:horizontalAlignValue" use="optional" />
     </xs:complexType>
 
     <!-- Button -->

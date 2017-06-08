@@ -29,7 +29,18 @@
         <xs:attribute name="text-color" type="content:colorValue" use="optional" />
         <xs:attribute name="background-color" type="content:colorValue" use="optional" />
         <xs:attribute name="background-image" type="xs:string" use="optional" />
-        <xs:attribute name="background-image-align" type="content:fullAlignValue" use="optional" />
+        <xs:attribute name="background-image-align" type="content:imageGravity" use="optional" default="center">
+            <xs:annotation>
+                <xs:documentation>This defines how we align the background image. This defaults to center.
+                </xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="background-image-scale-type" type="content:imageScaleType" use="optional" default="fill">
+            <xs:annotation>
+                <xs:documentation>This defines how we should scale the background image. This defaults to fill.
+                </xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
         <xs:attribute name="navbar-color" type="content:colorValue" use="optional">
             <xs:annotation>
                 <xs:documentation>This defines the color of the application navigation bar for this tool. This defaults
