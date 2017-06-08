@@ -43,9 +43,7 @@ class PageUtil
   end
 
   def push_translatable_attributes
-    phrases = {}
-    @resource.resource_attributes.where(is_translatable: true).each { |a| phrases[a.key] = a.value }
-
+    phrases = Hash[@resource.resource_attributes.where(is_translatable: true).pluck(:key, :value)]
     push_page(phrases, 'attributes.xml', true)
   end
 
