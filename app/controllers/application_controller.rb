@@ -7,6 +7,10 @@ class ApplicationController < ActionController::Base
     render_error(ApiError.new(:id, 'Not found.'), :not_found)
   end
 
+  rescue_from Error::NotFoundError do |exception|
+    render_error(ApiError.new(:id, exception.message), :not_found)
+  end
+
   rescue_from Error::BadRequestError,
               Error::XmlError,
               ActiveRecord::RecordInvalid,

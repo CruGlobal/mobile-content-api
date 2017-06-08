@@ -12,8 +12,8 @@ class TranslationsController < ApplicationController
     if @translation.is_published
       redirect
     else
-      raise ActiveRecord::RecordNotFound, "Translation with ID: #{id} not found. "\
-                                          "Use drafts/{id} if you're looking for an unpublished translation."
+      raise Error::NotFoundError, "Translation with ID: #{id} not found. "\
+                                  "Use drafts/{id} if you're looking for an unpublished translation."
     end
   end
 
