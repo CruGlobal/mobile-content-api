@@ -6,8 +6,6 @@
 
     <xs:import namespace="https://mobile-content-api.cru.org/xmlns/content" schemaLocation="content.xsd" />
 
-    <!-- Value definitions -->
-
     <!-- element nodes -->
     <!--
         Page node
@@ -27,9 +25,6 @@
 
             background-image:       tract:page background image.
                                     DEFAULT( none )
-
-            background-image-align: (top|bottom|left|right|center|repeat)
-                                    DEFAULT( center )
     -->
     <xs:complexType name="page">
         <xs:sequence>
