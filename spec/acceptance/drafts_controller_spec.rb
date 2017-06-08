@@ -101,18 +101,6 @@ resource 'Drafts' do
         expect(response_headers['Location']).to eq("drafts/#{id}")
       end
     end
-
-    it 'create draft with resource/language combination for an existing draft' do
-      language_id = languages::German::ID
-      allow(Translation).to receive(:latest_translation).with(resource_id, language_id).and_return(Translation.find(3))
-
-      do_request data: { type: :translation, attributes: { resource_id: resource_id, language_id: language_id } }
-
-      expect(status).to be(400)
-      expect(JSON.parse(response_body)['errors'][0]['detail']).to(
-        eq("Draft already exists for Resource ID: #{resource_id} and Language ID: #{language_id}")
-      )
-    end
   end
 
   put 'drafts/:id' do

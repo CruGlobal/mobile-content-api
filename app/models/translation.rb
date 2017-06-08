@@ -18,7 +18,7 @@ class Translation < ActiveRecord::Base
   before_update :push_published_to_s3
   before_validation :set_defaults, on: :create
 
-  def create_new_version # TODO: add test to translation_spec?
+  def create_new_version
     unless is_published
       raise Error::MultipleDraftsError,
             "Draft already exists for Resource ID: #{resource.id} and Language ID: #{language.id}"

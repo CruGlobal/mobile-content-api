@@ -81,11 +81,22 @@ describe Translation do
     )
   end
 
-  it 'increments version by one' do
-    translation = described_class.find(translations::English::ID)
-    new_translation = translation.create_new_version
+  context 'creating new version' do
+    it 'increments version by one if draft does not exist' do
+      translation = described_class.find(translations::English::ID)
 
-    expect(new_translation.version).to be(2)
+      new_translation = translation.create_new_version
+
+      expect(new_translation.version).to be(2)
+    end
+
+    it 'throws error if draft exists' do
+      t = described_class.find(translations::German2::ID)
+
+      expect { t.create_new_version }.to(
+        raise_error("Draft already exists for Resource ID: #{t.resource.id} and Language ID: #{t.language.id}")
+      )
+    end
   end
 
   context 'latest translation' do
@@ -185,7 +196,7 @@ describe Translation do
   def mock_onesky(filename, body, code = 200)
     allow(RestClient).to(
       receive(:get).with(any_args, hash_including(params: hash_including(source_file_name: filename)))
-        .and_return(instance_double(RestClient::Response, body: body, code: code))
+          .and_return(instance_double(RestClient::Response, body: body, code: code))
     )
   end
 
