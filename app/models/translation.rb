@@ -13,19 +13,11 @@ class Translation < ActiveRecord::Base
   validates :resource, presence: true
   validates :language, presence: true
   validates :is_published, inclusion: { in: [true, false] }
+  validate :prevent_multiple_drafts, on: :create
 
   before_destroy :prevent_destroy_published
   before_update :push_published_to_s3
   before_validation :set_defaults, on: :create
-
-  def create_new_version
-    unless is_published
-      raise Error::MultipleDraftsError,
-            "Draft already exists for Resource ID: #{resource.id} and Language ID: #{language.id}"
-    end
-
-    Translation.create!(resource: resource, language: language, version: version + 1)
-  end
 
   def s3_uri
     "https://s3.amazonaws.com/#{ENV['MOBILE_CONTENT_API_BUCKET']}/"\
@@ -74,6 +66,14 @@ class Translation < ActiveRecord::Base
   def page_structure(page_id)
     custom_page = custom_pages.find_by(page_id: page_id)
     custom_page.nil? ? Page.find(page_id).structure : custom_page.structure
+  end
+
+  def prevent_multiple_drafts
+    existing = Translation.find_by(resource: resource, language: language, is_published: false)
+
+    if existing.present?
+      errors.add(:id, "Draft already exists for Resource ID: #{resource.id} and Language ID: #{language.id}")
+    end
   end
 
   def prevent_destroy_published

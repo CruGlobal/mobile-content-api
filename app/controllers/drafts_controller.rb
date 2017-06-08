@@ -13,7 +13,7 @@ class DraftsController < SecureController
     resource = load_resource
     existing_translation = Translation.latest_translation(resource.id, language_id)
 
-    d = existing_translation.nil? ? resource.create_new_draft(language_id) : existing_translation.create_new_version
+    d = existing_translation.nil? ? resource.create_new_draft(language_id) : create_new_version(existing_translation)
     response.headers['Location'] = "drafts/#{d.id}"
     render json: d, status: :created
   end
@@ -28,6 +28,10 @@ class DraftsController < SecureController
   end
 
   private
+
+  def create_new_version(t)
+    Translation.create!(resource: t.resource, language: t.language, version: t.version + 1)
+  end
 
   def load_resource
     Resource.find(data_attrs[:resource_id])
