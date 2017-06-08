@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <xs:schema xmlns:content="https://mobile-content-api.cru.org/xmlns/content"
-    xmlns:manifest="https://mobile-content-api.cru.org/xmlns/manifest" xmlns:xs="http://www.w3.org/2001/XMLSchema"
+    xmlns:manifest="https://mobile-content-api.cru.org/xmlns/manifest"
+    xmlns:tract="https://mobile-content-api.cru.org/xmlns/tract" xmlns:xs="http://www.w3.org/2001/XMLSchema"
     attributeFormDefault="unqualified" elementFormDefault="qualified"
     targetNamespace="https://mobile-content-api.cru.org/xmlns/manifest">
 
     <xs:import namespace="https://mobile-content-api.cru.org/xmlns/content" schemaLocation="content.xsd" />
+    <xs:import namespace="https://mobile-content-api.cru.org/xmlns/tract" schemaLocation="tract.xsd" />
 
     <xs:complexType name="manifest">
         <xs:all>
@@ -55,6 +57,9 @@
                 </xs:documentation>
             </xs:annotation>
         </xs:attribute>
+
+        <!-- Import any external groups of attributes we want to support -->
+        <xs:attributeGroup ref="tract:manifest" />
     </xs:complexType>
 
     <xs:complexType name="page">
