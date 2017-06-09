@@ -85,7 +85,9 @@ describe Translation do
     t = described_class.create(resource_id: 1, language_id: 2)
 
     expect(t).not_to be_valid
-    expect(t.errors[:id]).to include("Draft already exists for Resource ID: #{t.resource.id} and Language ID: #{t.language.id}")
+    expect(t.errors[:id]).to(
+      include("Draft already exists for Resource ID: #{t.resource.id} and Language ID: #{t.language.id}")
+    )
   end
 
   context 'latest translation' do

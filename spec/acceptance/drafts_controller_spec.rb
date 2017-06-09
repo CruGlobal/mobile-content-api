@@ -82,7 +82,8 @@ resource 'Drafts' do
 
     context 'existing resource/language combination' do
       before do
-        do_request data: { type: :translation, attributes: { resource_id: resource_id, language_id: languages::English::ID } }
+        do_request data: { type: :translation,
+                           attributes: { resource_id: resource_id, language_id: languages::English::ID } }
       end
 
       it 'create draft with existing resource/language combination' do
