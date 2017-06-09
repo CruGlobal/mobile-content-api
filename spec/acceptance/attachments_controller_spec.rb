@@ -17,6 +17,9 @@ resource 'Attachments' do
   end
 
   post 'attachments/' do
+    parameter :file, 'File to attach', required: true
+    parameter :resource_id, 'Parent resource', required: true
+
     before do
       header 'Authorization', :authorization
     end
@@ -24,7 +27,7 @@ resource 'Attachments' do
     requires_authorization
 
     it 'create an Attachment' do
-      do_request file: test_file, multipart: true, resource_id: 2
+      do_request file: test_file, resource_id: 2
 
       expect(status).to be(204)
       expect(response_body).to be_empty

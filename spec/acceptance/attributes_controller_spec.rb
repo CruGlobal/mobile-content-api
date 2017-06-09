@@ -15,6 +15,11 @@ resource 'Attributes' do
   end
 
   post 'attributes/' do
+    parameter :key, 'Key - must be unique per resource', required: true
+    parameter :value, 'Value', required: true
+    parameter :resource_id, 'Parent resource', required: true
+    parameter :is_translatable, 'Whether this attribute can be related to Translated Attributes. Defaults to false'
+
     let(:data) { { type: :attribute, attributes: { key: 'foo', value: 'bar', resource_id: 1 } } }
 
     requires_authorization
