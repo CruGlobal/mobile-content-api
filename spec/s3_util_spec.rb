@@ -156,6 +156,6 @@ describe S3Util do
 
   def push
     s3_util = S3Util.new(translation)
-    s3_util.push_translation
+    s3_util.push_to_s3
   end
 end

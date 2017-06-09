@@ -152,7 +152,7 @@ describe Translation do
     it 'uploads the translation to S3' do
       s3_util = double
       allow(S3Util).to receive(:new).and_return(s3_util)
-      allow(s3_util).to receive(:push_translation)
+      allow(s3_util).to receive(:push_to_s3)
 
       translation.update(is_published: true)
     end
@@ -177,7 +177,7 @@ describe Translation do
         translation.update!(is_published: true)
 
         expect(translation).to have_received(:translated_name=).ordered
-        expect(s3_util).to have_received(:push_translation).ordered
+        expect(s3_util).to have_received(:push_to_s3).ordered
       end
 
       it 'translated description is updated prior to building zip' do
@@ -186,7 +186,7 @@ describe Translation do
         translation.update!(is_published: true)
 
         expect(translation).to have_received(:translated_description=).ordered
-        expect(s3_util).to have_received(:push_translation).ordered
+        expect(s3_util).to have_received(:push_to_s3).ordered
       end
 
       it 'does not update from OneSky for projects not using it' do

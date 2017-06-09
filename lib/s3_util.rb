@@ -15,7 +15,7 @@ class S3Util
     @translation = translation
   end
 
-  def push_translation
+  def push_to_s3
     Rails.logger.info "Starting build of translation with id: #{@translation.id}"
 
     build_zip

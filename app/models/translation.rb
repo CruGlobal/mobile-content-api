@@ -111,7 +111,7 @@ class Translation < ActiveRecord::Base
     name_desc_onesky if resource.uses_onesky?
 
     s3_util = S3Util.new(self)
-    s3_util.push_translation
+    s3_util.push_to_s3
   end
 
   def name_desc_onesky
