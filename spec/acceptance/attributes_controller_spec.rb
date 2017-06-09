@@ -17,7 +17,8 @@ resource 'Attributes' do
   post 'attributes/' do
     parameter :key, 'Key - must be unique per resource', required: true
     parameter :value, 'Value', required: true
-    parameter :resource_id, 'Parent resource', required: true
+    parameter 'resource id', 'Parent resource', required: true # i omitted the underscore because it was causing
+    # a SystemStackError for some reason
     parameter :is_translatable, 'Whether this attribute can be related to Translated Attributes. Defaults to false'
 
     let(:data) { { type: :attribute, attributes: { key: 'foo', value: 'bar', resource_id: 1 } } }
