@@ -190,7 +190,7 @@
                 </xs:annotation>
             </xs:element>
         </xs:all>
-        <xs:attribute name="type" default="url" use="optional">
+        <xs:attribute name="type" use="required">
             <xs:annotation>
                 <xs:documentation>This attribute determines what type of button this is.</xs:documentation>
             </xs:annotation>
