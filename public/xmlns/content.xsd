@@ -162,6 +162,24 @@
     </xs:complexType>
 
     <!-- Button -->
+    <!--
+        Samples:
+        <content:button
+            color="rgba(255,0,0,1)"
+            type="url"
+            url="https://www.google.com/">
+            <content:text
+                text-color="rgba(255,255,255,1)">
+                Google
+            </content:text>
+        </content:button>
+
+        <content:button
+            type="event"
+            events="trigger-modal">
+            <content:text>Do something!</content:text>
+        </content:button>
+    -->
     <xs:complexType name="button">
         <xs:all>
             <xs:element ref="content:text">
@@ -180,28 +198,26 @@
                 <xs:restriction base="xs:string">
                     <xs:enumeration value="event">
                         <xs:annotation>
-                            <xs:documentation>"event" type buttons will trigger the events specified within the value.
-                            </xs:documentation>
+                            <xs:documentation>"event" type buttons will trigger the events specified.</xs:documentation>
                         </xs:annotation>
                     </xs:enumeration>
                     <xs:enumeration value="url">
                         <xs:annotation>
-                            <xs:documentation>"url" type buttons will launch the url specified within the value.
-                            </xs:documentation>
+                            <xs:documentation>"url" type buttons will launch the url specified.</xs:documentation>
                         </xs:annotation>
                     </xs:enumeration>
                 </xs:restriction>
             </xs:simpleType>
         </xs:attribute>
-        <xs:attribute name="value" use="required">
+        <xs:attribute name="events" type="content:eventIdsType" use="optional">
             <xs:annotation>
-                <xs:documentation>This attribute defines either the url to open for "url" buttons, or the events to
-                    trigger for "event" buttons.
-                </xs:documentation>
+                <xs:documentation>This attribute defines the events to trigger for "event" buttons.</xs:documentation>
             </xs:annotation>
-            <xs:simpleType>
-                <xs:union memberTypes="content:uri content:eventIdsType" />
-            </xs:simpleType>
+        </xs:attribute>
+        <xs:attribute name="url" type="content:uri" use="optional">
+            <xs:annotation>
+                <xs:documentation>This attribute defines the url to open for "url" buttons.</xs:documentation>
+            </xs:annotation>
         </xs:attribute>
         <xs:attribute name="color" type="content:colorValue" use="optional">
             <xs:annotation>
