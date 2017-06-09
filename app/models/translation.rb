@@ -20,8 +20,9 @@ class Translation < ActiveRecord::Base
   before_validation :set_defaults, on: :create
 
   def s3_uri
-    "https://s3.amazonaws.com/#{ENV['MOBILE_CONTENT_API_BUCKET']}/"\
-    "#{resource.system.name}/#{resource.abbreviation}/#{language.code}/version_#{version}.zip"
+    obj = S3Util.s3_object(self)
+    raise Error::NotFoundError, "Zip file not found in S3 for translation: #{id}" unless obj.exists?
+    obj.public_url
   end
 
   def translated_page(page_id, strict)
@@ -36,6 +37,14 @@ class Translation < ActiveRecord::Base
 
   def update_draft(params)
     update!(params.permit(:is_published))
+  end
+
+  def object_name
+    "#{resource.system.name}/#{resource.abbreviation}/#{language.code}/#{zip_name}"
+  end
+
+  def zip_name
+    "version_#{version}.zip"
   end
 
   def self.latest_translation(resource_id, language_id)
