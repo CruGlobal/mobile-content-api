@@ -123,15 +123,18 @@
             i18n-id:    OPTIONAL - OneSky translation id
             text-color: DEFAULT( inherit text-color )
             text-scale: DEFAULT( inherit text-scale )
-            text-align: (center|start|end) DEFAULT( start )
     -->
     <xs:complexType name="text">
         <xs:simpleContent>
             <xs:extension base="xs:string">
                 <xs:attribute name="i18n-id" type="xs:string" use="optional" />
+                <xs:attribute name="text-align" type="content:textAlign" use="optional">
+                    <xs:annotation>
+                        <xs:documentation>Defines the alignment of the text. This defaults to start.</xs:documentation>
+                    </xs:annotation>
+                </xs:attribute>
                 <xs:attribute name="text-color" type="content:colorValue" use="optional" />
                 <xs:attribute name="text-scale" type="xs:float" use="optional" />
-                <xs:attribute name="text-align" type="content:textAlign" use="optional" />
             </xs:extension>
         </xs:simpleContent>
     </xs:complexType>
@@ -158,6 +161,7 @@
             type="url"
             url="https://www.google.com/">
             <content:text
+                text-align="center"
                 text-color="rgba(255,255,255,1)">
                 Google
             </content:text>
@@ -174,7 +178,8 @@
             <xs:element ref="content:text">
                 <xs:annotation>
                     <xs:documentation>This element is the text content of this button. The text-color attribute defaults
-                        to the primary-text-color of the closest ancestor container.
+                        to the primary-text-color of the closest ancestor container. The text-align attribute for
+                        buttons defaults to center.
                     </xs:documentation>
                 </xs:annotation>
             </xs:element>
