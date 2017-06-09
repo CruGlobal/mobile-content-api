@@ -3,8 +3,8 @@
 class ApplicationController < ActionController::Base
   before_action :decode_json_api
 
-  rescue_from ActiveRecord::RecordNotFound do |_exception|
-    render_api_error('Not found.', :not_found)
+  rescue_from ActiveRecord::RecordNotFound do |exception|
+    render_api_error(exception.to_s, :not_found)
   end
 
   rescue_from Error::NotFoundError do |exception|
