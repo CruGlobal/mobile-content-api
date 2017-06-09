@@ -13,9 +13,9 @@ class Translation < ActiveRecord::Base
   validates :resource, presence: true
   validates :language, presence: true
   validates :is_published, inclusion: { in: [true, false] }
-  validate :prevent_multiple_drafts, on: :create
+  validates_with DraftCreationValidator, on: :create
 
-  before_destroy :prevent_destroy_published
+  before_destroy :prevent_destroy_published, if: :is_published
   before_update :push_published_to_s3
   before_validation :set_defaults, on: :create
 
@@ -68,16 +68,8 @@ class Translation < ActiveRecord::Base
     custom_page.nil? ? Page.find(page_id).structure : custom_page.structure
   end
 
-  def prevent_multiple_drafts
-    existing = Translation.find_by(resource: resource, language: language, is_published: false)
-
-    if existing.present?
-      errors.add(:id, "Draft already exists for Resource ID: #{resource.id} and Language ID: #{language.id}")
-    end
-  end
-
   def prevent_destroy_published
-    raise Error::TranslationError, "Cannot delete published draft: #{id}" if is_published
+    raise Error::TranslationError, "Cannot delete published draft: #{id}"
   end
 
   def push_published_to_s3
