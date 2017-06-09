@@ -101,6 +101,7 @@ def any_string
   /.*/
 end
 
+# rubocop:disable AbcSize
 def mock_s3(object, translation)
   region = 'east'
   bucket_name = 'testing bucket'
