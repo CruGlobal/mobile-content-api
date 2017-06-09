@@ -7,8 +7,6 @@ resource 'CustomPages' do
   header 'Content-Type', 'application/vnd.api+json'
 
   let(:raw_post) { params.to_json }
-  let(:pages) { TestConstants::GodTools::Pages }
-  let(:german_2) { TestConstants::GodTools::Translations::German2::ID }
   let(:structure) do
     '<?xml version="1.0" encoding="UTF-8" ?>
 <page xmlns="https://mobile-content-api.cru.org/xmlns/tract"
@@ -27,7 +25,7 @@ resource 'CustomPages' do
     requires_authorization
 
     context 'creating' do
-      let(:attrs) { { translation_id: german_2, page_id: pages::Page4::ID, structure: structure } }
+      let(:attrs) { { translation_id: 3, page_id: 2, structure: structure } }
 
       it 'create a custom page' do
         do_request data: { type: :custom_page, attributes: attrs }
@@ -45,7 +43,7 @@ resource 'CustomPages' do
 
     it 'update a custom page' do
       do_request data: { type: :custom_page,
-                         attributes: { translation_id: german_2, page_id: pages::Page13::ID, structure: structure } }
+                         attributes: { translation_id: 3, page_id: 1, structure: structure } }
 
       expect(status).to be(200)
       expect(response_body['data']).not_to be_nil

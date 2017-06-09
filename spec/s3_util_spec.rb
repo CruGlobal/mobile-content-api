@@ -5,11 +5,10 @@ require 's3_util'
 require 'xml_util'
 
 describe S3Util do
-  let(:godtools) { TestConstants::GodTools }
   let(:translated_page_one) { 'this is a translated page' }
   let(:translated_page_two) { 'here is another translated page' }
   let(:translation) do
-    t = Translation.find(godtools::Translations::English::ID)
+    t = Translation.find(1)
     allow(t).to(receive(:translated_page).and_return(translated_page_one, translated_page_two))
     t
   end
@@ -149,7 +148,7 @@ describe S3Util do
   end
 
   def mock_onesky
-    onesky_project_id = Resource.find(godtools::ID).onesky_project_id
+    onesky_project_id = Resource.find(1).onesky_project_id
     allow(RestClient).to receive(:get)
       .with("https://platform.api.onesky.io/1/projects/#{onesky_project_id}/translations", any_args)
       .and_return('{ "1":"value" }')

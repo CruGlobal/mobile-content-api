@@ -7,7 +7,6 @@ resource 'TranslatedAttributes' do
   header 'Content-Type', 'application/vnd.api+json'
 
   let(:raw_post) { params.to_json }
-  let(:godtools) { TestConstants::GodTools }
   let(:authorization) do
     AuthToken.create!(access_code: AccessCode.find(1)).token
   end
@@ -18,9 +17,7 @@ resource 'TranslatedAttributes' do
 
   post 'translated_attributes' do
     let(:attrs) do
-      { attribute_id: godtools::Attributes::TranslatableAttr::ID,
-        translation_id: godtools::Translations::German1::ID,
-        value: 'translated attr' }
+      { attribute_id: 2, translation_id: 2, value: 'translated attr' }
     end
     let(:id) { 100 }
 
@@ -47,9 +44,7 @@ resource 'TranslatedAttributes' do
   put 'translated_attributes/:id' do
     let(:id) { 1 }
     let(:attrs) do
-      { attribute_id: godtools::Attributes::TranslatableAttr::ID,
-        translation_id: godtools::Translations::German2::ID,
-        value: 'updated translation' }
+      { attribute_id: 2, translation_id: 3, value: 'updated translation' }
     end
 
     requires_authorization

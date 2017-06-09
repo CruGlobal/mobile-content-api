@@ -3,7 +3,7 @@
 require 'rails_helper'
 
 describe AuthToken do
-  let(:access_code) { AccessCode.find(TestConstants::AccessCodes::ID) }
+  let(:access_code) { AccessCode.find(1) }
 
   it 'generates a value for the token' do
     result = described_class.create!(access_code: access_code)
