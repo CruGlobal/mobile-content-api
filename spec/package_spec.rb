@@ -24,8 +24,8 @@ describe Package do
   end
 
   after do
-    allow(PageUtil).to receive(:delete_temp_pages).and_call_original
-    PageUtil.delete_temp_pages
+    allow(PageClient).to receive(:delete_temp_pages).and_call_original
+    PageClient.delete_temp_pages
   end
 
   it 'deletes temp files after successful request' do
@@ -45,7 +45,7 @@ describe Package do
   end
 
   it 'zip file contains all pages' do
-    allow(PageUtil).to receive(:delete_temp_pages)
+    allow(PageClient).to receive(:delete_temp_pages)
 
     push
 
@@ -55,7 +55,7 @@ describe Package do
   end
 
   it 'zip file contains manifest' do
-    allow(PageUtil).to receive(:delete_temp_pages)
+    allow(PageClient).to receive(:delete_temp_pages)
 
     push
 
@@ -64,7 +64,7 @@ describe Package do
   end
 
   it 'zip file contains all attachments' do
-    allow(PageUtil).to receive(:delete_temp_pages)
+    allow(PageClient).to receive(:delete_temp_pages)
 
     push
 
@@ -87,7 +87,7 @@ describe Package do
     let(:title) { 'this is the kgp' }
 
     before do
-      allow(PageUtil).to receive(:delete_temp_pages)
+      allow(PageClient).to receive(:delete_temp_pages)
     end
 
     it 'contains all pages in order' do

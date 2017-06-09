@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 require 'rails_helper'
-require 'page_util'
+require 'page_client'
 
 describe Resource do
   let(:resource) { described_class.find(2) }
@@ -10,14 +10,14 @@ describe Resource do
     let(:language) { Language.find(3) }
 
     it 'pushes to OneSky' do
-      allow(PageUtil).to(receive(:new).with(resource, language.code)
-                           .and_return(instance_double(PageUtil, push_new_onesky_translation: :created)))
+      allow(PageClient).to(receive(:new).with(resource, language.code)
+                           .and_return(instance_double(PageClient, push_new_onesky_translation: :created)))
 
       resource.create_new_draft(language.id)
     end
 
     it 'adds a new record to the database' do
-      allow(PageUtil).to receive(:new).with(resource, language.code).and_return(double.as_null_object)
+      allow(PageClient).to receive(:new).with(resource, language.code).and_return(double.as_null_object)
 
       result = resource.create_new_draft(language.id)
 

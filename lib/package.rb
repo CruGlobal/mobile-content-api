@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 require 'zip'
-require 'page_util'
+require 'page_client'
 require 'xml_util'
 
 class Package
@@ -21,9 +21,9 @@ class Package
     build_zip
     upload
 
-    PageUtil.delete_temp_pages
+    PageClient.delete_temp_pages
   rescue StandardError => e
-    PageUtil.delete_temp_pages
+    PageClient.delete_temp_pages
     raise e
   end
 

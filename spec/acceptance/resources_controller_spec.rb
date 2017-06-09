@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 require 'acceptance_helper'
-require 'page_util'
+require 'page_client'
 
 resource 'Resources' do
   header 'Accept', 'application/vnd.api+json'
@@ -107,7 +107,7 @@ resource 'Resources' do
       requires_authorization
 
       it 'update resource in OneSky' do
-        mock_page_util(id)
+        mock_page_client(id)
 
         do_request 'keep-existing-phrases': false
 
@@ -119,10 +119,10 @@ resource 'Resources' do
 
   private
 
-  def mock_page_util(resource_id)
-    page_util = double
-    allow(page_util).to receive(:push_new_onesky_translation).with(false)
-    allow(PageUtil).to receive(:new).with(resource_id(resource_id), 'en').and_return(page_util)
+  def mock_page_client(resource_id)
+    page_client = double
+    allow(page_client).to receive(:push_new_onesky_translation).with(false)
+    allow(PageClient).to receive(:new).with(resource_id(resource_id), 'en').and_return(page_client)
   end
 
   RSpec::Matchers.define :resource_id do |id|
