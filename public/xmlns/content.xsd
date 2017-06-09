@@ -85,19 +85,8 @@
         </xs:list>
     </xs:simpleType>
 
-    <xs:simpleType name="fullAlignValue">
-        <xs:restriction base="xs:string">
-            <xs:enumeration value="start" />
-            <xs:enumeration value="end" />
-            <xs:enumeration value="center" />
-            <xs:enumeration value="top" />
-            <xs:enumeration value="bottom" />
-            <xs:enumeration value="repeat" />
-        </xs:restriction>
-    </xs:simpleType>
-
-    <xs:simpleType name="horizontalAlignValue">
-        <xs:restriction base="content:fullAlignValue">
+    <xs:simpleType name="textAlign">
+        <xs:restriction base="xs:token">
             <xs:enumeration value="start" />
             <xs:enumeration value="end" />
             <xs:enumeration value="center" />
@@ -142,7 +131,7 @@
                 <xs:attribute name="i18n-id" type="xs:string" use="optional" />
                 <xs:attribute name="text-color" type="content:colorValue" use="optional" />
                 <xs:attribute name="text-scale" type="xs:float" use="optional" />
-                <xs:attribute name="text-align" type="content:horizontalAlignValue" use="optional" />
+                <xs:attribute name="text-align" type="content:textAlign" use="optional" />
             </xs:extension>
         </xs:simpleContent>
     </xs:complexType>
