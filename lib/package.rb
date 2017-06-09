@@ -4,7 +4,7 @@ require 'zip'
 require 'page_util'
 require 'xml_util'
 
-class S3Util
+class Package
   def self.s3_object(translation)
     s3 = Aws::S3::Resource.new(region: ENV['AWS_REGION'])
     bucket = s3.bucket(ENV['MOBILE_CONTENT_API_BUCKET'])

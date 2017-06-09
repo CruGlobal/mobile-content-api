@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
 require 'rails_helper'
-require 's3_util'
+require 'package'
 require 'xml_util'
 
-describe S3Util do
+describe Package do
   let(:translated_page_one) { 'this is a translated page' }
   let(:translated_page_two) { 'here is another translated page' }
   let(:translation) do
@@ -155,7 +155,7 @@ describe S3Util do
   end
 
   def push
-    s3_util = S3Util.new(translation)
-    s3_util.push_to_s3
+    package = Package.new(translation)
+    package.push_to_s3
   end
 end
