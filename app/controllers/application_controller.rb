@@ -3,12 +3,8 @@
 class ApplicationController < ActionController::Base
   before_action :decode_json_api
 
-  rescue_from ActiveRecord::RecordNotFound do |exception|
-    render_api_error(exception.to_s, :not_found)
-  end
-
-  rescue_from Error::NotFoundError do |exception|
-    render_api_error(exception.message, :not_found)
+  rescue_from ActiveRecord::RecordNotFound, Error::NotFoundError do |exception|
+    render_api_error(exception, :not_found)
   end
 
   rescue_from Error::BadRequestError,
@@ -17,11 +13,11 @@ class ApplicationController < ActionController::Base
               Error::MultipleDraftsError,
               Error::TranslationError do |exception|
 
-    render_api_error(exception.message, :bad_request)
+    render_api_error(exception, :bad_request)
   end
 
   rescue_from Error::TextNotFoundError do |exception|
-    render_api_error(exception.message, :conflict)
+    render_api_error(exception, :conflict)
   end
 
   def render(**args)
@@ -47,8 +43,8 @@ class ApplicationController < ActionController::Base
     render_error(authorization, :unauthorized)
   end
 
-  def render_api_error(message, status)
-    render_error(ApiError.new(:id, message), status)
+  def render_api_error(exception, status)
+    render_error(ApiError.new(:id, exception.message), status)
   end
 
   def render_error(json, status)
