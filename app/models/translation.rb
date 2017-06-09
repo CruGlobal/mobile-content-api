@@ -13,19 +13,11 @@ class Translation < ActiveRecord::Base
   validates :resource, presence: true
   validates :language, presence: true
   validates :is_published, inclusion: { in: [true, false] }
+  validates_with DraftCreationValidator, on: :create
 
-  before_destroy :prevent_destroy_published
+  before_destroy :prevent_destroy_published, if: :is_published
   before_update :push_published_to_s3
   before_validation :set_defaults, on: :create
-
-  def create_new_version # TODO: add test to translation_spec?
-    unless is_published
-      raise Error::MultipleDraftsError,
-            "Draft already exists for Resource ID: #{resource.id} and Language ID: #{language.id}"
-    end
-
-    Translation.create!(resource: resource, language: language, version: version + 1)
-  end
 
   def s3_uri
     "https://s3.amazonaws.com/#{ENV['MOBILE_CONTENT_API_BUCKET']}/"\
@@ -77,7 +69,7 @@ class Translation < ActiveRecord::Base
   end
 
   def prevent_destroy_published
-    raise Error::TranslationError, "Cannot delete published draft: #{id}" if is_published
+    raise Error::TranslationError, "Cannot delete published draft: #{id}"
   end
 
   def push_published_to_s3

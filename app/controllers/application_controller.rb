@@ -3,13 +3,21 @@
 class ApplicationController < ActionController::Base
   before_action :decode_json_api
 
-  rescue_from ActiveRecord::RecordNotFound do |_exception|
-    render_error(ApiError.new(:id, 'Not found.'), :not_found)
+  rescue_from ActiveRecord::RecordNotFound, Error::NotFoundError do |exception|
+    render_api_error(exception, :not_found)
   end
 
-  # TODO: would be good to do this with all non-runtime errors instead of catching them in controllers
-  rescue_from Error::BadRequestError, Error::XmlError, ActiveRecord::RecordInvalid do |exception|
-    render_error(ApiError.new(:id, exception.message), :bad_request)
+  rescue_from Error::BadRequestError,
+              Error::XmlError,
+              ActiveRecord::RecordInvalid,
+              Error::MultipleDraftsError,
+              Error::TranslationError do |exception|
+
+    render_api_error(exception, :bad_request)
+  end
+
+  rescue_from Error::TextNotFoundError do |exception|
+    render_api_error(exception, :conflict)
   end
 
   def render(**args)
@@ -33,6 +41,10 @@ class ApplicationController < ActionController::Base
     authorization = AuthToken.new
     authorization.errors.add(:id, 'Unauthorized')
     render_error(authorization, :unauthorized)
+  end
+
+  def render_api_error(exception, status)
+    render_error(ApiError.new(:id, exception.message), status)
   end
 
   def render_error(json, status)

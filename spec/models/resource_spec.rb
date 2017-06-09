@@ -7,7 +7,7 @@ describe Resource do
   let(:resource) { described_class.find(TestConstants::Satisfied::ID) }
 
   context 'creating a new draft' do
-    let(:language) { Language.find(1) }
+    let(:language) { Language.find(3) }
 
     it 'pushes to OneSky' do
       allow(PageUtil).to(receive(:new).with(resource, language.code)

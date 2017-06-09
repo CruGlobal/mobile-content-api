@@ -81,15 +81,9 @@ resource 'Drafts' do
     end
 
     context 'existing resource/language combination' do
-      let(:id) { 101 }
-
       before do
-        existing = instance_double(Translation, is_published: true)
-        language_id = languages::Slovak::ID
-        allow(Translation).to receive(:latest_translation).with(resource_id, language_id).and_return(existing)
-        allow(existing).to receive(:create_new_version).and_return(Translation.new(id: id))
-
-        do_request data: { type: :translation, attributes: { resource_id: resource_id, language_id: language_id } }
+        do_request data: { type: :translation,
+                           attributes: { resource_id: resource_id, language_id: languages::English::ID } }
       end
 
       it 'create draft with existing resource/language combination' do
@@ -98,20 +92,8 @@ resource 'Drafts' do
       end
 
       it 'returns location header', document: false do
-        expect(response_headers['Location']).to eq("drafts/#{id}")
+        expect(response_headers['Location']).to match(%r{drafts\/\d+})
       end
-    end
-
-    it 'create draft with resource/language combination for an existing draft' do
-      language_id = languages::German::ID
-      allow(Translation).to receive(:latest_translation).with(resource_id, language_id).and_return(Translation.find(3))
-
-      do_request data: { type: :translation, attributes: { resource_id: resource_id, language_id: language_id } }
-
-      expect(status).to be(400)
-      expect(JSON.parse(response_body)['errors'][0]['detail']).to(
-        eq("Draft already exists for Resource ID: #{resource_id} and Language ID: #{language_id}")
-      )
     end
   end
 
