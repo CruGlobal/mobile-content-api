@@ -104,12 +104,29 @@ describe Translation do
     end
   end
 
-  it 'returns the S3 URI as bucket/system name/resource abbreviation/language abbreviation' do
-    bucket = 'test_bucket'
-    stub_const('ENV', 'MOBILE_CONTENT_API_BUCKET' => bucket)
+  context 'redirect to S3' do
+    let(:translation) { described_class.find(1) }
+    let(:object) do
+      object = instance_double(Aws::S3::Object)
+      mock_s3(object, translation)
+      object
+    end
 
-    uri = described_class.find(translations::English::ID).s3_uri
-    expect(uri).to eq("https://s3.amazonaws.com/#{bucket}/GodTools/kgp/en/version_1.zip")
+    it 'returns public url' do
+      expected = 'my_object_url'
+      allow(object).to receive(:exists?).and_return(true)
+      allow(object).to receive(:public_url).and_return(expected)
+
+      result = translation.s3_url
+
+      expect(result).to eq(expected)
+    end
+
+    it 'raises an error if object does not exist' do
+      allow(object).to receive(:exists?).and_return(false)
+
+      expect { translation.s3_url }.to raise_error("Zip file not found in S3 for translation: #{translation.id}")
+    end
   end
 
   it 'raises an error if deletion of a translation is attempted' do

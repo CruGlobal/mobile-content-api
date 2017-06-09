@@ -100,3 +100,17 @@ end
 def any_string
   /.*/
 end
+
+def mock_s3(object, translation)
+  region = 'east'
+  bucket_name = 'testing bucket'
+  stub_const('ENV', 'AWS_REGION' => region, 'MOBILE_CONTENT_API_BUCKET' => bucket_name)
+
+  bucket = instance_double(Aws::S3::Bucket)
+  allow(bucket).to receive(:object).with(translation.object_name.to_s).and_return(object)
+
+  s3 = instance_double(Aws::S3::Resource)
+  allow(s3).to receive(:bucket).with(bucket_name).and_return(bucket)
+
+  allow(Aws::S3::Resource).to receive(:new).with(region: region).and_return(s3)
+end

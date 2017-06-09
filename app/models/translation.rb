@@ -19,7 +19,7 @@ class Translation < ActiveRecord::Base
   before_update :push_published_to_s3
   before_validation :set_defaults, on: :create
 
-  def s3_uri
+  def s3_url
     obj = S3Util.s3_object(self)
     raise Error::NotFoundError, "Zip file not found in S3 for translation: #{id}" unless obj.exists?
     obj.public_url
