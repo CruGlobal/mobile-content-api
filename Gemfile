@@ -48,6 +48,7 @@ gem 'rollbar'
 gem 'rspec_api_documentation'
 gem 'rubocop-rspec'
 gem 'rubyzip', '>= 1.0.0'
+gem 'validates_email_format_of'
 
 # Use Capistrano for deployment
 # gem 'capistrano-rails', group: :development

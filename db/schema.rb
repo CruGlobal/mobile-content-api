@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170601143623) do
+ActiveRecord::Schema.define(version: 20170606210728) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -56,6 +56,13 @@ ActiveRecord::Schema.define(version: 20170601143623) do
     t.index ["page_id", "translation_id"], name: "index_custom_pages_on_page_id_and_translation_id", unique: true, using: :btree
     t.index ["page_id"], name: "index_custom_pages_on_page_id", using: :btree
     t.index ["translation_id"], name: "index_custom_pages_on_translation_id", using: :btree
+  end
+
+  create_table "destinations", force: :cascade do |t|
+    t.string "url",               null: false
+    t.string "route_id"
+    t.string "access_key_id"
+    t.string "access_key_secret"
   end
 
   create_table "languages", force: :cascade do |t|

@@ -76,8 +76,7 @@ resource 'Drafts' do
       end
 
       it 'returns location header', document: false do
-        expect(status).to be(201)
-        expect(response_body['data']).not_to be_nil
+        expect(response_headers['Location']).to eq("drafts/#{id}")
       end
     end
 
