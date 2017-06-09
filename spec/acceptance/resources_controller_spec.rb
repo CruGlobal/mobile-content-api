@@ -90,6 +90,13 @@ resource 'Resources' do
     end
 
     put 'resources/:id' do
+      parameter :name, 'Resource name'
+      parameter :abbreviation, 'Abbreviation'
+      parameter :manifest, 'Base manifest XML'
+      parameter :onesky_project_id, 'Setting this will cause this resource to use OneSky'
+      parameter :system_id, 'Parent system'
+      parameter :description, 'Description'
+
       requires_authorization
 
       it 'update resource' do
