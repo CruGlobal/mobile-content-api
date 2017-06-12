@@ -84,9 +84,14 @@ resource 'Resources' do
                         xmlns:content="https://mobile-content-api.cru.org/xmlns/content">
        </manifest>'
     end
+    let(:page_util) do
+      page_util = instance_double(PageUtil, push_new_onesky_translation: nil)
+      page_util
+    end
 
     before do
       header 'Authorization', :authorization
+      allow(PageUtil).to receive(:new).with(resource_id(id), 'en').and_return(page_util)
     end
 
     put 'resources/:id' do
@@ -114,9 +119,13 @@ resource 'Resources' do
       requires_authorization
 
       it 'update resource in OneSky' do
-        mock_page_util(id)
-
         do_request 'keep-existing-phrases': false
+
+        expect(page_util).to have_received(:push_new_onesky_translation).with(false)
+      end
+
+      it 'returns 204 with empty body', document: false do
+        do_request
 
         expect(status).to be(204)
         expect(response_body).to be_empty
@@ -125,12 +134,6 @@ resource 'Resources' do
   end
 
   private
-
-  def mock_page_util(resource_id)
-    page_util = double
-    allow(page_util).to receive(:push_new_onesky_translation).with(false)
-    allow(PageUtil).to receive(:new).with(resource_id(resource_id), 'en').and_return(page_util)
-  end
 
   RSpec::Matchers.define :resource_id do |id|
     match { |actual| (actual.id == id) }
