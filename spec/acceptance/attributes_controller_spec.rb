@@ -6,7 +6,6 @@ resource 'Attributes' do
   header 'Accept', 'application/vnd.api+json'
   header 'Content-Type', 'application/vnd.api+json'
   let(:raw_post) { params.to_json }
-  let(:godtools) { TestConstants::GodTools }
   let(:authorization) do
     AuthToken.create!(access_code: AccessCode.find(1)).token
   end
@@ -16,7 +15,7 @@ resource 'Attributes' do
   end
 
   post 'attributes/' do
-    let(:data) { { type: :attribute, attributes: { key: 'foo', value: 'bar', resource_id: godtools::ID } } }
+    let(:data) { { type: :attribute, attributes: { key: 'foo', value: 'bar', resource_id: 1 } } }
 
     requires_authorization
 
@@ -35,12 +34,12 @@ resource 'Attributes' do
   end
 
   put 'attributes/:id' do
-    let(:id) { godtools::Attributes::BannerImage::ID }
+    let(:id) { 1 }
 
     requires_authorization
 
     it 'update an Attribute' do
-      do_request data: { type: :attribute, attributes: { key: 'foo', value: 'new value', resource_id: godtools::ID } }
+      do_request data: { type: :attribute, attributes: { key: 'foo', value: 'new value', resource_id: 1 } }
 
       expect(status).to be(204)
       expect(response_body).to be_empty
@@ -48,7 +47,7 @@ resource 'Attributes' do
   end
 
   delete 'attributes/:id' do
-    let(:id) { godtools::Attributes::BannerImage::ID }
+    let(:id) { 1 }
 
     requires_authorization
 

@@ -4,7 +4,7 @@ require 'rails_helper'
 require 'page_util'
 
 describe Resource do
-  let(:resource) { described_class.find(TestConstants::Satisfied::ID) }
+  let(:resource) { described_class.find(2) }
 
   context 'creating a new draft' do
     let(:language) { Language.find(3) }

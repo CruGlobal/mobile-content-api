@@ -7,8 +7,6 @@ resource 'Drafts' do
   header 'Content-Type', 'application/vnd.api+json'
 
   let(:raw_post) { params.to_json }
-  let(:languages) { TestConstants::Languages }
-  let(:godtools) { TestConstants::GodTools }
   let(:authorization) do
     AuthToken.create!(access_code: AccessCode.find(1)).token
   end
@@ -29,19 +27,18 @@ resource 'Drafts' do
   end
 
   get 'drafts/:id' do
-    let(:id) { godtools::Translations::German2::ID }
+    let(:id) { '3' }
+    let(:page_id) { '1' }
 
     requires_authorization
 
     it 'get translated page' do
       result = '{ \"1\": \"phrase\" }'
       translation = double
-      allow(Translation).to receive(:find).with(godtools::Translations::German2::ID.to_s).and_return(translation)
-      allow(translation).to(
-        receive(:translated_page).with(godtools::Pages::Page13::ID.to_s, false).and_return(result)
-      )
+      allow(Translation).to receive(:find).with(id).and_return(translation)
+      allow(translation).to(receive(:translated_page).with(page_id, false).and_return(result))
 
-      do_request page_id: godtools::Pages::Page13::ID
+      do_request page_id: page_id
 
       expect(status).to be(200)
       expect(response_body).to eq(result)
@@ -50,7 +47,7 @@ resource 'Drafts' do
 
   post 'drafts' do
     let(:resource) { double }
-    let(:resource_id) { godtools::ID }
+    let(:resource_id) { 1 }
 
     before do
       allow(Resource).to receive(:find).with(resource_id).and_return(resource)
@@ -63,7 +60,7 @@ resource 'Drafts' do
       let(:id) { 100 }
 
       before do
-        language_id = languages::Slovak::ID
+        language_id = 3
         allow(Translation).to receive(:latest_translation).with(resource_id, language_id).and_return(nil)
         allow(resource).to receive(:create_new_draft).with(language_id).and_return(Translation.new(id: id))
 
@@ -82,8 +79,7 @@ resource 'Drafts' do
 
     context 'existing resource/language combination' do
       before do
-        do_request data: { type: :translation,
-                           attributes: { resource_id: resource_id, language_id: languages::English::ID } }
+        do_request data: { type: :translation, attributes: { resource_id: resource_id, language_id: 1 } }
       end
 
       it 'create draft with existing resource/language combination' do
@@ -98,13 +94,13 @@ resource 'Drafts' do
   end
 
   put 'drafts/:id' do
-    let(:id) { godtools::Translations::German2::ID }
+    let(:id) { '3' }
 
     requires_authorization
 
     it 'update draft' do
       translation = Translation.find(3)
-      allow(Translation).to receive(:find).with(godtools::Translations::German2::ID.to_s).and_return(translation)
+      allow(Translation).to receive(:find).with(id).and_return(translation)
       params = { is_published: true }
       allow(translation).to receive(:update_draft).with(ActionController::Parameters.new(params))
 
@@ -117,7 +113,7 @@ resource 'Drafts' do
     it 'update draft without translating all phrases' do
       translation = Translation.find(1)
       allow(translation).to receive(:update_draft).and_raise(Error::TextNotFoundError, 'Translated phrase not found.')
-      allow(Translation).to receive(:find).with(godtools::Translations::German2::ID.to_s).and_return(translation)
+      allow(Translation).to receive(:find).with(id).and_return(translation)
 
       do_request data: { type: :translation, attributes: { is_published: true } }
 

@@ -3,7 +3,6 @@
 require 'rails_helper'
 
 describe Translation do
-  let(:translations) { TestConstants::GodTools::Translations }
   let(:page_name) { '13_FinalPage.xml' }
   let(:element_one_id) { 'f9894df9-df1d-4831-9782-345028c6c9a2' }
   let(:element_two_id) { '9deda19f-c3ee-42ed-a1eb-92423e543352' }
@@ -15,7 +14,7 @@ describe Translation do
 
   context 'builds a translated page from resource page' do
     let(:result) do
-      translated_page(translations::German1::ID)
+      translated_page(2)
     end
 
     it 'builds from base XML' do
@@ -29,7 +28,7 @@ describe Translation do
 
   context 'builds a translated page from custom page' do
     let(:result) do
-      translated_page(translations::German2::ID)
+      translated_page(3)
     end
 
     it 'builds from custom XML' do
@@ -42,7 +41,7 @@ describe Translation do
 
   it 'error is raised if there is no phrases returned from OneSky' do
     mock_onesky(page_name, nil, 204)
-    translation = described_class.find(translations::German1::ID)
+    translation = described_class.find(2)
 
     expect { translation.translated_page(1, false) }.to(
       raise_error(Error::TextNotFoundError, 'No translated phrases found for this language.')
@@ -51,7 +50,7 @@ describe Translation do
 
   it 'error is raised if strict mode and translated phrase not found' do
     mock_onesky(page_name, "{ \"#{element_one_id}\":\"#{phrase_one}\" }")
-    translation = described_class.find(translations::German2::ID)
+    translation = described_class.find(3)
 
     expect { translation.translated_page(1, true) }
       .to(raise_error(Error::TextNotFoundError,
@@ -60,7 +59,7 @@ describe Translation do
 
   it 'error not raised raised if not strict mode and translated phrase not found' do
     mock_onesky('13_FinalPage.xml', '{ "1":"This is a German phrase" }')
-    translation = described_class.find(translations::German2::ID)
+    translation = described_class.find(3)
 
     translation.translated_page(1, false)
   end
@@ -92,34 +91,49 @@ describe Translation do
 
   context 'latest translation' do
     it 'returns latest version for resource/language combination' do
-      translation = described_class.latest_translation(TestConstants::GodTools::ID,
-                                                       TestConstants::Languages::German::ID)
+      translation = described_class.latest_translation(1, 2)
       expect(translation.version).to be(2)
     end
 
     it 'returns nil for resource/language combination that does not exist' do
-      translation = described_class.latest_translation(TestConstants::GodTools::ID,
-                                                       TestConstants::Languages::Slovak::ID)
+      translation = described_class.latest_translation(1, 3)
       expect(translation).to be_nil
     end
   end
 
-  it 'returns the S3 URI as bucket/system name/resource abbreviation/language abbreviation' do
-    bucket = 'test_bucket'
-    stub_const('ENV', 'MOBILE_CONTENT_API_BUCKET' => bucket)
+  context 'redirect to S3' do
+    let(:translation) { described_class.find(1) }
+    let(:object) do
+      object = instance_double(Aws::S3::Object)
+      mock_s3(object, translation)
+      object
+    end
 
-    uri = described_class.find(translations::English::ID).s3_uri
-    expect(uri).to eq("https://s3.amazonaws.com/#{bucket}/GodTools/kgp/en/version_1.zip")
+    it 'returns public url' do
+      expected = 'my_object_url'
+      allow(object).to receive(:exists?).and_return(true)
+      allow(object).to receive(:public_url).and_return(expected)
+
+      result = translation.s3_url
+
+      expect(result).to eq(expected)
+    end
+
+    it 'raises an error if object does not exist' do
+      allow(object).to receive(:exists?).and_return(false)
+
+      expect { translation.s3_url }.to raise_error("Zip file not found in S3 for translation: #{translation.id}")
+    end
   end
 
   it 'raises an error if deletion of a translation is attempted' do
-    translation = described_class.find(translations::English::ID)
+    translation = described_class.find(1)
 
     expect { translation.destroy! }.to raise_error(Error::TranslationError, 'Cannot delete published draft: 1')
   end
 
   context 'is_published set to true' do
-    let(:translation) { described_class.find(translations::German2::ID) }
+    let(:translation) { described_class.find(3) }
 
     before do
       mock_onesky('name_description.xml', '{ "name":"kgp german", "description":"german description" }')

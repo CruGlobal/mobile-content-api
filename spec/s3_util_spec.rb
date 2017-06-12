@@ -5,11 +5,10 @@ require 's3_util'
 require 'xml_util'
 
 describe S3Util do
-  let(:godtools) { TestConstants::GodTools }
   let(:translated_page_one) { 'this is a translated page' }
   let(:translated_page_two) { 'here is another translated page' }
   let(:translation) do
-    t = Translation.find(godtools::Translations::English::ID)
+    t = Translation.find(1)
     allow(t).to(receive(:translated_page).and_return(translated_page_one, translated_page_two))
     t
   end
@@ -17,7 +16,7 @@ describe S3Util do
   before do
     mock_onesky
 
-    mock_s3(instance_double(Aws::S3::Object, upload_file: true))
+    mock_s3(instance_double(Aws::S3::Object, upload_file: true), translation)
 
     # rubocop:disable AnyInstance
     allow_any_instance_of(Paperclip::Attachment).to receive(:url).and_return('public/wall.jpg')
@@ -38,7 +37,7 @@ describe S3Util do
   it 'deletes temp files if error is raised' do
     object = instance_double(Aws::S3::Object)
     allow(object).to receive(:upload_file).and_raise(StandardError)
-    mock_s3(object)
+    mock_s3(object, translation)
 
     expect { push }.to raise_error(StandardError)
 
@@ -148,14 +147,8 @@ describe S3Util do
     expect(pages_dir).to be_empty
   end
 
-  def mock_s3(object)
-    bucket = instance_double(Aws::S3::Bucket, object: object)
-    s3 = instance_double(Aws::S3::Resource, bucket: bucket)
-    allow(Aws::S3::Resource).to receive(:new).and_return(s3)
-  end
-
   def mock_onesky
-    onesky_project_id = Resource.find(godtools::ID).onesky_project_id
+    onesky_project_id = Resource.find(1).onesky_project_id
     allow(RestClient).to receive(:get)
       .with("https://platform.api.onesky.io/1/projects/#{onesky_project_id}/translations", any_args)
       .and_return('{ "1":"value" }')

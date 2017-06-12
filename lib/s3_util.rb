@@ -5,9 +5,14 @@ require 'page_util'
 require 'xml_util'
 
 class S3Util
+  def self.s3_object(translation)
+    s3 = Aws::S3::Resource.new(region: ENV['AWS_REGION'])
+    bucket = s3.bucket(ENV['MOBILE_CONTENT_API_BUCKET'])
+    bucket.object(translation.object_name.to_s)
+  end
+
   def initialize(translation)
     @translation = translation
-    @zip_file_name = "version_#{@translation.version}.zip"
   end
 
   def push_translation
@@ -32,7 +37,7 @@ class S3Util
     manifest_node.add_child(pages_node)
     manifest_node.add_child(resources_node)
 
-    Zip::File.open("pages/#{@zip_file_name}", Zip::File::CREATE) do |zip_file|
+    Zip::File.open("pages/#{@translation.zip_name}", Zip::File::CREATE) do |zip_file|
       add_pages(zip_file, pages_node)
       add_attachments(zip_file, resources_node)
 
@@ -112,10 +117,7 @@ class S3Util
   end
 
   def upload
-    s3 = Aws::S3::Resource.new(region: ENV['AWS_REGION'])
-    bucket = s3.bucket(ENV['MOBILE_CONTENT_API_BUCKET'])
-    obj = bucket.object("#{@translation.resource.system.name}/#{@translation.resource.abbreviation}"\
-                        "/#{@translation.language.code}/#{@zip_file_name}")
-    obj.upload_file("pages/#{@zip_file_name}", acl: 'public-read')
+    obj = self.class.s3_object(@translation)
+    obj.upload_file("pages/#{@translation.zip_name}", acl: 'public-read')
   end
 end
