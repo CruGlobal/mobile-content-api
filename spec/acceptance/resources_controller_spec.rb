@@ -112,16 +112,18 @@ resource 'Resources' do
       end
     end
 
-    put 'resources/:id/onesky' do
+    put 'resources/:id/onesky?keep-existing-phrases=:is_keeping' do
       parameter 'keep-existing-phrases',
                 'Query string parameter.  If false, deprecate phrases not pushed to OneSky in this update.'
+
+      let(:is_keeping) { false }
 
       requires_authorization
 
       it 'update resource in OneSky' do
-        do_request 'keep-existing-phrases': false
+        do_request
 
-        expect(page_util).to have_received(:push_new_onesky_translation).with(false)
+        expect(page_util).to have_received(:push_new_onesky_translation).with(is_keeping.to_s)
       end
 
       it 'returns 204 with empty body', document: false do
