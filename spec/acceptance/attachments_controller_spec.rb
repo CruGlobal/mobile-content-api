@@ -19,6 +19,7 @@ resource 'Attachments' do
   post 'attachments/' do
     parameter :file, 'File to attach', required: true
     parameter :resource_id, 'Parent resource', required: true
+    parameter :is_zipped, 'If true, this file will be included in the zip file', required: false
 
     before do
       header 'Authorization', :authorization
