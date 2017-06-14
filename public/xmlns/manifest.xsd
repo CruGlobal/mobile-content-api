@@ -26,6 +26,16 @@
                 </xs:complexType>
             </xs:element>
         </xs:all>
+        <xs:attribute name="code" type="xs:token" use="optional">
+            <xs:annotation>
+                <xs:documentation>This attribute defines the short code for this tool.</xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="language" type="xs:language" use="optional">
+            <xs:annotation>
+                <xs:documentation>This attribute defines the language this tool is for.</xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
         <xs:attribute name="primary-color" type="content:colorValue" use="optional" />
         <xs:attribute name="primary-text-color" type="content:colorValue" use="optional" />
         <xs:attribute name="text-color" type="content:colorValue" use="optional" />
