@@ -33,8 +33,7 @@ class S3Util
     @document = Nokogiri::XML(@translation.resource.manifest)
     manifest_node = load_or_create_manifest_node
 
-    manifest_node['code'] = @translation.resource.abbreviation
-    manifest_node['language'] = @translation.language.code
+    set_code_and_language(manifest_node)
 
     pages_node = Nokogiri::XML::Node.new('pages', @document)
     resources_node = Nokogiri::XML::Node.new('resources', @document)
@@ -63,6 +62,11 @@ class S3Util
     manifest_node = XmlUtil.xpath_namespace(@document, 'manifest').first
     insert_translated_name(manifest_node)
     manifest_node
+  end
+
+  def set_code_and_language(manifest_node)
+    manifest_node['code'] = @translation.resource.abbreviation
+    manifest_node['language'] = @translation.language.code
   end
 
   def insert_translated_name(manifest_node)
