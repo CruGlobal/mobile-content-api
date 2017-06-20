@@ -90,12 +90,22 @@
     -->
     <xs:complexType name="pageHeader">
         <xs:sequence>
-            <!--
-                Page number, displayed in page header - OPTIONAL
-                    text-color: DEFAULT( primary-text-color )
-                    text-scale: DEFAULT( 3.0 )
-            -->
-            <xs:element name="number" minOccurs="0" maxOccurs="1" type="content:textChild" />
+            <xs:element name="number" minOccurs="0" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation>This element is the page number displayed in the header.</xs:documentation>
+                </xs:annotation>
+                <xs:complexType>
+                    <xs:all>
+                        <xs:element ref="content:text">
+                            <xs:annotation>
+                                <xs:documentation>This element is the text content of the page number. The text-color
+                                    attribute defaults to the primary-text-color of the closest ancestor container.
+                                </xs:documentation>
+                            </xs:annotation>
+                        </xs:element>
+                    </xs:all>
+                </xs:complexType>
+            </xs:element>
             <!--
                 Page title, displayed in page header - REQUIRED
                     text-color: DEFAULT( primary-text-color )
@@ -119,8 +129,8 @@
                     <xs:all>
                         <xs:element ref="content:text">
                             <xs:annotation>
-                                <xs:documentation>This element is the text content of the hero heading. The
-                                    text-colorattribute defaults to the primary-color of the closest ancestor container.
+                                <xs:documentation>This element is the text content of the hero heading. The text-color
+                                    attribute defaults to the primary-color of the closest ancestor container.
                                 </xs:documentation>
                             </xs:annotation>
                         </xs:element>
