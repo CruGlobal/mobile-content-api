@@ -111,12 +111,22 @@
     -->
     <xs:complexType name="pageHero">
         <xs:sequence>
-            <!--
-                Hero heading - OPTIONAL
-                    text-color: DEFAULT( primary-color )
-                    text-scale: DEFAULT( 3.0 ) (3 times default text size)
-            -->
-            <xs:element name="heading" maxOccurs="1" minOccurs="0" type="content:textChild" />
+            <xs:element name="heading" minOccurs="0" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation>This is the heading text of the hero.</xs:documentation>
+                </xs:annotation>
+                <xs:complexType>
+                    <xs:all>
+                        <xs:element ref="content:text">
+                            <xs:annotation>
+                                <xs:documentation>This element is the text content of the hero heading. The
+                                    text-colorattribute defaults to the primary-color of the closest ancestor container.
+                                </xs:documentation>
+                            </xs:annotation>
+                        </xs:element>
+                    </xs:all>
+                </xs:complexType>
+            </xs:element>
             <!--
                 Content section - OPTIONAL
                     text-scale: DEFAULT( 1.0 )
