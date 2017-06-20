@@ -217,11 +217,21 @@
     <!-- Modal - a Modal that is displayed when it's listener is triggered -->
     <xs:complexType name="modal">
         <xs:sequence>
-            <!--
-                Modal title - OPTIONAL
-                    text-scale: DEFAULT( 3.0 ) (3 times default text size)
-            -->
-            <xs:element name="title" minOccurs="0" maxOccurs="1" type="content:textChild" />
+            <xs:element name="title" minOccurs="0" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation>This is the title line of the modal.</xs:documentation>
+                </xs:annotation>
+                <xs:complexType>
+                    <xs:all>
+                        <xs:element ref="content:text">
+                            <xs:annotation>
+                                <xs:documentation>This element is the text content of the modal title.
+                                </xs:documentation>
+                            </xs:annotation>
+                        </xs:element>
+                    </xs:all>
+                </xs:complexType>
+            </xs:element>
             <!--
                 Content section - OPTIONAL
                     text-scale: DEFAULT( 1.0 )
