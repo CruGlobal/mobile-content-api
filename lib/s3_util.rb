@@ -30,7 +30,7 @@ class S3Util
   private
 
   def build_zip
-    @document = Nokogiri::XML::Document.parse(@translation.resource.manifest)
+    @document = Nokogiri::XML(@translation.resource.manifest)
     manifest_node = load_or_create_manifest_node
 
     pages_node = Nokogiri::XML::Node.new('pages', @document)
