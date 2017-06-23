@@ -27,7 +27,9 @@ class Resource < ActiveRecord::Base
   def create_new_draft(language_id)
     language = Language.find(language_id)
 
-    PageUtil.new(self, language.code).push_new_onesky_translation
+    # TODO: disable this to prevent the API from overwriting existing translations within OneSky.
+    # TODO: This will probably need to be revisited -DF
+    # PageUtil.new(self, language.code).push_new_onesky_translation
     Translation.create!(resource: self, language: language)
   end
 
