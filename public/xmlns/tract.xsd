@@ -195,8 +195,17 @@
         </xs:attribute>
         <!-- hidden: DEFAULT( false ) whether this card is hidden. hidden cards can still be displayed if they have a listener that is triggered. -->
         <xs:attribute name="hidden" type="xs:boolean" use="optional" />
-        <!-- listeners: event_ids that trigger display of this card -->
-        <xs:attribute name="listeners" type="content:listenersType" use="optional" />
+        <xs:attribute name="listeners" type="content:listenersType" use="optional">
+            <xs:annotation>
+                <xs:documentation>This attribute defines events that will trigger display of this card.
+                </xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="dismiss-listeners" type="content:listenersType" use="optional">
+            <xs:annotation>
+                <xs:documentation>This attribute defines events that will dismiss this card.</xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
     </xs:complexType>
 
     <!-- Call to Action (next page arrow / text) -->

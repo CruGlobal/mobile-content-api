@@ -108,13 +108,13 @@
             </xs:simpleType>
         </xs:list>
     </xs:simpleType>
-    <xs:simpleType name="listenerValue">
+    <xs:simpleType name="listener">
         <xs:restriction base="xs:token">
             <xs:pattern value="[a-zA-Z0-9_\-]+" />
         </xs:restriction>
     </xs:simpleType>
     <xs:simpleType name="listenersType">
-        <xs:list itemType="content:listenerValue" />
+        <xs:list itemType="content:listener" />
     </xs:simpleType>
 
     <!-- element nodes -->
