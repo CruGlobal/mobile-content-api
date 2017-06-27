@@ -28,9 +28,9 @@ describe PageUtil do
       <content:text i18n-id=\"#{id_1}\">#{phrase_1}</content:text>
     </heading>
 
-    <paragraph>
+    <content:paragraph>
       <content:text i18n-id=\"#{id_2}\">#{phrase_2}</content:text>
-    </paragraph>
+    </content:paragraph>
   </hero>
 </page>"
   end
