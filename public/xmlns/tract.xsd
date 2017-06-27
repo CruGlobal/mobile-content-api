@@ -257,7 +257,6 @@
     <xs:complexType name="paragraph">
         <xs:choice minOccurs="1" maxOccurs="unbounded">
             <xs:group ref="content:elements" />
-            <xs:element ref="tract:tabs" />
         </xs:choice>
     </xs:complexType>
 
@@ -267,23 +266,7 @@
     <xs:complexType name="form">
         <xs:choice maxOccurs="unbounded">
             <xs:group ref="content:elements" />
-            <xs:element ref="tract:tabs" />
         </xs:choice>
-    </xs:complexType>
-
-    <!-- Tabbed content -->
-    <xs:complexType name="tabs">
-        <xs:sequence>
-            <xs:element name="tab" minOccurs="1" maxOccurs="unbounded" type="tract:tab" />
-        </xs:sequence>
-    </xs:complexType>
-    <xs:complexType name="tab">
-        <xs:sequence>
-            <xs:element name="label" type="content:textChild" />
-            <xs:choice minOccurs="0" maxOccurs="unbounded">
-                <xs:group ref="content:elements" />
-            </xs:choice>
-        </xs:sequence>
     </xs:complexType>
 
     <!-- attributes -->
@@ -309,5 +292,4 @@
     <xs:element name="page" type="tract:page" />
     <xs:element name="paragraph" type="tract:paragraph" />
     <xs:element name="form" type="tract:form" />
-    <xs:element name="tabs" type="tract:tabs" />
 </xs:schema>
