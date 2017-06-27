@@ -276,6 +276,13 @@
         </xs:sequence>
     </xs:complexType>
 
+    <!-- Paragraph - Vertical stack of content with margin/padding on the top and bottom -->
+    <xs:complexType name="paragraph">
+        <xs:choice minOccurs="1" maxOccurs="unbounded">
+            <xs:group ref="content:elements" />
+        </xs:choice>
+    </xs:complexType>
+
     <!-- Content Elements -->
     <xs:element name="text" type="content:text" />
     <xs:element name="image" type="content:image" />
@@ -283,6 +290,7 @@
     <xs:element name="link" type="content:link" />
     <xs:element name="input" type="content:input" />
     <xs:element name="tabs" type="content:tabs" />
+    <xs:element name="paragraph" type="content:paragraph" />
     <xs:group name="elements">
         <xs:choice>
             <xs:element ref="content:text" />

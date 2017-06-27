@@ -142,8 +142,8 @@
                     text-scale: DEFAULT( 1.0 )
             -->
             <xs:choice maxOccurs="unbounded" minOccurs="0">
-                <xs:element name="paragraph" type="tract:paragraph" />
-                <xs:element name="form" type="tract:form" />
+                <xs:element ref="content:paragraph" />
+                <xs:element ref="tract:form" />
             </xs:choice>
         </xs:sequence>
     </xs:complexType>
@@ -161,7 +161,7 @@
                     text-scale: DEFAULT( 1.0 )
             -->
             <xs:choice minOccurs="0" maxOccurs="unbounded">
-                <xs:element ref="tract:paragraph" />
+                <xs:element ref="content:paragraph" />
                 <xs:element ref="tract:form" />
             </xs:choice>
         </xs:sequence>
@@ -246,18 +246,11 @@
                     text-scale: DEFAULT( 1.0 )
             -->
             <xs:choice minOccurs="0" maxOccurs="unbounded">
-                <xs:element ref="tract:paragraph" />
+                <xs:element ref="content:paragraph" />
             </xs:choice>
         </xs:sequence>
         <xs:attribute name="listeners" type="content:listenersType" use="required" />
         <xs:attribute name="dismiss-listeners" type="content:listenersType" use="required" />
-    </xs:complexType>
-
-    <!-- Paragraph - Vertical stack of content with margin/padding between each item -->
-    <xs:complexType name="paragraph">
-        <xs:choice minOccurs="1" maxOccurs="unbounded">
-            <xs:group ref="content:elements" />
-        </xs:choice>
     </xs:complexType>
 
     <!--
@@ -290,6 +283,5 @@
 
     <!-- base elements -->
     <xs:element name="page" type="tract:page" />
-    <xs:element name="paragraph" type="tract:paragraph" />
     <xs:element name="form" type="tract:form" />
 </xs:schema>
