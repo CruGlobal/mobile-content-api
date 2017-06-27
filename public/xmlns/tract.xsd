@@ -143,7 +143,7 @@
             -->
             <xs:choice maxOccurs="unbounded" minOccurs="0">
                 <xs:element ref="content:paragraph" />
-                <xs:element ref="tract:form" />
+                <xs:element ref="content:form" />
             </xs:choice>
         </xs:sequence>
     </xs:complexType>
@@ -162,7 +162,7 @@
             -->
             <xs:choice minOccurs="0" maxOccurs="unbounded">
                 <xs:element ref="content:paragraph" />
-                <xs:element ref="tract:form" />
+                <xs:element ref="content:form" />
             </xs:choice>
         </xs:sequence>
         <xs:attribute name="background-color" type="content:colorValue" use="optional">
@@ -253,15 +253,6 @@
         <xs:attribute name="dismiss-listeners" type="content:listenersType" use="required" />
     </xs:complexType>
 
-    <!--
-        Form Content - vertical stacked content with input fields
-    -->
-    <xs:complexType name="form">
-        <xs:choice maxOccurs="unbounded">
-            <xs:group ref="content:elements" />
-        </xs:choice>
-    </xs:complexType>
-
     <!-- attributes -->
     <xs:attribute name="card-background-color" type="content:colorValue" />
 
@@ -283,5 +274,4 @@
 
     <!-- base elements -->
     <xs:element name="page" type="tract:page" />
-    <xs:element name="form" type="tract:form" />
 </xs:schema>
