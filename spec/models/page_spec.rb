@@ -20,13 +20,13 @@ describe Page do
       <content:text i18n-id=\"#{id_1}\">#{p_1}</content:text>
     </heading>
 
-    <paragraph>
+    <content:paragraph>
       <content:text i18n-id=\"#{id_2}\">#{p_2}</content:text>
-    </paragraph>
+    </content:paragraph>
 
-    <paragraph>
+    <content:paragraph>
       <content:text i18n-id=\"#{id_3}\">#{p_3}</content:text>
-    </paragraph>
+    </content:paragraph>
   </hero>
 </page>"
   end
