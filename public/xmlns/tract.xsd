@@ -37,7 +37,6 @@
                     </xs:sequence>
                 </xs:complexType>
             </xs:element>
-            <xs:element name="call-to-action" maxOccurs="1" minOccurs="0" type="tract:callToAction" />
             <xs:element name="modals" minOccurs="0" maxOccurs="1">
                 <xs:complexType>
                     <xs:sequence>
@@ -45,6 +44,7 @@
                     </xs:sequence>
                 </xs:complexType>
             </xs:element>
+            <xs:element name="call-to-action" minOccurs="0" maxOccurs="1" type="tract:callToAction" />
         </xs:sequence>
         <xs:attribute name="primary-color" type="content:colorValue" use="optional" />
         <xs:attribute name="primary-text-color" type="content:colorValue" use="optional" />
