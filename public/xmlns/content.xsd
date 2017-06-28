@@ -128,7 +128,7 @@
     <!-- Tabbed content -->
     <xs:complexType name="tabs">
         <xs:sequence>
-            <xs:element name="tab" minOccurs="1" maxOccurs="unbounded">
+            <xs:element name="tab" minOccurs="1" maxOccurs="3">
                 <xs:complexType>
                     <xs:sequence>
                         <xs:element name="label" type="content:textChild" />
