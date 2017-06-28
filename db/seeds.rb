@@ -15,15 +15,15 @@ page_13_structure = '<?xml version="1.0" encoding="UTF-8" ?>
       <content:text i18n-id="f9894df9-df1d-4831-9782-345028c6c9a2">one un-translated phrase</content:text>
     </heading>
 
-    <paragraph>
+    <content:paragraph>
       <content:text i18n-id="9deda19f-c3ee-42ed-a1eb-92423e543352">two un-translated phrase</content:text>
-    </paragraph>
+    </content:paragraph>
 
-    <form>
+    <content:form>
       <content:text>These four points explain how to enter into a personal relationship with God and
         experience the life for which you were created.
       </content:text>
-    </form>
+    </content:form>
   </hero>
 </page>'
 
@@ -35,9 +35,9 @@ page_13_custom_structure = '<?xml version="1.0" encoding="UTF-8" ?>
       <content:text i18n-id="f9894df9-df1d-4831-9782-345028c6c9a2">one un-translated phrase</content:text>
     </heading>
 
-    <paragraph>
+    <content:paragraph>
       <content:text i18n-id="9deda19f-c3ee-42ed-a1eb-92423e543352">two un-translated phrase</content:text>
-    </paragraph>
+    </content:paragraph>
   </hero>
 </page>'
 
@@ -49,14 +49,14 @@ page_4_structure = '<?xml version="1.0" encoding="UTF-8" ?>
       <content:text i18n-id="1373aa60-6c3f-4c69-b5ad-acfa2c0e4540">one un-translated phrase</content:text>
     </heading>
 
-    <paragraph>
+    <content:paragraph>
       <content:text i18n-id="e68a67da-df02-493f-b138-661bfe120663">two un-translated phrase</content:text>
-    </paragraph>
+    </content:paragraph>
 
-    <paragraph>
+    <content:paragraph>
       <content:text>We are sinful and separated from God because of our sin.
       </content:text>
-    </paragraph>
+    </content:paragraph>
   </hero>
 </page>'
 
