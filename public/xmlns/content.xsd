@@ -289,6 +289,13 @@
                 </xs:restriction>
             </xs:simpleType>
         </xs:attribute>
+        <xs:attribute name="required" type="xs:boolean" use="optional" default="false">
+            <xs:annotation>
+                <xs:documentation>Is this input required or not. A required field must contain at least one
+                    non-whitespace character
+                </xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
         <xs:attribute name="value" type="xs:string" use="optional" />
     </xs:complexType>
 
