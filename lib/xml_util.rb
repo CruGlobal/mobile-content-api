@@ -2,7 +2,7 @@
 
 module XmlUtil
   def self.translatable_nodes(xml)
-    xml.xpath('//content:text[@i18n-id]')
+    xml.xpath('//content:text[@i18n-id]', 'content' => 'https://mobile-content-api.cru.org/xmlns/content')
   end
 
   def self.translatable_node_attrs(xml)
