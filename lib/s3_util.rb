@@ -72,7 +72,7 @@ class S3Util
 
   def add_pages(zip_file, pages_node)
     @translation.resource.pages.order(position: :asc).each do |page|
-      custom_page = CustomPage.where(page_id: page.id, translation_id: @translation.id)
+      custom_page = CustomPage.find_by(page_id: page.id, translation_id: @translation.id)
 
       page = (custom_page.nil? ? page : custom_page)
 
