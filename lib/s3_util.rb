@@ -74,13 +74,7 @@ class S3Util
     @translation.resource.pages.order(position: :asc).each do |page|
       custom_page = CustomPage.where(page_id: page.id, translation_id: @translation.id)
 
-      if custom_page.nil
-        page = custom_page
-        Rails.logger.info("Adding custom page: #{custom_page.id} to package for translation: #{@translation.id}")
-      else
-        page = page
-        Rails.logger.info("Adding page with id: #{page.id} to package for translation with id: #{@translation.id}")
-      end
+      page = (custom_page.nil? ? page : custom_page)
 
       sha_filename = write_page_to_file(page)
       zip_file.add(sha_filename, "pages/#{sha_filename}")
