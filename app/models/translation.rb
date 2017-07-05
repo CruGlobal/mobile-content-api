@@ -69,6 +69,19 @@ class Translation < ActiveRecord::Base
       end
     end
 
+    XmlUtil.translatable_node_attrs(xml).each do |attribute|
+      phrase_id = attribute.value
+      new_name = attribute.name.slice('-i18n-id')
+      translated_phrase = phrases[phrase_id]
+
+      if translated_phrase.present?
+        attribute.name = new_name
+        attribute.value = translated_phrase
+      elsif strict
+        raise Error::TextNotFoundError, "Translated phrase not found: ID: #{phrase_id}, base text: #{attribute.value}"
+      end
+    end
+
     xml.to_s
   end
 

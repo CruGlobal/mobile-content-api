@@ -5,6 +5,10 @@ module XmlUtil
     xml.xpath('//content:text[@i18n-id]')
   end
 
+  def self.translatable_node_attrs(xml)
+    xml.xpath("//@*[contains(name(),'-i18n-id')]")
+  end
+
   def self.xml_filename_sha(data)
     "#{filename_sha(data)}.xml"
   end
