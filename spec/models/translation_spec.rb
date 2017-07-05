@@ -8,9 +8,14 @@ describe Translation do
   let(:element_two_id) { '9deda19f-c3ee-42ed-a1eb-92423e543352' }
   let(:phrase_one) { 'This is a German phrase' }
   let(:phrase_two) { 'another phrase in German' }
+  let(:phrase_three) { 'https://www.bible.com/' }
   let(:phrases) { "{ \"#{element_one_id}\":\"#{phrase_one}\", \"#{element_two_id}\":\"#{phrase_two}\" }" }
   let(:phrase_one_element) { "<content:text i18n-id=\"#{element_one_id}\">#{phrase_one}</content:text>" }
   let(:phrase_two_element) { "<content:text i18n-id=\"#{element_two_id}\">#{phrase_two}</content:text>" }
+  # rubocop:disable LineLength
+  let(:phrase_three_element) { "<content:button type=\"url\" url=\"#{phrase_three}\"><content:text>Label</content:text></content:button>" }
+
+  # rubocop:enable LineLength
 
   context 'builds a translated page from resource page' do
     let(:result) do
@@ -24,6 +29,10 @@ describe Translation do
     it 'includes translated phrases' do
       includes_translated_phrases
     end
+
+    it 'includes translated attributes' do
+      includes_translated_attributes
+    end
   end
 
   context 'builds a translated page from custom page' do
@@ -36,6 +45,9 @@ describe Translation do
     end
     it 'includes translated phrases' do
       includes_translated_phrases
+    end
+    it 'includes translated attributes' do
+      includes_translated_attributes
     end
   end
 
@@ -208,5 +220,9 @@ describe Translation do
   def includes_translated_phrases
     expect(result.include?(phrase_one_element)).to be_truthy
     expect(result.include?(phrase_two_element)).to be_truthy
+  end
+
+  def includes_translated_attributes
+    expect(result.include?(phrase_three_element)).to be_truthy
   end
 end

@@ -3,6 +3,7 @@
 require 's3_util'
 require 'xml_util'
 
+# rubocop:disable ClassLength
 class Translation < ActiveRecord::Base
   belongs_to :resource
   belongs_to :language
@@ -56,8 +57,15 @@ class Translation < ActiveRecord::Base
   def onesky_translated_page(page_id, strict)
     page = Page.find(page_id)
     phrases = download_translated_phrases(page.filename)
-
     xml = Nokogiri::XML(page_structure(page_id))
+
+    xml = onesky_translated_page_content(xml, phrases, strict)
+    xml = onesky_translated_page_attributes(xml, phrases, strict)
+
+    xml.to_s
+  end
+
+  def onesky_translated_page_content(xml, phrases, strict)
     XmlUtil.translatable_nodes(xml).each do |node|
       phrase_id = node['i18n-id']
       translated_phrase = phrases[phrase_id]
@@ -69,6 +77,10 @@ class Translation < ActiveRecord::Base
       end
     end
 
+    xml
+  end
+
+  def onesky_translated_page_attributes(xml, phrases, strict)
     XmlUtil.translatable_node_attrs(xml).each do |attribute|
       phrase_id = attribute.value
       new_name = attribute.name.slice('-i18n-id')
@@ -82,7 +94,7 @@ class Translation < ActiveRecord::Base
       end
     end
 
-    xml.to_s
+    xml
   end
 
   def page_structure(page_id)
