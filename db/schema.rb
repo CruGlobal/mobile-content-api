@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170705200338) do
+ActiveRecord::Schema.define(version: 20170705203601) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -52,7 +52,7 @@ ActiveRecord::Schema.define(version: 20170705200338) do
   create_table "custom_pages", force: :cascade do |t|
     t.string  "structure",   null: false
     t.integer "page_id",     null: false
-    t.integer "language_id"
+    t.integer "language_id", null: false
     t.index ["language_id"], name: "index_custom_pages_on_language_id", using: :btree
     t.index ["page_id", "language_id"], name: "index_custom_pages_on_page_id_and_language_id", unique: true, using: :btree
     t.index ["page_id"], name: "index_custom_pages_on_page_id", using: :btree
