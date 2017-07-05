@@ -5,4 +5,5 @@ class LanguageSerializer < ActiveModel::Serializer
   attributes :id, :code
 
   has_many :translations
+  has_many :custom_pages
 end

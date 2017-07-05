@@ -3,7 +3,7 @@
 require 'rails_helper'
 
 describe CustomPage do
-  let(:translation_id) { 3 }
+  let(:language_id) { 2 }
   let(:page_id) { 1 }
   let(:valid_xml) do
     '<?xml version="1.0" encoding="UTF-8" ?>
@@ -12,10 +12,10 @@ describe CustomPage do
 </page>'
   end
 
-  it 'Translation/Page combination cannot be replicated' do
-    result = described_class.create(translation_id: translation_id, page_id: page_id, structure: valid_xml)
+  it 'Language/Page combination cannot be replicated' do
+    result = described_class.create(language_id: language_id, page_id: page_id, structure: valid_xml)
 
     expect(result).not_to be_valid
-    expect(result.errors[:translation]).to include 'has already been taken'
+    expect(result.errors[:language]).to include 'has already been taken'
   end
 end

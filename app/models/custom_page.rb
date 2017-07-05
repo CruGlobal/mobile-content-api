@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
 class CustomPage < AbstractPage
-  belongs_to :translation
+  belongs_to :language
   belongs_to :page
 
   validates :page, presence: true
-  validates :translation, presence: true, uniqueness: { scope: :page }
+  validates :language, presence: true, uniqueness: { scope: :page }
 end

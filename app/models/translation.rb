@@ -6,7 +6,6 @@ require 'xml_util'
 class Translation < ActiveRecord::Base
   belongs_to :resource
   belongs_to :language
-  has_many :custom_pages
   has_many :translated_pages
 
   validates :version, presence: true
@@ -73,7 +72,7 @@ class Translation < ActiveRecord::Base
   end
 
   def page_structure(page_id)
-    custom_page = custom_pages.find_by(page_id: page_id)
+    custom_page = language.custom_pages.find_by(page_id: page_id)
     custom_page.nil? ? Page.find(page_id).structure : custom_page.structure
   end
 

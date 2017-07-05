@@ -14,7 +14,7 @@ describe Translation do
 
   context 'builds a translated page from resource page' do
     let(:result) do
-      translated_page(2)
+      translated_page(1)
     end
 
     it 'builds from base XML' do
