@@ -84,7 +84,7 @@ resource 'Drafts' do
 
     context 'multiple languages/resource combination' do
       let(:id) { 100 }
-      let(:translation) { double }
+      let(:translation) { Translation.find(1) }
 
       before do
         existing_language_id = 1
