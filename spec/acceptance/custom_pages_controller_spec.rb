@@ -25,7 +25,7 @@ resource 'CustomPages' do
     requires_authorization
 
     context 'creating' do
-      let(:attrs) { { translation_id: 3, page_id: 2, structure: structure } }
+      let(:attrs) { { language_id: 3, page_id: 2, structure: structure } }
 
       it 'create a custom page' do
         do_request data: { type: :custom_page, attributes: attrs }
@@ -43,7 +43,7 @@ resource 'CustomPages' do
 
     it 'update a custom page' do
       do_request data: { type: :custom_page,
-                         attributes: { translation_id: 3, page_id: 1, structure: structure } }
+                         attributes: { language_id: 2, page_id: 1, structure: structure } }
 
       expect(status).to be(200)
       expect(response_body['data']).not_to be_nil

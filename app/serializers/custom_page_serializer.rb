@@ -5,5 +5,5 @@ class CustomPageSerializer < ActiveModel::Serializer
   attributes :id, :structure
 
   belongs_to :page
-  belongs_to :translation
+  belongs_to :language
 end

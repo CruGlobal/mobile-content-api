@@ -101,7 +101,7 @@ Translation.find_or_create_by!(resource: kgp, language: english, version: 1, is_
 Translation.find_or_create_by!(resource: kgp, language: german, version: 1, is_published: true)
 german_kgp = Translation.find_or_create_by!(resource: kgp, language: german, version: 2)
 
-CustomPage.find_or_create_by!(translation: german_kgp, page: page_13, structure: page_13_custom_structure)
+CustomPage.find_or_create_by!(language: german, page: page_13, structure: page_13_custom_structure)
 
 Translation.find_or_create_by!(resource: satisfied, language: english, version: 1, is_published: true)
 Translation.find_or_create_by!(resource: satisfied, language: english, version: 2, is_published: true)

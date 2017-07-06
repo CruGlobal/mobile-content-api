@@ -6,6 +6,4 @@ class TranslationSerializer < ActiveModel::Serializer
 
   belongs_to :resource
   belongs_to :language
-
-  has_many :custom_pages
 end
