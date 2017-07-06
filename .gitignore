@@ -30,3 +30,5 @@ vendor/cache
 /.env.*
 /doc
 public/system
+
+vendor/bundle

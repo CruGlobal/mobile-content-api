@@ -11,11 +11,14 @@ class DraftsController < SecureController
 
   def create
     resource = load_resource
-    existing_translation = Translation.latest_translation(resource.id, language_id)
 
-    d = existing_translation.nil? ? resource.create_new_draft(language_id) : create_new_version(existing_translation)
-    response.headers['Location'] = "drafts/#{d.id}"
-    render json: d, status: :created
+    create_draft(resource, language_id) unless language_id.nil?
+
+    data_attrs[:language_ids]&.each do |language_id|
+      create_draft(resource, language_id)
+    end
+
+    head :no_content
   end
 
   def update
@@ -49,5 +52,10 @@ class DraftsController < SecureController
 
   def load_translation
     Translation.find(params[:id])
+  end
+
+  def create_draft(resource, language_id)
+    translation = Translation.latest_translation(resource.id, language_id)
+    translation.nil? ? resource.create_new_draft(language_id) : create_new_version(translation)
   end
 end
