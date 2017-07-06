@@ -22,6 +22,10 @@ resource 'CustomPages' do
   end
 
   post 'custom_pages/' do
+    parameter :translation_id, 'Parent translation', required: true
+    parameter :page_id, 'Parent page', required: true
+    parameter :structure, 'Custom XML', required: true
+
     requires_authorization
 
     context 'creating' do

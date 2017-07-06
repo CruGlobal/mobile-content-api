@@ -9,6 +9,9 @@ resource 'Views' do
   let(:raw_post) { params.to_json }
 
   post 'views/' do
+    parameter 'resource id', 'Parent resource', required: true # see note in attributes_controller_spec.rb
+    parameter :quantity, 'Number of views', required: true
+
     it 'add views' do
       do_request data: { type: :view, attributes: { resource_id: 1, quantity: 257 } }
 

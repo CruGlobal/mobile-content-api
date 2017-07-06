@@ -46,6 +46,9 @@ resource 'Drafts' do
   end
 
   post 'drafts' do
+    parameter :language_id, 'Parent language', required: true
+    parameter :resource_id, 'Parent resource', required: true
+
     let(:resource) { double }
     let(:resource_id) { 1 }
 
@@ -94,6 +97,8 @@ resource 'Drafts' do
   end
 
   put 'drafts/:id' do
+    parameter :is_published, 'Set to true to publish'
+
     let(:id) { '3' }
 
     requires_authorization

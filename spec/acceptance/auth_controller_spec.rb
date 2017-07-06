@@ -9,6 +9,8 @@ resource 'Auth' do
   let(:valid_code) { 123_456 }
 
   post 'auth/' do
+    parameter :code, 'Valid access code', required: true
+
     it 'create a token with valid code' do
       do_request data: { type: :auth_token, attributes: { code: valid_code } }
 

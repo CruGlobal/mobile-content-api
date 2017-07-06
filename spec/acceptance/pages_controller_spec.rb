@@ -15,6 +15,11 @@ resource 'Pages' do
   end
 
   post 'pages' do
+    parameter :filename, 'Filename', required: true
+    parameter :structure, 'XML structure', required: true
+    parameter 'resource id', 'Parent resource', required: true # see note in attributes_controller_spec.rb
+    parameter :position, 'Position relative to other pages in the resource', required: true
+
     let(:attrs) { { filename: 'test.xml', structure: test_structure, resource_id: 2, position: 1 } }
 
     before do

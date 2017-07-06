@@ -8,6 +8,11 @@ resource 'Follow Ups' do
   let(:raw_post) { params.to_json }
 
   post 'follow_ups/' do
+    parameter :name, 'First and last name'
+    parameter :email, 'Email address', required: true
+    parameter :language_id, 'Language', required: true
+    parameter :destination_id, 'Destination of follow up request', required: true
+
     let(:data) do
       { type: :follow_up,
         attributes: { name: 'Billy Bob', email: 'bob@test.com', language_id: 2, destination_id: 1 } }

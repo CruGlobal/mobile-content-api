@@ -14,6 +14,10 @@ resource 'TranslatedPages' do
   end
 
   post 'translated_pages/' do
+    parameter :value, 'Translated content', required: true
+    parameter :page_id, 'Parent page', required: true
+    parameter :translation_id, 'Parent translation', required: true
+
     requires_authorization
 
     it 'create an Translated Page' do

@@ -16,6 +16,10 @@ resource 'TranslatedAttributes' do
   end
 
   post 'translated_attributes' do
+    parameter :attribute_id, 'Parent attribute', required: true
+    parameter :translation_id, 'Parent translation', required: true
+    parameter :value, 'Translated text', required: true
+
     let(:attrs) do
       { attribute_id: 2, translation_id: 2, value: 'translated attr' }
     end

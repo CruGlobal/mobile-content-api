@@ -28,6 +28,9 @@ resource 'Languages' do
   end
 
   post 'languages' do
+    parameter :name, 'Name', required: true
+    parameter :code, 'Code - must be unique', required: true
+
     let(:data) { { type: :language, attributes: { name: 'Elvish', code: 'ev' } } }
 
     before do
