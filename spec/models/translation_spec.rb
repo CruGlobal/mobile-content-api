@@ -3,16 +3,17 @@
 require 'rails_helper'
 
 describe Translation do
+  # rubocop:disable LineLength
   let(:page_name) { '13_FinalPage.xml' }
   let(:element_one_id) { 'f9894df9-df1d-4831-9782-345028c6c9a2' }
   let(:element_two_id) { '9deda19f-c3ee-42ed-a1eb-92423e543352' }
+  let(:element_three_id) { '9deda19f-c3ee-42ed-a1eb-92423e543353' }
   let(:phrase_one) { 'This is a German phrase' }
   let(:phrase_two) { 'another phrase in German' }
   let(:phrase_three) { 'https://www.bible.com/' }
-  let(:phrases) { "{ \"#{element_one_id}\":\"#{phrase_one}\", \"#{element_two_id}\":\"#{phrase_two}\" }" }
+  let(:phrases) { "{ \"#{element_one_id}\":\"#{phrase_one}\", \"#{element_two_id}\":\"#{phrase_two}\", \"#{element_three_id}\":\"#{phrase_three}\"}" }
   let(:phrase_one_element) { "<content:text i18n-id=\"#{element_one_id}\">#{phrase_one}</content:text>" }
   let(:phrase_two_element) { "<content:text i18n-id=\"#{element_two_id}\">#{phrase_two}</content:text>" }
-  # rubocop:disable LineLength
   let(:phrase_three_element) { "<content:button type=\"url\" url=\"#{phrase_three}\"><content:text>Label</content:text></content:button>" }
 
   # rubocop:enable LineLength

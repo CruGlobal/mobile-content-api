@@ -23,6 +23,9 @@ page_13_structure = '<?xml version="1.0" encoding="UTF-8" ?>
       <content:text>These four points explain how to enter into a personal relationship with God and
         experience the life for which you were created.
       </content:text>
+      <content:button type="url" url-i18n-id="9deda19f-c3ee-42ed-a1eb-92423e543353">
+        <content:text>Label</content:text>
+      </content:button>
     </content:form>
   </hero>
 </page>'
