@@ -236,6 +236,7 @@
                 <xs:documentation>This attribute defines the url to open for "url" buttons.</xs:documentation>
             </xs:annotation>
         </xs:attribute>
+        <xs:attribute name="url-i18n-id" type="xs:string" use="optional" />
         <xs:attribute name="color" type="content:colorValue" use="optional">
             <xs:annotation>
                 <xs:documentation>This attribute determines the color of the button. This defaults to the primary-color
