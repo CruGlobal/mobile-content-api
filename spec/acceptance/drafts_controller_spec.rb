@@ -68,12 +68,7 @@ resource 'Drafts' do
       end
 
       it 'create draft with new resource/language combination' do
-        expect(status).to be(201)
-        expect(response_body['data']).not_to be_nil
-      end
-
-      it 'returns location header', document: false do
-        expect(response_headers['Location']).to eq("drafts/#{id}")
+        expect(status).to be(204)
       end
     end
 
@@ -83,12 +78,28 @@ resource 'Drafts' do
       end
 
       it 'create draft with existing resource/language combination' do
-        expect(status).to be(201)
-        expect(response_body['data']).not_to be_nil
+        expect(status).to be(204)
+      end
+    end
+
+    context 'multiple languages/resource combination' do
+      let(:id) { 100 }
+      let(:translation) { double }
+
+      before do
+        existing_language_id = 1
+        missing_language_id = 3
+
+        allow(Translation).to receive(:latest_translation)
+          .with(resource_id, existing_language_id).and_return(translation)
+        allow(Translation).to receive(:latest_translation).with(resource_id, missing_language_id).and_return(nil)
+        allow(resource).to receive(:create_new_draft).with(missing_language_id).and_return(Translation.new(id: id))
+
+        do_request data: { type: :translation, attributes: { resource_id: resource_id, language_ids: [1, 3] } }
       end
 
-      it 'returns location header', document: false do
-        expect(response_headers['Location']).to match(%r{drafts\/\d+})
+      it 'creates 2 drafts with existing resource/language combinations' do
+        expect(status).to be(204)
       end
     end
   end
