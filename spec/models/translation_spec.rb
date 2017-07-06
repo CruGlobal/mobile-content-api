@@ -14,7 +14,7 @@ describe Translation do
   let(:phrases) { "{ \"#{element_one_id}\":\"#{phrase_one}\", \"#{element_two_id}\":\"#{phrase_two}\", \"#{element_three_id}\":\"#{phrase_three}\"}" }
   let(:phrase_one_element) { "<content:text i18n-id=\"#{element_one_id}\">#{phrase_one}</content:text>" }
   let(:phrase_two_element) { "<content:text i18n-id=\"#{element_two_id}\">#{phrase_two}</content:text>" }
-  let(:phrase_three_element) { "<content:button type=\"url\" url=\"#{phrase_three}\"><content:text>Label</content:text></content:button>" }
+  let(:phrase_three_element) { "<content:button type=\"url\" url=\"#{phrase_three}\">" }
 
   # rubocop:enable LineLength
 
@@ -46,9 +46,6 @@ describe Translation do
     end
     it 'includes translated phrases' do
       includes_translated_phrases
-    end
-    it 'includes translated attributes' do
-      includes_translated_attributes
     end
   end
 

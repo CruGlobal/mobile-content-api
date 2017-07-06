@@ -83,7 +83,7 @@ class Translation < ActiveRecord::Base
   def onesky_translated_page_attributes(xml, phrases, strict)
     XmlUtil.translatable_node_attrs(xml).each do |attribute|
       phrase_id = attribute.value
-      new_name = attribute.name.slice('-i18n-id')
+      new_name = attribute.name.gsub("-i18n-id", "")
       translated_phrase = phrases[phrase_id]
 
       if translated_phrase.present?
