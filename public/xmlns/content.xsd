@@ -322,6 +322,7 @@
             <xs:element ref="content:link" />
             <xs:element ref="content:form" />
             <xs:element ref="content:input" />
+            <xs:element ref="content:paragraph" />
         </xs:choice>
     </xs:group>
     <xs:complexType name="textChild">
