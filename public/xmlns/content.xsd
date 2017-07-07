@@ -315,6 +315,7 @@
     <xs:element name="input" type="content:input" />
     <xs:group name="elements">
         <xs:choice>
+            <xs:element ref="content:paragraph" />
             <xs:element ref="content:tabs" />
             <xs:element ref="content:text" />
             <xs:element ref="content:image" />
@@ -322,7 +323,6 @@
             <xs:element ref="content:link" />
             <xs:element ref="content:form" />
             <xs:element ref="content:input" />
-            <xs:element ref="content:paragraph" />
         </xs:choice>
     </xs:group>
     <xs:complexType name="textChild">
