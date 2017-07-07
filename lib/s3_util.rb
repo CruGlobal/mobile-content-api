@@ -33,11 +33,12 @@ class S3Util
     @document = Nokogiri::XML(@translation.resource.manifest)
     manifest_node = load_or_create_manifest_node
 
+    add_code_and_language(manifest_node)
+
     pages_node = Nokogiri::XML::Node.new('pages', @document)
     resources_node = Nokogiri::XML::Node.new('resources', @document)
 
-    manifest_node.add_child(pages_node)
-    manifest_node.add_child(resources_node)
+    add_child_nodes(manifest_node, pages_node, resources_node)
 
     Zip::File.open("pages/#{@translation.zip_name}", Zip::File::CREATE) do |zip_file|
       add_pages(zip_file, pages_node)
@@ -46,6 +47,16 @@ class S3Util
       manifest_filename = write_manifest_to_file
       zip_file.add(manifest_filename, "pages/#{manifest_filename}")
     end
+  end
+
+  def add_code_and_language(manifest_node)
+    manifest_node['code'] = @translation.resource.abbreviation
+    manifest_node['language'] = @translation.language.code
+  end
+
+  def add_child_nodes(manifest_node, pages_node, resources_node)
+    manifest_node.add_child(pages_node)
+    manifest_node.add_child(resources_node)
   end
 
   def load_or_create_manifest_node
