@@ -315,6 +315,7 @@
     <xs:element name="input" type="content:input" />
     <xs:group name="elements">
         <xs:choice>
+            <xs:element ref="content:paragraph" />
             <xs:element ref="content:tabs" />
             <xs:element ref="content:text" />
             <xs:element ref="content:image" />
