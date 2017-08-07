@@ -18,7 +18,7 @@ describe Translation do
 
   # rubocop:enable LineLength
 
-  context 'builds a translated page from resource page' do # TODO: rename to avoid confusion with TranslatedPages
+  context 'builds a translated page from base page and OneSky phrases' do
     let(:result) do
       translated_page(1)
     end
@@ -36,7 +36,7 @@ describe Translation do
     end
   end
 
-  context 'builds a translated page from custom page' do
+  context 'builds a translated page from custom page and OneSky phrases' do
     let(:result) do
       translated_page(3)
     end
