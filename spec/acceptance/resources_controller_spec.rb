@@ -27,14 +27,14 @@ resource 'Resources' do
       do_request 'filter[system]': 'GodTools'
 
       expect(status).to be(200)
-      expect(JSON.parse(response_body)['data'].count).to be(2)
+      expect(JSON.parse(response_body)['data'].count).to be(3)
     end
 
     it 'get all resources, include translations' do
       do_request 'filter[system]': 'GodTools', include: :translations
 
       expect(status).to be(200)
-      expect(JSON.parse(response_body)['included'].count).to be(8)
+      expect(JSON.parse(response_body)['included'].count).to be(10)
     end
   end
 

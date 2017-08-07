@@ -63,35 +63,40 @@ page_4_structure = '<?xml version="1.0" encoding="UTF-8" ?>
   </hero>
 </page>'
 
-is_there_god_structure = '<item name="Is There a God?">Does God exist? Here are six straight-forward reasons to believe that God is really there.
-By Marilyn Adamson at EveryStudent.com
-Just once wouldn\'t you love for someone to simply show you the evidence for God\'s existence? No arm-twisting. No statements of, ' \
-'"You just have to believe." Well, here is an attempt to candidly offer some of the reasons which suggest that God exists.</item>'
+is_there_god_structure = '<?xml version="1.0" encoding="UTF-8" ?>
+<article xmlns="https://mobile-content-api.cru.org/xmlns/article">
+<category>God\'s Existence</category>
+<category>Knowing God</category>
+<title>Is There a God?</title>
+<heading>Does God exist? Here are six straightforward reasons to believe that God is really there.</heading>
+<author>Marilyn Adamson</author>
+<body>Just once wouldn\'t you love for someone to simply show you the evidence for God\'s existence? No arm-twisting. No statements of, ' \
+'"You just have to believe." Well, here is an attempt to candidly offer some of the reasons which suggest that God exists.</body>
+</article>'
 
-
-beyond_blind_faith_structure = '<item name="Beyond Blind Faith">
- Is Jesus God? Here is a picture of the life of Jesus Christ and why it\'s not blind faith to believe in him...
-  By Paul E. Little
-It is impossible for us to know conclusively whether God exists and what He is like unless He takes the initiative and reveals '\
+beyond_blind_faith_structure = '<?xml version="1.0" encoding="UTF-8" ?>
+<article xmlns="https://mobile-content-api.cru.org/xmlns/article">
+<title>Beyond Blind Faith</title>
+<body>It is impossible for us to know conclusively whether God exists and what He is like unless He takes the initiative and reveals '\
 'Himself. We must scan the horizon of history to see if there is any clue to God\'s revelation. There is one clear clue. In an '\
-'obscure village in Palestine, 2,000 years ago, a Child was born in a stable. Today the entire world is still celebrating the birth of Jesus.</item>'
+'obscure village in Palestine, 2,000 years ago, a Child was born in a stable. Today the entire world is still celebrating the birth of Jesus.</body>
+</article>'
 
 tract = ResourceType.find_or_create_by!(name: 'tract', dtd_file: 'tract.xsd')
 article = ResourceType.find_or_create_by!(name: 'article', dtd_file: 'article.xsd')
 
 godtools = System.find_or_create_by!(name: 'GodTools')
-every_student = System.find_or_create_by!(name: 'EveryStudent')
 
 kgp = Resource.find_or_create_by!(name: 'Knowing God Personally', resource_type: tract, abbreviation: 'kgp', onesky_project_id: 148_314, system: godtools,
                                   manifest: '<?xml version="1.0"?><manifest xmlns="https://mobile-content-api.cru.org/xmlns/manifest" xmlns:content="https://mobile-content-api.cru.org/xmlns/content"><title><content:text i18n-id="89a09d72-114f-4d89-a72c-ca204c796fd9">Knowing God Personally</content:text></title></manifest>')
 satisfied = Resource.find_or_create_by!(name: 'Satisfied?', resource_type: tract, abbreviation: 'sat', system: godtools)
-es_content = Resource.find_or_create_by!(name: 'EveryStudent content', resource_type: article, abbreviation: 'esc', system: every_student)
+every_student = Resource.find_or_create_by!(name: 'Questions About God', resource_type: article, abbreviation: 'es', system: godtools)
 
 page_13 = Page.find_or_create_by!(filename: '13_FinalPage.xml', resource: kgp, structure: page_13_structure, position: 1)
 page_4 = Page.find_or_create_by!(filename: '04_ThirdPoint.xml', resource: kgp, structure: page_4_structure, position: 0)
 
-is_there_god = Page.find_or_create_by!(filename: 'Is_There_A_God.xml', resource: es_content, structure: is_there_god_structure, position: 0)
-beyond_blind_faith = Page.find_or_create_by!(filename: 'Beyond_Blind_Faith.xml', resource: es_content, structure: beyond_blind_faith_structure, position: 1)
+is_there_god = Page.find_or_create_by!(filename: 'Is_There_A_God.xml', resource: every_student, structure: is_there_god_structure, position: 0)
+beyond_blind_faith = Page.find_or_create_by!(filename: 'Beyond_Blind_Faith.xml', resource: every_student, structure: beyond_blind_faith_structure, position: 1)
 
 english = Language.find_or_create_by!(name: 'English', code: 'en')
 german = Language.find_or_create_by!(name: 'German', code: 'de')
@@ -109,8 +114,8 @@ Translation.find_or_create_by!(resource: satisfied, language: english, version: 
 Translation.find_or_create_by!(resource: satisfied, language: german, version: 1, is_published: true)
 Translation.find_or_create_by!(resource: satisfied, language: german, version: 2, is_published: true)
 
-Translation.find_or_create_by!(resource: es_content, language: english, version: 1, is_published: true)
-german_es = Translation.find_or_create_by!(resource: es_content, language: german, version: 1, is_published: true)
+Translation.find_or_create_by!(resource: every_student, language: english, version: 1, is_published: true)
+german_es = Translation.find_or_create_by!(resource: every_student, language: german, version: 1, is_published: true)
 
 TranslatedPage.find_or_create_by!(value: 'German translation of article Is There A God?', translation: german_es, page: is_there_god)
 TranslatedPage.find_or_create_by!(value: 'German translation of article Beyond Blind Faith', translation: german_es, page: beyond_blind_faith)
