@@ -89,7 +89,7 @@ godtools = System.find_or_create_by!(name: 'GodTools')
 
 kgp = Resource.find_or_create_by!(name: 'Knowing God Personally', resource_type: tract, abbreviation: 'kgp', onesky_project_id: 148_314, system: godtools,
                                   manifest: '<?xml version="1.0"?><manifest xmlns="https://mobile-content-api.cru.org/xmlns/manifest" xmlns:content="https://mobile-content-api.cru.org/xmlns/content"><title><content:text i18n-id="89a09d72-114f-4d89-a72c-ca204c796fd9">Knowing God Personally</content:text></title></manifest>')
-satisfied = Resource.find_or_create_by!(name: 'Satisfied?', resource_type: tract, abbreviation: 'sat', system: godtools)
+satisfied = Resource.find_or_create_by!(name: 'Satisfied?', resource_type: tract, abbreviation: 'sat', system: godtools, onesky_project_id: 999_999)
 every_student = Resource.find_or_create_by!(name: 'Questions About God', resource_type: article, abbreviation: 'es', system: godtools)
 
 page_13 = Page.find_or_create_by!(filename: '13_FinalPage.xml', resource: kgp, structure: page_13_structure, position: 1)

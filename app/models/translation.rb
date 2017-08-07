@@ -12,6 +12,7 @@ class Translation < ActiveRecord::Base
   validates :language, presence: true
   validates :is_published, inclusion: { in: [true, false] }
   validates_with DraftCreationValidator, on: :create
+  validates_with UsesOneskyValidator
 
   before_destroy :prevent_destroy_published, if: :is_published
   before_update :push_published_to_s3
