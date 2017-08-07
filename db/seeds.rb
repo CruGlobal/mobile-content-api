@@ -64,6 +64,8 @@ page_4_structure = '<?xml version="1.0" encoding="UTF-8" ?>
 </page>'
 
 is_there_god_structure = '<article>
+<category>God\'s Existence</category>
+<category>Knowing God</category>
 <title>Is There a God?</title>
 <heading>Does God exist? Here are six straightforward reasons to believe that God is really there.</heading>
 <author>Marilyn Adamson</author>
