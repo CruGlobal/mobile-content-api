@@ -4,7 +4,7 @@ require 'rest-client'
 require 'auth_util'
 require 'xml_util'
 
-class PageUtil
+class PageClient
   def initialize(resource, language_code)
     @resource = resource
     @language_code = language_code

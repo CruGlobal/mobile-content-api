@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
 require 'rails_helper'
-require 's3_util'
+require 'package'
 require 'xml_util'
 
-describe S3Util do
+describe Package do
   let(:translated_page_one) { 'this is a translated page' }
   let(:translated_page_two) { 'here is another translated page' }
   let(:translation) do
@@ -24,8 +24,8 @@ describe S3Util do
   end
 
   after do
-    allow(PageUtil).to receive(:delete_temp_pages).and_call_original
-    PageUtil.delete_temp_pages
+    allow(PageClient).to receive(:delete_temp_pages).and_call_original
+    PageClient.delete_temp_pages
   end
 
   it 'deletes temp files after successful request' do
@@ -45,7 +45,7 @@ describe S3Util do
   end
 
   it 'zip file contains all pages' do
-    allow(PageUtil).to receive(:delete_temp_pages)
+    allow(PageClient).to receive(:delete_temp_pages)
 
     push
 
@@ -55,7 +55,7 @@ describe S3Util do
   end
 
   it 'zip file contains manifest' do
-    allow(PageUtil).to receive(:delete_temp_pages)
+    allow(PageClient).to receive(:delete_temp_pages)
 
     push
 
@@ -64,7 +64,7 @@ describe S3Util do
   end
 
   it 'zip file contains all attachments' do
-    allow(PageUtil).to receive(:delete_temp_pages)
+    allow(PageClient).to receive(:delete_temp_pages)
 
     push
 
@@ -87,7 +87,7 @@ describe S3Util do
     let(:title) { 'this is the kgp' }
 
     before do
-      allow(PageUtil).to receive(:delete_temp_pages)
+      allow(PageClient).to receive(:delete_temp_pages)
     end
 
     it 'contains all pages in order' do
@@ -155,7 +155,7 @@ describe S3Util do
   end
 
   def push
-    s3_util = S3Util.new(translation)
-    s3_util.push_translation
+    package = Package.new(translation)
+    package.push_to_s3
   end
 end

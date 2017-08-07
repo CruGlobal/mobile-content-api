@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
 require 'rails_helper'
-require 'page_util'
+require 'page_client'
 require 'xml_util'
 
-describe PageUtil do
+describe PageClient do
   let(:locale) { 'de' }
 
   let(:name) { 'resource name' }
@@ -63,7 +63,7 @@ describe PageUtil do
                      system_id: 1)
   end
 
-  let(:page_util_instance) do
+  let(:page_client) do
     described_class.new(resource, locale)
   end
 
@@ -72,7 +72,7 @@ describe PageUtil do
   end
 
   it 'deletes all temp files after successful request' do
-    page_util_instance.push_new_onesky_translation
+    page_client.push_new_onesky_translation
 
     pages_dir = Dir.glob('pages/*')
     expect(pages_dir).to be_empty
@@ -81,7 +81,7 @@ describe PageUtil do
   it 'deletes all temp files if error is raised' do
     allow(RestClient).to receive(:post).and_raise(StandardError)
 
-    expect { page_util_instance.push_new_onesky_translation }.to raise_error(StandardError)
+    expect { page_client.push_new_onesky_translation }.to raise_error(StandardError)
 
     pages_dir = Dir.glob('pages/*')
     expect(pages_dir).to be_empty
@@ -103,13 +103,13 @@ describe PageUtil do
     it 'correct URL' do
       url = 'https://platform.api.onesky.io/1/projects/1/files'
 
-      page_util_instance.push_new_onesky_translation
+      page_client.push_new_onesky_translation
 
       expect(RestClient).to have_received(:post).with(url, anything).exactly(4).times
     end
 
     it 'all resource pages' do
-      page_util_instance.push_new_onesky_translation
+      page_client.push_new_onesky_translation
 
       expect(RestClient).to have_received(:post).with(any_string, hash_including(file: file_1))
       expect(RestClient).to have_received(:post).with(any_string, hash_including(file: file_2))
@@ -117,7 +117,7 @@ describe PageUtil do
 
     context 'translatable attributes' do
       it 'resource uses OneSky' do
-        page_util_instance.push_new_onesky_translation
+        page_client.push_new_onesky_translation
 
         expect(RestClient).to have_received(:post).with(any_string, hash_including(file: file_4))
       end
@@ -125,26 +125,26 @@ describe PageUtil do
       it 'resource does not use OneSky' do
         allow(resource).to receive(:uses_onesky?).and_return(false)
 
-        page_util_instance.push_new_onesky_translation
+        page_client.push_new_onesky_translation
 
         expect(RestClient).not_to have_received(:post).with(any_string, hash_including(file: file_4))
       end
     end
 
     it 'name/description file' do
-      page_util_instance.push_new_onesky_translation
+      page_client.push_new_onesky_translation
 
       expect(RestClient).to have_received(:post).with(any_string, hash_including(file: file_3))
     end
 
     it 'correct locale' do
-      page_util_instance.push_new_onesky_translation
+      page_client.push_new_onesky_translation
 
       expect(RestClient).to have_received(:post).with(any_string, hash_including(locale: locale)).exactly(4).times
     end
 
     it 'keeps existing strings by default' do
-      page_util_instance.push_new_onesky_translation
+      page_client.push_new_onesky_translation
 
       expect(RestClient).to(
         have_received(:post).with(any_string, hash_including(is_keeping_all_strings: true)).exactly(3).times
@@ -156,7 +156,7 @@ describe PageUtil do
     it 'all OneSky phrases' do
       allow(described_class).to receive(:delete_temp_pages)
 
-      page_util_instance.push_new_onesky_translation
+      page_client.push_new_onesky_translation
 
       file = File.new("pages/#{filename_1}")
       expect(file.read).to eq("{\"#{id_1}\":\"#{phrase_1}\",\"#{id_2}\":\"#{phrase_2}\"}")
@@ -165,7 +165,7 @@ describe PageUtil do
     it 'name and description' do
       allow(described_class).to receive(:delete_temp_pages)
 
-      page_util_instance.push_new_onesky_translation
+      page_client.push_new_onesky_translation
 
       file = File.new('pages/name_description.xml')
       expect(file.read).to eq("{\"name\":\"#{name}\",\"description\":\"#{description}\"}")
@@ -174,7 +174,7 @@ describe PageUtil do
     it 'translatable attributes' do
       allow(described_class).to receive(:delete_temp_pages)
 
-      page_util_instance.push_new_onesky_translation
+      page_client.push_new_onesky_translation
 
       file = File.new('pages/attributes.xml')
       expect(file.read).to eq("{\"#{attr_1.key}\":\"#{attr_1.value}\",\"#{attr_2.key}\":\"#{attr_2.value}\"}")

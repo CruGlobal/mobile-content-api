@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
 require 'zip'
-require 'page_util'
+require 'page_client'
 require 'xml_util'
 
-class S3Util
+class Package
   def self.s3_object(translation)
     s3 = Aws::S3::Resource.new(region: ENV['AWS_REGION'])
     bucket = s3.bucket(ENV['MOBILE_CONTENT_API_BUCKET'])
@@ -15,15 +15,15 @@ class S3Util
     @translation = translation
   end
 
-  def push_translation
+  def push_to_s3
     Rails.logger.info "Starting build of translation with id: #{@translation.id}"
 
     build_zip
     upload
 
-    PageUtil.delete_temp_pages
+    PageClient.delete_temp_pages
   rescue StandardError => e
-    PageUtil.delete_temp_pages
+    PageClient.delete_temp_pages
     raise e
   end
 

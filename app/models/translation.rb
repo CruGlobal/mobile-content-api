@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require 's3_util'
+require 'package'
 require 'xml_util'
 
 # rubocop:disable ClassLength
@@ -20,7 +20,7 @@ class Translation < ActiveRecord::Base
   before_validation :set_defaults, on: :create
 
   def s3_url
-    obj = S3Util.s3_object(self)
+    obj = Package.s3_object(self)
     raise Error::NotFoundError, "Zip file not found in S3 for translation: #{id}" unless obj.exists?
     obj.public_url
   end
@@ -110,8 +110,8 @@ class Translation < ActiveRecord::Base
 
     name_desc_onesky if resource.uses_onesky?
 
-    s3_util = S3Util.new(self)
-    s3_util.push_translation
+    package = Package.new(self)
+    package.push_to_s3
   end
 
   def name_desc_onesky
