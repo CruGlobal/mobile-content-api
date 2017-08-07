@@ -174,9 +174,9 @@ describe Translation do
       end
 
       it 'does not update from OneSky for projects not using it' do
-        t = described_class.find(9)
+        t = described_class.find(7)
 
-        t.update!(id: 9, is_published: true)
+        t.update!(id: 7, is_published: true)
 
         expect(t.translated_name).to be_nil
         expect(t.translated_description).to be_nil

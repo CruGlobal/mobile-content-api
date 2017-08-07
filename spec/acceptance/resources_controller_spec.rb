@@ -34,7 +34,7 @@ resource 'Resources' do
       do_request 'filter[system]': 'GodTools', include: :translations
 
       expect(status).to be(200)
-      expect(JSON.parse(response_body)['included'].count).to be(10)
+      expect(JSON.parse(response_body)['included'].count).to be(8)
     end
   end
 

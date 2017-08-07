@@ -95,10 +95,6 @@ every_student = Resource.find_or_create_by!(name: 'Questions About God', resourc
 page_13 = Page.find_or_create_by!(filename: '13_FinalPage.xml', resource: kgp, structure: page_13_structure, position: 1)
 page_4 = Page.find_or_create_by!(filename: '04_ThirdPoint.xml', resource: kgp, structure: page_4_structure, position: 0)
 
-#TODO remove
-is_there_god = Page.find_or_create_by!(filename: 'Is_There_A_God.xml', resource: every_student, structure: is_there_god_structure, position: 0)
-beyond_blind_faith = Page.find_or_create_by!(filename: 'Beyond_Blind_Faith.xml', resource: every_student, structure: beyond_blind_faith_structure, position: 1)
-
 english = Language.find_or_create_by!(name: 'English', code: 'en')
 german = Language.find_or_create_by!(name: 'German', code: 'de')
 Language.find_or_create_by!(name: 'Slovak', code: 'sk')
@@ -114,10 +110,6 @@ Translation.find_or_create_by!(resource: satisfied, language: english, version: 
 Translation.find_or_create_by!(resource: satisfied, language: english, version: 3)
 Translation.find_or_create_by!(resource: satisfied, language: german, version: 1, is_published: true)
 Translation.find_or_create_by!(resource: satisfied, language: german, version: 2, is_published: true)
-
-#TODO remove
-Translation.find_or_create_by!(resource: every_student, language: english, version: 1, is_published: true)
-german_es = Translation.find_or_create_by!(resource: every_student, language: german, version: 1, is_published: true)
 
 TranslatedPage.find_or_create_by!(value: 'German article Is There A God?', resource: every_student, language: german)
 TranslatedPage.find_or_create_by!(value: 'German article Beyond Blind Faith', resource: every_student, language: german)
