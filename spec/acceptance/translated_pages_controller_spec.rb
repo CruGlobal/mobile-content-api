@@ -6,7 +6,7 @@ resource 'TranslatedPages' do
   let(:authorization) { AuthToken.create!(access_code: AccessCode.find(1)).token }
   let(:data) do
     { data: { type: :translated_page,
-              attributes: { value: 'This is a translated page.', page_id: 3, translation_id: 1 } } }
+              attributes: { value: 'This is a translated page.', resource_id: 3, language_id: 2 } } }
   end
 
   before do

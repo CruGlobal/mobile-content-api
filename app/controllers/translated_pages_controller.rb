@@ -23,6 +23,6 @@ class TranslatedPagesController < SecureController
   end
 
   def permitted_params
-    [:value, :page_id, :translation_id]
+    [:value, :resource_id, :language_id]
   end
 end

@@ -8,6 +8,7 @@ class Resource < ActiveRecord::Base
   has_many :resource_attributes, class_name: 'Attribute'
   has_many :views
   has_many :attachments
+  has_many :translated_pages
 
   validates :name, presence: true
   validates :abbreviation, presence: true, uniqueness: true

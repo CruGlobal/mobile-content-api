@@ -3,11 +3,9 @@
 require 'package'
 require 'xml_util'
 
-# rubocop:disable ClassLength
 class Translation < ActiveRecord::Base
   belongs_to :resource
   belongs_to :language
-  has_many :translated_pages
 
   validates :version, presence: true
   validates :resource, presence: true
@@ -26,13 +24,14 @@ class Translation < ActiveRecord::Base
   end
 
   def translated_page(page_id, strict)
-    if resource.uses_onesky?
-      onesky_translated_page(page_id, strict)
-    else
-      t = translated_pages.find_by(page_id: page_id)
-      raise Error::TextNotFoundError, 'Translated page not found for this language.' if t.nil?
-      t.value
-    end
+    page = Page.find(page_id)
+    phrases = download_translated_phrases(page.filename)
+    xml = Nokogiri::XML(page_structure(page_id))
+
+    xml = onesky_translated_page_content(xml, phrases, strict)
+    xml = onesky_translated_page_attributes(xml, phrases, strict)
+
+    xml.to_s
   end
 
   def update_draft(params)
@@ -52,17 +51,6 @@ class Translation < ActiveRecord::Base
   end
 
   private
-
-  def onesky_translated_page(page_id, strict)
-    page = Page.find(page_id)
-    phrases = download_translated_phrases(page.filename)
-    xml = Nokogiri::XML(page_structure(page_id))
-
-    xml = onesky_translated_page_content(xml, phrases, strict)
-    xml = onesky_translated_page_attributes(xml, phrases, strict)
-
-    xml.to_s
-  end
 
   def onesky_translated_page_content(xml, phrases, strict)
     XmlUtil.translatable_nodes(xml).each do |node|
