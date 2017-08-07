@@ -36,7 +36,7 @@ class ApplicationController < ActionController::Base
 
   def authorize!
     authorization = AuthToken.find_by(token: request.headers['Authorization'])
-    return unless authorization.nil?
+    return unless authorization.nil? || expired(authorization)
 
     authorization = AuthToken.new
     authorization.errors.add(:id, 'Unauthorized')
@@ -63,5 +63,9 @@ class ApplicationController < ActionController::Base
     def initialize(code, message)
       errors.add(code, message)
     end
+  end
+
+  def expired(token)
+    token.expiration < DateTime.now.utc
   end
 end
