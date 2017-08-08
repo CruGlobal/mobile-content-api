@@ -16,7 +16,7 @@ class XmlValidator < ActiveModel::EachValidator
 
   def xsd_location(record)
     return 'manifest.xsd' if record.is_a?(Resource)
-    return record.resource.resource_type.dtd_file if record.is_a?(Page)
+    return record.resource.resource_type.dtd_file if record.is_a?(Page) || record.is_a?(TranslatedPage)
     return record.page.resource.resource_type.dtd_file if record.is_a?(CustomPage)
 
     raise "Object type: #{record.class} not supported."

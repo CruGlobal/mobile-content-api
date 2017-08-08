@@ -111,8 +111,8 @@ Translation.find_or_create_by!(resource: satisfied, language: english, version: 
 Translation.find_or_create_by!(resource: satisfied, language: german, version: 1, is_published: true)
 Translation.find_or_create_by!(resource: satisfied, language: german, version: 2, is_published: true)
 
-TranslatedPage.find_or_create_by!(value: 'German article Is There A God?', resource: every_student, language: german)
-TranslatedPage.find_or_create_by!(value: 'German article Beyond Blind Faith', resource: every_student, language: german)
+TranslatedPage.find_or_create_by!(value: is_there_god_structure, resource: every_student, language: german)
+TranslatedPage.find_or_create_by!(value: beyond_blind_faith_structure, resource: every_student, language: german)
 
 AccessCode.find_or_create_by!(code: 123_456)
 
