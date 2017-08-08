@@ -175,6 +175,7 @@ GEM
       slop (~> 3.4)
     puma (3.9.1)
     rack (2.0.3)
+    rack-cors (0.4.1)
     rack-protection (2.0.0)
       rack
     rack-test (0.6.3)
@@ -328,6 +329,7 @@ DEPENDENCIES
   paperclip
   pg
   puma (~> 3.0)
+  rack-cors
   raddocs!
   rails (~> 5.0.2)
   rest-client (~> 2.0.1)
@@ -351,4 +353,4 @@ DEPENDENCIES
   web-console (>= 3.3.0)
 
 BUNDLED WITH
-   1.15.1
+   1.15.3
