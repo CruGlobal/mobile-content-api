@@ -4,10 +4,14 @@ require 'acceptance_helper'
 
 resource 'TranslatedPages' do
   let(:authorization) { AuthToken.create!(access_code: AccessCode.find(1)).token }
-  let(:data) do
-    { data: { type: :translated_page,
-              attributes: { value: 'This is a translated page.', page_id: 3, translation_id: 1 } } }
+  let(:article) do
+    '<?xml version="1.0" encoding="UTF-8" ?>
+<article xmlns="https://mobile-content-api.cru.org/xmlns/article">
+<title>article</title>
+<body>article body</body>
+</article>'
   end
+  let(:data) { { data: { type: :translated_page, attributes: { value: article, resource_id: 3, language_id: 2 } } } }
 
   before do
     header 'Authorization', :authorization

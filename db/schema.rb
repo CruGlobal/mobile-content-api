@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170705203601) do
+ActiveRecord::Schema.define(version: 20170807201839) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -114,12 +114,11 @@ ActiveRecord::Schema.define(version: 20170705203601) do
   end
 
   create_table "translated_pages", force: :cascade do |t|
-    t.string  "value",          null: false
-    t.integer "page_id",        null: false
-    t.integer "translation_id", null: false
-    t.index ["page_id", "translation_id"], name: "index_translated_pages_on_page_id_and_translation_id", unique: true, using: :btree
-    t.index ["page_id"], name: "index_translated_pages_on_page_id", using: :btree
-    t.index ["translation_id"], name: "index_translated_pages_on_translation_id", using: :btree
+    t.string  "value",       null: false
+    t.integer "language_id", null: false
+    t.integer "resource_id", null: false
+    t.index ["language_id"], name: "index_translated_pages_on_language_id", using: :btree
+    t.index ["resource_id"], name: "index_translated_pages_on_resource_id", using: :btree
   end
 
   create_table "translations", force: :cascade do |t|
@@ -150,6 +149,8 @@ ActiveRecord::Schema.define(version: 20170705203601) do
   add_foreign_key "resources", "systems"
   add_foreign_key "translated_attributes", "attributes"
   add_foreign_key "translated_attributes", "translations"
+  add_foreign_key "translated_pages", "languages"
+  add_foreign_key "translated_pages", "resources"
   add_foreign_key "translations", "languages"
   add_foreign_key "translations", "resources"
   add_foreign_key "views", "resources"

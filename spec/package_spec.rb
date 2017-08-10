@@ -116,7 +116,7 @@ describe Package do
 
     context 'resource does not have a manifest file' do
       let(:translation) do
-        t = Translation.find(10)
+        t = Translation.find(8)
         allow(t).to(receive(:translated_page).and_return(translated_page_one, translated_page_two))
         t
       end

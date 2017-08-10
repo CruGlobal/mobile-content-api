@@ -1,13 +1,13 @@
 # frozen_string_literal: true
 
 class TranslatedPage < ActiveRecord::Base
-  belongs_to :page
-  belongs_to :translation
+  belongs_to :resource
+  belongs_to :language
 
-  validates :value, presence: true
-  validates :page, presence: true
-  validates :translation, presence: true, uniqueness: { scope: :page }
+  validates :value, presence: true, xml: { if: :value_changed? }
+  validates :resource, presence: true
+  validates :language, presence: true
   validate do
-    errors.add('page', 'Uses OneSky.') if page.resource.uses_onesky?
+    errors.add('resource', 'Uses OneSky.') if resource.uses_onesky?
   end
 end

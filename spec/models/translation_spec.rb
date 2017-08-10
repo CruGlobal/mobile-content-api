@@ -18,7 +18,7 @@ describe Translation do
 
   # rubocop:enable LineLength
 
-  context 'builds a translated page from resource page' do
+  context 'builds a translated page from base page and OneSky phrases' do
     let(:result) do
       translated_page(1)
     end
@@ -36,7 +36,7 @@ describe Translation do
     end
   end
 
-  context 'builds a translated page from custom page' do
+  context 'builds a translated page from custom page and OneSky phrases' do
     let(:result) do
       translated_page(3)
     end
@@ -72,22 +72,6 @@ describe Translation do
     translation = described_class.find(3)
 
     translation.translated_page(1, false)
-  end
-
-  it 'uses existing translated pages for non-OneSky projects' do
-    translation = described_class.find(10)
-
-    result = translation.translated_page(3, false)
-
-    expect(result).to eq('German translation of article Is There A God?')
-  end
-
-  it 'error raised if translated page not found' do
-    translation = described_class.find(9)
-
-    expect { translation.translated_page(3, false) }.to(
-      raise_error(Error::TextNotFoundError, 'Translated page not found for this language.')
-    )
   end
 
   it 'is invalid if draft exists' do
@@ -187,15 +171,6 @@ describe Translation do
 
         expect(translation).to have_received(:translated_description=).ordered
         expect(package).to have_received(:push_to_s3).ordered
-      end
-
-      it 'does not update from OneSky for projects not using it' do
-        t = described_class.find(9)
-
-        t.update!(id: 9, is_published: true)
-
-        expect(t.translated_name).to be_nil
-        expect(t.translated_description).to be_nil
       end
     end
   end
