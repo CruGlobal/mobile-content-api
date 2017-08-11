@@ -28,8 +28,6 @@ resource 'Languages' do
   end
 
   post 'languages' do
-    let(:data) { { type: :language, attributes: { name: 'Elvish', code: 'ev' } } }
-
     before do
       header 'Authorization', :authorization
     end
@@ -37,16 +35,25 @@ resource 'Languages' do
     requires_authorization
 
     it 'create a language' do
-      do_request data: data
+      do_request data: { type: :language, attributes: { name: 'Elvish', code: 'ev' } }
 
       expect(status).to be(201)
-      expect(response_body['data']).not_to be_nil
+      expect(JSON.parse(response_body)['data']).not_to be_nil
     end
 
     it 'sets location header', document: false do
-      do_request data: data
+      do_request data: { type: :language, attributes: { name: 'Elvish', code: 'ev' } }
 
       expect(response_headers['Location']).to match(%r{languages\/\d+})
+    end
+
+    it 'cannot duplicate code', document: false do
+      code = 'en'
+
+      do_request data: { type: :language, attributes: { name: 'another English', code: code } }
+
+      expect(status).to be(400)
+      expect(JSON.parse(response_body)['errors'][0]['detail']).to eq("Code #{code} already exists.")
     end
   end
 

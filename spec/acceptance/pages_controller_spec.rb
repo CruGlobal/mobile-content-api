@@ -33,7 +33,7 @@ resource 'Pages' do
       do_request data: { type: :page, attributes: attrs }
 
       expect(status).to eq(201)
-      expect(response_body['data']).not_to be_nil
+      expect(JSON.parse(response_body)['data']).not_to be_nil
     end
 
     it 'sets location header', document: false do
@@ -59,7 +59,7 @@ resource 'Pages' do
       do_request data: { type: :page, attributes: attrs }
 
       expect(status).to eq(200)
-      expect(response_body['data']).not_to be_nil
+      expect(JSON.parse(response_body)['data']).not_to be_nil
     end
   end
 end

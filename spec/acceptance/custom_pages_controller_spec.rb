@@ -31,7 +31,7 @@ resource 'CustomPages' do
         do_request data: { type: :custom_page, attributes: attrs }
 
         expect(status).to be(201)
-        expect(response_body['data']).not_to be_nil
+        expect(JSON.parse(response_body)['data']).not_to be_nil
       end
 
       it 'creating sets location header', document: false do
@@ -46,7 +46,7 @@ resource 'CustomPages' do
                          attributes: { language_id: 2, page_id: 1, structure: structure } }
 
       expect(status).to be(200)
-      expect(response_body['data']).not_to be_nil
+      expect(JSON.parse(response_body)['data']).not_to be_nil
     end
   end
 

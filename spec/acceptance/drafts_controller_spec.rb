@@ -118,7 +118,7 @@ resource 'Drafts' do
       do_request data: { type: :translation, attributes: params }
 
       expect(status).to be(200)
-      expect(response_body['data']).not_to be_nil
+      expect(JSON.parse(response_body)['data']).not_to be_nil
     end
 
     it 'update draft without translating all phrases' do

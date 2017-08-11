@@ -15,6 +15,8 @@ class LanguagesController < ApplicationController
     language = Language.create!(data_attrs.permit(:name, :code))
     response.headers['Location'] = "languages/#{language.id}"
     render json: language, status: :created
+  rescue ActiveRecord::RecordNotUnique
+    raise Error::BadRequestError, "Code #{data_attrs[:code]} already exists."
   end
 
   def destroy
