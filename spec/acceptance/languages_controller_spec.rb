@@ -38,7 +38,7 @@ resource 'Languages' do
       do_request data: { type: :language, attributes: { name: 'Elvish', code: 'ev' } }
 
       expect(status).to be(201)
-      expect(response_body['data']).not_to be_nil
+      expect(JSON.parse(response_body)['data']).not_to be_nil
     end
 
     it 'sets location header', document: false do

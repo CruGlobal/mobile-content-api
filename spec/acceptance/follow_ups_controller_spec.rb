@@ -19,7 +19,7 @@ resource 'Follow Ups' do
       do_request data: data
 
       expect(status).to be(204)
-      expect(response_body['data']).to be_nil
+      expect(response_body).to be_empty
     end
   end
 end
