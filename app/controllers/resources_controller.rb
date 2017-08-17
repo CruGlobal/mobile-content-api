@@ -3,7 +3,7 @@
 require 'page_client'
 
 class ResourcesController < ApplicationController
-  before_action :authorize!, only: [:update, :push_to_onesky]
+  before_action :authorize!, only: [:create, :update, :push_to_onesky]
 
   def index
     render json: all_resources, include: params[:include], status: :ok
@@ -11,6 +11,11 @@ class ResourcesController < ApplicationController
 
   def show
     render json: load_resource, include: params[:include], status: :ok
+  end
+
+  def create
+    r = Resource.create!(data_attrs.permit(permitted_params))
+    render json: r, status: :created
   end
 
   def update
@@ -39,6 +44,6 @@ class ResourcesController < ApplicationController
   end
 
   def permitted_params
-    [:name, :abbreviation, :manifest, :onesky_project_id, :system_id, :description]
+    [:name, :abbreviation, :manifest, :onesky_project_id, :system_id, :description, :resource_type_id]
   end
 end
