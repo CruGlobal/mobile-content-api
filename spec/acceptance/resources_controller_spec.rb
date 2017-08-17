@@ -77,6 +77,20 @@ resource 'Resources' do
     end
   end
 
+  post 'resources' do
+    requires_authorization
+
+    it 'create a resource' do
+      header 'Authorization', :authorization
+
+      do_request data: { type: :resource,
+                         attributes: { name: 'new resource', abbreviation: 'r', system_id: 1, resource_type_id: 1 } }
+
+      expect(status).to be(201)
+      expect(response_body).not_to be_nil
+    end
+  end
+
   context 'PUT do' do
     let(:id) { 1 }
     let(:manifest) do
