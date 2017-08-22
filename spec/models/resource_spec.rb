@@ -38,6 +38,19 @@ describe Resource do
     end
   end
 
+  context 'returns latest translation (published or not) for each language' do
+    let(:latest_drafts_translations) { resource.latest_drafts_translations }
+
+    it 'resource has 2 translations' do
+      expect(latest_drafts_translations.count).to be(2)
+    end
+
+    it 'returns highest version for each language' do
+      expect(latest_drafts_translations[0][:id]).to eq(6)
+      expect(latest_drafts_translations[1][:id]).to eq(8)
+    end
+  end
+
   it 'validates manifest if present' do
     attributes = { name: 'test', abbreviation: 't', system_id: 1, resource_type_id: 1, manifest: '<xml>bad xml</xml>' }
 
