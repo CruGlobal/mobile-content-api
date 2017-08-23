@@ -56,6 +56,10 @@ class ApplicationController < ActionController::Base
               request.headers['Content-Type'] != 'application/vnd.api+json' ||
               !request.body.respond_to?(:string)
 
+    merge_params
+  end
+
+  def merge_params
     params.merge!(ActiveSupport::JSON.decode(request.body.string))
   end
 
