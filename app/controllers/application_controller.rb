@@ -53,7 +53,9 @@ class ApplicationController < ActionController::Base
 
   def decode_json_api
     return if request.headers['REQUEST_METHOD'] == 'GET' ||
-              request.headers['Content-Type'] != 'application/vnd.api+json'
+              request.headers['Content-Type'] != 'application/vnd.api+json' ||
+              !request.body.respond_to?(:string)
+
     params.merge!(ActiveSupport::JSON.decode(request.body.string))
   end
 
