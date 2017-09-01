@@ -49,6 +49,15 @@ describe Resource do
       expect(latest_drafts_translations[0][:id]).to eq(6)
       expect(latest_drafts_translations[1][:id]).to eq(8)
     end
+
+    it 'is ordered by language' do
+      r = described_class.find(1)
+
+      r.create_new_draft(1)
+
+      expect(r.latest_drafts_translations[0][:id]).to eq(9)
+      expect(r.latest_drafts_translations[1][:id]).to eq(3)
+    end
   end
 
   it 'validates manifest if present' do
