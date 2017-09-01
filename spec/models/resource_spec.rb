@@ -39,24 +39,22 @@ describe Resource do
   end
 
   context 'returns latest translation (published or not) for each language' do
-    let(:latest_drafts_translations) { resource.latest_drafts_translations }
-
     it 'resource has 2 translations' do
-      expect(latest_drafts_translations.count).to be(2)
+      expect(resource.latest_drafts_translations.count).to be(2)
     end
 
     it 'returns highest version for each language' do
-      expect(latest_drafts_translations[0][:id]).to eq(6)
-      expect(latest_drafts_translations[1][:id]).to eq(8)
+      expect(resource.latest_drafts_translations[0][:id]).to eq(6)
+      expect(resource.latest_drafts_translations[1][:id]).to eq(8)
     end
 
     it 'is ordered by language' do
-      r = described_class.find(1)
+      resource_kgp = described_class.find(1)
 
-      r.create_new_draft(1)
+      Translation.create!(resource: resource_kgp, language_id: 1, version: 2)
 
-      expect(r.latest_drafts_translations[0][:id]).to eq(9)
-      expect(r.latest_drafts_translations[1][:id]).to eq(3)
+      expect(resource_kgp.latest_drafts_translations[0][:id]).to eq(13)
+      expect(resource_kgp.latest_drafts_translations[1][:id]).to eq(3)
     end
   end
 
