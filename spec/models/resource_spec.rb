@@ -51,10 +51,7 @@ describe Resource do
     it 'is ordered by language' do
       resource_kgp = described_class.find(1)
 
-      Translation.create!(resource: resource_kgp, language_id: 1, version: 2)
-
-      expect(resource_kgp.latest_drafts_translations[0][:id]).to eq(13)
-      expect(resource_kgp.latest_drafts_translations[1][:id]).to eq(3)
+      expect(resource_kgp.latest_drafts_translations[0].language).to eq(Language.find(4))
     end
   end
 
