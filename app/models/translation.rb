@@ -7,7 +7,7 @@ class Translation < ActiveRecord::Base
   belongs_to :resource
   belongs_to :language
 
-  validates :version, presence: true
+  validates :version, presence: true, uniqueness: { scope: [:resource, :language] }
   validates :resource, presence: true
   validates :language, presence: true
   validates :is_published, inclusion: { in: [true, false] }

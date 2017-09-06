@@ -34,7 +34,7 @@ resource 'Resources' do
       do_request 'filter[system]': 'GodTools', include: :translations
 
       expect(status).to be(200)
-      expect(JSON.parse(response_body)['included'].count).to be(8)
+      expect(JSON.parse(response_body)['included'].count).to be(9)
     end
   end
 
@@ -58,7 +58,7 @@ resource 'Resources' do
       do_request include: :translations
 
       expect(status).to be(200)
-      expect(JSON.parse(response_body)['included'].count).to be(3)
+      expect(JSON.parse(response_body)['included'].count).to be(4)
     end
 
     it 'has custom attributes', document: false do

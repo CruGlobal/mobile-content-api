@@ -18,6 +18,13 @@ describe Translation do
 
   # rubocop:enable LineLength
 
+  it 'cannot duplicate Resource, Translation, and version' do
+    t = described_class.find_or_create_by(resource_id: 1, language_id: 1, version: 1, is_published: false)
+
+    expect(t).not_to be_valid
+    expect(t.errors['version']).to include('has already been taken')
+  end
+
   context 'builds a translated page from base page and OneSky phrases' do
     let(:result) do
       translated_page(1)

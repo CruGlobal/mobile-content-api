@@ -56,6 +56,7 @@ class Resource < ActiveRecord::Base
                        on translations.version = max_table.max_version
                        and translations.language_id = max_table.language_id
                        and translations.resource_id = max_table.resource_id")
+               .includes(:language).order('languages.name ASC')
   end
 
   # returns the highest version for each Language and this Resource
