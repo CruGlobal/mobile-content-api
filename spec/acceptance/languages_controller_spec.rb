@@ -19,7 +19,7 @@ resource 'Languages' do
     it 'sorts by name ascending', document: false do
       do_request
 
-      expect(JSON.parse(response_body)['data'][0]['id']).to eq(4.to_s)
+      expect(JSON.parse(response_body)['data'][0]['id']).to eq('4')
     end
   end
 
