@@ -15,6 +15,12 @@ resource 'Languages' do
 
       expect(status).to be(200)
     end
+
+    it 'sorts by name ascending', document: false do
+      do_request
+
+      expect(JSON.parse(response_body)['data'][0]['id']).to eq('4')
+    end
   end
 
   get 'languages/:id' do
