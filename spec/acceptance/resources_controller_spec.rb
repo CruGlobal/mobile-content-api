@@ -23,6 +23,12 @@ resource 'Resources' do
       expect(JSON.parse(response_body)['included']).to be_nil
     end
 
+    it 'sorts by name ascending', document: false do
+      do_request
+
+      expect(JSON.parse(response_body)['data'][1]['id']).to eq(3.to_s)
+    end
+
     it 'get all resources with system name' do
       do_request 'filter[system]': 'GodTools'
 
