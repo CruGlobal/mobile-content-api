@@ -16,6 +16,7 @@ describe Attachment do
     result = described_class.create(resource_id: 1, file: test_file)
 
     expect(result).not_to be_valid
+    expect(result.errors['resource']).to include('has already been taken')
   end
 
   it 'sha256 is saved on create' do
