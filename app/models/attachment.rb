@@ -6,6 +6,7 @@ class Attachment < ActiveRecord::Base
   validates :file, presence: true
   validates :is_zipped, inclusion: { in: [true, false] }
   validates :resource, presence: true, uniqueness: { scope: :file_file_name }
+  validates_with AttachmentValidator
 
   belongs_to :resource
 
@@ -15,6 +16,10 @@ class Attachment < ActiveRecord::Base
   before_validation :set_defaults
   before_save :save_sha256
 
+  def filename_sha
+    XmlUtil.filename_sha(open(file.queued_for_write[:original].path).read)
+  end
+
   private
 
   def set_defaults
@@ -22,7 +27,6 @@ class Attachment < ActiveRecord::Base
   end
 
   def save_sha256
-    path = file.queued_for_write[:original].path
-    self.sha256 = XmlUtil.filename_sha(open(path).read)
+    self.sha256 = filename_sha
   end
 end
