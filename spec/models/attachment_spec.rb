@@ -32,11 +32,22 @@ describe Attachment do
     expect(attachment.sha256).to eq('398ddaf37848344632c44bd9c057b7e092e19f93c825f6bc4737f885f517a2ce')
   end
 
-  it 'cannot have two attachments with the same sha256 for the same package' do
-    result = described_class.create(resource_id: 1,
-                                    file: Rack::Test::UploadedFile.new('public/wall_2.jpg', 'image/png'))
+  context 'cannot have two attachments with the same sha256 for the same package' do
+    it 'creating' do
+      result = described_class.create(resource_id: 1,
+                                      file: Rack::Test::UploadedFile.new('public/wall_2.jpg', 'image/png'))
 
-    expect(result).not_to be_valid
-    expect(result.errors['file']).to include('This file already exists for this resource')
+      expect(result).not_to be_valid
+      expect(result.errors['file']).to include('This file already exists for this resource')
+    end
+
+    it 'updating' do
+      attachment = described_class.find(2)
+
+      attachment.update(file: Rack::Test::UploadedFile.new('public/wall_2.jpg', 'image/png'))
+
+      expect(attachment).not_to be_valid
+      expect(attachment.errors['file']).to include('This file already exists for this resource')
+    end
   end
 end

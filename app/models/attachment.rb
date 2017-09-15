@@ -17,7 +17,10 @@ class Attachment < ActiveRecord::Base
   before_save :save_sha256
 
   def filename_sha
-    XmlUtil.filename_sha(open(file.queued_for_write[:original].path).read)
+    queued = file.queued_for_write[:original]
+    return unless queued
+
+    XmlUtil.filename_sha(open(queued.path).read)
   end
 
   private
