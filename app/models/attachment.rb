@@ -16,13 +16,6 @@ class Attachment < ActiveRecord::Base
   before_validation :set_defaults
   before_save :save_sha256
 
-  def filename_sha
-    queued = file.queued_for_write[:original]
-    return unless queued
-
-    XmlUtil.filename_sha(open(queued.path).read)
-  end
-
   private
 
   def set_defaults
@@ -30,6 +23,9 @@ class Attachment < ActiveRecord::Base
   end
 
   def save_sha256
-    self.sha256 = filename_sha
+    queued = file.queued_for_write[:original]
+    return unless queued
+
+    self.sha256 = XmlUtil.filename_sha(open(queued.path).read)
   end
 end
