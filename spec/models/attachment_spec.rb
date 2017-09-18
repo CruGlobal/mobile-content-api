@@ -19,6 +19,14 @@ describe Attachment do
     expect(result.errors['resource']).to include('has already been taken')
   end
 
+  it 'does not read sha when not updating file' do
+    attachment = described_class.find(1)
+
+    attachment.update(resource_id: 2)
+
+    expect(attachment).to be_valid
+  end
+
   context 'sha256 is saved on' do
     it 'create' do
       result = described_class.create(resource_id: 2, file: test_file)
