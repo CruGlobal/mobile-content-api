@@ -1,4 +1,4 @@
-# Mobile Content API
+# Mobile Content API [![Build Status](https://travis-ci.org/CruGlobal/mobile-content-api.svg?branch=master)](https://travis-ci.org/CruGlobal/mobile-content-api)
 
 * Ruby version: 2.3.4
 * Bundler version: 1.15.1
