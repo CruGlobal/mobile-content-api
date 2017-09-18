@@ -37,6 +37,7 @@ gem 'syslog-logger'
 gem 'active_model_serializers', '= 0.10.5'
 gem 'aws-sdk'
 gem 'aws-sdk-rails'
+gem 'codecov', require: false
 gem 'ddtrace'
 gem 'nokogiri'
 gem 'oj', '~> 2.12.14'
