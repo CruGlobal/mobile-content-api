@@ -74,6 +74,10 @@ GEM
     climate_control (0.2.0)
     cocaine (0.5.8)
       climate_control (>= 0.0.3, < 1.0)
+    codecov (0.1.10)
+      json
+      simplecov
+      url
     coderay (1.1.1)
     coffee-rails (4.2.2)
       coffee-script (>= 2.2.0)
@@ -297,6 +301,7 @@ GEM
       unf_ext
     unf_ext (0.0.7.4)
     unicode-display_width (1.2.1)
+    url (0.3.2)
     validates_email_format_of (1.6.3)
       i18n
     web-console (3.5.1)
@@ -316,6 +321,7 @@ DEPENDENCIES
   aws-sdk
   aws-sdk-rails
   byebug
+  codecov
   coffee-rails (~> 4.2)
   ddtrace
   dotenv-rails
@@ -353,4 +359,4 @@ DEPENDENCIES
   web-console (>= 3.3.0)
 
 BUNDLED WITH
-   1.15.3
+   1.15.4
