@@ -12,13 +12,6 @@ describe Attachment do
     expect(result.is_zipped).to be_falsey
   end
 
-  it 'cannot duplicate file name and resource' do
-    result = described_class.create(resource_id: 1, file: test_file)
-
-    expect(result).not_to be_valid
-    expect(result.errors['resource']).to include('has already been taken')
-  end
-
   it 'does not read sha when not updating file' do
     attachment = described_class.find(1)
 
