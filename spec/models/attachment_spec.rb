@@ -3,7 +3,7 @@
 require 'rails_helper'
 
 describe Attachment do
-  let(:test_file) { Rack::Test::UploadedFile.new('spec/fixtures/wall.jpg', 'image/png') }
+  let(:test_file) { Rack::Test::UploadedFile.new("#{fixture_path}/wall.jpg", 'image/png') }
 
   it 'is not zipped unless specified' do
     result = described_class.create(resource_id: 2, file: test_file)
@@ -36,7 +36,7 @@ describe Attachment do
 
     it 'update' do
       attachment = described_class.find(1)
-      attachment.update(resource_id: 2, file: Rack::Test::UploadedFile.new('spec/fixtures/beal.jpg', 'image/png'))
+      attachment.update(resource_id: 2, file: Rack::Test::UploadedFile.new("#{fixture_path}/beal.jpg", 'image/png'))
 
       expect(attachment.sha256).to eq('398ddaf37848344632c44bd9c057b7e092e19f93c825f6bc4737f885f517a2ce')
     end
@@ -45,7 +45,7 @@ describe Attachment do
   context 'cannot have two attachments with the same sha256 for the same package' do
     it 'creating' do
       result = described_class.create(resource_id: 1,
-                                      file: Rack::Test::UploadedFile.new('spec/fixtures/wall_2.jpg', 'image/png'))
+                                      file: Rack::Test::UploadedFile.new("#{fixture_path}/wall_2.jpg", 'image/png'))
 
       expect(result).not_to be_valid
       expect(result.errors['file']).to include('This file already exists for this resource')
@@ -54,7 +54,7 @@ describe Attachment do
     it 'updating' do
       attachment = described_class.find(2)
 
-      attachment.update(file: Rack::Test::UploadedFile.new('spec/fixtures/wall_2.jpg', 'image/png'))
+      attachment.update(file: Rack::Test::UploadedFile.new("#{fixture_path}/wall_2.jpg", 'image/png'))
 
       expect(attachment).not_to be_valid
       expect(attachment.errors['file']).to include('This file already exists for this resource')
