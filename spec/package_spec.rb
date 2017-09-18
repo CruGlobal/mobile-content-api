@@ -19,7 +19,7 @@ describe Package do
     mock_s3(instance_double(Aws::S3::Object, upload_file: true), translation)
 
     # rubocop:disable AnyInstance
-    allow_any_instance_of(Paperclip::Attachment).to receive(:url).and_return('public/wall.jpg')
+    allow_any_instance_of(Paperclip::Attachment).to receive(:url).and_return("#{fixture_path}/wall.jpg")
     allow_any_instance_of(Paperclip::Attachment).to receive(:original_filename).and_return('wall.jpg')
   end
 

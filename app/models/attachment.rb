@@ -6,6 +6,7 @@ class Attachment < ActiveRecord::Base
   validates :file, presence: true
   validates :is_zipped, inclusion: { in: [true, false] }
   validates :resource, presence: true, uniqueness: { scope: :file_file_name }
+  validates_with AttachmentValidator, if: :queued
 
   belongs_to :resource
 
@@ -13,7 +14,15 @@ class Attachment < ActiveRecord::Base
   validates_attachment :file, content_type: { content_type: %w(image/jpg image/jpeg image/png image/gif) }
 
   before_validation :set_defaults
-  before_save :save_sha256
+  before_save :save_sha256, if: :queued
+
+  def queued
+    file.queued_for_write[:original]
+  end
+
+  def generate_sha256
+    XmlUtil.filename_sha(open(queued.path).read)
+  end
 
   private
 
@@ -22,7 +31,6 @@ class Attachment < ActiveRecord::Base
   end
 
   def save_sha256
-    path = file.queued_for_write[:original].path
-    self.sha256 = XmlUtil.filename_sha(open(path).read)
+    self.sha256 = generate_sha256
   end
 end
