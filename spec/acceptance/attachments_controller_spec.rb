@@ -3,7 +3,7 @@
 require 'acceptance_helper'
 
 resource 'Attachments' do
-  let(:test_file) { Rack::Test::UploadedFile.new('public/wall.jpg', 'image/png') }
+  let(:test_file) { Rack::Test::UploadedFile.new('spec/fixtures/wall.jpg', 'image/png') }
   let(:authorization) { AuthToken.create!(access_code: AccessCode.find(1)).token }
 
   get 'attachments/:id/download' do
