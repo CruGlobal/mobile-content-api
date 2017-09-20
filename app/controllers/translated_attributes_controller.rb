@@ -35,6 +35,6 @@ class TranslatedAttributesController < SecureController
   end
 
   def permitted_params
-    data_attrs.permit([:value, :attribute_id, :translation_id])
+    permit_params(:value, :attribute_id, :translation_id)
   end
 end

@@ -10,6 +10,6 @@ class FollowUpsController < ApplicationController
   private
 
   def permitted_params
-    data_attrs.permit([:email, :language_id, :destination_id, :name])
+    permit_params(:email, :language_id, :destination_id, :name)
   end
 end

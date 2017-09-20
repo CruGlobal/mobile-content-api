@@ -23,6 +23,6 @@ class TranslatedPagesController < SecureController
   end
 
   def permitted_params
-    data_attrs.permit([:value, :resource_id, :language_id])
+    permit_params(:value, :resource_id, :language_id)
   end
 end

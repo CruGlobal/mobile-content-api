@@ -44,7 +44,6 @@ class ResourcesController < ApplicationController
   end
 
   def permitted_params
-    data_attrs
-      .permit([:name, :abbreviation, :manifest, :onesky_project_id, :system_id, :description, :resource_type_id])
+    permit_params(:name, :abbreviation, :manifest, :onesky_project_id, :system_id, :description, :resource_type_id)
   end
 end
