@@ -11,7 +11,7 @@ class FollowUp < ActiveRecord::Base
   validates :destination, presence: true
 
   def send_to_api
-    validate_fields
+    save!
 
     Rails.logger.info "Sending follow up with id: #{id}."
     code = RestClient.post(destination.url, body, headers).code
@@ -19,10 +19,6 @@ class FollowUp < ActiveRecord::Base
   end
 
   private
-
-  def validate_fields
-    raise Error::BadRequestError, errors.full_messages.join(', ') unless valid?
-  end
 
   def body
     "subscriber[route_id]=#{destination.route_id}&subscriber[language_code]=#{language.code}"\

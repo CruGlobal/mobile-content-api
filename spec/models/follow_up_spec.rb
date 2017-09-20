@@ -29,10 +29,14 @@ describe FollowUp do
       .to raise_error("Received response code: #{code} from destination: #{destination.id}")
   end
 
-  it 'does not send if record is invalid' do
-    follow_up = described_class.create(email: nil, language_id: language.id, destination_id: destination.id, name: full_name)
+  it 'saves record before sending to destination' do
+    mock_rest_client(201)
+    follow_up = described_class.new(email: email, language_id: language.id, destination_id: destination.id, name: full_name)
+    allow(follow_up).to receive(:save!)
 
-    expect { follow_up.send_to_api }.to raise_error("Email can't be blank, Email Invalid email address")
+    follow_up.send_to_api
+
+    expect(follow_up).to have_received(:save!)
   end
 
   context 'sends correct values to api' do
