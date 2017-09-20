@@ -14,7 +14,8 @@ describe FollowUp do
   let(:full_name) { "#{first_name} #{last_name}" }
 
   it 'validates email address' do
-    result = described_class.create(email: 'myemail', language_id: language.id, destination_id: destination.id, name: full_name)
+    result = described_class
+             .create(email: 'myemail', language_id: language.id, destination_id: destination.id, name: full_name)
 
     expect(result).not_to be_valid
     expect(result.errors[:email]).to include('Invalid email address')
@@ -22,7 +23,7 @@ describe FollowUp do
 
   it 'returns remote response code if request failed' do
     code = 404
-    follow_up = described_class.create(email: email, language_id: language.id, destination_id: destination.id, name: full_name)
+    follow_up = described_class.create(valid_attrs)
     mock_rest_client(code)
 
     expect { follow_up.send_to_api }
@@ -31,7 +32,7 @@ describe FollowUp do
 
   it 'saves record before sending to destination' do
     mock_rest_client(201)
-    follow_up = described_class.new(email: email, language_id: language.id, destination_id: destination.id, name: full_name)
+    follow_up = described_class.new(valid_attrs)
     allow(follow_up).to receive(:save!)
 
     follow_up.send_to_api
@@ -40,7 +41,7 @@ describe FollowUp do
   end
 
   context 'sends correct values to api' do
-    let(:follow_up) { described_class.create(email: email, language_id: language.id, destination_id: destination.id, name: full_name) }
+    let(:follow_up) { described_class.create(valid_attrs) }
 
     before do
       mock_rest_client(201)
@@ -79,6 +80,10 @@ describe FollowUp do
   end
 
   private
+
+  def valid_attrs
+    { email: email, language_id: language.id, destination_id: destination.id, name: full_name }
+  end
 
   def mock_rest_client(code)
     allow(RestClient).to(
