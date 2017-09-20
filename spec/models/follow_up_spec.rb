@@ -14,7 +14,7 @@ describe FollowUp do
   let(:full_name) { "#{first_name} #{last_name}" }
 
   it 'validates email address' do
-    result = described_class.new('myemail', language.id, destination.id, full_name)
+    result = described_class.create(email: 'myemail', language_id: language.id, destination_id: destination.id, name: full_name)
 
     expect(result).not_to be_valid
     expect(result.errors[:email]).to include('Invalid email address')
@@ -22,7 +22,7 @@ describe FollowUp do
 
   it 'returns remote response code if request failed' do
     code = 404
-    follow_up = described_class.new(email, language.id, destination.id, full_name)
+    follow_up = described_class.create(email: email, language_id: language.id, destination_id: destination.id, name: full_name)
     mock_rest_client(code)
 
     expect { follow_up.send_to_api }
@@ -30,13 +30,13 @@ describe FollowUp do
   end
 
   it 'does not send if record is invalid' do
-    follow_up = described_class.new(nil, language.id, destination.id, full_name)
+    follow_up = described_class.create(email: nil, language_id: language.id, destination_id: destination.id, name: full_name)
 
     expect { follow_up.send_to_api }.to raise_error("Email can't be blank, Email Invalid email address")
   end
 
   context 'sends correct values to api' do
-    let(:follow_up) { described_class.new(email, language.id, destination.id, full_name) }
+    let(:follow_up) { described_class.create(email: email, language_id: language.id, destination_id: destination.id, name: full_name) }
 
     before do
       mock_rest_client(201)

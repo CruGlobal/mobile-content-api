@@ -3,18 +3,12 @@
 require 'rest-client'
 
 class FollowUp < ActiveRecord::Base
-  attr_accessor :email, :name, :language, :destination
+  belongs_to :language
+  belongs_to :destination
 
   validates :email, presence: true, email_format: { message: 'Invalid email address' }
   validates :language, presence: true
   validates :destination, presence: true
-
-  def initialize(email, language_id, destination_id, name = nil)
-    self.email = email
-    self.language = Language.find(language_id)
-    self.destination = Destination.find(destination_id)
-    self.name = name
-  end
 
   def send_to_api
     validate_fields
