@@ -11,7 +11,7 @@ class FollowUp < ActiveRecord::Base
   validates :destination, presence: true
 
   def send_to_api
-    save!
+    save! if changed?
 
     Rails.logger.info "Sending follow up with id: #{id}."
     code = RestClient.post(destination.url, body, headers).code

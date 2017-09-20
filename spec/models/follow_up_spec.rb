@@ -30,7 +30,7 @@ describe FollowUp do
       .to raise_error("Received response code: #{code} from destination: #{destination.id}")
   end
 
-  it 'saves record before sending to destination' do
+  it 'ensures record is saved before sending to destination' do
     mock_rest_client(201)
     follow_up = described_class.new(valid_attrs)
     allow(follow_up).to receive(:save!)
