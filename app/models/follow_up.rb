@@ -2,9 +2,7 @@
 
 require 'rest-client'
 
-class FollowUp
-  include ActiveModel::Validations
-
+class FollowUp < ActiveRecord::Base
   attr_accessor :email, :name, :language, :destination
 
   validates :email, presence: true, email_format: { message: 'Invalid email address' }

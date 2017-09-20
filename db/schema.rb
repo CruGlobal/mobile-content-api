@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170901192625) do
+ActiveRecord::Schema.define(version: 20170919235321) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -63,6 +63,15 @@ ActiveRecord::Schema.define(version: 20170901192625) do
     t.string "route_id"
     t.string "access_key_id"
     t.string "access_key_secret"
+  end
+
+  create_table "follow_ups", force: :cascade do |t|
+    t.string  "email",          null: false
+    t.string  "name"
+    t.integer "language_id",    null: false
+    t.integer "destination_id", null: false
+    t.index ["destination_id"], name: "index_follow_ups_on_destination_id", using: :btree
+    t.index ["language_id"], name: "index_follow_ups_on_language_id", using: :btree
   end
 
   create_table "languages", force: :cascade do |t|
@@ -145,6 +154,8 @@ ActiveRecord::Schema.define(version: 20170901192625) do
   add_foreign_key "auth_tokens", "access_codes"
   add_foreign_key "custom_pages", "languages"
   add_foreign_key "custom_pages", "pages"
+  add_foreign_key "follow_ups", "destinations"
+  add_foreign_key "follow_ups", "languages"
   add_foreign_key "pages", "resources"
   add_foreign_key "resources", "resource_types"
   add_foreign_key "resources", "systems"
