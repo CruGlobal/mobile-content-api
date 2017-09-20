@@ -12,10 +12,8 @@ class FollowUp < ActiveRecord::Base
 
   def send_to_api
     save! if changed?
-
     Rails.logger.info "Sending follow up with id: #{id}."
-    code = RestClient.post(destination.url, body, headers).code
-    raise Error::BadRequestError, "Received response code: #{code} from destination: #{destination.id}" if code != 201
+    perform_request
   end
 
   private
@@ -36,5 +34,10 @@ class FollowUp < ActiveRecord::Base
     { 'Access-Id': destination.access_key_id,
       'Access-Secret': destination.access_key_secret,
       'Content-Type': 'application/x-www-form-urlencoded' }
+  end
+
+  def perform_request
+    code = RestClient.post(destination.url, body, headers).code
+    raise Error::BadRequestError, "Received response code: #{code} from destination: #{destination.id}" if code != 201
   end
 end
