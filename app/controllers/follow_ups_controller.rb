@@ -2,8 +2,14 @@
 
 class FollowUpsController < ApplicationController
   def create
-    f = FollowUp.new(data_attrs[:email], data_attrs[:language_id], data_attrs[:destination_id], data_attrs[:name])
+    f = FollowUp.create!(permitted_params)
     f.send_to_api
     head :no_content
+  end
+
+  private
+
+  def permitted_params
+    permit_params(:email, :language_id, :destination_id, :name)
   end
 end

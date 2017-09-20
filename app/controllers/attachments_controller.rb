@@ -8,12 +8,12 @@ class AttachmentsController < ApplicationController
   end
 
   def create
-    a = Attachment.create!(params.permit(permitted_params))
+    a = Attachment.create!(permitted_params)
     head :no_content, location: "attachments/#{a.id}"
   end
 
   def update
-    load_attachment.update!(params.permit(permitted_params))
+    load_attachment.update!(permitted_params)
     head :no_content
   end
 
@@ -29,6 +29,6 @@ class AttachmentsController < ApplicationController
   end
 
   def permitted_params
-    [:resource_id, :file, :is_zipped]
+    params.permit([:resource_id, :file, :is_zipped])
   end
 end

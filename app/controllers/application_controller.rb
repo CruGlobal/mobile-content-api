@@ -34,6 +34,10 @@ class ApplicationController < ActionController::Base
     params.require(:data).require(:attributes)
   end
 
+  def permit_params(*params)
+    data_attrs.permit(params)
+  end
+
   def authorize!
     authorization = AuthToken.find_by(token: request.headers['Authorization'])
     return unless authorization.nil? || expired(authorization)

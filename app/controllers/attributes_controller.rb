@@ -35,6 +35,6 @@ class AttributesController < SecureController
   end
 
   def permitted_params
-    data_attrs.permit([:key, :value, :resource_id])
+    permit_params(:key, :value, :resource_id)
   end
 end
