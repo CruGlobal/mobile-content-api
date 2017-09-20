@@ -19,7 +19,7 @@ class FollowUp < ActiveRecord::Base
   def send_to_api
     validate_fields
 
-    Rails.logger.info 'Sending request to destination'
+    Rails.logger.info "Sending follow up with id: #{id}."
     code = RestClient.post(destination.url, body, headers).code
     raise Error::BadRequestError, "Received response code: #{code} from destination: #{destination.id}" if code != 201
   end
