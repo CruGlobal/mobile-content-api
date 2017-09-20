@@ -2,12 +2,12 @@
 
 class TranslatedPagesController < SecureController
   def create
-    t = TranslatedPage.create!(data_attrs.permit(permitted_params))
+    t = TranslatedPage.create!(permitted_params)
     render json: t, location: "translated_pages/#{t.id}", status: :created
   end
 
   def update
-    t = load_translated_page.update!(data_attrs.permit(permitted_params))
+    t = load_translated_page.update!(permitted_params)
     render json: t, status: :created
   end
 
@@ -23,6 +23,6 @@ class TranslatedPagesController < SecureController
   end
 
   def permitted_params
-    [:value, :resource_id, :language_id]
+    data_attrs.permit([:value, :resource_id, :language_id])
   end
 end

@@ -14,12 +14,12 @@ class ResourcesController < ApplicationController
   end
 
   def create
-    r = Resource.create!(data_attrs.permit(permitted_params))
+    r = Resource.create!(permitted_params)
     render json: r, status: :created
   end
 
   def update
-    r = load_resource.update!(data_attrs.permit(permitted_params))
+    r = load_resource.update!(permitted_params)
     render json: r, status: :ok
   end
 
@@ -44,6 +44,7 @@ class ResourcesController < ApplicationController
   end
 
   def permitted_params
-    [:name, :abbreviation, :manifest, :onesky_project_id, :system_id, :description, :resource_type_id]
+    data_attrs
+      .permit([:name, :abbreviation, :manifest, :onesky_project_id, :system_id, :description, :resource_type_id])
   end
 end

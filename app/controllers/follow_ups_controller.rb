@@ -2,7 +2,7 @@
 
 class FollowUpsController < ApplicationController
   def create
-    f = FollowUp.create!(data_attrs.permit(permitted_params))
+    f = FollowUp.create!(permitted_params)
     f.send_to_api
     head :no_content
   end
@@ -10,6 +10,6 @@ class FollowUpsController < ApplicationController
   private
 
   def permitted_params
-    [:email, :language_id, :destination_id, :name]
+    data_attrs.permit([:email, :language_id, :destination_id, :name])
   end
 end
