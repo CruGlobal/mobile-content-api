@@ -10,3 +10,5 @@ before_script:
 script:
   - bundle exec rake spec
   - bundle exec rubocop -R
+  - gem install bundler-audit
+  - bundle audit

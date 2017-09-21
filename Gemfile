@@ -39,7 +39,7 @@ gem 'aws-sdk'
 gem 'aws-sdk-rails'
 gem 'codecov', require: false
 gem 'ddtrace'
-gem 'nokogiri'
+gem 'nokogiri', '>= 1.8.1'
 gem 'oj', '~> 2.12.14'
 gem 'paperclip'
 gem 'pg'
