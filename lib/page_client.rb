@@ -2,6 +2,7 @@
 
 require 'rest-client'
 require 'auth_util'
+require 'hash_util'
 require 'xml_util'
 
 class PageClient
@@ -60,7 +61,7 @@ class PageClient
                     api_key: ENV['ONESKY_API_KEY'],
                     timestamp: AuthUtil.epoch_time_seconds,
                     locale: @language_code,
-                    dev_hash: AuthUtil.dev_hash,
+                    dev_hash: HashUtil.dev_hash,
                     multipart: true,
                     is_keeping_all_strings: keep_existing_phrases
   end

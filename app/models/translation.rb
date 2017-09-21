@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 require 'package'
-require 'xml_util'
 
 class Translation < ActiveRecord::Base
   belongs_to :resource
@@ -126,7 +125,7 @@ class Translation < ActiveRecord::Base
   end
 
   def headers(page_filename)
-    { api_key: ENV['ONESKY_API_KEY'], timestamp: AuthUtil.epoch_time_seconds, dev_hash: AuthUtil.dev_hash,
+    { api_key: ENV['ONESKY_API_KEY'], timestamp: AuthUtil.epoch_time_seconds, dev_hash: HashUtil.dev_hash,
       locale: language.code, source_file_name: page_filename, export_file_name: page_filename }
   end
 
