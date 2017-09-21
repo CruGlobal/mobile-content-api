@@ -35,6 +35,10 @@ class Translation < ActiveRecord::Base
     xml.to_s
   end
 
+  def create_new_version
+    Translation.create!(resource: resource, language: language, version: version + 1)
+  end
+
   def update_draft(params)
     update!(params.permit(:is_published))
   end

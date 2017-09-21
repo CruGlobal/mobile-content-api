@@ -46,59 +46,55 @@ resource 'Drafts' do
   end
 
   post 'drafts' do
-    let(:resource) { double }
     let(:resource_id) { 1 }
+    let(:resource) { instance_double(Resource, id: resource_id) }
 
     before do
       allow(Resource).to receive(:find).with(resource_id).and_return(resource)
-      allow(resource).to receive(:id).and_return(resource_id)
     end
 
     requires_authorization
 
-    context 'new resource/language combination' do
+    context 'one language' do
       let(:id) { 100 }
+      let(:language) { 1 }
 
       before do
-        language_id = 3
-        allow(Translation).to receive(:latest_translation).with(resource_id, language_id).and_return(nil)
-        allow(resource).to receive(:create_new_draft).with(language_id).and_return(Translation.new(id: id))
+        allow(resource).to receive(:create_draft)
 
-        do_request data: { type: :translation, attributes: { resource_id: resource_id, language_id: language_id } }
+        do_request data: {
+          type: :translation, attributes: { resource_id: resource_id, language_id: language }
+        }
       end
 
-      it 'create draft with new resource/language combination' do
+      it 'creates a draft' do
+        expect(resource).to have_received(:create_draft).with(language)
+      end
+
+      it 'returns no content' do
         expect(status).to be(204)
       end
     end
 
-    context 'existing resource/language combination' do
-      before do
-        do_request data: { type: :translation, attributes: { resource_id: resource_id, language_id: 1 } }
-      end
-
-      it 'create draft with existing resource/language combination' do
-        expect(status).to be(204)
-      end
-    end
-
-    context 'multiple languages/resource combination' do
+    context 'multiple languages' do
       let(:id) { 100 }
-      let(:translation) { Translation.find(1) }
+      let(:language_one) { 1 }
+      let(:language_two) { 3 }
 
       before do
-        existing_language_id = 1
-        missing_language_id = 3
+        allow(resource).to receive(:create_draft)
 
-        allow(Translation).to receive(:latest_translation)
-          .with(resource_id, existing_language_id).and_return(translation)
-        allow(Translation).to receive(:latest_translation).with(resource_id, missing_language_id).and_return(nil)
-        allow(resource).to receive(:create_new_draft).with(missing_language_id).and_return(Translation.new(id: id))
-
-        do_request data: { type: :translation, attributes: { resource_id: resource_id, language_ids: [1, 3] } }
+        do_request data: {
+          type: :translation, attributes: { resource_id: resource_id, language_ids: [language_one, language_two] }
+        }
       end
 
-      it 'creates 2 drafts with existing resource/language combinations' do
+      it 'creates 2 drafts' do
+        expect(resource).to have_received(:create_draft).with(language_one)
+        expect(resource).to have_received(:create_draft).with(language_two)
+      end
+
+      it 'returns no content' do
         expect(status).to be(204)
       end
     end

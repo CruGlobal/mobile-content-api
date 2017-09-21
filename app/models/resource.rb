@@ -34,6 +34,11 @@ class Resource < ActiveRecord::Base
     Translation.create!(resource: self, language: language)
   end
 
+  def create_draft(language_id)
+    translation = Translation.latest_translation(id, language_id)
+    translation.nil? ? create_new_draft(language_id) : translation.create_new_version
+  end
+
   def latest_translations
     latest(true)
   end
