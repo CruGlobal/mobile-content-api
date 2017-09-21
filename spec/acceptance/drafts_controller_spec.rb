@@ -102,29 +102,38 @@ resource 'Drafts' do
 
   put 'drafts/:id' do
     let(:id) { '3' }
+    let(:attrs) { { is_published: true } }
 
     requires_authorization
 
-    it 'update draft' do
-      translation = Translation.find(3)
-      allow(Translation).to receive(:find).with(id).and_return(translation)
-      params = { is_published: true }
-      allow(translation).to receive(:update_draft).with(ActionController::Parameters.new(params))
+    context 'all phrases are translated' do
+      before do
+        translation = Translation.find(3)
+        allow(Translation).to receive(:find).with(id).and_return(translation)
+        allow(translation).to receive(:update_draft).with(ActionController::Parameters.new(attrs))
 
-      do_request data: { type: :translation, attributes: params }
+        do_request data: { type: :translation, attributes: attrs }
+      end
 
-      expect(status).to be(200)
-      expect(JSON.parse(response_body)['data']).not_to be_nil
+      it 'update draft' do
+        expect(JSON.parse(response_body)['data']).not_to be_nil
+      end
+
+      it 'returns OK' do
+        expect(status).to be(200)
+      end
     end
 
-    it 'update draft without translating all phrases' do
-      translation = Translation.find(1)
-      allow(translation).to receive(:update_draft).and_raise(Error::TextNotFoundError, 'Translated phrase not found.')
-      allow(Translation).to receive(:find).with(id).and_return(translation)
+    context 'all phrases are not translated' do
+      it 'returns conflict' do
+        translation = Translation.find(1)
+        allow(translation).to receive(:update_draft).and_raise(Error::TextNotFoundError, 'Translated phrase not found.')
+        allow(Translation).to receive(:find).with(id).and_return(translation)
 
-      do_request data: { type: :translation, attributes: { is_published: true } }
+        do_request data: { type: :translation, attributes: attrs }
 
-      expect(status).to be(409)
+        expect(status).to be(409)
+      end
     end
   end
 
