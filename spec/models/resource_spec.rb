@@ -6,22 +6,35 @@ require 'page_client'
 describe Resource do
   let(:resource) { described_class.find(2) }
 
-  context 'creating a new draft' do
+  context 'create draft' do
     let(:language) { Language.find(3) }
 
-    it 'pushes to OneSky' do
-      allow(PageClient).to(receive(:new).with(resource, language.code)
-                           .and_return(instance_double(PageClient, push_new_onesky_translation: :created)))
+    context 'new resource/language combination' do
+      it 'pushes to OneSky' do
+        allow(PageClient).to(receive(:new).with(resource, language.code)
+                                 .and_return(instance_double(PageClient, push_new_onesky_translation: :created)))
 
-      resource.create_new_draft(language.id)
+        resource.create_draft(language.id)
+      end
+
+      it 'adds a new draft' do
+        allow(PageClient).to receive(:new).with(resource, language.code).and_return(double.as_null_object)
+
+        resource.create_draft(language.id)
+
+        expect(Translation).to have_received(:create!)
+      end
     end
 
-    it 'adds a new record to the database' do
-      allow(PageClient).to receive(:new).with(resource, language.code).and_return(double.as_null_object)
+    context 'existing resource/language combination' do
+      it 'adds a new version' do
+        translation = instance_double(Translation, create_new_version: nil)
+        allow(Translation).to receive(:latest_translation).with(resource.id, language.id).and_return(translation)
 
-      result = resource.create_new_draft(language.id)
+        resource.create_draft(language.id)
 
-      expect(result).not_to be_nil
+        expect(translation).to have_received(:create_new_version)
+      end
     end
   end
 

@@ -55,6 +55,14 @@ describe Translation do
     end
   end
 
+  context 'create new version' do
+    it 'increments version by 1' do
+      result = described_class.find(1).create_new_version
+
+      expect(result.version).to be(2)
+    end
+  end
+
   it 'error is raised if there is no phrases returned from OneSky' do
     mock_onesky(page_name, nil, 204)
     translation = described_class.find(2)

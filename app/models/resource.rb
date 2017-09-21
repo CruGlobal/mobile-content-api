@@ -25,18 +25,9 @@ class Resource < ActiveRecord::Base
     onesky_project_id.present?
   end
 
-  def create_new_draft(language_id)
-    language = Language.find(language_id)
-
-    # TODO: disable this to prevent the API from overwriting existing translations within OneSky.
-    # TODO: This will probably need to be revisited -DF
-    # PageClient.new(self, language.code).push_new_onesky_translation
-    Translation.create!(resource: self, language: language)
-  end
-
   def create_draft(language_id)
     translation = Translation.latest_translation(id, language_id)
-    translation.nil? ? create_new_draft(language_id) : translation.create_new_version
+    translation.nil? ? create_first_draft(language_id) : translation.create_new_version
   end
 
   def latest_translations
@@ -54,6 +45,15 @@ class Resource < ActiveRecord::Base
   delegate :name, to: :resource_type, prefix: true
 
   private
+
+  def create_first_draft(language_id)
+    language = Language.find(language_id)
+
+    # TODO: disable this to prevent the API from overwriting existing translations within OneSky.
+    # TODO: This will probably need to be revisited -DF
+    # PageClient.new(self, language.code).push_new_onesky_translation
+    Translation.create!(resource: self, language: language)
+  end
 
   # returns the Translation with the highest version for each Language and this Resource
   def latest(is_published = [true, false])
