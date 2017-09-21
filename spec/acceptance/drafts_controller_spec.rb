@@ -29,19 +29,24 @@ resource 'Drafts' do
   get 'drafts/:id' do
     let(:id) { '3' }
     let(:page_id) { '1' }
+    let(:result) { '{ \"1\": \"phrase\" }' }
 
     requires_authorization
 
-    it 'get translated page' do
-      result = '{ \"1\": \"phrase\" }'
+    before do
       translation = double
       allow(Translation).to receive(:find).with(id).and_return(translation)
       allow(translation).to(receive(:translated_page).with(page_id, false).and_return(result))
 
       do_request page_id: page_id
+    end
 
-      expect(status).to be(200)
+    it 'get translated page' do
       expect(response_body).to eq(result)
+    end
+
+    it 'returns OK', document: false do
+      expect(status).to be(200)
     end
   end
 
@@ -119,13 +124,13 @@ resource 'Drafts' do
         expect(JSON.parse(response_body)['data']).not_to be_nil
       end
 
-      it 'returns OK' do
+      it 'returns OK', document: false do
         expect(status).to be(200)
       end
     end
 
     context 'all phrases are not translated' do
-      it 'returns conflict' do
+      it 'returns conflict', document: false do
         translation = Translation.find(1)
         allow(translation).to receive(:update_draft).and_raise(Error::TextNotFoundError, 'Translated phrase not found.')
         allow(Translation).to receive(:find).with(id).and_return(translation)
