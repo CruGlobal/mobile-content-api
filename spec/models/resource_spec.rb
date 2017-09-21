@@ -18,11 +18,12 @@ describe Resource do
       end
 
       it 'adds a new draft' do
+        allow(Translation).to receive(:create!)
         allow(PageClient).to receive(:new).with(resource, language.code).and_return(double.as_null_object)
 
         resource.create_draft(language.id)
 
-        expect(Translation).to have_received(:create!)
+        expect(Translation).to have_received(:create!).with(resource: resource, language: language)
       end
     end
 
