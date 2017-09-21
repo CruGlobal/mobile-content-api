@@ -60,7 +60,6 @@ describe Resource do
 
     result = described_class.create(attributes)
 
-    expect(result).not_to be_valid
     expect(result.errors['manifest'])
       .to include("1:0: ERROR: Element 'xml': No matching global declaration available for the validation root.")
   end

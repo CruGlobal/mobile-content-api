@@ -8,7 +8,6 @@ describe ResourceType do
 
     result = described_class.create(name: name, dtd_file: 'blah.xsd')
 
-    expect(result).not_to be_valid
     expect(result.errors['dtd-file']).to include('Does not exist.')
   end
 end

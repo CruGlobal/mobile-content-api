@@ -8,7 +8,6 @@ describe TranslatedAttribute do
                                     value: 'default',
                                     translation: Translation.find(1))
 
-    expect(result).not_to be_valid
     expect(result.errors['parent-attribute']).to include('Is not translatable.')
   end
 
@@ -17,7 +16,6 @@ describe TranslatedAttribute do
                                   translation_id: 3,
                                   value: 'foo')
 
-    expect(attr).not_to be_valid
     expect(attr.errors[:translation]).to include('has already been taken')
   end
 end

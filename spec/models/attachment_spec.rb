@@ -15,7 +15,6 @@ describe Attachment do
   it 'cannot duplicate file name and resource' do
     result = described_class.create(resource_id: 1, file: test_file)
 
-    expect(result).not_to be_valid
     expect(result.errors['resource']).to include('has already been taken')
   end
 
@@ -47,7 +46,6 @@ describe Attachment do
       result = described_class.create(resource_id: 1,
                                       file: Rack::Test::UploadedFile.new("#{fixture_path}/wall_2.jpg", 'image/png'))
 
-      expect(result).not_to be_valid
       expect(result.errors['file']).to include('This file already exists for this resource')
     end
 
@@ -56,7 +54,6 @@ describe Attachment do
 
       attachment.update(file: Rack::Test::UploadedFile.new("#{fixture_path}/wall_2.jpg", 'image/png'))
 
-      expect(attachment).not_to be_valid
       expect(attachment.errors['file']).to include('This file already exists for this resource')
     end
   end

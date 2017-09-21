@@ -21,7 +21,6 @@ describe Translation do
   it 'cannot duplicate Resource, Translation, and version' do
     t = described_class.find_or_create_by(resource_id: 1, language_id: 1, version: 1, is_published: false)
 
-    expect(t).not_to be_valid
     expect(t.errors['version']).to include('has already been taken')
   end
 
@@ -84,7 +83,6 @@ describe Translation do
   it 'is invalid if draft exists' do
     t = described_class.create(resource_id: 1, language_id: 2)
 
-    expect(t).not_to be_valid
     expect(t.errors[:id]).to(
       include("Draft already exists for Resource ID: #{t.resource.id} and Language ID: #{t.language.id}")
     )
