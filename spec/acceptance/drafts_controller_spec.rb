@@ -76,7 +76,7 @@ resource 'Drafts' do
         expect(resource).to have_received(:create_draft).with(language)
       end
 
-      it 'returns no content' do
+      it 'returns no content', document: false do
         expect(status).to be(204)
       end
     end
@@ -94,12 +94,12 @@ resource 'Drafts' do
         }
       end
 
-      it 'creates 2 drafts' do
+      it 'create two drafts' do
         expect(resource).to have_received(:create_draft).with(language_one)
         expect(resource).to have_received(:create_draft).with(language_two)
       end
 
-      it 'returns no content' do
+      it 'returns no content', document: false do
         expect(status).to be(204)
       end
     end
