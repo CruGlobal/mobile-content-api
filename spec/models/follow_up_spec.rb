@@ -17,7 +17,6 @@ describe FollowUp do
     result = described_class
              .create(email: 'myemail', language_id: language.id, destination_id: destination.id, name: full_name)
 
-    expect(result).not_to be_valid
     expect(result.errors[:email]).to include('Invalid email address')
   end
 

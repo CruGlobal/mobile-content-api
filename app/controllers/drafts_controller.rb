@@ -12,10 +12,10 @@ class DraftsController < SecureController
   def create
     resource = load_resource
 
-    create_draft(resource, language_id) unless language_id.nil?
+    resource.create_draft(language_id) unless language_id.nil?
 
     data_attrs[:language_ids]&.each do |language_id|
-      create_draft(resource, language_id)
+      resource.create_draft(language_id)
     end
 
     head :no_content
@@ -31,10 +31,6 @@ class DraftsController < SecureController
   end
 
   private
-
-  def create_new_version(t)
-    Translation.create!(resource: t.resource, language: t.language, version: t.version + 1)
-  end
 
   def load_resource
     Resource.find(data_attrs[:resource_id])
@@ -52,10 +48,5 @@ class DraftsController < SecureController
 
   def load_translation
     Translation.find(params[:id])
-  end
-
-  def create_draft(resource, language_id)
-    translation = Translation.latest_translation(resource.id, language_id)
-    translation.nil? ? resource.create_new_draft(language_id) : create_new_version(translation)
   end
 end

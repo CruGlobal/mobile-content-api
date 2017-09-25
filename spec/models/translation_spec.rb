@@ -21,7 +21,6 @@ describe Translation do
   it 'cannot duplicate Resource, Translation, and version' do
     t = described_class.find_or_create_by(resource_id: 1, language_id: 1, version: 1, is_published: false)
 
-    expect(t).not_to be_valid
     expect(t.errors['version']).to include('has already been taken')
   end
 
@@ -56,6 +55,14 @@ describe Translation do
     end
   end
 
+  context 'create new version' do
+    it 'increments version by 1' do
+      result = described_class.find(1).create_new_version
+
+      expect(result.version).to be(2)
+    end
+  end
+
   it 'error is raised if there is no phrases returned from OneSky' do
     mock_onesky(page_name, nil, 204)
     translation = described_class.find(2)
@@ -84,7 +91,6 @@ describe Translation do
   it 'is invalid if draft exists' do
     t = described_class.create(resource_id: 1, language_id: 2)
 
-    expect(t).not_to be_valid
     expect(t.errors[:id]).to(
       include("Draft already exists for Resource ID: #{t.resource.id} and Language ID: #{t.language.id}")
     )

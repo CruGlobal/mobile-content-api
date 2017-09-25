@@ -34,13 +34,12 @@ describe Page do
   it 'cannot duplicate Resource ID and Page position' do
     result = described_class.create(filename: 'blahblah.xml', resource_id: 1, structure: structure, position: 1)
 
-    expect(result).not_to be_valid
+    expect(result.errors['position']).to include('has already been taken')
   end
 
   it 'cannot be created for resource not using OneSky' do
     result = described_class.create(filename: 'blahblah.xml', resource_id: 3, structure: structure, position: 1)
 
-    expect(result).not_to be_valid
     expect(result.errors['resource']).to include('Does not use OneSky.')
   end
 end

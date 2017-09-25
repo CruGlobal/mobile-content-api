@@ -29,76 +29,77 @@ resource 'Drafts' do
   get 'drafts/:id' do
     let(:id) { '3' }
     let(:page_id) { '1' }
+    let(:result) { '{ \"1\": \"phrase\" }' }
 
     requires_authorization
 
-    it 'get translated page' do
-      result = '{ \"1\": \"phrase\" }'
+    before do
       translation = double
       allow(Translation).to receive(:find).with(id).and_return(translation)
       allow(translation).to(receive(:translated_page).with(page_id, false).and_return(result))
 
       do_request page_id: page_id
+    end
 
-      expect(status).to be(200)
+    it 'get translated page' do
       expect(response_body).to eq(result)
+    end
+
+    it 'returns OK', document: false do
+      expect(status).to be(200)
     end
   end
 
   post 'drafts' do
-    let(:resource) { double }
     let(:resource_id) { 1 }
+    let(:resource) { instance_double(Resource, id: resource_id) }
 
     before do
       allow(Resource).to receive(:find).with(resource_id).and_return(resource)
-      allow(resource).to receive(:id).and_return(resource_id)
     end
 
     requires_authorization
 
-    context 'new resource/language combination' do
+    context 'one language' do
       let(:id) { 100 }
+      let(:language) { 1 }
 
       before do
-        language_id = 3
-        allow(Translation).to receive(:latest_translation).with(resource_id, language_id).and_return(nil)
-        allow(resource).to receive(:create_new_draft).with(language_id).and_return(Translation.new(id: id))
+        allow(resource).to receive(:create_draft)
 
-        do_request data: { type: :translation, attributes: { resource_id: resource_id, language_id: language_id } }
+        do_request data: {
+          type: :translation, attributes: { resource_id: resource_id, language_id: language }
+        }
       end
 
-      it 'create draft with new resource/language combination' do
+      it 'creates a draft' do
+        expect(resource).to have_received(:create_draft).with(language)
+      end
+
+      it 'returns no content', document: false do
         expect(status).to be(204)
       end
     end
 
-    context 'existing resource/language combination' do
-      before do
-        do_request data: { type: :translation, attributes: { resource_id: resource_id, language_id: 1 } }
-      end
-
-      it 'create draft with existing resource/language combination' do
-        expect(status).to be(204)
-      end
-    end
-
-    context 'multiple languages/resource combination' do
+    context 'multiple languages' do
       let(:id) { 100 }
-      let(:translation) { Translation.find(1) }
+      let(:language_one) { 1 }
+      let(:language_two) { 3 }
 
       before do
-        existing_language_id = 1
-        missing_language_id = 3
+        allow(resource).to receive(:create_draft)
 
-        allow(Translation).to receive(:latest_translation)
-          .with(resource_id, existing_language_id).and_return(translation)
-        allow(Translation).to receive(:latest_translation).with(resource_id, missing_language_id).and_return(nil)
-        allow(resource).to receive(:create_new_draft).with(missing_language_id).and_return(Translation.new(id: id))
-
-        do_request data: { type: :translation, attributes: { resource_id: resource_id, language_ids: [1, 3] } }
+        do_request data: {
+          type: :translation, attributes: { resource_id: resource_id, language_ids: [language_one, language_two] }
+        }
       end
 
-      it 'creates 2 drafts with existing resource/language combinations' do
+      it 'create two drafts' do
+        expect(resource).to have_received(:create_draft).with(language_one)
+        expect(resource).to have_received(:create_draft).with(language_two)
+      end
+
+      it 'returns no content', document: false do
         expect(status).to be(204)
       end
     end
@@ -106,29 +107,38 @@ resource 'Drafts' do
 
   put 'drafts/:id' do
     let(:id) { '3' }
+    let(:attrs) { { is_published: true } }
 
     requires_authorization
 
-    it 'update draft' do
-      translation = Translation.find(3)
-      allow(Translation).to receive(:find).with(id).and_return(translation)
-      params = { is_published: true }
-      allow(translation).to receive(:update_draft).with(ActionController::Parameters.new(params))
+    context 'all phrases are translated' do
+      before do
+        translation = Translation.find(3)
+        allow(Translation).to receive(:find).with(id).and_return(translation)
+        allow(translation).to receive(:update_draft).with(ActionController::Parameters.new(attrs))
 
-      do_request data: { type: :translation, attributes: params }
+        do_request data: { type: :translation, attributes: attrs }
+      end
 
-      expect(status).to be(200)
-      expect(JSON.parse(response_body)['data']).not_to be_nil
+      it 'update draft' do
+        expect(JSON.parse(response_body)['data']).not_to be_nil
+      end
+
+      it 'returns OK', document: false do
+        expect(status).to be(200)
+      end
     end
 
-    it 'update draft without translating all phrases' do
-      translation = Translation.find(1)
-      allow(translation).to receive(:update_draft).and_raise(Error::TextNotFoundError, 'Translated phrase not found.')
-      allow(Translation).to receive(:find).with(id).and_return(translation)
+    context 'all phrases are not translated' do
+      it 'returns conflict', document: false do
+        translation = Translation.find(1)
+        allow(translation).to receive(:update_draft).and_raise(Error::TextNotFoundError, 'Translated phrase not found.')
+        allow(Translation).to receive(:find).with(id).and_return(translation)
 
-      do_request data: { type: :translation, attributes: { is_published: true } }
+        do_request data: { type: :translation, attributes: attrs }
 
-      expect(status).to be(409)
+        expect(status).to be(409)
+      end
     end
   end
 

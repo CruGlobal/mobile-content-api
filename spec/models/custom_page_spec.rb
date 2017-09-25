@@ -15,7 +15,6 @@ describe CustomPage do
   it 'Language/Page combination cannot be replicated' do
     result = described_class.create(language_id: language_id, page_id: page_id, structure: valid_xml)
 
-    expect(result).not_to be_valid
     expect(result.errors[:language]).to include 'has already been taken'
   end
 end

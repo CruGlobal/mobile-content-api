@@ -34,3 +34,5 @@ Metrics/BlockLength:
 MethodLength:
   Max: 20
 
+RSpec/MultipleExpectations:
+  Max: 2
