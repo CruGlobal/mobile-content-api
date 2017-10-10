@@ -13,8 +13,9 @@ class Package
 
   def initialize(translation)
     @translation = translation
-    @directory = SecureRandom.uuid
-    FileUtils.mkdir_p("pages/#{@directory}") # TODO directory name a method
+
+    @directory = "pages/#{SecureRandom.uuid}"
+    FileUtils.mkdir_p(@directory)
   end
 
   def push_to_s3
@@ -41,12 +42,12 @@ class Package
     manifest_node.add_child(pages_node)
     manifest_node.add_child(resources_node)
 
-    Zip::File.open("pages/#{@directory}/#{@translation.zip_name}", Zip::File::CREATE) do |zip_file|
+    Zip::File.open("#{@directory}/#{@translation.zip_name}", Zip::File::CREATE) do |zip_file|
       add_pages(zip_file, pages_node)
       add_attachments(zip_file, resources_node)
 
       manifest_filename = write_manifest_to_file
-      zip_file.add(manifest_filename, "pages/#{@directory}/#{manifest_filename}")
+      zip_file.add(manifest_filename, "#{@directory}/#{manifest_filename}")
     end
   end
 
@@ -77,7 +78,7 @@ class Package
       Rails.logger.info("Adding page with id: #{page.id} to package for translation with id: #{@translation.id}")
 
       sha_filename = write_page_to_file(page)
-      zip_file.add(sha_filename, "pages/#{@directory}/#{sha_filename}")
+      zip_file.add(sha_filename, "#{@directory}/#{sha_filename}")
 
       add_node('page', pages_node, page.filename, sha_filename)
     end
@@ -87,7 +88,7 @@ class Package
     translated_page = @translation.translated_page(page.id, true)
     sha_filename = XmlUtil.xml_filename_sha(translated_page)
 
-    File.write("pages/#{@directory}/#{sha_filename}", translated_page)
+    File.write("#{@directory}/#{sha_filename}", translated_page)
 
     sha_filename
   end
@@ -97,7 +98,7 @@ class Package
       Rails.logger.info("Adding attachment with id: #{a.id} to package for translation with id: #{@translation.id}")
 
       sha_filename = save_attachment_to_file(a)
-      zip_file.add(sha_filename, "pages/#{@directory}/#{sha_filename}")
+      zip_file.add(sha_filename, "#{@directory}/#{sha_filename}")
       add_node('resource', resources_node, a.file.original_filename, sha_filename)
     end
   end
@@ -106,7 +107,7 @@ class Package
     string_io_bytes = open(attachment.file.url).read
     sha_filename = attachment.sha256
 
-    File.binwrite("pages/#{@directory}/#{sha_filename}", string_io_bytes)
+    File.binwrite("#{@directory}/#{sha_filename}", string_io_bytes)
     sha_filename
   end
 
@@ -114,7 +115,7 @@ class Package
     filename = XmlUtil.xml_filename_sha(@document.to_s)
     @translation.manifest_name = filename
 
-    file = File.open("pages/#{@directory}/#{filename}", 'w')
+    file = File.open("#{@directory}/#{filename}", 'w')
     @document.write_to(file)
     file.close
 
@@ -132,6 +133,6 @@ class Package
     Rails.logger.info("Uploading zip to OneSky for translation with id: #{@translation.id}")
 
     obj = self.class.s3_object(@translation)
-    obj.upload_file("pages/#{@directory}/#{@translation.zip_name}", acl: 'public-read')
+    obj.upload_file("#{@directory}/#{@translation.zip_name}", acl: 'public-read')
   end
 end

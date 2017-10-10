@@ -30,7 +30,7 @@ class PageClient
   end
 
   def self.delete_temp_dir(directory)
-    FileUtils.remove_dir("pages/#{directory}")
+    FileUtils.remove_dir(directory)
   end
 
   private
