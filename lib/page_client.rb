@@ -29,6 +29,10 @@ class PageClient
     temp_dir.each { |file| File.delete(file) }
   end
 
+  def self.delete_temp_dir(directory)
+    FileUtils.remove_dir("pages/#{directory}")
+  end
+
   private
 
   def push_resource_pages(keep_existing_phrases)

@@ -15,7 +15,6 @@ class Package
     @translation = translation
     @directory = SecureRandom.uuid
     FileUtils.mkdir_p("pages/#{@directory}") # TODO directory name a method
-    # TODO delete after
   end
 
   def push_to_s3
@@ -24,9 +23,9 @@ class Package
     build_zip
     upload
 
-    PageClient.delete_temp_pages
+    PageClient.delete_temp_dir(@directory)
   rescue StandardError => e
-    PageClient.delete_temp_pages
+    PageClient.delete_temp_dir(@directory)
     raise e
   end
 
