@@ -9,7 +9,7 @@ docker build \
     --build-arg TEST_DB_PASSWORD=password \
     --build-arg TEST_DB_USER=postgres \
     --build-arg TEST_DB_HOST=$PROJECT_NAME-postgres \
-    -t 056154071827.dkr.ecr.us-east-1.amazonaws.com/$PROJECT_NAME:$GIT_COMMIT-$BUILD_NUMBER .
+    -t 056154071827.dkr.ecr.us-east-1.amazonaws.com/$PROJECT_NAME:$ENVIRONMENT-$BUILD_NUMBER .
 
 docker stop $PROJECT_NAME-postgres
 docker network rm $PROJECT_NAME
