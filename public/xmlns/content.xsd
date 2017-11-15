@@ -93,6 +93,17 @@
         </xs:restriction>
     </xs:simpleType>
 
+    <xs:simpleType name="textStyle">
+        <xs:restriction base="xs:token">
+            <xs:enumeration value="bold" />
+            <xs:enumeration value="italic" />
+            <xs:enumeration value="underline" />
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="textStyles">
+        <xs:list itemType="content:textStyle" />
+    </xs:simpleType>
+
     <xs:simpleType name="uri">
         <xs:restriction base="xs:anyURI">
             <xs:pattern value="https?://.*" />
@@ -158,6 +169,11 @@
                 </xs:attribute>
                 <xs:attribute name="text-color" type="content:colorValue" use="optional" />
                 <xs:attribute name="text-scale" type="xs:float" use="optional" />
+                <xs:attribute name="text-style" type="content:textStyles" default="">
+                    <xs:annotation>
+                        <xs:documentation>Defines any typeface styles to apply to this text content.</xs:documentation>
+                    </xs:annotation>
+                </xs:attribute>
             </xs:extension>
         </xs:simpleContent>
     </xs:complexType>
