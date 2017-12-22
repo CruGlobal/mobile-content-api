@@ -19,12 +19,18 @@
 
   background-image-align: (top|bottom|left|right|center|repeat)
                             DEFAULT( center )
+
+  card-text-color:        Default color used for all text on cards on this page. Necessary b/c often times
+                          the default text color is white, which does not work on cards.
+                          This attribute overrides both page.text-color and manifest.text-color
+                            DEFAULT (text-color set either on page or manifest)
 -->
 <page xmlns="https://mobile-content-api.cru.org/xmlns/tract"
       xmlns:content="https://mobile-content-api.cru.org/xmlns/content"
       background-color="{{rgba}}"
       background-image="{{resource_id}}"
-      background-image-align="center">
+      background-image-align="center"
+      card-text-color="{{rgba}}">
 
   <!--
     HERO - Page content - OPTIONAL
