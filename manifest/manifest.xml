@@ -23,6 +23,10 @@
 
   background-image-align: (top|bottom|left|right|center)
                             DEFAULT( center )
+  navbar-color:           Color used for navigation bar. Defaults to "GodTools Blue"
+                            EXAMPLE( rgba(255, 255, 255, 1) )
+  navbar-control-color:   Color used to tint icons in the navigation bar
+                            DEFAULT( rgba(255, 255, 255, 1) )
 -->
 <manifest xmlns="https://mobile-content-api.cru.org/xmlns/manifest"
           xmlns:content="https://mobile-content-api.cru.org/xmlns/content"
@@ -31,6 +35,8 @@
           background-image-align="repeat"
           primary-color="{{rgba}}"
           primary-text-color="{{rgba}}"
+          navbar-color="{{rgba}}"
+          navbar-control-color="{{rgba}}"
           text-color="{{rgba}}">
   <!--
     Content Title - REQUIRED
