@@ -62,7 +62,7 @@ group :development, :test do
   gem 'guard-rubocop'
   gem 'rspec'
   gem 'rspec-rails', '~> 3.4'
-  gem 'rubocop', '~> 0.47.1', require: false
+  gem 'rubocop', '~> 0.49.0', require: false
   gem 'simplecov', require: false
 end
 
