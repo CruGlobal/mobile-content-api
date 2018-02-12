@@ -219,7 +219,8 @@
                         </xs:documentation>
                     </xs:annotation>
                 </xs:attribute>
-                <!-- control-color: DEFAULT "GodTools blue" rgba(59,164,219,1) . -->
+                <!-- control-color: iOS DEFAULT is "GodTools blue" rgba(59,164,219,1) , Android DEFAULT is the primary-color attribute set at the
+                nearest ancestor either page, or manifest. -->
                 <xs:attribute name="control-color" type="content:colorValue" use="optional">
                     <xs:annotation>
                         <xs:documentation>This attribute defines the rgba color of the call to action control (button).</xs:documentation>
