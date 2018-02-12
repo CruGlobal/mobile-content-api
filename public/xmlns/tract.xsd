@@ -219,9 +219,10 @@
                         </xs:documentation>
                     </xs:annotation>
                 </xs:attribute>
-                <xs:attribute name="button-color" type="content:colorValue" use="optional">
+                <!-- control-color: DEFAULT "GodTools blue" rgba(59,164,219,1) . -->
+                <xs:attribute name="control-color" type="content:colorValue" use="optional">
                     <xs:annotation>
-                        <xs:documentation>This attribute defines the rgba color of the call to action button.</xs:documentation>
+                        <xs:documentation>This attribute defines the rgba color of the call to action control (button).</xs:documentation>
                     </xs:annotation>
                 </xs:attribute>
             </xs:extension>
