@@ -7,4 +7,5 @@ class Language < ActiveRecord::Base
 
   validates :name, presence: true
   validates :code, presence: true
+  validates_with LanguageValidator, on: :create
 end

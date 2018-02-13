@@ -73,6 +73,13 @@ resource 'Languages' do
 
       expect(JSON.parse(response_body)['data']['attributes']['direction']).to eq("rtl")
     end
+
+    it 'fails on invalid direction value', document: false do
+      do_request data: { type: :language, attributes: { name: 'Elvish', code: 'ev', direction: 'bogus' } }
+
+      expect(status).to be(400)
+      expect(JSON.parse(response_body)['errors'][0]['detail']).to eq("Validation failed: Bogus Invalid direction bogus. Valid values for direction are 'ltr' and 'rtl'")
+    end
   end
 
   delete 'languages/:id' do
