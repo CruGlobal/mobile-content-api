@@ -219,6 +219,12 @@
                         </xs:documentation>
                     </xs:annotation>
                 </xs:attribute>
+                <xs:attribute name="control-color" type="content:colorValue" use="optional">
+                    <xs:annotation>
+                        <xs:documentation>This attribute defines the rgba color of the call to action control (button).
+                            DEFAULT is the primary-color attribute set at the nearest ancestor either page, or manifest.</xs:documentation>
+                    </xs:annotation>
+                </xs:attribute>
             </xs:extension>
         </xs:complexContent>
     </xs:complexType>
