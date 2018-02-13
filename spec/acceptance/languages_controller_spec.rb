@@ -65,20 +65,21 @@ resource 'Languages' do
     it 'defaults direction to ltr', document: false do
       do_request data: { type: :language, attributes: { name: 'Elvish', code: 'ev' } }
 
-      expect(JSON.parse(response_body)['data']['attributes']['direction']).to eq("ltr")
+      expect(JSON.parse(response_body)['data']['attributes']['direction']).to eq('ltr')
     end
 
     it 'honors direction when set to rtl', document: false do
       do_request data: { type: :language, attributes: { name: 'Elvish', code: 'ev', direction: 'rtl' } }
 
-      expect(JSON.parse(response_body)['data']['attributes']['direction']).to eq("rtl")
+      expect(JSON.parse(response_body)['data']['attributes']['direction']).to eq('rtl')
     end
 
     it 'fails on invalid direction value', document: false do
       do_request data: { type: :language, attributes: { name: 'Elvish', code: 'ev', direction: 'bogus' } }
 
+      error = "Validation failed: Bogus Invalid direction bogus. Valid values for direction are 'ltr' and 'rtl'"
       expect(status).to be(400)
-      expect(JSON.parse(response_body)['errors'][0]['detail']).to eq("Validation failed: Bogus Invalid direction bogus. Valid values for direction are 'ltr' and 'rtl'")
+      expect(JSON.parse(response_body)['errors'][0]['detail']).to eq(error)
     end
   end
 
