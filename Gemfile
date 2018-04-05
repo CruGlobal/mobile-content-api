@@ -1,11 +1,6 @@
 # frozen_string_literal: true
 source 'https://rubygems.org'
 
-git_source(:github) do |repo_name|
-  repo_name = "#{repo_name}/#{repo_name}" unless repo_name.include?('/')
-  "https://github.com/#{repo_name}.git"
-end
-
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '~> 5.0.2'
 # Use sqlite3 as the database for Active Record
@@ -44,7 +39,7 @@ gem 'nokogiri', '>= 1.8.2'
 gem 'oj', '~> 2.12.14'
 gem 'paperclip'
 gem 'pg'
-gem 'raddocs', git: 'https://github.com/krim/raddocs.git', branch: 'rails_5_support'
+gem 'raddocs'
 gem 'rails-html-sanitizer', '>= 1.0.4'
 gem 'rest-client', '~> 2.0.1'
 gem 'rollbar'
