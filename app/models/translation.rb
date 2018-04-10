@@ -112,6 +112,7 @@ class Translation < ActiveRecord::Base
     p = download_translated_phrases('name_description.xml')
     self.translated_name = p['name']
     self.translated_description = p['description']
+    self.translated_tagline = p['tagline']
   end
 
   def download_translated_phrases(page_filename)
