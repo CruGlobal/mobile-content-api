@@ -27,6 +27,10 @@ Documentation:
 Metrics/LineLength:
   Max: 120
 
+Metrics/ClassLength:
+  Exclude:
+    - app/models/translation.rb
+
 Metrics/BlockLength:
   Exclude:
     - spec/**/*
