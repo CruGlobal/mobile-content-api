@@ -102,8 +102,7 @@ class Translation < ActiveRecord::Base
 
     name_desc_onesky if resource.uses_onesky?
 
-    package = Package.new(self)
-    package.push_to_s3
+    Package.new(self).push_to_s3
   end
 
   def name_desc_onesky
@@ -112,6 +111,7 @@ class Translation < ActiveRecord::Base
     p = download_translated_phrases('name_description.xml')
     self.translated_name = p['name']
     self.translated_description = p['description']
+    self.translated_tagline = p['tagline']
   end
 
   def download_translated_phrases(page_filename)

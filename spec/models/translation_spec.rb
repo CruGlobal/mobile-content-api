@@ -143,7 +143,8 @@ describe Translation do
     let(:translation) { described_class.find(3) }
 
     before do
-      mock_onesky('name_description.xml', '{ "name":"kgp german", "description":"german description" }')
+      mock_onesky('name_description.xml',
+                  '{ "name":"kgp german", "description":"german description", "tagline": "german tagline" }')
     end
 
     it 'uploads the translation to S3' do
@@ -168,6 +169,12 @@ describe Translation do
         expect(translation.translated_description).to eq('german description')
       end
 
+      it 'includes the tagline' do
+        translation.update!(is_published: true)
+
+        expect(translation.translated_tagline).to eq('german tagline')
+      end
+
       it 'translated name is updated prior to building zip' do # Package needs the translated name/description
         allow(translation).to receive(:translated_name=)
 
@@ -183,6 +190,15 @@ describe Translation do
         translation.update!(is_published: true)
 
         expect(translation).to have_received(:translated_description=).ordered
+        expect(package).to have_received(:push_to_s3).ordered
+      end
+
+      it 'translated tagline is updated prior to building zip' do
+        allow(translation).to receive(:translated_tagline=)
+
+        translation.update!(is_published: true)
+
+        expect(translation).to have_received(:translated_tagline=).ordered
         expect(package).to have_received(:push_to_s3).ordered
       end
     end

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180212221933) do
+ActiveRecord::Schema.define(version: 20180410112406) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -139,6 +139,7 @@ ActiveRecord::Schema.define(version: 20180212221933) do
     t.string  "translated_name"
     t.string  "translated_description"
     t.string  "manifest_name"
+    t.string  "translated_tagline",     default: ""
     t.index ["language_id"], name: "index_translations_on_language_id", using: :btree
     t.index ["resource_id", "language_id", "version"], name: "index_translations_on_resource_id_and_language_id_and_version", unique: true, using: :btree
     t.index ["resource_id"], name: "index_translations_on_resource_id", using: :btree
