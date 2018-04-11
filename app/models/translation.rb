@@ -102,8 +102,7 @@ class Translation < ActiveRecord::Base
 
     name_desc_onesky if resource.uses_onesky?
 
-    package = Package.new(self)
-    package.push_to_s3
+    Package.new(self).push_to_s3
   end
 
   def name_desc_onesky
