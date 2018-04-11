@@ -165,9 +165,14 @@ describe Translation do
       it 'updates from OneSky' do
         translation.update!(is_published: true)
 
-        expected_hash = { name: 'kgp german', description: 'german description', tagline: 'german tagline' }
+        expect(translation.translated_name).to eq('kgp german')
+        expect(translation.translated_description).to eq('german description')
+      end
 
-        expect(translation).to include(expected_hash)
+      it 'includes the tagline' do
+        translation.update!(is_published: true)
+
+        expect(translation.translated_tagline).to eq('german tagline')
       end
 
       it 'translated name is updated prior to building zip' do # Package needs the translated name/description
