@@ -192,6 +192,15 @@ describe Translation do
         expect(translation).to have_received(:translated_description=).ordered
         expect(package).to have_received(:push_to_s3).ordered
       end
+
+      it 'translated tagline is updated prior to building zip' do
+        allow(translation).to receive(:translated_tagline=)
+
+        translation.update!(is_published: true)
+
+        expect(translation).to have_received(:translated_tagline=).ordered
+        expect(package).to have_received(:push_to_s3).ordered
+      end
     end
   end
 
