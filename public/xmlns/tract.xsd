@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<xs:schema xmlns:content="https://mobile-content-api.cru.org/xmlns/content"
-    xmlns:tract="https://mobile-content-api.cru.org/xmlns/tract" xmlns:xs="http://www.w3.org/2001/XMLSchema"
-    attributeFormDefault="unqualified" elementFormDefault="qualified"
+<xs:schema xmlns:analytics="https://mobile-content-api.cru.org/xmlns/analytics"
+    xmlns:content="https://mobile-content-api.cru.org/xmlns/content"
+    xmlns:tract="https://mobile-content-api.cru.org/xmlns/tract"
+    xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified"
     targetNamespace="https://mobile-content-api.cru.org/xmlns/tract">
 
+    <xs:import namespace="https://mobile-content-api.cru.org/xmlns/analytics" schemaLocation="analytics.xsd" />
     <xs:import namespace="https://mobile-content-api.cru.org/xmlns/content" schemaLocation="content.xsd" />
 
     <!-- element nodes -->
@@ -156,6 +158,7 @@
                     text-color: DEFAULT( primary-text-color )
             -->
             <xs:element name="label" type="content:textChild" />
+            <xs:element ref="analytics:events" minOccurs="0" />
             <!--
                 Content section - OPTIONAL
                     text-scale: DEFAULT( 1.0 )

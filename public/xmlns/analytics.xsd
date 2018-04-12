@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:analytics="https://mobile-content-api.cru.org/xmlns/analytics"
+    xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified"
+    targetNamespace="https://mobile-content-api.cru.org/xmlns/analytics">
+
+    <xs:simpleType name="systemType">
+        <xs:annotation>
+            <xs:documentation>The analytic systems being targeted by a specific analytics event</xs:documentation>
+        </xs:annotation>
+        <xs:list>
+            <xs:simpleType>
+                <xs:restriction base="xs:token">
+                    <xs:enumeration value="adobe">
+                        <xs:annotation>
+                            <xs:documentation>Adobe Analytics</xs:documentation>
+                        </xs:annotation>
+                    </xs:enumeration>
+                    <xs:enumeration value="google">
+                        <xs:annotation>
+                            <xs:documentation>Google Analytics</xs:documentation>
+                        </xs:annotation>
+                    </xs:enumeration>
+                    <xs:enumeration value="snowplow">
+                        <xs:annotation>
+                            <xs:documentation>Snowplow Analytics</xs:documentation>
+                        </xs:annotation>
+                    </xs:enumeration>
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:list>
+    </xs:simpleType>
+
+    <xs:element name="events">
+        <xs:annotation>
+            <xs:documentation>A group of analytics events</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element maxOccurs="unbounded" minOccurs="0" ref="analytics:event" />
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="event">
+        <xs:complexType>
+            <xs:choice>
+                <xs:element name="attribute" maxOccurs="unbounded" minOccurs="0">
+                    <xs:complexType>
+                        <xs:attribute name="key" use="required" />
+                        <xs:attribute name="value" use="optional" />
+                    </xs:complexType>
+                </xs:element>
+            </xs:choice>
+            <xs:attribute name="system" type="analytics:systemType" />
+            <xs:attribute name="action" type="xs:string" />
+            <xs:attribute name="delay" default="0" type="xs:int" />
+        </xs:complexType>
+    </xs:element>
+</xs:schema>
