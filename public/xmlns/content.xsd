@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<xs:schema xmlns:content="https://mobile-content-api.cru.org/xmlns/content" xmlns:xs="http://www.w3.org/2001/XMLSchema"
-    attributeFormDefault="unqualified" elementFormDefault="qualified"
-    targetNamespace="https://mobile-content-api.cru.org/xmlns/content">
+<xs:schema xmlns:analytics="https://mobile-content-api.cru.org/xmlns/analytics"
+    xmlns:content="https://mobile-content-api.cru.org/xmlns/content" xmlns:xs="http://www.w3.org/2001/XMLSchema"
+    elementFormDefault="qualified" targetNamespace="https://mobile-content-api.cru.org/xmlns/content">
+
+    <xs:import namespace="https://mobile-content-api.cru.org/xmlns/analytics" schemaLocation="analytics.xsd" />
 
     <!-- Value definitions -->
     <xs:simpleType name="colorValue">
@@ -143,6 +145,14 @@
                 <xs:complexType>
                     <xs:sequence>
                         <xs:element name="label" type="content:textChild" />
+                        <xs:element ref="analytics:events" minOccurs="0">
+                            <xs:annotation>
+                                <xs:documentation>
+                                    Analytics Events to trigger for a tab. The default trigger mode for tab analytics
+                                    events is "selected".
+                                </xs:documentation>
+                            </xs:annotation>
+                        </xs:element>
                         <xs:choice minOccurs="0" maxOccurs="unbounded">
                             <xs:group ref="content:elements" />
                         </xs:choice>
