@@ -47,13 +47,50 @@
                 <xs:element name="attribute" maxOccurs="unbounded" minOccurs="0">
                     <xs:complexType>
                         <xs:attribute name="key" use="required" />
-                        <xs:attribute name="value" use="optional" />
+                        <xs:attribute name="value" use="optional" default="" />
                     </xs:complexType>
                 </xs:element>
             </xs:choice>
             <xs:attribute name="system" type="analytics:systemType" />
             <xs:attribute name="action" type="xs:string" />
             <xs:attribute name="delay" default="0" type="xs:int" />
+            <xs:attribute name="trigger" use="optional">
+                <xs:annotation>
+                    <xs:documentation>
+                        This attribute defines the mechanism that triggers this analytics event. Elements may only
+                        support specific trigger modes and the default value is dependent on the element the event is
+                        in.
+                    </xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:token">
+                        <xs:enumeration value="selected">
+                            <xs:annotation>
+                                <xs:documentation>
+                                    This event is triggered when the element containing it is triggered. For example,
+                                    a user selects a tab in the content:tabs element.
+                                </xs:documentation>
+                            </xs:annotation>
+                        </xs:enumeration>
+                        <xs:enumeration value="visible">
+                            <xs:annotation>
+                                <xs:documentation>
+                                    This event is triggered when the element containing the event becomes visible. For
+                                    example, a card within a tract becomes active and is visible to the user.
+                                </xs:documentation>
+                            </xs:annotation>
+                        </xs:enumeration>
+                        <xs:enumeration value="hidden">
+                            <xs:annotation>
+                                <xs:documentation>
+                                    This event is triggered when the element containing it is no longer visible. For
+                                    example, a user navigates away from an active card.
+                                </xs:documentation>
+                            </xs:annotation>
+                        </xs:enumeration>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:attribute>
         </xs:complexType>
     </xs:element>
 </xs:schema>
