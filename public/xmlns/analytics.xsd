@@ -65,7 +65,7 @@
                 <xs:annotation>
                     <xs:documentation>
                         Defines the number of seconds to wait before triggering this analytics event. This event can be
-                        canceled if the trigger mode is no longer applicable (e.g. trigger=visible & element is no
+                        canceled if the trigger mode is no longer applicable (e.g. trigger=visible and element is no
                         longer visible).
                     </xs:documentation>
                 </xs:annotation>
