@@ -47,13 +47,29 @@
                 <xs:element name="attribute" maxOccurs="unbounded" minOccurs="0">
                     <xs:complexType>
                         <xs:attribute name="key" use="required" />
-                        <xs:attribute name="value" use="optional" default="" />
+                        <xs:attribute name="value" default="" />
                     </xs:complexType>
                 </xs:element>
             </xs:choice>
-            <xs:attribute name="system" type="analytics:systemType" />
-            <xs:attribute name="action" type="xs:string" />
-            <xs:attribute name="delay" default="0" type="xs:int" />
+            <xs:attribute name="system" type="analytics:systemType">
+                <xs:annotation>
+                    <xs:documentation>Space separated list of analytics systems this event is for.</xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
+            <xs:attribute name="action" type="xs:string">
+                <xs:annotation>
+                    <xs:documentation>Analytics action being triggered.</xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
+            <xs:attribute name="delay" default="0" type="xs:int">
+                <xs:annotation>
+                    <xs:documentation>
+                        Defines the number of seconds to wait before triggering this analytics event. This event can be
+                        canceled if the trigger mode is no longer applicable (e.g. trigger=visible & element is no
+                        longer visible).
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
             <xs:attribute name="trigger" use="optional">
                 <xs:annotation>
                     <xs:documentation>
