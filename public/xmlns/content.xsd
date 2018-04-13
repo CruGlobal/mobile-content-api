@@ -232,6 +232,14 @@
                     </xs:documentation>
                 </xs:annotation>
             </xs:element>
+            <xs:element ref="analytics:events">
+                <xs:annotation>
+                    <xs:documentation>
+                        Define any analytics events that are triggered by this button. The default trigger mode for
+                        analytics events on buttons is "selected".
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
         </xs:all>
         <xs:attribute name="type" use="required">
             <xs:annotation>
