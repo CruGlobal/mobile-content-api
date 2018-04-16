@@ -223,7 +223,7 @@
         </content:button>
     -->
     <xs:complexType name="button">
-        <xs:all>
+        <xs:sequence>
             <xs:element ref="content:text">
                 <xs:annotation>
                     <xs:documentation>This element is the text content of this button. The text-color attribute defaults
@@ -240,7 +240,7 @@
                     </xs:documentation>
                 </xs:annotation>
             </xs:element>
-        </xs:all>
+        </xs:sequence>
         <xs:attribute name="type" use="required">
             <xs:annotation>
                 <xs:documentation>This attribute determines what type of button this is.</xs:documentation>
