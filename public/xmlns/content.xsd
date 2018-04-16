@@ -284,17 +284,27 @@
         </xs:attribute>
     </xs:complexType>
 
-    <!--
-        Link
-            text-color: DEFAULT( inherit primary-color )
-    -->
+    <!-- Link -->
     <xs:complexType name="link">
-        <xs:complexContent>
-            <xs:extension base="content:textChild">
-                <!-- events: events to fire when link is pressed. -->
-                <xs:attribute name="events" type="content:eventIdsType" use="required" />
-            </xs:extension>
-        </xs:complexContent>
+        <xs:sequence>
+            <xs:element ref="content:text">
+                <xs:annotation>
+                    <xs:documentation>This element is the text content of this link. The text-color attribute defaults
+                        to the primary-color of the closest ancestor container.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element ref="analytics:events" minOccurs="0" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation>
+                        Define any analytics events that are triggered by this link. The default trigger mode
+                        for analytics events on links is "selected".
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+        </xs:sequence>
+        <!-- events: events to fire when link is pressed. -->
+        <xs:attribute name="events" type="content:eventIdsType" use="required" />
     </xs:complexType>
 
     <!--
