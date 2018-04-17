@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:analytics="https://mobile-content-api.cru.org/xmlns/analytics"
+    xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified"
+    targetNamespace="https://mobile-content-api.cru.org/xmlns/analytics">
+
+    <xs:simpleType name="systemType">
+        <xs:annotation>
+            <xs:documentation>The analytic systems being targeted by a specific analytics event</xs:documentation>
+        </xs:annotation>
+        <xs:list>
+            <xs:simpleType>
+                <xs:restriction base="xs:token">
+                    <xs:enumeration value="adobe">
+                        <xs:annotation>
+                            <xs:documentation>Adobe Analytics</xs:documentation>
+                        </xs:annotation>
+                    </xs:enumeration>
+                    <xs:enumeration value="google">
+                        <xs:annotation>
+                            <xs:documentation>Google Analytics</xs:documentation>
+                        </xs:annotation>
+                    </xs:enumeration>
+                    <xs:enumeration value="snowplow">
+                        <xs:annotation>
+                            <xs:documentation>Snowplow Analytics</xs:documentation>
+                        </xs:annotation>
+                    </xs:enumeration>
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:list>
+    </xs:simpleType>
+
+    <xs:element name="events">
+        <xs:annotation>
+            <xs:documentation>A group of analytics events</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element maxOccurs="unbounded" minOccurs="0" ref="analytics:event" />
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="event">
+        <xs:complexType>
+            <xs:choice>
+                <xs:element name="attribute" maxOccurs="unbounded" minOccurs="0">
+                    <xs:complexType>
+                        <xs:attribute name="key" use="required" />
+                        <xs:attribute name="value" default="" />
+                    </xs:complexType>
+                </xs:element>
+            </xs:choice>
+            <xs:attribute name="system" type="analytics:systemType">
+                <xs:annotation>
+                    <xs:documentation>Space separated list of analytics systems this event is for.</xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
+            <xs:attribute name="action" type="xs:string">
+                <xs:annotation>
+                    <xs:documentation>Analytics action being triggered.</xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
+            <xs:attribute name="delay" default="0" type="xs:int">
+                <xs:annotation>
+                    <xs:documentation>
+                        Defines the number of seconds to wait before triggering this analytics event. This event can be
+                        canceled if the trigger mode is no longer applicable (e.g. trigger=visible and element is no
+                        longer visible).
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
+            <xs:attribute name="trigger" use="optional">
+                <xs:annotation>
+                    <xs:documentation>
+                        This attribute defines the mechanism that triggers this analytics event. Elements may only
+                        support specific trigger modes and the default value is dependent on the element the event is
+                        in.
+                    </xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:token">
+                        <xs:enumeration value="selected">
+                            <xs:annotation>
+                                <xs:documentation>
+                                    This event is triggered when the element containing it is triggered. For example,
+                                    a user selects a tab in the content:tabs element.
+                                </xs:documentation>
+                            </xs:annotation>
+                        </xs:enumeration>
+                        <xs:enumeration value="visible">
+                            <xs:annotation>
+                                <xs:documentation>
+                                    This event is triggered when the element containing the event becomes visible. For
+                                    example, a card within a tract becomes active and is visible to the user.
+                                </xs:documentation>
+                            </xs:annotation>
+                        </xs:enumeration>
+                        <xs:enumeration value="hidden">
+                            <xs:annotation>
+                                <xs:documentation>
+                                    This event is triggered when the element containing it is no longer visible. For
+                                    example, a user navigates away from an active card.
+                                </xs:documentation>
+                            </xs:annotation>
+                        </xs:enumeration>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:attribute>
+        </xs:complexType>
+    </xs:element>
+</xs:schema>
