@@ -51,10 +51,17 @@
                     </xs:complexType>
                 </xs:element>
             </xs:choice>
-            <xs:attribute name="system" type="analytics:systemType">
+            <xs:attribute name="system" use="required">
                 <xs:annotation>
-                    <xs:documentation>Space separated list of analytics systems this event is for.</xs:documentation>
+                    <xs:documentation>
+                        Space separated list of analytics systems this event is for. At least 1 system is required.
+                    </xs:documentation>
                 </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="analytics:systemType">
+                        <xs:minLength value="1" />
+                    </xs:restriction>
+                </xs:simpleType>
             </xs:attribute>
             <xs:attribute name="action" type="xs:string">
                 <xs:annotation>
