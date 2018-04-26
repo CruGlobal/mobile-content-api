@@ -109,6 +109,9 @@
             </xs:attribute>
         </xs:complexType>
         <xs:unique name="uniqueAttributeKey">
+            <xs:annotation>
+                <xs:documentation>Attribute keys are unique within the context of a single event</xs:documentation>
+            </xs:annotation>
             <xs:selector xpath="analytics:attribute" />
             <xs:field xpath="@key" />
         </xs:unique>
