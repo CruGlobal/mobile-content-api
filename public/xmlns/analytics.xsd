@@ -108,5 +108,9 @@
                 </xs:simpleType>
             </xs:attribute>
         </xs:complexType>
+        <xs:unique name="uniqueAttributeKey">
+            <xs:selector xpath="analytics:attribute" />
+            <xs:field xpath="@key" />
+        </xs:unique>
     </xs:element>
 </xs:schema>
