@@ -38,6 +38,7 @@ class FollowUp < ActiveRecord::Base
 
   def perform_request
     code = RestClient.post(destination.url, body, headers).code
+    Rails.logger.info "Received response code: #{code} from destination: #{destination.id}"
     raise Error::BadRequestError, "Received response code: #{code} from destination: #{destination.id}" if code != 201
   end
 end
