@@ -19,8 +19,12 @@ class FollowUp < ActiveRecord::Base
   private
 
   def body
-    "subscriber[route_id]=#{destination.route_id}&subscriber[language_code]=#{language.code}"\
-    "&subscriber[email]=#{email}#{names}#{auth_params}"
+    params = "subscriber[route_id]=#{destination.route_id}&subscriber[language_code]=#{language.code}"\
+    "&subscriber[email]=#{email}#{names}"
+
+    Rails.logger.info "Request body: #{params}"
+
+    "#{params}#{auth_params}"
   end
 
   def names
@@ -39,8 +43,12 @@ class FollowUp < ActiveRecord::Base
   end
 
   def perform_request
-    code = RestClient.post(destination.url, body, headers).code
+    response = RestClient.post(destination.url, body, headers)
+    code = response.code
+
     Rails.logger.info "Received response code: #{code} from destination: #{destination.id}"
+    Rails.logger.info response
+    
     raise Error::BadRequestError, "Received response code: #{code} from destination: #{destination.id}" if code != 201
   end
 end
