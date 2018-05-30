@@ -20,7 +20,7 @@ class FollowUp < ActiveRecord::Base
 
   def body
     "subscriber[route_id]=#{destination.route_id}&subscriber[language_code]=#{language.code}"\
-    "&subscriber[email]=#{email}#{names}"
+    "&subscriber[email]=#{email}#{names}#{auth_params}"
   end
 
   def names
@@ -30,10 +30,12 @@ class FollowUp < ActiveRecord::Base
     "&subscriber[first_name]=#{names[0]}&subscriber[last_name]=#{names[1]}"
   end
 
+  def auth_params
+    "&access_id=#{destination.access_key_id}&access_secret=#{destination.access_key_secret}"
+  end
+
   def headers
-    { 'Access-Id': destination.access_key_id,
-      'Access-Secret': destination.access_key_secret,
-      'Content-Type': 'application/x-www-form-urlencoded' }
+    { 'Content-Type': 'application/x-www-form-urlencoded' }
   end
 
   def perform_request
