@@ -42,13 +42,14 @@ class FollowUp < ActiveRecord::Base
     { 'Content-Type': 'application/x-www-form-urlencoded' }
   end
 
+  # rubocop:disable Metrics/AbcSize
   def perform_request
     response = RestClient.post(destination.url, body, headers)
     code = response.code
 
     Rails.logger.info "Received response code: #{code} from destination: #{destination.id}"
     Rails.logger.info response
-    
+
     raise Error::BadRequestError, "Received response code: #{code} from destination: #{destination.id}" if code != 201
   end
 end
