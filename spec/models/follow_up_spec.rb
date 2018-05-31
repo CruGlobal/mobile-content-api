@@ -54,27 +54,12 @@ describe FollowUp do
 
     it 'body' do
       expected = "subscriber[route_id]=#{destination.route_id}&subscriber[language_code]=#{language.code}"\
-                 "&subscriber[email]=#{email}&subscriber[first_name]=#{first_name}&subscriber[last_name]=#{last_name}"
+                 "&subscriber[email]=#{email}&subscriber[first_name]=#{first_name}&subscriber[last_name]=#{last_name}"\
+                 "&access_id=#{destination.access_key_id}&access_secret=#{destination.access_key_secret}"
 
       follow_up.send_to_api
 
       expect(RestClient).to have_received(:post).with(any_string, expected, anything)
-    end
-
-    it 'access key id' do
-      follow_up.send_to_api
-
-      expect(RestClient).to have_received(:post).with(any_string,
-                                                      anything,
-                                                      hash_including('Access-Id': destination.access_key_id))
-    end
-
-    it 'access key secret' do
-      follow_up.send_to_api
-
-      expect(RestClient).to have_received(:post).with(any_string,
-                                                      anything,
-                                                      hash_including('Access-Secret': destination.access_key_secret))
     end
   end
 
