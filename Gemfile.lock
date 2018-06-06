@@ -173,9 +173,9 @@ GEM
       method_source (~> 0.8.1)
       slop (~> 3.4)
     puma (3.9.1)
-    rack (2.0.4)
+    rack (2.0.5)
     rack-cors (0.4.1)
-    rack-protection (2.0.1)
+    rack-protection (2.0.2)
       rack
     rack-test (0.6.3)
       rack (>= 1.0)
@@ -267,10 +267,10 @@ GEM
       json (>= 1.8, < 3)
       simplecov-html (~> 0.10.0)
     simplecov-html (0.10.1)
-    sinatra (2.0.1)
+    sinatra (2.0.2)
       mustermann (~> 1.0)
       rack (~> 2.0)
-      rack-protection (= 2.0.1)
+      rack-protection (= 2.0.2)
       tilt (~> 2.0)
     slop (3.6.0)
     spring (2.0.2)
@@ -351,7 +351,7 @@ DEPENDENCIES
   rubyzip (>= 1.0.0)
   sass-rails (~> 5.0)
   simplecov
-  sinatra (~> 2.0.1)
+  sinatra (~> 2.0.2)
   spring
   spring-watcher-listen (~> 2.0.0)
   sqlite3
