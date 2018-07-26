@@ -19,19 +19,22 @@ class FollowUp < ActiveRecord::Base
   private
 
   def body
-    "subscriber[route_id]=#{destination.route_id}&subscriber[language_code]=#{language.code}"\
-    "&subscriber[email]=#{email}#{names}#{auth_params}"
-  end
-
-  def names
-    return nil if name.nil?
-
-    names = name.split(' ')
-    "&subscriber[first_name]=#{names[0]}&subscriber[last_name]=#{names[1]}"
+    auth_params.merge(subscriber: subscriber_params).to_query
   end
 
   def auth_params
-    "&access_id=#{destination.access_key_id}&access_secret=#{destination.access_key_secret}"
+    { access_id: destination.access_key_id, access_secret: destination.access_key_secret }
+  end
+
+  def subscriber_params
+    { route_id: destination.route_id, language_code: language.code, email: email }.merge(name_params)
+  end
+
+  def name_params
+    return nil if name.nil?
+
+    names = name.split(' ')
+    { first_name: names[0], last_name: names[1] }
   end
 
   def headers

@@ -53,9 +53,9 @@ describe FollowUp do
     end
 
     it 'body' do
-      expected = "subscriber[route_id]=#{destination.route_id}&subscriber[language_code]=#{language.code}"\
-                 "&subscriber[email]=#{email}&subscriber[first_name]=#{first_name}&subscriber[last_name]=#{last_name}"\
-                 "&access_id=#{destination.access_key_id}&access_secret=#{destination.access_key_secret}"
+      expected = { access_id: destination.access_key_id, access_secret: destination.access_key_secret,
+                   subscriber: { route_id: destination.route_id, language_code: language.code, email: email,
+                                 first_name: first_name, last_name: last_name } }.to_query
 
       follow_up.send_to_api
 
