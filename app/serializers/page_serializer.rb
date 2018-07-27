@@ -2,7 +2,7 @@
 
 class PageSerializer < ActiveModel::Serializer
   type 'page'
-  attributes :id, :filename, :structure, :position
+  attributes :id, :filename, :structure
 
   belongs_to :resource
 

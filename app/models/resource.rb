@@ -4,7 +4,7 @@ class Resource < ActiveRecord::Base
   belongs_to :system
   belongs_to :resource_type
   has_many :translations
-  has_many :pages
+  has_many :pages, -> { order(:position) }
   has_many :resource_attributes, class_name: 'Attribute'
   has_many :views
   has_many :attachments
