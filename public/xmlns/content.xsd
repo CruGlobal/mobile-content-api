@@ -130,6 +130,38 @@
         <xs:list itemType="content:listener" />
     </xs:simpleType>
 
+    <xs:simpleType name="deviceType">
+        <xs:restriction base="xs:token">
+            <xs:enumeration value="mobile">
+                <xs:annotation>
+                    <xs:documentation>This device type represents a native app on Android or iOS</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="web">
+                <xs:annotation>
+                    <xs:documentation>This device type represents a web browser</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="deviceTypes">
+        <xs:annotation>
+            <xs:documentation>A space separated list of device types</xs:documentation>
+        </xs:annotation>
+        <xs:list itemType="content:deviceType" />
+    </xs:simpleType>
+
+    <!-- common attributes -->
+    <xs:attributeGroup name="deviceRestrictions">
+        <xs:attribute name="restrictTo" type="content:deviceTypes">
+            <xs:annotation>
+                <xs:documentation>This attribute specifies that the element it is on is only rendered on the specified
+                    device types. By default elements are rendered on all devices.
+                </xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+    </xs:attributeGroup>
+
     <!-- element nodes -->
     <!-- Paragraph - Vertical stack of content with margin/padding on the top and bottom -->
     <xs:complexType name="paragraph">
@@ -200,6 +232,7 @@
             </xs:documentation>
         </xs:annotation>
         <xs:attribute name="resource" type="xs:string" use="required" />
+        <xs:attributeGroup ref="content:deviceRestrictions" />
     </xs:complexType>
 
     <!-- Button -->
