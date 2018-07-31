@@ -54,9 +54,7 @@ class Package
   def load_or_create_manifest_node
     return load_manifest if @translation.resource.manifest.present?
 
-    manifest = Nokogiri::XML::Node.new('manifest', @document)
-    @document.root = manifest
-    manifest
+    @document.root = @document.create_element('manifest', 'xmlns' => XmlUtil::XMLNS_MANIFEST)
   end
 
   def load_manifest
