@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 module XmlUtil
+  XMLNS_MANIFEST = 'https://mobile-content-api.cru.org/xmlns/manifest'
+
   def self.translatable_nodes(xml)
     xml.xpath('//content:text[@i18n-id]')
   end
@@ -18,6 +20,6 @@ module XmlUtil
   end
 
   def self.xpath_namespace(xml, string)
-    xml.xpath("//m:#{string}", 'm' => 'https://mobile-content-api.cru.org/xmlns/manifest')
+    xml.xpath("//m:#{string}", 'm' => XMLNS_MANIFEST)
   end
 end

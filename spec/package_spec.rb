@@ -129,7 +129,7 @@ describe Package do
         push
 
         manifest = load_xml(translation.manifest_name)
-        expect(manifest.xpath('/m:manifest', 'm' => 'https://mobile-content-api.cru.org/xmlns/manifest').size).to be(1)
+        expect(manifest.xpath('/m:manifest', 'm' => XmlUtil::XMLNS_MANIFEST).size).to be(1)
       end
     end
   end

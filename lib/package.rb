@@ -54,7 +54,7 @@ class Package
   def load_or_create_manifest_node
     return load_manifest if @translation.resource.manifest.present?
 
-    @document.root = @document.create_element('manifest', 'xmlns' => 'https://mobile-content-api.cru.org/xmlns/manifest')
+    @document.root = @document.create_element('manifest', 'xmlns' => XmlUtil::XMLNS_MANIFEST)
   end
 
   def load_manifest
