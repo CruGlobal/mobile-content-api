@@ -97,14 +97,14 @@ describe Package do
     it 'contains all pages in order' do
       push
 
-      result = XmlUtil.xpath_namespace(load_xml(translation.manifest_name), 'pages').first
+      result = XmlUtil.xpath_namespace(load_xml(translation.manifest_name), '//manifest:pages').first
       expect(result.to_s).to eq(pages)
     end
 
     it 'contains all resources' do
       push
 
-      result = XmlUtil.xpath_namespace(load_xml(translation.manifest_name), 'resources').first
+      result = XmlUtil.xpath_namespace(load_xml(translation.manifest_name), '//manifest:resources').first
       expect(result.to_s).to eq(resources)
     end
 

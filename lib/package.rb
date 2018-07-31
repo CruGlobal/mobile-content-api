@@ -33,14 +33,11 @@ class Package
   private
 
   def build_zip
-    @document = Nokogiri::XML(@translation.resource.manifest)
-    manifest_node = load_or_create_manifest_node
+    manifest = XML::Manifest.new(@translation)
+    @document = manifest.document
 
-    pages_node = Nokogiri::XML::Node.new('pages', @document)
-    resources_node = Nokogiri::XML::Node.new('resources', @document)
-
-    manifest_node.add_child(pages_node)
-    manifest_node.add_child(resources_node)
+    pages_node = manifest.pages_node
+    resources_node = manifest.resources_node
 
     Zip::File.open("#{@directory}/#{@translation.zip_name}", Zip::File::CREATE) do |zip_file|
       add_pages(zip_file, pages_node)
@@ -49,26 +46,6 @@ class Package
       manifest_filename = write_manifest_to_file
       zip_file.add(manifest_filename, "#{@directory}/#{manifest_filename}")
     end
-  end
-
-  def load_or_create_manifest_node
-    return load_manifest if @translation.resource.manifest.present?
-
-    @document.root = @document.create_element('manifest', 'xmlns' => XmlUtil::XMLNS_MANIFEST)
-  end
-
-  def load_manifest
-    manifest_node = XmlUtil.xpath_namespace(@document, 'manifest').first
-    insert_translated_name(manifest_node)
-    manifest_node
-  end
-
-  def insert_translated_name(manifest_node)
-    title_node = XmlUtil.xpath_namespace(manifest_node, 'title').first
-    return if title_node.nil?
-
-    name_node = title_node.xpath('content:text[@i18n-id]').first
-    name_node.content = @translation.translated_name
   end
 
   def add_pages(zip_file, pages_node)

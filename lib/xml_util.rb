@@ -20,6 +20,10 @@ module XmlUtil
   end
 
   def self.xpath_namespace(xml, string)
-    xml.xpath("//m:#{string}", 'm' => XMLNS_MANIFEST)
+    xml.xpath(string, 'manifest' => XMLNS_MANIFEST)
+  end
+
+  def self.get_or_create_child(xml, ns, name)
+    xml.xpath("ns:#{name}", 'ns' => ns).first || xml.add_child(xml.document.create_element(name, xmlns: ns))
   end
 end
