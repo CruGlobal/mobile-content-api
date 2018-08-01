@@ -2,16 +2,15 @@
 
 module XML
   class Manifest
-    # TODO: temporarily expose while we migrate manifest xml code from Package class
     attr_reader :document
 
     def initialize(translation)
       @translation = translation
 
       @document = Nokogiri::XML(@translation.resource.manifest)
-      manifest_node = @document.root
-      manifest_node = create_manifest if manifest_node.nil?
+      @document.root = create_manifest if @document.root.nil?
 
+      manifest_node = @document.root
       add_manifest_metadata(manifest_node)
       insert_translated_name(manifest_node)
     end
