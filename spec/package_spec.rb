@@ -108,6 +108,27 @@ describe Package do
       expect(result.to_s).to eq(resources)
     end
 
+    it 'contains tool code' do
+      push
+
+      result = XmlUtil.xpath_namespace(load_xml(translation.manifest_name), '//manifest:manifest').first
+      expect(result['tool']).to eq(translation.resource.abbreviation)
+    end
+
+    it 'contains tool locale' do
+      push
+
+      result = XmlUtil.xpath_namespace(load_xml(translation.manifest_name), '//manifest:manifest').first
+      expect(result['locale']).to eq(translation.language.code)
+    end
+
+    it 'contains tool type' do
+      push
+
+      result = XmlUtil.xpath_namespace(load_xml(translation.manifest_name), '//manifest:manifest').first
+      expect(result['type']).to eq(translation.resource.resource_type.name)
+    end
+
     it 'contains translated title' do
       allow(translation).to receive(:translated_name).and_return(title)
 
