@@ -7,8 +7,6 @@ resource 'TranslatedPages' do
   let(:article) do
     '<?xml version="1.0" encoding="UTF-8" ?>
 <article xmlns="https://mobile-content-api.cru.org/xmlns/article">
-<title>article</title>
-<body>article body</body>
 </article>'
   end
   let(:data) { { data: { type: :translated_page, attributes: { value: article, resource_id: 3, language_id: 2 } } } }
