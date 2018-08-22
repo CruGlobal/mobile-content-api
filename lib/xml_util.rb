@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 module XmlUtil
+  XMLNS_CONTENT = 'https://mobile-content-api.cru.org/xmlns/content'
   XMLNS_MANIFEST = 'https://mobile-content-api.cru.org/xmlns/manifest'
 
   def self.translatable_nodes(xml)
@@ -20,6 +21,10 @@ module XmlUtil
   end
 
   def self.xpath_namespace(xml, string)
-    xml.xpath("//m:#{string}", 'm' => XMLNS_MANIFEST)
+    xml.xpath(string, 'manifest' => XMLNS_MANIFEST, 'content' => XMLNS_CONTENT)
+  end
+
+  def self.get_or_create_child(xml, ns, name)
+    xml.xpath("ns:#{name}", 'ns' => ns).first || xml.add_child(xml.document.create_element(name, xmlns: ns))
   end
 end

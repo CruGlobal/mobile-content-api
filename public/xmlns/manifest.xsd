@@ -8,6 +8,13 @@
     <xs:import namespace="https://mobile-content-api.cru.org/xmlns/content" schemaLocation="content.xsd" />
     <xs:import namespace="https://mobile-content-api.cru.org/xmlns/tract" schemaLocation="tract.xsd" />
 
+    <xs:simpleType name="toolType">
+        <xs:restriction base="xs:token">
+            <xs:enumeration value="article" />
+            <xs:enumeration value="tract" />
+        </xs:restriction>
+    </xs:simpleType>
+
     <xs:complexType name="manifest">
         <xs:all>
             <xs:element name="title" minOccurs="0" maxOccurs="1" type="content:textChild" />
@@ -26,6 +33,7 @@
                 </xs:complexType>
             </xs:element>
         </xs:all>
+        <xs:attributeGroup ref="manifest:toolMetaData" />
         <xs:attribute name="primary-color" type="content:colorValue" use="optional" />
         <xs:attribute name="primary-text-color" type="content:colorValue" use="optional" />
         <xs:attribute name="text-color" type="content:colorValue" use="optional" />
@@ -71,6 +79,29 @@
         <xs:attribute name="filename" type="xs:string" use="required" />
         <xs:attribute name="src" type="xs:string" use="required" />
     </xs:complexType>
+
+    <xs:attributeGroup name="toolMetaData">
+        <xs:annotation>
+            <xs:documentation>Various tool meta-data attributes. These attributes should be automatically populated
+                when publishing a tool in the mobile-content-api.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:attribute name="tool" type="xs:token" use="optional">
+            <xs:annotation>
+                <xs:documentation>The code of the tool this manifest is for</xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="locale" type="xs:token" use="optional">
+            <xs:annotation>
+                <xs:documentation>The language this manifest is for</xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="type" type="manifest:toolType" use="optional" default="tract">
+            <xs:annotation>
+                <xs:documentation>The type of this tool</xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+    </xs:attributeGroup>
 
     <!-- root element -->
     <xs:element name="manifest" type="manifest:manifest" />

@@ -33,52 +33,24 @@ class Package
   private
 
   def build_zip
-    @document = Nokogiri::XML(@translation.resource.manifest)
-    manifest_node = load_or_create_manifest_node
-
-    pages_node = Nokogiri::XML::Node.new('pages', @document)
-    resources_node = Nokogiri::XML::Node.new('resources', @document)
-
-    manifest_node.add_child(pages_node)
-    manifest_node.add_child(resources_node)
+    manifest = XML::Manifest.new(@translation)
 
     Zip::File.open("#{@directory}/#{@translation.zip_name}", Zip::File::CREATE) do |zip_file|
-      add_pages(zip_file, pages_node)
-      add_attachments(zip_file, resources_node)
+      add_pages(zip_file, manifest)
+      add_attachments(zip_file, manifest)
 
-      manifest_filename = write_manifest_to_file
+      manifest_filename = write_manifest_to_file(manifest)
       zip_file.add(manifest_filename, "#{@directory}/#{manifest_filename}")
     end
   end
 
-  def load_or_create_manifest_node
-    return load_manifest if @translation.resource.manifest.present?
-
-    @document.root = @document.create_element('manifest', 'xmlns' => XmlUtil::XMLNS_MANIFEST)
-  end
-
-  def load_manifest
-    manifest_node = XmlUtil.xpath_namespace(@document, 'manifest').first
-    insert_translated_name(manifest_node)
-    manifest_node
-  end
-
-  def insert_translated_name(manifest_node)
-    title_node = XmlUtil.xpath_namespace(manifest_node, 'title').first
-    return if title_node.nil?
-
-    name_node = title_node.xpath('content:text[@i18n-id]').first
-    name_node.content = @translation.translated_name
-  end
-
-  def add_pages(zip_file, pages_node)
+  def add_pages(zip_file, manifest)
     @translation.resource.pages.order(position: :asc).each do |page|
       Rails.logger.info("Adding page with id: #{page.id} to package for translation with id: #{@translation.id}")
 
       sha_filename = write_page_to_file(page)
       zip_file.add(sha_filename, "#{@directory}/#{sha_filename}")
-
-      add_node('page', pages_node, page.filename, sha_filename)
+      manifest.add_page(page.filename, sha_filename)
     end
   end
 
@@ -91,13 +63,13 @@ class Package
     sha_filename
   end
 
-  def add_attachments(zip_file, resources_node)
+  def add_attachments(zip_file, manifest)
     @translation.resource.attachments.where(is_zipped: true).each do |a|
       Rails.logger.info("Adding attachment with id: #{a.id} to package for translation with id: #{@translation.id}")
 
       sha_filename = save_attachment_to_file(a)
       zip_file.add(sha_filename, "#{@directory}/#{sha_filename}")
-      add_node('resource', resources_node, a.file.original_filename, sha_filename)
+      manifest.add_resource(a.file.original_filename, sha_filename)
     end
   end
 
@@ -109,22 +81,15 @@ class Package
     sha_filename
   end
 
-  def write_manifest_to_file
-    filename = XmlUtil.xml_filename_sha(@document.to_s)
+  def write_manifest_to_file(manifest)
+    filename = XmlUtil.xml_filename_sha(manifest.document.to_s)
     @translation.manifest_name = filename
 
     file = File.open("#{@directory}/#{filename}", 'w')
-    @document.write_to(file)
+    manifest.document.write_to(file)
     file.close
 
     filename
-  end
-
-  def add_node(type, parent, filename, sha_filename)
-    node = Nokogiri::XML::Node.new(type, @document)
-    node['filename'] = filename
-    node['src'] = sha_filename
-    parent.add_child(node)
   end
 
   def upload
