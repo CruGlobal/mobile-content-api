@@ -45,7 +45,7 @@ gem 'rest-client', '~> 2.0.1'
 gem 'rollbar'
 gem 'rspec_api_documentation'
 gem 'rubocop-rspec'
-gem 'rubyzip', '>= 1.0.0'
+gem 'rubyzip', '>= 1.2.2'
 gem 'sinatra', '~> 2.0.2'
 gem 'validates_email_format_of'
 
