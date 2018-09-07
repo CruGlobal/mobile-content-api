@@ -101,6 +101,11 @@
                 </xs:documentation>
             </xs:annotation>
         </xs:attribute>
+        <xs:attribute name="category-label-color" type="content:colorValue">
+            <xs:annotation>
+                <xs:documentation>The category label color. This defaults to text-color.</xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
 
         <!-- Import any external groups of attributes we want to support -->
         <xs:attributeGroup ref="tract:manifest" />
@@ -113,7 +118,9 @@
         <xs:all>
             <xs:element name="label" type="content:textChild">
                 <xs:annotation>
-                    <xs:documentation>The displayed label for this category</xs:documentation>
+                    <xs:documentation>The displayed label for this category. The label text-color defaults to the
+                        category-label-color.
+                    </xs:documentation>
                 </xs:annotation>
             </xs:element>
         </xs:all>
