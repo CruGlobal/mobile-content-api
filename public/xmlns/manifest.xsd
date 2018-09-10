@@ -33,10 +33,27 @@
                 </xs:complexType>
             </xs:element>
         </xs:all>
+
         <xs:attributeGroup ref="manifest:toolMetaData" />
-        <xs:attribute name="primary-color" type="content:colorValue" use="optional" />
-        <xs:attribute name="primary-text-color" type="content:colorValue" use="optional" />
-        <xs:attribute name="text-color" type="content:colorValue" use="optional" />
+        <xs:attribute name="primary-color" type="content:colorValue" default="rgba(59,164,219,1)">
+            <xs:annotation>
+                <xs:documentation>The primary color of this tool. Defaults to rgba(59,164,219,1).</xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="primary-text-color" type="content:colorValue" default="rgba(255,255,255,1)">
+            <xs:annotation>
+                <xs:documentation>The text color for text displayed on top of the primary-color. Defaults to
+                    rgba(255,255,255,1).
+                </xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="text-color" type="content:colorValue" use="optional" default="rgba(90,90,90,1)">
+            <xs:annotation>
+                <xs:documentation>The default text color for text content within this tool. Defaults to
+                    rgba(90,90,90,1).
+                </xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
         <xs:attribute name="background-color" type="content:colorValue" use="optional" />
         <xs:attribute name="background-image" type="xs:string" use="optional" />
         <xs:attribute name="background-image-align" type="content:imageGravity" use="optional" default="center">
