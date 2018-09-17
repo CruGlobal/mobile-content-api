@@ -189,6 +189,11 @@
                             <xs:group ref="content:elements" />
                         </xs:choice>
                     </xs:sequence>
+                    <xs:attribute name="listeners" type="content:listenersType">
+                        <xs:annotation>
+                            <xs:documentation>event_ids that trigger this tab</xs:documentation>
+                        </xs:annotation>
+                    </xs:attribute>
                 </xs:complexType>
             </xs:element>
         </xs:sequence>
@@ -232,6 +237,11 @@
             </xs:documentation>
         </xs:annotation>
         <xs:attribute name="resource" type="xs:string" use="required" />
+        <xs:attribute name="events" type="content:eventIdsType" use="optional">
+            <xs:annotation>
+                <xs:documentation>This attribute defines the events to trigger when the user "clicks" the image.</xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
         <xs:attributeGroup ref="content:deviceRestrictions" />
     </xs:complexType>
 
