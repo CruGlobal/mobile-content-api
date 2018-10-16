@@ -115,7 +115,7 @@
         <xs:annotation>
             <xs:documentation>This defines a category for content within this tool.</xs:documentation>
         </xs:annotation>
-        <xs:all>
+        <xs:sequence>
             <xs:element name="label" type="content:textChild">
                 <xs:annotation>
                     <xs:documentation>The displayed label for this category. The label text-color defaults to the
@@ -123,7 +123,8 @@
                     </xs:documentation>
                 </xs:annotation>
             </xs:element>
-        </xs:all>
+            <xs:group ref="article:categoryElements" />
+        </xs:sequence>
         <xs:attribute name="id" type="manifest:categoryId" use="required">
             <xs:annotation>
                 <xs:documentation>The id of this category, category ids should be unique within a single manifest.
