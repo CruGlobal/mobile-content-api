@@ -65,21 +65,10 @@ page_4_structure = '<?xml version="1.0" encoding="UTF-8" ?>
 
 is_there_god_structure = '<?xml version="1.0" encoding="UTF-8" ?>
 <article xmlns="https://mobile-content-api.cru.org/xmlns/article">
-<category>God\'s Existence</category>
-<category>Knowing God</category>
-<title>Is There a God?</title>
-<heading>Does God exist? Here are six straightforward reasons to believe that God is really there.</heading>
-<author>Marilyn Adamson</author>
-<body>Just once wouldn\'t you love for someone to simply show you the evidence for God\'s existence? No arm-twisting. No statements of, ' \
-'"You just have to believe." Well, here is an attempt to candidly offer some of the reasons which suggest that God exists.</body>
 </article>'
 
 beyond_blind_faith_structure = '<?xml version="1.0" encoding="UTF-8" ?>
 <article xmlns="https://mobile-content-api.cru.org/xmlns/article">
-<title>Beyond Blind Faith</title>
-<body>It is impossible for us to know conclusively whether God exists and what He is like unless He takes the initiative and reveals '\
-'Himself. We must scan the horizon of history to see if there is any clue to God\'s revelation. There is one clear clue. In an '\
-'obscure village in Palestine, 2,000 years ago, a Child was born in a stable. Today the entire world is still celebrating the birth of Jesus.</body>
 </article>'
 
 tract = ResourceType.find_or_create_by!(name: 'tract', dtd_file: 'tract.xsd')

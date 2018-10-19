@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<xs:schema xmlns:content="https://mobile-content-api.cru.org/xmlns/content"
+<xs:schema xmlns:article="https://mobile-content-api.cru.org/xmlns/article"
+    xmlns:content="https://mobile-content-api.cru.org/xmlns/content"
     xmlns:manifest="https://mobile-content-api.cru.org/xmlns/manifest"
     xmlns:tract="https://mobile-content-api.cru.org/xmlns/tract" xmlns:xs="http://www.w3.org/2001/XMLSchema"
-    attributeFormDefault="unqualified" elementFormDefault="qualified"
-    targetNamespace="https://mobile-content-api.cru.org/xmlns/manifest">
+    elementFormDefault="qualified" targetNamespace="https://mobile-content-api.cru.org/xmlns/manifest">
 
+    <xs:import namespace="https://mobile-content-api.cru.org/xmlns/article" schemaLocation="article.xsd" />
     <xs:import namespace="https://mobile-content-api.cru.org/xmlns/content" schemaLocation="content.xsd" />
     <xs:import namespace="https://mobile-content-api.cru.org/xmlns/tract" schemaLocation="tract.xsd" />
 
@@ -20,9 +21,10 @@
             <xs:element name="title" minOccurs="0" maxOccurs="1" type="content:textChild" />
             <xs:element name="pages" minOccurs="0" maxOccurs="1">
                 <xs:complexType>
-                    <xs:sequence>
+                    <xs:choice>
                         <xs:element name="page" minOccurs="0" maxOccurs="unbounded" type="manifest:page" />
-                    </xs:sequence>
+                        <xs:group ref="article:manifestElements" />
+                    </xs:choice>
                 </xs:complexType>
             </xs:element>
             <xs:element name="resources" minOccurs="0" maxOccurs="1">
