@@ -5,12 +5,20 @@
     <xs:complexType name="aemImport">
         <xs:attribute name="src" />
     </xs:complexType>
+    <xs:complexType name="categoryAemTag">
+        <xs:attribute name="id" />
+    </xs:complexType>
 
     <!-- exported elements and element groups -->
     <xs:element name="article" />
     <xs:group name="manifestElements">
         <xs:choice>
             <xs:element name="aem-import" minOccurs="0" maxOccurs="unbounded" type="article:aemImport" />
+        </xs:choice>
+    </xs:group>
+    <xs:group name="categoryElements">
+        <xs:choice>
+            <xs:element name="aem-tag" minOccurs="0" maxOccurs="unbounded" type="article:categoryAemTag" />
         </xs:choice>
     </xs:group>
 </xs:schema>
