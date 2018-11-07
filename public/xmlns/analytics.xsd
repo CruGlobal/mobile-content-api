@@ -15,6 +15,16 @@
                             <xs:documentation>Adobe Analytics</xs:documentation>
                         </xs:annotation>
                     </xs:enumeration>
+                    <xs:enumeration value="appsee">
+                        <xs:annotation>
+                            <xs:documentation>Appsee</xs:documentation>
+                        </xs:annotation>
+                    </xs:enumeration>
+                    <xs:enumeration value="firebase">
+                        <xs:annotation>
+                            <xs:documentation>Firebase</xs:documentation>
+                        </xs:annotation>
+                    </xs:enumeration>
                     <xs:enumeration value="google">
                         <xs:annotation>
                             <xs:documentation>Google Analytics</xs:documentation>
