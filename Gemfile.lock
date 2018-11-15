@@ -175,7 +175,7 @@ GEM
       method_source (~> 0.8.1)
       slop (~> 3.4)
     puma (3.9.1)
-    rack (2.0.5)
+    rack (2.0.6)
     rack-cors (0.4.1)
     rack-protection (2.0.2)
       rack
