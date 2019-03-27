@@ -50,7 +50,13 @@
         <xs:attribute name="primary-color" type="content:colorValue" use="optional" />
         <xs:attribute name="primary-text-color" type="content:colorValue" use="optional" />
         <xs:attribute name="text-color" type="content:colorValue" use="optional" />
-        <xs:attribute name="background-color" type="content:colorValue" use="optional" />
+        <xs:attribute name="background-color" type="content:colorValue" default="rgba(255, 255, 255, 0)">
+            <xs:annotation>
+                <xs:documentation>This defines the background color for this page. This background color is layered on
+                    top of any manifest background layers.
+                </xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
         <xs:attribute name="background-image" type="xs:string" use="optional" />
         <xs:attribute name="background-image-align" type="content:imageGravity" use="optional" default="center">
             <xs:annotation>
