@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'package'
-
 class Translation < ActiveRecord::Base
   belongs_to :resource
   belongs_to :language
