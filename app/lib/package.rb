@@ -73,7 +73,7 @@ class Package
     sha_filename
   end
 
-  def add_attachments(zip_file, manifest)
+  def add_attachments(zip_file, manifest) # rubocop:disable Metrics/AbcSize
     @resources.uniq.each do |filename|
       attachment = @translation.resource.attachments.find_by(file_file_name: filename)
       raise ActiveRecord::RecordNotFound, "Attachment not found: #{filename}" if attachment.nil?
