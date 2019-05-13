@@ -3,10 +3,9 @@
 require 'zip'
 
 class Package
-  XPATH_RESOURCES = %w[//manifest:manifest/@background-image
+  XPATH_RESOURCES = %w[//@background-image
                        //manifest:manifest/@banner
-                       //tract:card/@background-image
-                       //content:image[not(@restrictTo='web')]/@resource]
+                       //content:image[not(@restrictTo='web')]/@resource].freeze
 
   def self.s3_object(translation)
     s3 = Aws::S3::Resource.new(region: ENV['AWS_REGION'])
@@ -50,7 +49,7 @@ class Package
 
   def determine_resources(document)
     nodes = XmlUtil.xpath_namespace(document, XPATH_RESOURCES.join('|'))
-    nodes.each {|node| @resources << node.content}
+    nodes.each { |node| @resources << node.content }
   end
 
   def add_pages(zip_file, manifest)
