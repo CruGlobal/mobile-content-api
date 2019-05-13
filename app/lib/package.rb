@@ -74,12 +74,15 @@ class Package
   end
 
   def add_attachments(zip_file, manifest)
-    @translation.resource.attachments.where(file_file_name: @resources.uniq).each do |a|
-      Rails.logger.info("Adding attachment with id: #{a.id} to package for translation with id: #{@translation.id}")
+    @resources.uniq.each do |filename|
+      attachment = @translation.resource.attachments.find_by(file_file_name: filename)
+      raise ActiveRecord::RecordNotFound, "Attachment not found: #{filename}" if attachment.nil?
+      Rails.logger.info("Adding attachment with id: #{attachment.id} to package " \
+                        "for translation with id: #{@translation.id}")
 
-      sha_filename = save_attachment_to_file(a)
+      sha_filename = save_attachment_to_file(attachment)
       zip_file.add(sha_filename, "#{@directory}/#{sha_filename}")
-      manifest.add_resource(a.file.original_filename, sha_filename)
+      manifest.add_resource(attachment.file.original_filename, sha_filename)
     end
   end
 
