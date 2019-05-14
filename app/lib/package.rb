@@ -4,7 +4,7 @@ require 'zip'
 
 class Package
   XPATH_RESOURCES = %w[//@background-image
-                       //manifest:manifest/@banner
+                       //manifest:category/@banner
                        //content:image[not(@restrictTo='web')]/@resource].freeze
 
   def self.s3_object(translation)
