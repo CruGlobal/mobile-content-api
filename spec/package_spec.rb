@@ -215,6 +215,17 @@ describe Package do
         expect(manifest.xpath('/m:manifest', 'm' => XmlUtil::XMLNS_MANIFEST).size).to be(1)
       end
     end
+
+    context 'page missing resource' do
+      let(:translated_page_one) do
+        '<?xml version="1.0" encoding="UTF-8"?>
+           <page xmlns="https://mobile-content-api.cru.org/xmlns/tract" background-image="missing.jpg"></page>'
+      end
+
+      it 'raises an exception' do
+        expect { push }.to raise_error(ActiveRecord::RecordNotFound, 'Attachment not found: missing.jpg')
+      end
+    end
   end
 
   it 'always uses strict mode' do
