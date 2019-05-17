@@ -45,6 +45,7 @@ GEM
       tzinfo (~> 1.1)
     arel (7.1.4)
     ast (2.3.0)
+    awesome_print (1.8.0)
     aws-sdk (2.9.31)
       aws-sdk-resources (= 2.9.31)
     aws-sdk-core (2.9.31)
@@ -322,6 +323,7 @@ PLATFORMS
 
 DEPENDENCIES
   active_model_serializers (= 0.10.5)
+  awesome_print
   aws-sdk
   aws-sdk-rails
   byebug
@@ -367,4 +369,4 @@ DEPENDENCIES
   web-console (>= 3.3.0)
 
 BUNDLED WITH
-   1.17.1
+   1.17.3

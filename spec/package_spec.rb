@@ -6,8 +6,83 @@ require 'package'
 require 'xml_util'
 
 describe Package do
-  let(:translated_page_one) { 'this is a translated page' }
-  let(:translated_page_two) { 'here is another translated page' }
+  let(:translated_page_one) do
+    '<?xml version="1.0" encoding="UTF-8"?>
+<page xmlns="https://mobile-content-api.cru.org/xmlns/tract"
+      xmlns:content="https://mobile-content-api.cru.org/xmlns/content"
+      primary-color="rgba(59,164,219,1)" primary-text-color="rgba(255,255,255,1)"
+      background-image="wall.jpg">
+  <header>
+    <number>
+      <content:text>999</content:text>
+    </number>
+    <title>
+      <content:text>Header Title (Default)</content:text>
+    </title>
+  </header>
+  <hero>
+    <heading>
+      <content:text>Hero Heading</content:text>
+    </heading>
+
+    <content:paragraph>
+      <content:text>paragraph 1 - line 1</content:text>
+      <content:text>paragraph 1 - line 2</content:text>
+      <content:text>paragraph 1 - line 3</content:text>
+      <content:text>p1 - l4</content:text>
+    </content:paragraph>
+    <content:paragraph>
+      <content:text>paragraph 2 - line 1</content:text>
+      <content:text>paragraph 2 - line 2</content:text>
+      <content:text>paragraph 2 - line 3</content:text>
+    </content:paragraph>
+  </hero>
+</page>
+'
+  end
+  let(:translated_page_two) do
+    '<?xml version="1.0" encoding="UTF-8"?>
+<page xmlns="https://mobile-content-api.cru.org/xmlns/tract"
+      xmlns:content="https://mobile-content-api.cru.org/xmlns/content">
+  <hero>
+    <heading>
+      <content:text i18n-id="image_restrict_to_title">Image restrictTo testing</content:text>
+    </heading>
+
+    <content:paragraph>
+      <content:text>web_bundled.png</content:text>
+      <content:text>before</content:text>
+      <content:image resource="web_bundled.png" restrictTo="web"/>
+      <content:text>after</content:text>
+    </content:paragraph>
+    <content:paragraph>
+      <content:text>web_attach.png</content:text>
+      <content:text>before</content:text>
+      <content:image resource="web_attach.png" restrictTo="web"/>
+      <content:text>after</content:text>
+    </content:paragraph>
+    <content:paragraph>
+      <content:text>mobile_only.png</content:text>
+      <content:text>before</content:text>
+      <content:image resource="mobile_only.png" restrictTo="mobile"/>
+      <content:text>after</content:text>
+    </content:paragraph>
+    <content:paragraph>
+      <content:text>web_mobile.png</content:text>
+      <content:text>before</content:text>
+      <content:image resource="web_mobile.png" restrictTo="web mobile"/>
+      <content:text>after</content:text>
+    </content:paragraph>
+    <content:paragraph>
+      <content:text>both.png</content:text>
+      <content:text>before</content:text>
+      <content:image resource="both.png"/>
+      <content:text>after</content:text>
+    </content:paragraph>
+  </hero>
+</page>
+'
+  end
   let(:translation) do
     t = Translation.find(1)
     allow(t).to(receive(:translated_page).and_return(translated_page_one, translated_page_two))
@@ -23,8 +98,12 @@ describe Package do
     mock_s3(instance_double(Aws::S3::Object, upload_file: true), translation)
 
     # rubocop:disable AnyInstance
-    allow_any_instance_of(Paperclip::Attachment).to receive(:url).and_return("#{fixture_path}/wall.jpg")
-    allow_any_instance_of(Paperclip::Attachment).to receive(:original_filename).and_return('wall.jpg')
+    allow_any_instance_of(Paperclip::Attachment).to receive(:url) do |attachment|
+      "#{fixture_path}/#{attachment.instance.file_file_name}"
+    end
+    allow_any_instance_of(Paperclip::Attachment).to receive(:original_filename) do |attachment|
+      attachment.instance.file_file_name
+    end
 
     allow(SecureRandom).to receive(:uuid).and_return(guid)
   end
@@ -57,8 +136,8 @@ describe Package do
 
     push
 
-    expect_exists('790a2170adb13955e67dee0261baff93cc7f045b22a35ad434435bdbdcec036a.xml')
-    expect_exists('5ce1cd1be598eb31a76c120724badc90e1e9bafa4b03c33ce40f80ccff756444.xml')
+    expect_exists('71edacf514e76a1068454ef9dc219dfa36cd4394757b4a4bf2cee18b9e18559a.xml')
+    expect_exists('f5861440733ca31e99a04b9dd880ba3eeae314560d9197583bdbda0cb5c4c265.xml')
   end
 
   it 'zip file contains manifest' do
@@ -80,12 +159,15 @@ describe Package do
   context 'manifest' do
     let(:pages) do
       Nokogiri::XML('<pages xmlns="https://mobile-content-api.cru.org/xmlns/manifest">
-        <page filename="04_ThirdPoint.xml" src="790a2170adb13955e67dee0261baff93cc7f045b22a35ad434435bdbdcec036a.xml"/>
-        <page filename="13_FinalPage.xml" src="5ce1cd1be598eb31a76c120724badc90e1e9bafa4b03c33ce40f80ccff756444.xml"/>
+        <page filename="04_ThirdPoint.xml" src="71edacf514e76a1068454ef9dc219dfa36cd4394757b4a4bf2cee18b9e18559a.xml"/>
+        <page filename="13_FinalPage.xml" src="f5861440733ca31e99a04b9dd880ba3eeae314560d9197583bdbda0cb5c4c265.xml"/>
       </pages>').root
     end
     let(:resources) do
       Nokogiri::XML('<resources xmlns="https://mobile-content-api.cru.org/xmlns/manifest">
+        <resource filename="mobile_only.png" src="2cf2ab68c49b217c6b2402699c742a236f96efe36bc48821eb6ba1a1427b8945"/>
+        <resource filename="web_mobile.png" src="4245551d69a8c582b6fc5185fb5312efc4f6863bda991a12a76102736f92fa2d"/>
+        <resource filename="both.png" src="ad03ee4cc7b015919b375539db150dee5f47245c6a293663c21c774b2dba294f"/>
         <resource filename="wall.jpg" src="073d78ef4dc421f10d2db375414660d3983f506fabdaaff0887f6ee955aa3bdd"/>
       </resources>').root
     end
@@ -102,7 +184,7 @@ describe Package do
       expect(result).to be_equivalent_to(pages)
     end
 
-    it 'contains all resources' do
+    it 'contains all referenced resources' do
       push
 
       result = XmlUtil.xpath_namespace(load_xml(translation.manifest_name), '//manifest:resources').first
@@ -131,6 +213,17 @@ describe Package do
 
         manifest = load_xml(translation.manifest_name)
         expect(manifest.xpath('/m:manifest', 'm' => XmlUtil::XMLNS_MANIFEST).size).to be(1)
+      end
+    end
+
+    context 'page missing resource' do
+      let(:translated_page_one) do
+        '<?xml version="1.0" encoding="UTF-8"?>
+           <page xmlns="https://mobile-content-api.cru.org/xmlns/tract" background-image="missing.jpg"></page>'
+      end
+
+      it 'raises an exception' do
+        expect { push }.to raise_error(ActiveRecord::RecordNotFound, 'Attachment not found: missing.jpg')
       end
     end
   end
