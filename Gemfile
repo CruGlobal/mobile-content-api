@@ -35,7 +35,7 @@ gem 'aws-sdk-rails'
 gem 'ddtrace'
 gem 'loofah', '~> 2.2.1'
 gem 'nokogiri', '>= 1.8.5'
-gem 'oj', '~> 2.12.14'
+gem 'oj'
 gem 'paperclip'
 gem 'pg'
 gem 'rails-html-sanitizer', '>= 1.0.4'
@@ -78,4 +78,7 @@ group :development do
 end
 
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
+gem 'dogstatsd-ruby'
+gem 'lograge'
+gem 'ougai', '~> 1.7'
 gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]

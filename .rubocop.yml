@@ -30,6 +30,7 @@ Metrics/LineLength:
 Metrics/BlockLength:
   Exclude:
     - spec/**/*
+  Max: 30
 
 MethodLength:
   Max: 20

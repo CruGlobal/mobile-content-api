@@ -3,6 +3,14 @@ MAINTAINER cru.org <wmd@cru.org>
 
 ARG RAILS_ENV=production
 
+ARG DD_API_KEY
+RUN DD_INSTALL_ONLY=true DD_API_KEY=$DD_API_KEY bash -c "$(curl -L https://raw.githubusercontent.com/DataDog/datadog-agent/master/cmd/agent/install_script.sh)"
+
+# Config for logging to datadog
+COPY docker/datadog-agent /etc/datadog-agent
+COPY docker/supervisord-datadog.conf /etc/supervisor/conf.d/supervisord-datadog.conf
+COPY docker/docker-entrypoint.sh /
+
 COPY Gemfile Gemfile.lock ./
 
 RUN bundle config gems.contribsys.com $SIDEKIQ_CREDS
@@ -29,3 +37,5 @@ RUN mkdir -p /home/app/webapp/tmp \
                     /home/app/webapp/log \
                     /home/app/webapp/public/uploads \
                     /home/app/webapp/pages
+
+CMD "/docker-entrypoint.sh"

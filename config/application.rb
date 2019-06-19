@@ -8,8 +8,11 @@ require 'fileutils'
 # you've limited to :test, :development, or :production.
 Bundler.require(*Rails.groups)
 
+require_relative '../lib/log/logger'
 module MobileContentApi
   class Application < Rails::Application
+    # Enable ougai
+    config.logger = Log::Logger.new(Rails.root.join('log', 'datadog.log'))
     ActiveModelSerializers.config.adapter = :json_api
     FileUtils.mkdir_p('pages')
 
