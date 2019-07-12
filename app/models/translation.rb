@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class Translation < ActiveRecord::Base
+  include XML::Translatable
+
   belongs_to :resource
   belongs_to :language
 
@@ -26,8 +28,8 @@ class Translation < ActiveRecord::Base
     phrases = download_translated_phrases(page.filename)
     xml = Nokogiri::XML(page_structure(page_id))
 
-    xml = onesky_translated_page_content(xml, phrases, strict)
-    xml = onesky_translated_page_attributes(xml, phrases, strict)
+    xml = translate_node_content(xml, phrases, strict)
+    xml = translate_node_attributes(xml, phrases, strict)
 
     xml.to_s
   end
@@ -53,38 +55,6 @@ class Translation < ActiveRecord::Base
   end
 
   private
-
-  def onesky_translated_page_content(xml, phrases, strict)
-    XmlUtil.translatable_nodes(xml).each do |node|
-      phrase_id = node['i18n-id']
-      translated_phrase = phrases[phrase_id]
-
-      if translated_phrase.present?
-        node.content = translated_phrase
-      elsif strict
-        raise Error::TextNotFoundError, "Translated phrase not found: ID: #{phrase_id}, base text: #{node.content}"
-      end
-    end
-
-    xml
-  end
-
-  def onesky_translated_page_attributes(xml, phrases, strict)
-    XmlUtil.translatable_node_attrs(xml).each do |attribute|
-      phrase_id = attribute.value
-      new_name = attribute.name.gsub('-i18n-id', '')
-      translated_phrase = phrases[phrase_id]
-
-      if translated_phrase.present?
-        attribute.name = new_name
-        attribute.value = translated_phrase
-      elsif strict
-        raise Error::TextNotFoundError, "Translated phrase not found: ID: #{phrase_id}, base text: #{attribute.value}"
-      end
-    end
-
-    xml
-  end
 
   def page_structure(page_id)
     custom_page = language.custom_pages.find_by(page_id: page_id)
