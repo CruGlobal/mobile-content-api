@@ -9,6 +9,8 @@ describe XML::Manifest do
   let(:translation) do
     t = Translation.find(1)
     allow(t).to(receive(:translated_name).and_return(title))
+    allow(t).to(receive(:manifest_translated_phrases).and_return('name' => 'Knowing God Personally',
+                                                                 'description' => ''))
     t
   end
 
@@ -65,7 +67,9 @@ describe XML::Manifest do
 
     context 'resource does not have a manifest file' do
       let(:translation) do
-        Translation.find(8)
+        t = Translation.find(8)
+        allow(t).to(receive(:manifest_translated_phrases).and_return({}))
+        t
       end
 
       it 'creates manifest node' do

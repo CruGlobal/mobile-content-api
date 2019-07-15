@@ -54,6 +54,10 @@ class Translation < ActiveRecord::Base
     order(version: :desc).find_by(resource_id: resource_id, language_id: language_id)
   end
 
+  def manifest_translated_phrases
+    @manifest_translated_phrases ||= download_translated_phrases('name_description.xml')
+  end
+
   private
 
   def page_structure(page_id)
@@ -76,7 +80,7 @@ class Translation < ActiveRecord::Base
   def name_desc_onesky
     logger.info "Updating translated name and description for translation with id: #{id}"
 
-    p = download_translated_phrases('name_description.xml')
+    p = manifest_translated_phrases
     self.translated_name = p['name']
     self.translated_description = p['description']
     self.translated_tagline = p['tagline']
