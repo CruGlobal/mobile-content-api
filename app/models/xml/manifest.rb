@@ -22,7 +22,8 @@ module XML
         phrases[i18n_id] = @translation.translated_name
       end
 
-      translate_node_content(@document, phrases, true)
+      # TODO: go strict, what about keeping default title (if not translated)?
+      translate_node_content(@document, phrases, false)
       translate_node_attributes(@document, phrases, true)
     end
 
