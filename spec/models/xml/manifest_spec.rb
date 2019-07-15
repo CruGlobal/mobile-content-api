@@ -65,6 +65,66 @@ describe XML::Manifest do
       expect(result.content).to eq(title)
     end
 
+    context 'manifest with categories' do
+      let(:title) { 'Otázky o Bohu' }
+      let(:translation) do
+        t = Translation.find(1)
+        t.resource.manifest = '<?xml version="1.0"?>
+<manifest xmlns="https://mobile-content-api.cru.org/xmlns/manifest"
+          xmlns:article="https://mobile-content-api.cru.org/xmlns/article"
+          xmlns:content="https://mobile-content-api.cru.org/xmlns/content"
+          category-label-color="rgba(255,255,255,1)">
+    <title><content:text i18n-id="name">Questions about God</content:text></title>
+    <categories>
+        <category id="about-god" banner="banner-about-god.jpg">
+           <label>
+               <content:text i18n-id="about_god">About God</content:text>
+           </label>
+        </category>
+        <category id="about-jesus" banner="about-jesus.jpg">
+           <label>
+              <content:text i18n-id="about_jesus">About Jesus</content:text>
+           </label>
+        </category>
+        <category id="about-life" banner="about-life.jpg">
+           <label>
+               <content:text i18n-id="about_life">About Life</content:text>
+           </label>
+        </category>
+        <category id="everything" banner="missing.jpg">
+           <label>
+               <content:text i18n-id="everything">Everything</content:text>
+           </label>
+        </category>
+    </categories>
+</manifest>'
+        allow(t).to(receive(:translated_name).and_return(title))
+
+        phrases = {
+          # 'name' => '...',
+          # 'description' => '',
+          'about_god' => 'O Bohu',
+          'about_jesus' => 'O Ježišovi',
+          'about_life' => 'O Živote',
+          'everything' => 'Všetko Ostatné'
+        }
+        allow(t).to(receive(:manifest_translated_phrases).and_return(phrases))
+
+        t
+      end
+
+      it 'translates title' do
+        result = XmlUtil.xpath_namespace(manifest.document, '//manifest:title/content:text').first
+        expect(result.content).to eq(title)
+      end
+
+      it 'translates category content' do
+        result = XmlUtil.xpath_namespace(manifest.document, '//manifest:category/manifest:label/content:text')
+        expect(result.first.content).to eq('O Bohu')
+        expect(result.last.content).to eq('Všetko Ostatné')
+      end
+    end
+
     context 'resource does not have a manifest file' do
       let(:translation) do
         t = Translation.find(8)
