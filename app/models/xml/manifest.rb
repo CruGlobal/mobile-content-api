@@ -37,7 +37,9 @@ module XML
     private
 
     def create_manifest
-      @document.root = @document.create_element('manifest', xmlns: XmlUtil::XMLNS_MANIFEST)
+      @document.root = @document.create_element('manifest',
+                                                'xmlns' => XmlUtil::XMLNS_MANIFEST,
+                                                'xmlns:content' => XmlUtil::XMLNS_CONTENT)
     end
 
     def add_manifest_metadata(manifest_node)
