@@ -15,13 +15,7 @@ module XML
       manifest_node = @document.root
       add_manifest_metadata(manifest_node)
 
-      phrases = @translation.manifest_translated_phrases
-      # backwards compatibility with manifest name translation:
-      if (i18n_id = title_i18n_id(manifest_node))
-        phrases = phrases.dup
-        phrases[i18n_id] = @translation.translated_name
-      end
-
+      phrases = manifest_translated_phrases(manifest_node)
       # TODO: go strict, what about keeping default title (if not translated)?
       translate_node_content(@document, phrases, false)
       translate_node_attributes(@document, phrases, true)
@@ -47,6 +41,17 @@ module XML
       manifest_node['tool'] = @translation.resource.abbreviation
       manifest_node['locale'] = @translation.language.code
       manifest_node['type'] = @translation.resource.resource_type.name
+    end
+
+    def manifest_translated_phrases(manifest_node)
+      phrases = @translation.manifest_translated_phrases
+      # backwards compatibility with manifest name translation:
+      if (i18n_id = title_i18n_id(manifest_node))
+        phrases = phrases.dup
+        phrases[i18n_id] = @translation.translated_name
+      end
+
+      phrases
     end
 
     def title_i18n_id(manifest_node)
