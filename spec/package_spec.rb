@@ -209,6 +209,8 @@ describe Package do
       end
 
       it 'creates manifest node' do
+        mock_onesky translation.resource.onesky_project_id
+
         push
 
         manifest = load_xml(translation.manifest_name)
@@ -251,11 +253,14 @@ describe Package do
     expect(Dir.exist?(directory)).to be_falsey
   end
 
-  def mock_onesky
-    onesky_project_id = Resource.find(1).onesky_project_id
+  def mock_onesky(project_id = nil)
+    ENV['ONESKY_API_SECRET'] ||= ''
+    project_id ||= Resource.find(1).onesky_project_id
+    response = RestClient::Response.new('{ "1":"value" }')
+    response.instance_variable_set :@code, 200
     allow(RestClient).to receive(:get)
-      .with("https://platform.api.onesky.io/1/projects/#{onesky_project_id}/translations", any_args)
-      .and_return('{ "1":"value" }')
+      .with("https://platform.api.onesky.io/1/projects/#{project_id}/translations", any_args)
+      .and_return(response)
   end
 
   def mock_dir_deletion
@@ -263,6 +268,7 @@ describe Package do
   end
 
   def push
+    mock_onesky
     package = Package.new(translation)
     package.push_to_s3
   end
