@@ -15,7 +15,7 @@ Rails.configuration.datadog_trace = {
   template_base_path: 'views/',
   tracer: Datadog.tracer,
   debug: false,
-  trace_agent_hostname: 'datadog-apm.aws.cru.org',
+  trace_agent_hostname: ENV['DATADOG_HOST'],
   trace_agent_port: 8126,
   env: Rails.env,
   tags: { app: base_name }
