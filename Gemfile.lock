@@ -368,7 +368,6 @@ DEPENDENCIES
   rubyzip (>= 1.2.2)
   sass-rails (~> 5.0)
   simplecov
-  sinatra (~> 2.0.2)
   spring
   spring-watcher-listen (~> 2.0.0)
   sqlite3

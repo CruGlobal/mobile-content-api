@@ -32,21 +32,16 @@ gem 'syslog-logger'
 gem 'active_model_serializers', '= 0.10.5'
 gem 'aws-sdk'
 gem 'aws-sdk-rails'
-gem 'codecov', require: false
 gem 'ddtrace'
 gem 'loofah', '~> 2.2.1'
 gem 'nokogiri', '>= 1.8.5'
 gem 'oj', '~> 2.12.14'
 gem 'paperclip'
 gem 'pg'
-gem 'raddocs'
 gem 'rails-html-sanitizer', '>= 1.0.4'
 gem 'rest-client', '~> 2.0.1'
 gem 'rollbar'
-gem 'rspec_api_documentation'
-gem 'rubocop-rspec'
 gem 'rubyzip', '>= 1.2.2'
-gem 'sinatra', '~> 2.0.2'
 gem 'validates_email_format_of'
 
 # Use Capistrano for deployment
@@ -55,16 +50,21 @@ gem 'validates_email_format_of'
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'byebug', platform: :mri
+  gem 'codecov', require: false
   gem 'dotenv-rails'
   gem 'equivalent-xml', '~> 0.6.0'
   gem 'guard-rspec'
   gem 'guard-rubocop'
   gem 'rspec'
   gem 'rspec-rails', '~> 3.4'
+  gem 'rspec_api_documentation', require: false
   gem 'rubocop', '~> 0.49.0', require: false
+  gem 'rubocop-rspec', require: false
   gem 'simplecov', require: false
   gem 'webmock', require: false
 end
+
+gem 'raddocs'
 
 group :development do
   # Access an IRB console on exception pages or by using <%= console %> anywhere in the code.
