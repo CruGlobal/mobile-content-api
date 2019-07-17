@@ -23,6 +23,8 @@ Rails.application.routes.draw do
 
   resources :auth, only: [:create, :show]
 
+  resources :custom_manifests, only: [:create, :update, :destroy, :show]
+
   get 'monitors/lb'
   get 'monitors/commit'
 

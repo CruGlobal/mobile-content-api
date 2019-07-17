@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180416210608) do
+ActiveRecord::Schema.define(version: 20190716115741) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -47,6 +47,17 @@ ActiveRecord::Schema.define(version: 20180416210608) do
     t.datetime "expiration",     default: '2016-01-01 01:00:00', null: false
     t.index ["access_code_id"], name: "index_auth_tokens_on_access_code_id", using: :btree
     t.index ["token"], name: "index_auth_tokens_on_token", unique: true, using: :btree
+  end
+
+  create_table "custom_manifests", force: :cascade do |t|
+    t.string   "structure",   null: false
+    t.integer  "resource_id", null: false
+    t.integer  "language_id", null: false
+    t.datetime "created_at",  null: false
+    t.datetime "updated_at",  null: false
+    t.index ["language_id"], name: "index_custom_manifests_on_language_id", using: :btree
+    t.index ["resource_id", "language_id"], name: "index_custom_manifests_on_resource_id_and_language_id", unique: true, using: :btree
+    t.index ["resource_id"], name: "index_custom_manifests_on_resource_id", using: :btree
   end
 
   create_table "custom_pages", force: :cascade do |t|
@@ -154,6 +165,8 @@ ActiveRecord::Schema.define(version: 20180416210608) do
   add_foreign_key "attachments", "resources"
   add_foreign_key "attributes", "resources"
   add_foreign_key "auth_tokens", "access_codes"
+  add_foreign_key "custom_manifests", "languages"
+  add_foreign_key "custom_manifests", "resources"
   add_foreign_key "custom_pages", "languages"
   add_foreign_key "custom_pages", "pages"
   add_foreign_key "follow_ups", "destinations"

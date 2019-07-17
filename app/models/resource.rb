@@ -9,6 +9,7 @@ class Resource < ActiveRecord::Base
   has_many :views
   has_many :attachments
   has_many :translated_pages
+  has_many :custom_manifests
 
   validates :name, presence: true
   validates :abbreviation, presence: true, uniqueness: true
