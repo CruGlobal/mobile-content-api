@@ -9,7 +9,7 @@ module XML
     def initialize(translation)
       @translation = translation
 
-      @document = Nokogiri::XML(@translation.resource.manifest)
+      @document = Nokogiri::XML(@translation.resolve_manifest)
       @document.root = create_manifest if @document.root.nil?
 
       manifest_node = @document.root

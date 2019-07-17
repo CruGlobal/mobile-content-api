@@ -123,6 +123,40 @@ describe XML::Manifest do
         expect(result.first.content).to eq('O Bohu')
         expect(result.last.content).to eq('Všetko Ostatné')
       end
+
+      context 'resource has custom manifest for language' do
+        let(:custom_manifest_structure) do
+'<?xml version="1.0"?>
+<manifest xmlns="https://mobile-content-api.cru.org/xmlns/manifest"
+          xmlns:article="https://mobile-content-api.cru.org/xmlns/article"
+          xmlns:content="https://mobile-content-api.cru.org/xmlns/content"
+          category-label-color="rgba(255,255,255,1)">
+    <title><content:text i18n-id="name">About God</content:text></title>
+    <categories>
+        <category id="about-god" banner="banner-about-god-custom.jpg">
+           <label>
+               <content:text i18n-id="about_god">The LORD</content:text>
+           </label>
+        </category>
+    </categories>
+</manifest>'
+        end
+        let(:language) { translation.language }
+        let(:custom_manifest) do
+          translation.resource.custom_manifests.create! language: language, structure: custom_manifest_structure
+        end
+
+        it 'is using custom manifest structure' do
+          custom_manifest
+          expect(manifest.document.to_s).to include('banner-about-god-custom.jpg')
+        end
+
+        it 'translates category content' do
+          custom_manifest
+          result = XmlUtil.xpath_namespace(manifest.document, '//manifest:category/manifest:label/content:text')
+          expect(result.first.content).to eq('O Bohu')
+        end
+      end
     end
 
     context 'resource does not have a manifest file' do
