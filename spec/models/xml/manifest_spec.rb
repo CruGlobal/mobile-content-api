@@ -113,6 +113,26 @@ describe XML::Manifest do
         t
       end
 
+      let(:custom_manifest_structure) do
+        '<?xml version="1.0"?>
+<manifest xmlns="https://mobile-content-api.cru.org/xmlns/manifest"
+          xmlns:article="https://mobile-content-api.cru.org/xmlns/article"
+          xmlns:content="https://mobile-content-api.cru.org/xmlns/content">
+<title><content:text i18n-id="name">About God</content:text></title>
+<categories>
+  <category id="about-god" banner="banner-about-god-custom.jpg">
+    <label>
+      <content:text i18n-id="about_god">The LORD</content:text>
+    </label>
+  </category>
+</categories>
+</manifest>'
+      end
+      let(:language) { translation.language }
+      let(:custom_manifest) do
+        translation.resource.custom_manifests.create! language: language, structure: custom_manifest_structure
+      end
+
       it 'translates title' do
         result = XmlUtil.xpath_namespace(manifest.document, '//manifest:title/content:text').first
         expect(result.content).to eq(title)
@@ -124,38 +144,24 @@ describe XML::Manifest do
         expect(result.last.content).to eq('Všetko Ostatné')
       end
 
-      context 'resource has custom manifest for language' do
-        let(:custom_manifest_structure) do
-'<?xml version="1.0"?>
-<manifest xmlns="https://mobile-content-api.cru.org/xmlns/manifest"
-          xmlns:article="https://mobile-content-api.cru.org/xmlns/article"
-          xmlns:content="https://mobile-content-api.cru.org/xmlns/content"
-          category-label-color="rgba(255,255,255,1)">
-    <title><content:text i18n-id="name">About God</content:text></title>
-    <categories>
-        <category id="about-god" banner="banner-about-god-custom.jpg">
-           <label>
-               <content:text i18n-id="about_god">The LORD</content:text>
-           </label>
-        </category>
-    </categories>
-</manifest>'
-        end
-        let(:language) { translation.language }
-        let(:custom_manifest) do
-          translation.resource.custom_manifests.create! language: language, structure: custom_manifest_structure
-        end
+      it 'uses custom manifest structure when found' do
+        custom_manifest
+        expect(manifest.document.to_s).to include('banner-about-god-custom.jpg')
+      end
 
-        it 'is using custom manifest structure' do
-          custom_manifest
-          expect(manifest.document.to_s).to include('banner-about-god-custom.jpg')
-        end
+      it 'translates category content using custom manifest' do
+        custom_manifest
+        result = XmlUtil.xpath_namespace(manifest.document, '//manifest:category/manifest:label/content:text')
+        expect(result.first.content).to eq('O Bohu')
+      end
 
-        it 'translates category content' do
-          custom_manifest
-          result = XmlUtil.xpath_namespace(manifest.document, '//manifest:category/manifest:label/content:text')
-          expect(result.first.content).to eq('O Bohu')
-        end
+      it 'translates using base manifest when custom manifest is for different language' do
+        language = Language.create!(name: 'czech', code: 'cs', direction: 'ltr')
+        translation.resource.custom_manifests.create! language: language, structure: custom_manifest_structure
+
+        expect(manifest.document.to_s).to include('banner-about-god.jpg')
+        result = XmlUtil.xpath_namespace(manifest.document, '//manifest:category/manifest:label/content:text')
+        expect(result.first.content).to eq('O Bohu')
       end
     end
 
