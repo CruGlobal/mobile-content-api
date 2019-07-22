@@ -28,14 +28,14 @@ resource 'TranslatedAttributes' do
     requires_authorization
 
     it 'create a Translated Attribute' do
-      do_request data: { type: :translated_attribute, attributes: attrs }
+      do_request data: { type: type, attributes: attrs }
 
       expect(status).to be(204)
       expect(response_body).to be_empty
     end
 
     it 'sets location header', document: false do
-      do_request data: { type: :translated_attribute, attributes: attrs }
+      do_request data: { type: type, attributes: attrs }
 
       expect(response_headers['Location']).to eq("translated_attributes/#{id}")
     end
@@ -53,7 +53,7 @@ resource 'TranslatedAttributes' do
       attribute = instance_double(TranslatedAttribute, update!: nil)
       allow(TranslatedAttribute).to receive(:find).and_return(attribute)
 
-      do_request data: { type: :translated_attribute, attributes: attrs }
+      do_request data: { type: type, attributes: attrs }
 
       expect(status).to be(204)
       expect(response_body).to be_empty

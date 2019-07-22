@@ -28,21 +28,21 @@ resource 'CustomPages' do
       let(:attrs) { { language_id: 3, page_id: 2, structure: structure } }
 
       it 'create a custom page' do
-        do_request data: { type: :custom_page, attributes: attrs }
+        do_request data: { type: type, attributes: attrs }
 
         expect(status).to be(201)
         expect(JSON.parse(response_body)['data']).not_to be_nil
       end
 
       it 'creating sets location header', document: false do
-        do_request data: { type: :custom_page, attributes: attrs }
+        do_request data: { type: type, attributes: attrs }
 
         expect(response_headers['Location']).to match(%r{custom_pages\/\d+})
       end
     end
 
     it 'update a custom page' do
-      do_request data: { type: :custom_page,
+      do_request data: { type: type,
                          attributes: { language_id: 2, page_id: 1, structure: structure } }
 
       expect(status).to be(200)

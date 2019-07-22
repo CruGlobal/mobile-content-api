@@ -45,7 +45,7 @@ resource 'CustomManifests' do
 
     it 'creates a custom manifest' do
       attrs = { language_id: language.id, resource_id: resource.id, structure: structure }
-      do_request data: { type: :custom_manifest, attributes: attrs }
+      do_request data: { type: type, attributes: attrs }
 
       expect(status).to be(201)
 
@@ -70,7 +70,7 @@ resource 'CustomManifests' do
 
     it 'updates a custom manifest' do
       attrs = { structure: structure }
-      do_request data: { type: :custom_manifest, attributes: attrs }
+      do_request data: { type: type, attributes: attrs }
 
       expect(status).to be(200)
       expect(JSON.parse(response_body)['data']).not_to be_nil
