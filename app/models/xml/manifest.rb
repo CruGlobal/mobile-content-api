@@ -2,6 +2,8 @@
 
 module XML
   class Manifest
+    include Translatable
+
     attr_reader :document
 
     def initialize(translation)
@@ -12,7 +14,10 @@ module XML
 
       manifest_node = @document.root
       add_manifest_metadata(manifest_node)
-      insert_translated_name(manifest_node)
+
+      phrases = manifest_translated_phrases(manifest_node)
+      translate_node_content(@document, phrases, true)
+      translate_node_attributes(@document, phrases, true)
     end
 
     def add_page(filename, sha_filename)
@@ -26,7 +31,9 @@ module XML
     private
 
     def create_manifest
-      @document.root = @document.create_element('manifest', xmlns: XmlUtil::XMLNS_MANIFEST)
+      @document.root = @document.create_element('manifest',
+                                                'xmlns' => XmlUtil::XMLNS_MANIFEST,
+                                                'xmlns:content' => XmlUtil::XMLNS_CONTENT)
     end
 
     def add_manifest_metadata(manifest_node)
@@ -35,12 +42,23 @@ module XML
       manifest_node['type'] = @translation.resource.resource_type.name
     end
 
-    def insert_translated_name(manifest_node)
+    def manifest_translated_phrases(manifest_node)
+      phrases = @translation.manifest_translated_phrases
+      # backwards compatibility with manifest name translation:
+      if (i18n_id = title_i18n_id(manifest_node))
+        phrases = phrases.dup
+        phrases[i18n_id] = @translation.translated_name
+      end
+
+      phrases
+    end
+
+    def title_i18n_id(manifest_node)
       title_node = XmlUtil.xpath_namespace(manifest_node, 'manifest:title').first
       return if title_node.nil?
 
       name_node = title_node.xpath('content:text[@i18n-id]').first
-      name_node.content = @translation.translated_name
+      name_node.attributes['i18n-id'].value
     end
 
     def pages_node

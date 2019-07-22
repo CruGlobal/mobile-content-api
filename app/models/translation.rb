@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class Translation < ActiveRecord::Base
+  include XML::Translatable
+
   belongs_to :resource
   belongs_to :language
 
@@ -26,8 +28,8 @@ class Translation < ActiveRecord::Base
     phrases = download_translated_phrases(page.filename)
     xml = Nokogiri::XML(page_structure(page_id))
 
-    xml = onesky_translated_page_content(xml, phrases, strict)
-    xml = onesky_translated_page_attributes(xml, phrases, strict)
+    xml = translate_node_content(xml, phrases, strict)
+    xml = translate_node_attributes(xml, phrases, strict)
 
     xml.to_s
   end
@@ -52,39 +54,11 @@ class Translation < ActiveRecord::Base
     order(version: :desc).find_by(resource_id: resource_id, language_id: language_id)
   end
 
+  def manifest_translated_phrases
+    @manifest_translated_phrases ||= download_translated_phrases('name_description.xml')
+  end
+
   private
-
-  def onesky_translated_page_content(xml, phrases, strict)
-    XmlUtil.translatable_nodes(xml).each do |node|
-      phrase_id = node['i18n-id']
-      translated_phrase = phrases[phrase_id]
-
-      if translated_phrase.present?
-        node.content = translated_phrase
-      elsif strict
-        raise Error::TextNotFoundError, "Translated phrase not found: ID: #{phrase_id}, base text: #{node.content}"
-      end
-    end
-
-    xml
-  end
-
-  def onesky_translated_page_attributes(xml, phrases, strict)
-    XmlUtil.translatable_node_attrs(xml).each do |attribute|
-      phrase_id = attribute.value
-      new_name = attribute.name.gsub('-i18n-id', '')
-      translated_phrase = phrases[phrase_id]
-
-      if translated_phrase.present?
-        attribute.name = new_name
-        attribute.value = translated_phrase
-      elsif strict
-        raise Error::TextNotFoundError, "Translated phrase not found: ID: #{phrase_id}, base text: #{attribute.value}"
-      end
-    end
-
-    xml
-  end
 
   def page_structure(page_id)
     custom_page = language.custom_pages.find_by(page_id: page_id)
@@ -106,25 +80,14 @@ class Translation < ActiveRecord::Base
   def name_desc_onesky
     logger.info "Updating translated name and description for translation with id: #{id}"
 
-    p = download_translated_phrases('name_description.xml')
+    p = manifest_translated_phrases
     self.translated_name = p['name']
     self.translated_description = p['description']
     self.translated_tagline = p['tagline']
   end
 
-  def download_translated_phrases(page_filename)
-    logger.info "Downloading translated phrases for page: #{page_filename} with language: #{language.code}"
-
-    response = RestClient.get "https://platform.api.onesky.io/1/projects/#{resource.onesky_project_id}/translations",
-                              params: headers(page_filename)
-
-    raise Error::TextNotFoundError, 'No translated phrases found for this language.' if response.code == 204
-    JSON.parse(response.body)
-  end
-
-  def headers(page_filename)
-    { api_key: ENV['ONESKY_API_KEY'], timestamp: AuthUtil.epoch_time_seconds, dev_hash: HashUtil.dev_hash,
-      locale: language.code, source_file_name: page_filename, export_file_name: page_filename }
+  def download_translated_phrases(filename)
+    OneSky.download_translated_phrases(filename, language_code: language.code, project_id: resource.onesky_project_id)
   end
 
   def set_defaults

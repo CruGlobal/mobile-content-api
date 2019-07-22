@@ -1,9 +1,7 @@
 # frozen_string_literal: true
 
-require 'rest-client'
-require 'auth_util'
-require 'hash_util'
 require 'xml_util'
+require 'one_sky'
 
 class PageClient
   def initialize(resource, language_code)
@@ -57,16 +55,9 @@ class PageClient
   def push_page(phrases, filename, keep_existing_phrases)
     File.write("pages/#{filename}", phrases.to_json)
 
-    Rails.logger.info "Pushing page with name: #{filename} to OneSky with language code: #{@language_code}"
-
-    RestClient.post "https://platform.api.onesky.io/1/projects/#{@resource.onesky_project_id}/files",
-                    file: File.new("pages/#{filename}"),
-                    file_format: 'HIERARCHICAL_JSON',
-                    api_key: ENV['ONESKY_API_KEY'],
-                    timestamp: AuthUtil.epoch_time_seconds,
-                    locale: @language_code,
-                    dev_hash: HashUtil.dev_hash,
-                    multipart: true,
-                    is_keeping_all_strings: keep_existing_phrases
+    OneSky.push_phrases "pages/#{filename}",
+                        project_id: @resource.onesky_project_id,
+                        language_code: @language_code,
+                        keep_existing: keep_existing_phrases
   end
 end
