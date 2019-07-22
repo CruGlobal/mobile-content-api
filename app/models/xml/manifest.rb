@@ -16,8 +16,7 @@ module XML
       add_manifest_metadata(manifest_node)
 
       phrases = manifest_translated_phrases(manifest_node)
-      # TODO: go strict, what about keeping default title (if not translated)?
-      translate_node_content(@document, phrases, false)
+      translate_node_content(@document, phrases, true)
       translate_node_attributes(@document, phrases, true)
     end
 

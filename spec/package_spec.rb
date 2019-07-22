@@ -85,6 +85,7 @@ describe Package do
   end
   let(:translation) do
     t = Translation.find(1)
+    t.translated_name = 'Knowing God Personally!'
     allow(t).to(receive(:translated_page).and_return(translated_page_one, translated_page_two))
     t
   end
@@ -226,6 +227,14 @@ describe Package do
 
       it 'raises an exception' do
         expect { push }.to raise_error(ActiveRecord::RecordNotFound, 'Attachment not found: missing.jpg')
+      end
+    end
+
+    context 'translation missing i18n title' do
+      it 'fails to push' do
+        translation.translated_name = nil
+
+        expect { push }.to raise_error(Error::TextNotFoundError)
       end
     end
   end
