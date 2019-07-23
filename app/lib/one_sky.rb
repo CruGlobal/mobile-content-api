@@ -15,8 +15,10 @@ module OneSky
                                 source_file_name: filename, export_file_name: filename
                               )
 
-    # NOTE: maybe Error::TextNotFoundError should have been a error under a OneSky namespace
-    raise Error::TextNotFoundError, 'No translated phrases found for this language.' if response.code == 204
+    if response.code == 204
+      logger.info "No translated phrases found for: #{filename} with language: #{language_code}"
+      return {}
+    end
     JSON.parse(response.body)
   end
 
