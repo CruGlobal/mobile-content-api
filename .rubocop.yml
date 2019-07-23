@@ -36,3 +36,6 @@ MethodLength:
 
 RSpec/MultipleExpectations:
   Max: 2
+
+RSpec/ExampleLength:
+  Max: 8
