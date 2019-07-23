@@ -24,7 +24,7 @@ class ResourcesController < ApplicationController
   end
 
   def push_to_onesky # TODO: this could be done for individual pages when their structure is updated
-    PageClient.new(load_resource, 'en').push_new_onesky_translation(params['keep-existing-phrases'])
+    PageClient.new(load_resource, 'en').push_new_onesky_translation param?('keep-existing-phrases')
 
     head :no_content
   end
