@@ -54,6 +54,12 @@ class Translation < ActiveRecord::Base
     order(version: :desc).find_by(resource_id: resource_id, language_id: language_id)
   end
 
+  # Returns the manifest (XML) content to use for this translation (language).
+  # @return [String] or nil if no manifest exists
+  def resolve_manifest
+    resource.custom_manifests.find_by(language_id: language_id)&.structure || resource.manifest
+  end
+
   def manifest_translated_phrases
     @manifest_translated_phrases ||= download_translated_phrases('name_description.xml')
   end

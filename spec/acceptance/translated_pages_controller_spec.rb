@@ -9,7 +9,7 @@ resource 'TranslatedPages' do
 <article xmlns="https://mobile-content-api.cru.org/xmlns/article">
 </article>'
   end
-  let(:data) { { data: { type: :translated_page, attributes: { value: article, resource_id: 3, language_id: 2 } } } }
+  let(:data) { { data: { type: 'translated-page', attributes: { value: article, resource_id: 3, language_id: 2 } } } }
 
   before do
     header 'Authorization', :authorization

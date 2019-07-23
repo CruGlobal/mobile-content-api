@@ -2,14 +2,14 @@
 
 require 'acceptance_helper'
 
-resource 'Follow Ups' do
+resource 'FollowUps' do
   header 'Accept', 'application/vnd.api+json'
   header 'Content-Type', 'application/vnd.api+json'
   let(:raw_post) { params.to_json }
 
   post 'follow_ups/' do
     let(:data) do
-      { type: :follow_up,
+      { type: type,
         attributes: { name: 'Billy Bob', email: 'bob@test.com', language_id: 2, destination_id: 1 } }
     end
 
