@@ -89,8 +89,6 @@ resource 'CustomManifests' do
   get 'custom_manifests/:id' do
     let(:id) { a_custom_manifest.id }
 
-    requires_authorization
-
     it 'retrieves a custom manifest' do
       do_request
 
