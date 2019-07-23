@@ -59,7 +59,7 @@ resource 'CustomManifests' do
       do_request data: { attributes: attrs }
 
       expect(status).to be(200)
-      expect(JSON.parse(response_body)['data']).not_to be_nil
+      expect(JSON.parse(response_body)['data']).not_to be nil
     end
   end
 
@@ -73,7 +73,7 @@ resource 'CustomManifests' do
       do_request data: { type: type, attributes: attrs }
 
       expect(status).to be(200)
-      expect(JSON.parse(response_body)['data']).not_to be_nil
+      expect(JSON.parse(response_body)['data']).not_to be nil
     end
   end
 
@@ -87,6 +87,21 @@ resource 'CustomManifests' do
 
       expect(status).to be(204)
       expect(response_body).to be_empty
+    end
+  end
+
+  get 'custom_manifests/:id' do
+    let(:id) { a_custom_manifest.id }
+
+    requires_authorization
+
+    it 'retrieves a custom manifest' do
+      do_request
+
+      expect(status).to be(200)
+      data = JSON.parse(response_body)['data']
+      expect(data['id'].to_i).to eql id
+      expect(data['type']).to eql 'custom-manifest'
     end
   end
 end
