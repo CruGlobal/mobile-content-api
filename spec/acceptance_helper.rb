@@ -8,38 +8,45 @@ RspecApiDocumentation.configure do |config|
   config.format = :json
 end
 
-def requires_authorization
-  it 'must send a token', document: false do
-    blank
-  end
+RSpec.configure do |config|
+  config.extend(Module.new do
+    def requires_authorization
+      it 'must send a token', document: false do
+        blank
+      end
 
-  it 'cannot use an expired token', document: false do
-    expired
-  end
-end
+      it 'cannot use an expired token', document: false do
+        expired
+      end
+    end
+  end)
+  config.include(Module.new do
+    def type
+      example.metadata[:resource_name].singularize.underscore.tr('_', '-')
+    end
 
-private
+    def blank
+      header 'Authorization', nil
 
-def blank
-  header 'Authorization', nil
+      do_request
 
-  do_request
+      expect(status).to be(401)
+      expect(JSON.parse(response_body)['data']).to be nil
+    end
 
-  expect(status).to be(401)
-  expect(JSON.parse(response_body)['data']).to be_nil
-end
+    def expired
+      header 'Authorization', expired_token
 
-def expired
-  header 'Authorization', expired_token
+      do_request
 
-  do_request
+      expect(status).to be(401)
+      expect(JSON.parse(response_body)['data']).to be nil
+    end
 
-  expect(status).to be(401)
-  expect(JSON.parse(response_body)['data']).to be_nil
-end
-
-def expired_token
-  auth = AuthToken.create!(access_code: AccessCode.find(1))
-  auth.update!(expiration: DateTime.now.utc - 25.hours)
-  auth.token
+    def expired_token
+      auth = AuthToken.create!(access_code: AccessCode.find(1))
+      auth.update!(expiration: DateTime.now.utc - 25.hours)
+      auth.token
+    end
+  end)
 end
