@@ -182,5 +182,39 @@ describe XML::Manifest do
         expect(result).to be_nil
       end
     end
+
+    context 'resource has a custom manifest without i18n-id attribute' do
+      let(:translation) do
+        t = Translation.find(1)
+        t.resource.manifest = '<?xml version="1.0"?>
+<manifest xmlns="https://mobile-content-api.cru.org/xmlns/manifest"
+          xmlns:article="https://mobile-content-api.cru.org/xmlns/article"
+          xmlns:content="https://mobile-content-api.cru.org/xmlns/content">
+    <title><content:text i18n-id="name">Questions about God</content:text></title>
+</manifest>'
+        allow(t).to(receive(:translated_name).and_return('*Questions about God*'))
+        allow(t).to(receive(:manifest_translated_phrases).and_return({}))
+
+        t
+      end
+
+      let(:custom_manifest_structure) do
+        '<?xml version="1.0" encoding="UTF-8" ?>
+<manifest xmlns="https://mobile-content-api.cru.org/xmlns/manifest"
+          xmlns:article="https://mobile-content-api.cru.org/xmlns/article"
+          xmlns:content="https://mobile-content-api.cru.org/xmlns/content">
+    <title><content:text>Renderer Testing (es)</content:text></title>
+</manifest>'
+      end
+      let(:language) { translation.language }
+      let(:custom_manifest) do
+        translation.resource.custom_manifests.create! language: language, structure: custom_manifest_structure
+      end
+
+      it 'uses custom manifest structure' do
+        custom_manifest
+        expect(manifest.document.to_s).to include('Renderer Testing (es)')
+      end
+    end
   end
 end

@@ -57,7 +57,9 @@ module XML
       title_node = XmlUtil.xpath_namespace(manifest_node, 'manifest:title').first
       return if title_node.nil?
 
-      name_node = title_node.xpath('content:text[@i18n-id]').first
+      name_node = title_node.xpath('content:text[@i18n-id]')&.first
+      return if name_node.nil?
+
       name_node.attributes['i18n-id'].value
     end
 
