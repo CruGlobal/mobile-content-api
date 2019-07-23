@@ -67,9 +67,14 @@ describe Translation do
     mock_onesky(page_name, nil, 204)
     translation = described_class.find(2)
 
-    expect { translation.translated_page(1, false) }.to(
-      raise_error(Error::TextNotFoundError, 'No translated phrases found for this language.')
-    )
+    expect { translation.translated_page(1, true) }.to raise_error(Error::TextNotFoundError)
+  end
+
+  it 'no error raised if there is no phrases returned for non-strict mode' do
+    mock_onesky(page_name, nil, 204)
+    translation = described_class.find(2)
+
+    expect(translation.translated_page(1, false)).not_to be_empty
   end
 
   it 'error is raised if strict mode and translated phrase not found' do
