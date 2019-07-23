@@ -105,10 +105,6 @@ resource 'Resources' do
        </manifest>'
     end
 
-    before do
-      header 'Authorization', :authorization
-    end
-
     put 'resources/:id' do
       requires_authorization
 

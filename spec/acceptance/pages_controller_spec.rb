@@ -10,10 +10,6 @@ resource 'Pages' do
   let(:authorization) { AuthToken.create!(access_code: AccessCode.find(1)).token }
   let(:test_structure) { '<?xml version="1.0" encoding="UTF-8" ?><page> new page </page>' }
 
-  before do
-    header 'Authorization', :authorization
-  end
-
   post 'pages' do
     let(:attrs) { { filename: 'test.xml', structure: test_structure, resource_id: 2, position: 1 } }
 

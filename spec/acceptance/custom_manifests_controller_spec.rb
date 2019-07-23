@@ -36,10 +36,6 @@ resource 'CustomManifests' do
       resource.custom_manifests.create!(language: language, structure: empty_structure)
   end
 
-  before do
-    header 'Authorization', :authorization
-  end
-
   post 'custom_manifests/' do
     requires_authorization
 

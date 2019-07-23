@@ -34,10 +34,6 @@ resource 'Languages' do
   end
 
   post 'languages' do
-    before do
-      header 'Authorization', :authorization
-    end
-
     requires_authorization
 
     it 'create a language' do
