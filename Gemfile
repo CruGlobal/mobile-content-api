@@ -57,7 +57,7 @@ group :development, :test do
   gem 'guard-rubocop'
   gem 'rspec'
   gem 'rspec-rails', '~> 3.4'
-  gem 'rspec_api_documentation', require: false
+  gem 'rspec_api_documentation'
   gem 'rubocop', '~> 0.49.0', require: false
   gem 'rubocop-rspec', require: false
   gem 'simplecov', require: false
