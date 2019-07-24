@@ -366,7 +366,7 @@ DEPENDENCIES
   lograge
   loofah (~> 2.2.1)
   nokogiri (>= 1.8.5)
-  oj
+  oj (~> 3.7.9)
   ougai (~> 1.7)
   paperclip
   pg
