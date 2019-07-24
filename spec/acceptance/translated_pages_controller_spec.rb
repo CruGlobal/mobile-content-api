@@ -11,10 +11,6 @@ resource 'TranslatedPages' do
   end
   let(:data) { { data: { type: 'translated-page', attributes: { value: article, resource_id: 3, language_id: 2 } } } }
 
-  before do
-    header 'Authorization', :authorization
-  end
-
   post 'translated_pages/' do
     requires_authorization
 

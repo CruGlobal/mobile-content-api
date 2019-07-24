@@ -36,10 +36,6 @@ resource 'CustomManifests' do
       resource.custom_manifests.create!(language: language, structure: empty_structure)
   end
 
-  before do
-    header 'Authorization', :authorization
-  end
-
   post 'custom_manifests/' do
     requires_authorization
 
@@ -92,8 +88,6 @@ resource 'CustomManifests' do
 
   get 'custom_manifests/:id' do
     let(:id) { a_custom_manifest.id }
-
-    requires_authorization
 
     it 'retrieves a custom manifest' do
       do_request

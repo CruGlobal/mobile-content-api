@@ -11,10 +11,6 @@ resource 'TranslatedAttributes' do
     AuthToken.create!(access_code: AccessCode.find(1)).token
   end
 
-  before do
-    header 'Authorization', :authorization
-  end
-
   post 'translated_attributes' do
     let(:attrs) do
       { attribute_id: 2, translation_id: 2, value: 'translated attr' }
