@@ -13,12 +13,9 @@ resource 'CustomPages' do
       xmlns:content="https://mobile-content-api.cru.org/xmlns/content">
 </page>'
   end
+
   let(:authorization) do
     AuthToken.create!(access_code: AccessCode.find(1)).token
-  end
-
-  before do
-    header 'Authorization', :authorization
   end
 
   post 'custom_pages/' do

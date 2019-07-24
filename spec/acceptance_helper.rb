@@ -11,6 +11,14 @@ end
 RSpec.configure do |config|
   config.extend(Module.new do
     def requires_authorization
+      before do
+        header 'Authorization', :authorization
+      end
+
+      after do
+        header 'Authorization', nil
+      end
+
       it 'must send a token', document: false do
         blank
       end

@@ -10,10 +10,6 @@ resource 'Attributes' do
     AuthToken.create!(access_code: AccessCode.find(1)).token
   end
 
-  before do
-    header 'Authorization', :authorization
-  end
-
   post 'attributes/' do
     let(:data) { { type: :attribute, attributes: { key: 'foo', value: 'bar', resource_id: 1 } } }
 

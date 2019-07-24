@@ -11,10 +11,6 @@ resource 'Drafts' do
     AuthToken.create!(access_code: AccessCode.find(1)).token
   end
 
-  before do
-    header 'Authorization', :authorization
-  end
-
   get 'drafts/' do
     requires_authorization
 
