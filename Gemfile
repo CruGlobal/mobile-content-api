@@ -8,21 +8,20 @@ gem 'pg'
 # Use Puma as the app server
 gem 'puma', '~> 3.0', require: false
 
-gem 'syslog-logger'
-
 gem 'active_model_serializers', '= 0.10.5'
-gem 'aws-sdk'
-gem 'aws-sdk-rails'
-gem 'ddtrace'
-gem 'loofah', '~> 2.2.1'
 gem 'nokogiri', '>= 1.8.5'
 gem 'oj', '~> 3.7.9'
 gem 'paperclip'
-gem 'rails-html-sanitizer', '>= 1.0.4'
 gem 'rest-client', '~> 2.0.1'
-gem 'rollbar'
 gem 'rubyzip', '>= 1.2.2'
+gem 'syslog-logger'
 gem 'validates_email_format_of'
+
+# External (services)
+gem 'aws-sdk'
+gem 'aws-sdk-rails'
+gem 'ddtrace'
+gem 'rollbar'
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console

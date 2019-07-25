@@ -330,7 +330,6 @@ DEPENDENCIES
   guard-rubocop
   listen (~> 3.0.5)
   lograge
-  loofah (~> 2.2.1)
   nokogiri (>= 1.8.5)
   oj (~> 3.7.9)
   ougai (~> 1.7)
@@ -340,7 +339,6 @@ DEPENDENCIES
   rack-cors
   raddocs
   rails (~> 5.0.2)
-  rails-html-sanitizer (>= 1.0.4)
   rest-client (~> 2.0.1)
   rollbar
   rspec
