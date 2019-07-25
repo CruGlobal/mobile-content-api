@@ -1,4 +1,4 @@
-FROM 056154071827.dkr.ecr.us-east-1.amazonaws.com/base-image-ruby-version-arg:2.3
+FROM 056154071827.dkr.ecr.us-east-1.amazonaws.com/base-image-ruby-version-arg:2.5
 MAINTAINER cru.org <wmd@cru.org>
 
 ARG RAILS_ENV=production
