@@ -78,12 +78,19 @@ describe Translation do
   end
 
   it 'error is raised if strict mode and translated phrase not found' do
-    mock_onesky(page_name, "{ \"#{element_one_id}\":\"#{phrase_one}\" }")
-    translation = described_class.find(3)
+    mock_onesky(page_name, [[element_one_id, phrase_one]].to_h.to_json.to_s)
+    translation = described_class.find(1)
 
     expect { translation.translated_page(1, true) }
-      .to(raise_error(Error::TextNotFoundError,
-                      "Translated phrase not found: ID: #{element_two_id}, base text: two un-translated phrase"))
+      .to(raise_error(Error::TextNotFoundError, /Translated phrase not found: ID: #{element_two_id}/))
+  end
+
+  it 'error is raised if strict mode and translated phrase for attribute not found' do
+    mock_onesky(page_name, [[element_one_id, phrase_one], [element_two_id, phrase_two]].to_h.to_json.to_s)
+    translation = described_class.find(1)
+
+    expect { translation.translated_page(1, true) }
+      .to(raise_error(Error::TextNotFoundError, /Translated phrase not found: ID: #{element_three_id}/))
   end
 
   it 'error not raised raised if not strict mode and translated phrase not found' do
@@ -225,11 +232,11 @@ describe Translation do
   end
 
   def includes_translated_phrases
-    expect(result.include?(phrase_one_element)).to be_truthy
-    expect(result.include?(phrase_two_element)).to be_truthy
+    expect(result).to include phrase_one_element
+    expect(result).to include phrase_two_element
   end
 
   def includes_translated_attributes
-    expect(result.include?(phrase_three_element)).to be_truthy
+    expect(result).to include phrase_three
   end
 end
