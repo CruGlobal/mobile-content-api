@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class TranslatedAttribute < ActiveRecord::Base
-  belongs_to :parent_attribute, foreign_key: :attribute_id, class_name: 'Attribute'
+  belongs_to :parent_attribute, foreign_key: :attribute_id, class_name: 'Attribute', inverse_of: :translated_attributes
   belongs_to :translation
 
   validates :value, presence: true

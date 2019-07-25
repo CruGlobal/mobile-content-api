@@ -17,7 +17,6 @@ resource 'Translations' do
 
   get 'translations/:id' do
     it 'get a translation' do
-      # rubocop:disable AnyInstance
       allow_any_instance_of(Translation).to receive(:s3_url).and_return('www.google.com')
       id = 1
 

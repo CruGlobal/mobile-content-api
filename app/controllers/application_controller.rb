@@ -21,9 +21,7 @@ class ApplicationController < ActionController::Base
   end
 
   def render(**args)
-    if args.key? :json
-      response.headers['Content-Type'] = 'application/vnd.api+json'
-    end
+    response.headers['Content-Type'] = 'application/vnd.api+json' if args.key?(:json)
 
     super
   end
