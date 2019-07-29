@@ -10,7 +10,7 @@ gem 'puma', '~> 3.0', require: false
 
 gem 'active_model_serializers', '= 0.10.5'
 gem 'nokogiri', '>= 1.8.5'
-gem 'oj', '~> 3.7.9'
+gem 'oj', '~> 3.8.1'
 gem 'paperclip'
 gem 'rest-client', '~> 2.0.1'
 gem 'rubyzip', '>= 1.2.2'

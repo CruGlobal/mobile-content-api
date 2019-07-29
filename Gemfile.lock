@@ -157,7 +157,7 @@ GEM
     notiffany (0.1.1)
       nenv (~> 0.1)
       shellany (~> 0.0)
-    oj (3.7.12)
+    oj (3.8.1)
     ougai (1.7.1)
       oj (~> 3.4)
     paperclip (5.2.0)
@@ -330,7 +330,7 @@ DEPENDENCIES
   listen (~> 3.0.5)
   lograge
   nokogiri (>= 1.8.5)
-  oj (~> 3.7.9)
+  oj (~> 3.8.1)
   ougai (~> 1.7)
   paperclip
   pg
