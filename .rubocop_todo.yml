@@ -53,6 +53,7 @@ RSpec/ContextWording:
 # SupportedStyles: inflected, explicit
 RSpec/PredicateMatcher:
   Exclude:
+    - 'spec/controllers/application_controller_spec.rb'
     - 'spec/models/translation_spec.rb'
     - 'spec/package_spec.rb'
 

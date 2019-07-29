@@ -26,13 +26,18 @@ Metrics/LineLength:
 Metrics/BlockLength:
   Exclude:
     - spec/**/*
-  Max: 30
+    - config/environments/*
+    - config/initializers/*
 
 MethodLength:
   Max: 20
 
 Layout/EmptyLineAfterGuardClause:
   Enabled: false
+
+Layout/RescueEnsureAlignment:
+  Exclude:
+    - config/initializers/*
 
 RSpec/MultipleExpectations:
   Max: 3

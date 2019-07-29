@@ -14,6 +14,7 @@ describe ApplicationController do
   before(:all) do
     Mime::Type.register 'application/vnd.api+json', :json_api
   end
+  # rubocop: enable BeforeAfterAll
 
   it 'params are not merged if no body' do
     set_method_and_jsonapi_headers 'DELETE'
@@ -76,4 +77,5 @@ describe ApplicationController do
     request.headers['REQUEST-METHOD'] = method
     request.headers['Content-Type'] = 'application/vnd.api+json'
   end
+  # rubocop:enable AccessorMethodName
 end
