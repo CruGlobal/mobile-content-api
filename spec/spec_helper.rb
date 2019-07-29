@@ -115,5 +115,6 @@ RSpec.configure do |config|
 
       allow(Aws::S3::Resource).to receive(:new).with(region: region).and_return(s3)
     end
+    # rubocop:enable AbcSize
   end)
 end

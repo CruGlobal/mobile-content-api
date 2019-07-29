@@ -2,11 +2,7 @@ inherit_from: .rubocop_todo.yml
 require: rubocop-rspec
 
 AllCops:
-  TargetRubyVersion: 2.3
-  Include:
-    - '**/Rakefile'
-    - '**/config.ru'
-    - '**/Gemfile'
+  TargetRubyVersion: 2.5
   Exclude:
     - db/**/*
     - script/**/*
@@ -30,10 +26,18 @@ Metrics/LineLength:
 Metrics/BlockLength:
   Exclude:
     - spec/**/*
-  Max: 30
+    - config/environments/*
+    - config/initializers/*
 
 MethodLength:
   Max: 20
+
+Layout/EmptyLineAfterGuardClause:
+  Enabled: false
+
+Layout/RescueEnsureAlignment:
+  Exclude:
+    - config/initializers/*
 
 RSpec/MultipleExpectations:
   Max: 3

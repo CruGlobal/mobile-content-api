@@ -22,11 +22,6 @@ module OneSky
     JSON.parse(response.body)
   end
 
-  def download_translated_phrases(*args)
-    OneSky.download_translated_phrases(*args)
-  end
-  private :download_translated_phrases
-
   # @param filename [String] a (JSON) file path
   def self.push_phrases(filename, project_id:, language_code:, keep_existing: true)
     if filename.is_a?(File)
@@ -52,6 +47,12 @@ module OneSky
       timestamp: AuthUtil.epoch_time_seconds,
       dev_hash: HashUtil.dev_hash,
       locale: language_code }
+  end
+
+  private
+
+  def download_translated_phrases(*args)
+    OneSky.download_translated_phrases(*args)
   end
 
   class << self

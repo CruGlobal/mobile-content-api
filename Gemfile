@@ -35,7 +35,7 @@ gem 'aws-sdk-rails'
 gem 'ddtrace'
 gem 'loofah', '~> 2.2.1'
 gem 'nokogiri', '>= 1.8.5'
-gem 'oj'
+gem 'oj', '~> 3.7.9'
 gem 'paperclip'
 gem 'pg'
 gem 'rails-html-sanitizer', '>= 1.0.4'
@@ -58,7 +58,7 @@ group :development, :test do
   gem 'rspec'
   gem 'rspec-rails', '~> 3.4'
   gem 'rspec_api_documentation'
-  gem 'rubocop', '~> 0.49.0', require: false
+  gem 'rubocop', '~> 0.66.0', require: false
   gem 'rubocop-rspec', require: false
   gem 'simplecov', require: false
   gem 'webmock', require: false
