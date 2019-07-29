@@ -67,6 +67,21 @@ class ApplicationController < ActionController::Base
     params.merge!(ActiveSupport::JSON.decode(request.body.string))
   end
 
+  FALSE_VALUES = ActiveModel::Type::Boolean::FALSE_VALUES
+  private_constant :FALSE_VALUES
+
+  # Get a parameter as a boolean value.
+  # 'false', '0' (or if param is not present) are false-y.
+  # @return [true, false]
+  def param?(name)
+    param = params[name.to_s]
+    if param.to_s.blank?
+      nil
+    else
+      !FALSE_VALUES.include?(param)
+    end
+  end
+
   class ApiError
     include ActiveModel::Model
 
