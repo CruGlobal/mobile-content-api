@@ -2,11 +2,11 @@
 source 'https://rubygems.org'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem 'rails', '~> 5.0.2'
+gem 'rails', '~> 5.1.7'
 # Use PostgreSQL as the database for Active Record
 gem 'pg'
 # Use Puma as the app server
-gem 'puma', '~> 3.0', require: false
+gem 'puma', '~> 3.7'
 
 gem 'active_model_serializers', '= 0.10.5'
 gem 'nokogiri', '>= 1.8.5'
