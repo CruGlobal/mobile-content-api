@@ -34,7 +34,7 @@ group :development, :test do
   gem 'rspec'
   gem 'rspec-rails', '~> 3.6'
   gem 'rspec_api_documentation'
-  gem 'rubocop', '~> 0.66.0', require: false
+  gem 'rubocop', '~> 0.73.0', require: false
   gem 'rubocop-rspec', require: false
   gem 'simplecov', require: false
   gem 'webmock', require: false
