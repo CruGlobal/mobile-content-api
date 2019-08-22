@@ -6,7 +6,7 @@ describe MonitorsController, type: :request do
   context '#lb' do
     it 'gives success because we have a valid database connection' do
       get '/monitors/lb'
-      expect(response).to be_success
+      expect(response).to be_successful
     end
   end
 
