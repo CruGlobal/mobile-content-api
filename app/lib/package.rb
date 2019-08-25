@@ -87,7 +87,7 @@ class Package
   end
 
   def save_attachment_to_file(attachment)
-    string_io_bytes = open(attachment.file.url).read
+    string_io_bytes = open(rails_blob_path(attachment.file)).read
     sha_filename = attachment.sha256
 
     File.binwrite("#{@directory}/#{sha_filename}", string_io_bytes)

@@ -4,7 +4,7 @@ class AttachmentsController < ApplicationController
   before_action :authorize!, only: [:create, :update, :destroy]
 
   def download
-    redirect_to load_attachment.file.url, status: :found
+    redirect_to rails_blob_path(load_attachment.file), status: :found
   end
 
   def create

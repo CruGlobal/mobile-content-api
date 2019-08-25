@@ -3,25 +3,28 @@
 require 'xml_util'
 
 class Attachment < ActiveRecord::Base
-  validates :file, presence: true
+  validates :file, attached: true
   validates :is_zipped, inclusion: { in: [true, false] }
   validates :resource, presence: true, uniqueness: { scope: :file_file_name }
   validates_with AttachmentValidator, if: :queued
 
   belongs_to :resource
 
-  has_attached_file :file
-  validates_attachment :file, content_type: { content_type: %w(image/jpg image/jpeg image/png image/gif) }
+  has_one_attached :file
+  validates :file, file_content_type: {
+    allow: ['image/jpeg', 'image/png', 'image/gif', 'image/jpg'],
+    if: -> { file.attached? }
+  }
 
   before_validation :set_defaults
   before_save :save_sha256, if: :queued
 
   def queued
-    file.queued_for_write[:original]
+    file.attached?
   end
 
   def generate_sha256
-    XmlUtil.filename_sha(open(queued.path).read)
+    XmlUtil.filename_sha(open(Rails.application.routes.url_helpers.rails_blob_path(file)).read)
   end
 
   private
