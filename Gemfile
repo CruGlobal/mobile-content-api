@@ -61,5 +61,5 @@ end
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
 gem 'dogstatsd-ruby'
 gem 'lograge'
-gem 'ougai', '~> 1.7'
+gem 'ougai', '~> 1.8'
 gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
