@@ -168,7 +168,7 @@ GEM
       nenv (~> 0.1)
       shellany (~> 0.0)
     oj (3.8.1)
-    ougai (1.7.1)
+    ougai (1.8.0)
       oj (~> 3.4)
     paperclip (5.2.0)
       activemodel (>= 4.2.0)
@@ -343,7 +343,7 @@ DEPENDENCIES
   lograge
   nokogiri (>= 1.8.5)
   oj (~> 3.8.1)
-  ougai (~> 1.7)
+  ougai (~> 1.8)
   paperclip
   pg
   puma (~> 3.11)
