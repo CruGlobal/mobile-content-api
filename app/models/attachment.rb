@@ -5,7 +5,7 @@ require 'xml_util'
 class Attachment < ActiveRecord::Base
   validates :file, attached: true
   validates :is_zipped, inclusion: { in: [true, false] }
-  validates :resource, presence: true, uniqueness: { scope: :file_file_name }
+  validates :resource, presence: true
   validates_with AttachmentValidator, if: :queued
 
   belongs_to :resource
@@ -24,10 +24,15 @@ class Attachment < ActiveRecord::Base
   end
 
   def generate_sha256
+    return XmlUtil.filename_sha(open(ActiveStorage::Blob.service.send(:path_for, file.key)).read) if Rails.env == "test"
     XmlUtil.filename_sha(open(Rails.application.routes.url_helpers.rails_blob_path(file)).read)
   end
 
   private
+
+  def attached_filename
+    file.filename.to_s
+  end
 
   def set_defaults
     self.is_zipped ||= false

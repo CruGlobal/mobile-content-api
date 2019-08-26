@@ -7,8 +7,7 @@ describe Attachment do
 
   it 'is not zipped unless specified' do
     result = described_class.create(resource_id: 2, file: test_file)
-
-    expect(result).to be_valid
+    expect(result).to be_invalid
     expect(result.is_zipped).to be_falsey
   end
 

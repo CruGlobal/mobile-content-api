@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_08_25_234219) do
+ActiveRecord::Schema.define(version: 2019_08_26_132847) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -43,10 +43,10 @@ ActiveRecord::Schema.define(version: 2019_08_25_234219) do
   end
 
   create_table "attachments", force: :cascade do |t|
-    t.string "file_file_name", null: false
-    t.string "file_content_type", null: false
-    t.integer "file_file_size", null: false
-    t.datetime "file_updated_at", null: false
+    t.string "file_file_name"
+    t.string "file_content_type"
+    t.string "file_file_size"
+    t.string "file_updated_at"
     t.integer "resource_id"
     t.boolean "is_zipped", default: false, null: false
     t.string "sha256"

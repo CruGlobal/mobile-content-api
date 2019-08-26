@@ -99,10 +99,10 @@ describe Package do
     mock_s3(instance_double(Aws::S3::Object, upload_file: true), translation)
 
     allow_any_instance_of(Paperclip::Attachment).to receive(:url) do |attachment|
-      "#{fixture_path}/#{attachment.instance.file_file_name}"
+      "#{fixture_path}/#{attachment.instance.file.filename}"
     end
     allow_any_instance_of(Paperclip::Attachment).to receive(:original_filename) do |attachment|
-      attachment.instance.file_file_name
+      attachment.instance.file.filename
     end
 
     allow(SecureRandom).to receive(:uuid).and_return(guid)

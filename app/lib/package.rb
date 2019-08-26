@@ -75,7 +75,7 @@ class Package
 
   def add_attachments(zip_file, manifest) # rubocop:disable Metrics/AbcSize
     @resources.uniq.each do |filename|
-      attachment = @translation.resource.attachments.find_by(file_file_name: filename)
+      attachment = @translation.resource.attachments.joins(:active_storage_attachments).joins(:active_storage_blobs).where(filename: filename)
       raise ActiveRecord::RecordNotFound, "Attachment not found: #{filename}" if attachment.nil?
       Rails.logger.info("Adding attachment with id: #{attachment.id} to package " \
                         "for translation with id: #{@translation.id}")
