@@ -27,7 +27,7 @@ class Attachment < ActiveRecord::Base
   end
 
   def url
-    Rails.application.routes.url_helpers.rails_blob_path(file)
+    Rails.application.routes.url_helpers.rails_blob_url(file)
   end
 
   def generate_sha256
