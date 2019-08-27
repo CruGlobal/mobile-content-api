@@ -119,7 +119,6 @@ View.find_or_create_by!(quantity: 550, resource: kgp)
 View.find_or_create_by!(quantity: 718, resource: kgp)
 
 Attachment.create!(resource: kgp, file: Rack::Test::UploadedFile.new('spec/fixtures/wall.jpg', 'image/png'), is_zipped: true)
-# byebug
 Attachment.create!(resource: kgp, file: Rack::Test::UploadedFile.new('spec/fixtures/beal.jpg', 'image/png'))
 Attachment.create!(resource: kgp, file: Rack::Test::UploadedFile.new('spec/fixtures/mobile_only.png', 'image/png'), is_zipped: true)
 Attachment.create!(resource: kgp, file: Rack::Test::UploadedFile.new('spec/fixtures/web_mobile.png', 'image/png'))

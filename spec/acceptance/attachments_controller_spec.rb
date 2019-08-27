@@ -6,6 +6,12 @@ resource 'Attachments' do
   let(:test_file) { Rack::Test::UploadedFile.new("#{fixture_path}/wall.jpg", 'image/png') }
   let(:authorization) { AuthToken.create!(access_code: AccessCode.find(1)).token }
 
+  before do
+    allow_any_instance_of(Attachment).to receive(:url) do |attachment|
+      ActiveStorage::Blob.service.send(:path_for, attachment.file.key)
+    end
+  end
+
   get 'attachments/:id/download' do
     let(:id) { 1 }
 

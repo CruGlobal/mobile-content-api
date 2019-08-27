@@ -6,7 +6,8 @@ class Attachment < ActiveRecord::Base
   validates :file, attached: true
   validates :is_zipped, inclusion: { in: [true, false] }
   validates :resource, presence: true
-  validates_with AttachmentValidator, if: :queued
+  validates_with AttachmentValidator, if: :changed?
+  validates_with AttachmentFilenameDuplicateValidator, if: :changed?
 
   belongs_to :resource
 
@@ -17,22 +18,24 @@ class Attachment < ActiveRecord::Base
   }
 
   before_validation :set_defaults
-  before_save :save_sha256, if: :queued
+  before_save :save_sha256, if: :changed?
+  after_save :update_filename, if: :changed?
 
-  def queued
-    file.attached?
+  def changed?
+    return true if filename != file.filename.to_s
+    false
+  end
+
+  def url
+    Rails.application.routes.url_helpers.rails_blob_path(file)
   end
 
   def generate_sha256
-    return XmlUtil.filename_sha(open(ActiveStorage::Blob.service.send(:path_for, file.key)).read) if Rails.env == "test"
-    XmlUtil.filename_sha(open(Rails.application.routes.url_helpers.rails_blob_path(file)).read)
+    # return XmlUtil.filename_sha(open(ActiveStorage::Blob.service.send(:path_for, file.key)).read) if Rails.env == "test"
+    XmlUtil.filename_sha(open(url).read)
   end
 
   private
-
-  def attached_filename
-    file.filename.to_s
-  end
 
   def set_defaults
     self.is_zipped ||= false
@@ -40,5 +43,10 @@ class Attachment < ActiveRecord::Base
 
   def save_sha256
     self.sha256 = generate_sha256
+  end
+
+  def update_filename
+    self.filename = file.filename.to_s
+    save
   end
 end

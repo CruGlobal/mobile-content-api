@@ -15,6 +15,7 @@ gem 'bootsnap', '>= 1.1.0', require: false
 
 gem 'active_model_serializers', '= 0.10.5'
 gem 'active_storage_validations'
+gem 'aws-sdk-s3'
 gem 'file_validators'
 gem 'mini_magick', '~> 4.8'
 gem 'nokogiri', '>= 1.8.5'
