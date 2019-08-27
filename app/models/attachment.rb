@@ -31,7 +31,6 @@ class Attachment < ActiveRecord::Base
   end
 
   def generate_sha256
-    # return XmlUtil.filename_sha(open(ActiveStorage::Blob.service.send(:path_for, file.key)).read) if Rails.env == "test"
     XmlUtil.filename_sha(open(url).read)
   end
 
