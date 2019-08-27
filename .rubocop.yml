@@ -44,3 +44,6 @@ RSpec/MultipleExpectations:
 
 RSpec/ExampleLength:
   Max: 8
+
+RSpec/AnyInstance:
+  Enabled: false

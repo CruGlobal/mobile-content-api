@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 namespace :activestorage do
   task migrate: :environment do
     Rails.logger = Logger.new(STDOUT)
@@ -20,6 +22,8 @@ namespace :activestorage do
         attachment.file.attach(io: open("tmp/#{file_original}"),
                                filename: attachment.file_file_name,
                                content_type: attachment.file_content_type)
+        attachment.filename = file
+        attachment.save!
       rescue StandardError => error
         Rails.logger.warn("#{error.message} #{attachment.class.name} Model => #{file}")
       end

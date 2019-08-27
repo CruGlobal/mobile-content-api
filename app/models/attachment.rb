@@ -46,6 +46,6 @@ class Attachment < ActiveRecord::Base
 
   def update_filename
     self.filename = file.filename.to_s
-    save
+    save!
   end
 end

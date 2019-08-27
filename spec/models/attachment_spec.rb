@@ -6,7 +6,7 @@ describe Attachment do
   let(:test_file) { Rack::Test::UploadedFile.new("#{fixture_path}/wall.jpg", 'image/png') }
 
   before do
-    allow_any_instance_of(Attachment).to receive(:url) do |attachment|
+    allow_any_instance_of(described_class).to receive(:url) do |attachment|
       ActiveStorage::Blob.service.send(:path_for, attachment.file.key)
     end
   end

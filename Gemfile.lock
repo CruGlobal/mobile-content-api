@@ -1104,7 +1104,7 @@ DEPENDENCIES
   mini_magick (~> 4.8)
   nokogiri (>= 1.8.5)
   oj (~> 3.8.1)
-  ougai (~> 1.7)
+  ougai (~> 1.8)
   pg
   puma (~> 3.11)
   rack-cors
