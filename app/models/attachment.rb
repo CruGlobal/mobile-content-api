@@ -3,25 +3,35 @@
 require 'xml_util'
 
 class Attachment < ActiveRecord::Base
-  validates :file, presence: true
+  validates :file, attached: true
   validates :is_zipped, inclusion: { in: [true, false] }
-  validates :resource, presence: true, uniqueness: { scope: :file_file_name }
-  validates_with AttachmentValidator, if: :queued
+  validates :resource, presence: true
+  validates_with AttachmentValidator, if: :changed?
+  validates_with AttachmentFilenameDuplicateValidator, if: :changed?
 
   belongs_to :resource
 
-  has_attached_file :file
-  validates_attachment :file, content_type: { content_type: %w(image/jpg image/jpeg image/png image/gif) }
+  has_one_attached :file
+  validates :file, file_content_type: {
+    allow: ['image/jpeg', 'image/png', 'image/gif', 'image/jpg'],
+    if: -> { file.attached? }
+  }
 
   before_validation :set_defaults
-  before_save :save_sha256, if: :queued
+  before_save :save_sha256, if: :changed?
+  after_save :update_filename, if: :changed?
 
-  def queued
-    file.queued_for_write[:original]
+  def changed?
+    return true if filename != file.filename.to_s
+    false
+  end
+
+  def url
+    Rails.application.routes.url_helpers.rails_blob_url(file)
   end
 
   def generate_sha256
-    XmlUtil.filename_sha(open(queued.path).read)
+    XmlUtil.filename_sha(open(url).read)
   end
 
   private
@@ -32,5 +42,10 @@ class Attachment < ActiveRecord::Base
 
   def save_sha256
     self.sha256 = generate_sha256
+  end
+
+  def update_filename
+    self.filename = file.filename.to_s
+    save!
   end
 end

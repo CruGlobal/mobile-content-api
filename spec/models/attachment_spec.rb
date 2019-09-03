@@ -5,24 +5,26 @@ require 'rails_helper'
 describe Attachment do
   let(:test_file) { Rack::Test::UploadedFile.new("#{fixture_path}/wall.jpg", 'image/png') }
 
+  before do
+    allow_any_instance_of(described_class).to receive(:url) do |attachment|
+      ActiveStorage::Blob.service.send(:path_for, attachment.file.key)
+    end
+  end
+
   it 'is not zipped unless specified' do
     result = described_class.create(resource_id: 2, file: test_file)
-
     expect(result).to be_valid
     expect(result.is_zipped).to be_falsey
   end
 
   it 'cannot duplicate file name and resource' do
     result = described_class.create(resource_id: 1, file: test_file)
-
-    expect(result.errors['resource']).to include('has already been taken')
+    expect(result.errors[:file][1]).to include('filename is duplicate')
   end
 
   it 'does not read sha when not updating file' do
     attachment = described_class.find(1)
-
     attachment.update(resource_id: 2)
-
     expect(attachment).to be_valid
   end
 

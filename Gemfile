@@ -14,9 +14,12 @@ gem 'puma', '~> 3.11'
 gem 'bootsnap', '>= 1.1.0', require: false
 
 gem 'active_model_serializers', '= 0.10.5'
+gem 'active_storage_validations'
+gem 'aws-sdk-s3'
+gem 'file_validators'
+gem 'mini_magick', '~> 4.8'
 gem 'nokogiri', '>= 1.8.5'
 gem 'oj', '~> 3.8.1'
-gem 'paperclip'
 gem 'rest-client', '~> 2.0.1'
 gem 'rubyzip', '>= 1.2.2'
 gem 'syslog-logger'

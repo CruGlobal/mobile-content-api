@@ -118,6 +118,14 @@ TranslatedAttribute.find_or_create_by!(parent_attribute: attribute, translation:
 View.find_or_create_by!(quantity: 550, resource: kgp)
 View.find_or_create_by!(quantity: 718, resource: kgp)
 
+if Rails.env == "test"
+  Attachment.class_eval do
+    def url
+      ActiveStorage::Blob.service.send(:path_for, file.key)
+    end
+  end
+end
+
 Attachment.create!(resource: kgp, file: Rack::Test::UploadedFile.new('spec/fixtures/wall.jpg', 'image/png'), is_zipped: true)
 Attachment.create!(resource: kgp, file: Rack::Test::UploadedFile.new('spec/fixtures/beal.jpg', 'image/png'))
 Attachment.create!(resource: kgp, file: Rack::Test::UploadedFile.new('spec/fixtures/mobile_only.png', 'image/png'), is_zipped: true)
