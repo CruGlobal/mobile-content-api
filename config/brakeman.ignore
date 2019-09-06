@@ -1,0 +1,206 @@
+{
+  "ignored_warnings": [
+    {
+      "warning_type": "Unscoped Find",
+      "warning_code": 82,
+      "fingerprint": "0c67850b47a6a7969f0225042986a950d0ae21bc73b1afd85b50f01cbd4586dc",
+      "check_name": "UnscopedFind",
+      "message": "Unscoped call to `Attribute#find`",
+      "file": "app/controllers/attributes_controller.rb",
+      "line": 34,
+      "link": "https://brakemanscanner.org/docs/warning_types/unscoped_find/",
+      "code": "Attribute.find(params[:id])",
+      "render_path": null,
+      "location": {
+        "type": "method",
+        "class": "AttributesController",
+        "method": "load_attribute"
+      },
+      "user_input": "params[:id]",
+      "confidence": "Weak",
+      "note": ""
+    },
+    {
+      "warning_type": "Unscoped Find",
+      "warning_code": 82,
+      "fingerprint": "2fcf6c61aca934c2bf52da730148abb448c3aa319353ae8f4bc1b76dc12bc46c",
+      "check_name": "UnscopedFind",
+      "message": "Unscoped call to `CustomPage#find`",
+      "file": "app/controllers/custom_pages_controller.rb",
+      "line": 11,
+      "link": "https://brakemanscanner.org/docs/warning_types/unscoped_find/",
+      "code": "CustomPage.find(params[:id])",
+      "render_path": null,
+      "location": {
+        "type": "method",
+        "class": "CustomPagesController",
+        "method": "destroy"
+      },
+      "user_input": "params[:id]",
+      "confidence": "Weak",
+      "note": ""
+    },
+    {
+      "warning_type": "Unscoped Find",
+      "warning_code": 82,
+      "fingerprint": "52995e8314bd611d53e110c5e06e2ee57d06d5348c761e43dfc2a159e78c86fc",
+      "check_name": "UnscopedFind",
+      "message": "Unscoped call to `Translation#find`",
+      "file": "app/controllers/translations_controller.rb",
+      "line": 10,
+      "link": "https://brakemanscanner.org/docs/warning_types/unscoped_find/",
+      "code": "Translation.find(params[:id])",
+      "render_path": null,
+      "location": {
+        "type": "method",
+        "class": "TranslationsController",
+        "method": "show"
+      },
+      "user_input": "params[:id]",
+      "confidence": "Weak",
+      "note": ""
+    },
+    {
+      "warning_type": "Unscoped Find",
+      "warning_code": 82,
+      "fingerprint": "5517d1c9508fd0fec05f4b0b5cac21f4c7d5895218708f0d9c42973c68d498da",
+      "check_name": "UnscopedFind",
+      "message": "Unscoped call to `TranslatedPage#find`",
+      "file": "app/controllers/translated_pages_controller.rb",
+      "line": 22,
+      "link": "https://brakemanscanner.org/docs/warning_types/unscoped_find/",
+      "code": "TranslatedPage.find(params[:id])",
+      "render_path": null,
+      "location": {
+        "type": "method",
+        "class": "TranslatedPagesController",
+        "method": "load_translated_page"
+      },
+      "user_input": "params[:id]",
+      "confidence": "Weak",
+      "note": ""
+    },
+    {
+      "warning_type": "Unscoped Find",
+      "warning_code": 82,
+      "fingerprint": "650d49d90f04b4463ea2136f6759b525cd9448f980b181d55b263e6873fe90c0",
+      "check_name": "UnscopedFind",
+      "message": "Unscoped call to `Page#find`",
+      "file": "app/controllers/pages_controller.rb",
+      "line": 13,
+      "link": "https://brakemanscanner.org/docs/warning_types/unscoped_find/",
+      "code": "Page.find(params[:id])",
+      "render_path": null,
+      "location": {
+        "type": "method",
+        "class": "PagesController",
+        "method": "update"
+      },
+      "user_input": "params[:id]",
+      "confidence": "Weak",
+      "note": ""
+    },
+    {
+      "warning_type": "Unscoped Find",
+      "warning_code": 82,
+      "fingerprint": "6be5c8addbc8d76b082450203735dbef45eb851c62d2651bbd18f2923af5ec01",
+      "check_name": "UnscopedFind",
+      "message": "Unscoped call to `TranslatedAttribute#find`",
+      "file": "app/controllers/translated_attributes_controller.rb",
+      "line": 34,
+      "link": "https://brakemanscanner.org/docs/warning_types/unscoped_find/",
+      "code": "TranslatedAttribute.find(params[:id])",
+      "render_path": null,
+      "location": {
+        "type": "method",
+        "class": "TranslatedAttributesController",
+        "method": "load_translated_attr"
+      },
+      "user_input": "params[:id]",
+      "confidence": "Weak",
+      "note": ""
+    },
+    {
+      "warning_type": "Unscoped Find",
+      "warning_code": 82,
+      "fingerprint": "6cd997ffb13a4c8a2fb40e6c82b51568111797f7e0d5a122731b1c8843a1de74",
+      "check_name": "UnscopedFind",
+      "message": "Unscoped call to `Resource#find`",
+      "file": "app/controllers/resources_controller.rb",
+      "line": 44,
+      "link": "https://brakemanscanner.org/docs/warning_types/unscoped_find/",
+      "code": "Resource.find(params[:id])",
+      "render_path": null,
+      "location": {
+        "type": "method",
+        "class": "ResourcesController",
+        "method": "load_resource"
+      },
+      "user_input": "params[:id]",
+      "confidence": "Weak",
+      "note": ""
+    },
+    {
+      "warning_type": "Unscoped Find",
+      "warning_code": 82,
+      "fingerprint": "c14119ea6a88ea665f2ccf0616a9908ba6d7f503dad61ed82feab0d60b720423",
+      "check_name": "UnscopedFind",
+      "message": "Unscoped call to `CustomManifest#find`",
+      "file": "app/controllers/custom_manifests_controller.rb",
+      "line": 35,
+      "link": "https://brakemanscanner.org/docs/warning_types/unscoped_find/",
+      "code": "CustomManifest.find(params[:id])",
+      "render_path": null,
+      "location": {
+        "type": "method",
+        "class": "CustomManifestsController",
+        "method": "find_manifest"
+      },
+      "user_input": "params[:id]",
+      "confidence": "Weak",
+      "note": ""
+    },
+    {
+      "warning_type": "Unscoped Find",
+      "warning_code": 82,
+      "fingerprint": "cc856d8a856c341f06b1e4d9526c7015d363c12fc6dabcb5c3883b9593303dbe",
+      "check_name": "UnscopedFind",
+      "message": "Unscoped call to `Translation#find`",
+      "file": "app/controllers/drafts_controller.rb",
+      "line": 50,
+      "link": "https://brakemanscanner.org/docs/warning_types/unscoped_find/",
+      "code": "Translation.find(params[:id])",
+      "render_path": null,
+      "location": {
+        "type": "method",
+        "class": "DraftsController",
+        "method": "load_translation"
+      },
+      "user_input": "params[:id]",
+      "confidence": "Weak",
+      "note": ""
+    },
+    {
+      "warning_type": "Unscoped Find",
+      "warning_code": 82,
+      "fingerprint": "e971c83fa4b978fa4484d2f3d39662de68b053cc1f2f5501d3dff421a2b1a89e",
+      "check_name": "UnscopedFind",
+      "message": "Unscoped call to `Attachment#find`",
+      "file": "app/controllers/attachments_controller.rb",
+      "line": 28,
+      "link": "https://brakemanscanner.org/docs/warning_types/unscoped_find/",
+      "code": "Attachment.find(params[:id])",
+      "render_path": null,
+      "location": {
+        "type": "method",
+        "class": "AttachmentsController",
+        "method": "load_attachment"
+      },
+      "user_input": "params[:id]",
+      "confidence": "Weak",
+      "note": ""
+    }
+  ],
+  "updated": "2019-09-07 01:11:45 +0200",
+  "brakeman_version": "4.6.1"
+}

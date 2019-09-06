@@ -14,6 +14,5 @@ before_script:
 script:
   - bundle exec rake spec
   - bundle exec rubocop -R
-  - gem install bundler-audit brakeman
-  - bundle audit check --update
-  - brakeman -A -z --ensure-latest -x UnscopedFind,ForgerySetting --skip-files app/lib/hash_util.rb
+  - bundle exec bundle audit check --update
+  - bundle exec brakeman -A -q --no-pager --ensure-latest

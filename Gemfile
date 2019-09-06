@@ -33,6 +33,8 @@ gem 'rollbar'
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
+  gem 'brakeman'
+  gem 'bundler-audit'
   gem 'byebug', platform: :mri
   gem 'codecov', require: false
   gem 'dotenv-rails'
@@ -45,6 +47,7 @@ group :development, :test do
   gem 'rubocop', '~> 0.66.0', require: false
   gem 'rubocop-rspec', require: false
   gem 'simplecov', require: false
+  gem 'standard'
   gem 'webmock', require: false
 end
 
