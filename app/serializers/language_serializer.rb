@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class LanguageSerializer < ActiveModel::Serializer
-  type 'language'
+  type "language"
   attributes :id, :code, :name, :direction
 
   has_many :translations

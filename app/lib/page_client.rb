@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-require 'xml_util'
-require 'one_sky'
+require "xml_util"
+require "one_sky"
 
 class PageClient
   def initialize(resource, language_code)
@@ -17,13 +17,13 @@ class PageClient
     push_translatable_attributes if @resource.uses_onesky?
 
     self.class.delete_temp_pages
-  rescue StandardError => e
+  rescue => e
     self.class.delete_temp_pages
     raise e
   end
 
   def self.delete_temp_pages
-    temp_dir = Dir.glob('pages/*')
+    temp_dir = Dir.glob("pages/*")
     temp_dir.each { |file| File.delete(file) }
   end
 
@@ -36,28 +36,28 @@ class PageClient
   def push_resource_pages(keep_existing_phrases)
     @resource.pages.each do |page|
       phrases = {}
-      XmlUtil.translatable_nodes(Nokogiri::XML(page.structure)).each { |n| phrases[n['i18n-id']] = n.content }
+      XmlUtil.translatable_nodes(Nokogiri::XML(page.structure)).each { |n| phrases[n["i18n-id"]] = n.content }
 
       push_page(phrases, page.filename, keep_existing_phrases)
     end
   end
 
   def push_name_description
-    phrases = { name: @resource.name, description: @resource.description }
-    push_page(phrases, 'name_description.xml', false)
+    phrases = {name: @resource.name, description: @resource.description}
+    push_page(phrases, "name_description.xml", false)
   end
 
   def push_translatable_attributes
     phrases = Hash[@resource.resource_attributes.where(is_translatable: true).pluck(:key, :value)]
-    push_page(phrases, 'attributes.xml', true)
+    push_page(phrases, "attributes.xml", true)
   end
 
   def push_page(phrases, filename, keep_existing_phrases)
     File.write("pages/#{filename}", phrases.to_json)
 
     OneSky.push_phrases "pages/#{filename}",
-                        project_id: @resource.onesky_project_id,
-                        language_code: @language_code,
-                        keep_existing: keep_existing_phrases
+      project_id: @resource.onesky_project_id,
+      language_code: @language_code,
+      keep_existing: keep_existing_phrases
   end
 end

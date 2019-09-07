@@ -13,6 +13,6 @@ before_script:
 
 script:
   - bundle exec rake spec
-  - bundle exec rubocop -R
+  - bundle exec standardrb
   - bundle exec bundle audit check --update
   - bundle exec brakeman -A -q --no-pager --ensure-latest

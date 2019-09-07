@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
+require "rails_helper"
 
 describe AccessCode do
-  it 'sets expiration to 7 days after creation' do
+  it "sets expiration to 7 days after creation" do
     time = DateTime.current
     allow(DateTime).to receive(:now).and_return(time)
 

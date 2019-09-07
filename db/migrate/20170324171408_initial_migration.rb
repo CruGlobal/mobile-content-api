@@ -3,19 +3,19 @@
 class InitialMigration < ActiveRecord::Migration[5.0]
   def change
     create_table :systems do |t|
-      t.string :name, index: { unique: true }, null: false
+      t.string :name, index: {unique: true}, null: false
     end
 
     create_table :resources do |t|
       t.string :name, null: false
-      t.string :abbreviation, index: { unique: true }, null: false
+      t.string :abbreviation, index: {unique: true}, null: false
       t.integer :onesky_project_id, null: false
       t.references :system, null: false
     end
 
     create_table :languages do |t|
       t.string :name, null: false
-      t.string :abbreviation, index: { unique: true }, null: false
+      t.string :abbreviation, index: {unique: true}, null: false
     end
 
     create_table :translations do |t|

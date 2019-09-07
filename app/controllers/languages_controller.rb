@@ -13,7 +13,7 @@ class LanguagesController < ApplicationController
 
   def create
     language = Language.create!(permit_params(:name, :code, :direction))
-    response.headers['Location'] = "languages/#{language.id}"
+    response.headers["Location"] = "languages/#{language.id}"
     render json: language, status: :created
   rescue ActiveRecord::RecordNotUnique
     raise Error::BadRequestError, "Code #{data_attrs[:code]} already exists."

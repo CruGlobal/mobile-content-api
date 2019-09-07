@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
+require "rails_helper"
 
 describe CustomPage do
   let(:language_id) { 2 }
@@ -12,9 +12,9 @@ describe CustomPage do
 </page>'
   end
 
-  it 'Language/Page combination cannot be replicated' do
+  it "Language/Page combination cannot be replicated" do
     result = described_class.create(language_id: language_id, page_id: page_id, structure: valid_xml)
 
-    expect(result.errors[:language]).to include 'has already been taken'
+    expect(result.errors[:language]).to include "has already been taken"
   end
 end

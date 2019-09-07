@@ -1,16 +1,16 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
+require "rails_helper"
 
 describe AuthToken do
   let(:access_code) { AccessCode.find(1) }
 
-  it 'generates a value for the token' do
+  it "generates a value for the token" do
     result = described_class.create!(access_code: access_code)
     expect(result.token).not_to be_nil
   end
 
-  it 'sets expiration to 24 hours after creation' do
+  it "sets expiration to 24 hours after creation" do
     time = DateTime.current
     allow(DateTime).to receive(:now).and_return(time)
 

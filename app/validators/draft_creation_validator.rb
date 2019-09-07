@@ -6,6 +6,6 @@ class DraftCreationValidator < ActiveModel::Validator
     return if existing.nil?
 
     model.errors.add(:id,
-                     "Draft already exists for Resource ID: #{model.resource.id} and Language ID: #{model.language.id}")
+      "Draft already exists for Resource ID: #{model.resource.id} and Language ID: #{model.language.id}")
   end
 end

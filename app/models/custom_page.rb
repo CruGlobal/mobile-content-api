@@ -5,5 +5,5 @@ class CustomPage < AbstractPage
   belongs_to :page
 
   validates :page, presence: true
-  validates :language, presence: true, uniqueness: { scope: :page }
+  validates :language, presence: true, uniqueness: {scope: :page}
 end

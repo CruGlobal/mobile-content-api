@@ -1,0 +1,5 @@
+ignore:
+    - spec/controllers/application_controller_spec.rb:
+        - Performance/UnfreezeString 
+    - db/seeds.rb:
+        - Lint/UselessAssignment 
