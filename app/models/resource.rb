@@ -5,7 +5,7 @@ class Resource < ActiveRecord::Base
   belongs_to :resource_type
   has_many :translations
   has_many :pages, -> { order(:position) }, inverse_of: :resource
-  has_many :resource_attributes, class_name: 'Attribute'
+  has_many :resource_attributes, class_name: "Attribute"
   has_many :views
   has_many :attachments
   has_many :translated_pages
@@ -62,13 +62,13 @@ class Resource < ActiveRecord::Base
                        on translations.version = max_table.max_version
                        and translations.language_id = max_table.language_id
                        and translations.resource_id = max_table.resource_id")
-               .includes(:language).order('languages.name ASC')
+      .includes(:language).order("languages.name ASC")
   end
 
   # returns the highest version for each Language and this Resource
   def latest_versions(is_published)
-    Translation.select(:language_id, :resource_id, 'max(version) as max_version')
-               .where(resource_id: id, is_published: is_published)
-               .group(:language_id, :resource_id)
+    Translation.select(:language_id, :resource_id, "max(version) as max_version")
+      .where(resource_id: id, is_published: is_published)
+      .group(:language_id, :resource_id)
   end
 end

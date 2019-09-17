@@ -1,23 +1,23 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-require 'page_client'
-require 'xml_util'
+require "rails_helper"
+require "page_client"
+require "xml_util"
 
 describe PageClient do
-  let(:locale) { 'de' }
+  let(:locale) { "de" }
 
-  let(:name) { 'resource name' }
-  let(:description) { 'resource description' }
-  let(:attr_1) { Attribute.new(key: 'roger', value: 'test 1', is_translatable: true) }
-  let(:attr_2) { Attribute.new(key: 'thor', value: 'test 2', is_translatable: true) }
+  let(:name) { "resource name" }
+  let(:description) { "resource description" }
+  let(:attr_1) { Attribute.new(key: "roger", value: "test 1", is_translatable: true) }
+  let(:attr_2) { Attribute.new(key: "thor", value: "test 2", is_translatable: true) }
 
-  let(:filename_1) { 'test_page_1.xml' }
-  let(:filename_2) { 'test_page_2.xml' }
+  let(:filename_1) { "test_page_1.xml" }
+  let(:filename_2) { "test_page_2.xml" }
   let(:id_1) { 1 }
   let(:id_2) { 2 }
-  let(:phrase_1) { 'phrase 1' }
-  let(:phrase_2) { 'phrase 2' }
+  let(:phrase_1) { "phrase 1" }
+  let(:phrase_2) { "phrase 2" }
 
   let(:structure_1) do
     "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>
@@ -48,12 +48,12 @@ describe PageClient do
   end
 
   let(:resource) do
-    attributes = [attr_1, attr_2, Attribute.new(key: 'bill', value: 'test 3', is_translatable: false)]
+    attributes = [attr_1, attr_2, Attribute.new(key: "bill", value: "test 3", is_translatable: false)]
 
     pages = [Page.new(filename: filename_1, structure: structure_1, position: 1),
-             Page.new(filename: filename_2, structure: structure_2, position: 2)]
+             Page.new(filename: filename_2, structure: structure_2, position: 2),]
 
-    resource = Resource.create!(abbreviation: 'test',
+    resource = Resource.create!(abbreviation: "test",
                                 onesky_project_id: 1,
                                 name: name,
                                 description: description,
@@ -72,23 +72,23 @@ describe PageClient do
     allow(RestClient).to receive(:post)
   end
 
-  it 'deletes all temp files after successful request' do
+  it "deletes all temp files after successful request" do
     page_client.push_new_onesky_translation
 
-    pages_dir = Dir.glob('pages/*')
+    pages_dir = Dir.glob("pages/*")
     expect(pages_dir).to be_empty
   end
 
-  it 'deletes all temp files if error is raised' do
+  it "deletes all temp files if error is raised" do
     allow(RestClient).to receive(:post).and_raise(StandardError)
 
     expect { page_client.push_new_onesky_translation }.to raise_error(StandardError)
 
-    pages_dir = Dir.glob('pages/*')
+    pages_dir = Dir.glob("pages/*")
     expect(pages_dir).to be_empty
   end
 
-  context 'POSTS to OneSky' do
+  context "POSTS to OneSky" do
     let(:file_1) { double }
     let(:file_2) { double }
     let(:file_3) { double }
@@ -97,33 +97,33 @@ describe PageClient do
     before do
       allow(File).to receive(:new).with("pages/#{filename_1}").and_return(file_1)
       allow(File).to receive(:new).with("pages/#{filename_2}").and_return(file_2)
-      allow(File).to receive(:new).with('pages/name_description.xml').and_return(file_3)
-      allow(File).to receive(:new).with('pages/attributes.xml').and_return(file_4)
+      allow(File).to receive(:new).with("pages/name_description.xml").and_return(file_3)
+      allow(File).to receive(:new).with("pages/attributes.xml").and_return(file_4)
     end
 
-    it 'correct URL' do
-      url = 'https://platform.api.onesky.io/1/projects/1/files'
+    it "correct URL" do
+      url = "https://platform.api.onesky.io/1/projects/1/files"
 
       page_client.push_new_onesky_translation
 
       expect(RestClient).to have_received(:post).with(url, anything).exactly(4).times
     end
 
-    it 'all resource pages' do
+    it "all resource pages" do
       page_client.push_new_onesky_translation
 
       expect(RestClient).to have_received(:post).with(any_string, hash_including(file: file_1))
       expect(RestClient).to have_received(:post).with(any_string, hash_including(file: file_2))
     end
 
-    context 'translatable attributes' do
-      it 'resource uses OneSky' do
+    context "translatable attributes" do
+      it "resource uses OneSky" do
         page_client.push_new_onesky_translation
 
         expect(RestClient).to have_received(:post).with(any_string, hash_including(file: file_4))
       end
 
-      it 'resource does not use OneSky' do
+      it "resource does not use OneSky" do
         allow(resource).to receive(:uses_onesky?).and_return(false)
 
         page_client.push_new_onesky_translation
@@ -132,19 +132,19 @@ describe PageClient do
       end
     end
 
-    it 'name/description file' do
+    it "name/description file" do
       page_client.push_new_onesky_translation
 
       expect(RestClient).to have_received(:post).with(any_string, hash_including(file: file_3))
     end
 
-    it 'correct locale' do
+    it "correct locale" do
       page_client.push_new_onesky_translation
 
       expect(RestClient).to have_received(:post).with(any_string, hash_including(locale: locale)).exactly(4).times
     end
 
-    it 'keeps existing strings by default' do
+    it "keeps existing strings by default" do
       page_client.push_new_onesky_translation
 
       expect(RestClient).to(
@@ -153,8 +153,8 @@ describe PageClient do
     end
   end
 
-  context 'temp files created with' do
-    it 'all OneSky phrases' do
+  context "temp files created with" do
+    it "all OneSky phrases" do
       allow(described_class).to receive(:delete_temp_pages)
 
       page_client.push_new_onesky_translation
@@ -163,21 +163,21 @@ describe PageClient do
       expect(file.read).to eq("{\"#{id_1}\":\"#{phrase_1}\",\"#{id_2}\":\"#{phrase_2}\"}")
     end
 
-    it 'name and description' do
+    it "name and description" do
       allow(described_class).to receive(:delete_temp_pages)
 
       page_client.push_new_onesky_translation
 
-      file = File.new('pages/name_description.xml')
+      file = File.new("pages/name_description.xml")
       expect(file.read).to eq("{\"name\":\"#{name}\",\"description\":\"#{description}\"}")
     end
 
-    it 'translatable attributes' do
+    it "translatable attributes" do
       allow(described_class).to receive(:delete_temp_pages)
 
       page_client.push_new_onesky_translation
 
-      file = File.new('pages/attributes.xml')
+      file = File.new("pages/attributes.xml")
       expect(file.read).to eq("{\"#{attr_1.key}\":\"#{attr_1.value}\",\"#{attr_2.key}\":\"#{attr_2.value}\"}")
     end
   end

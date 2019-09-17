@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
+require "rails_helper"
 
 RSpec.describe CustomManifest, type: :model do
   let(:structure) do
@@ -23,23 +23,23 @@ RSpec.describe CustomManifest, type: :model do
 </manifest>'
   end
 
-  it 'cannot have a duplicate for resource and language' do
+  it "cannot have a duplicate for resource and language" do
     described_class.create!(resource_id: resource.id, language_id: language.id, structure: structure)
     t = described_class.create(resource_id: resource.id, language_id: language.id, structure: structure)
 
-    expect(t.errors['language']).to include('has already been taken')
+    expect(t.errors["language"]).to include("has already been taken")
   end
 
-  it 'updates structure' do
+  it "updates structure" do
     t = described_class.create!(resource_id: resource.id, language_id: language.id, structure: structure)
     t.update!(structure: empty_structure)
 
     expect(t.reload.structure).to include('i18n-id="title"')
   end
 
-  it 'validates (XML) structure' do
-    t = described_class.create(resource_id: resource.id, language_id: language.id, structure: '<invalid>XML')
+  it "validates (XML) structure" do
+    t = described_class.create(resource_id: resource.id, language_id: language.id, structure: "<invalid>XML")
 
-    expect(t.errors['structure']).not_to be_empty
+    expect(t.errors["structure"]).not_to be_empty
   end
 end

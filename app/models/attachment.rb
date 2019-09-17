@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
-require 'xml_util'
+require "xml_util"
 
 class Attachment < ActiveRecord::Base
   validates :file, attached: true
-  validates :is_zipped, inclusion: { in: [true, false] }
+  validates :is_zipped, inclusion: {in: [true, false]}
   validates :resource, presence: true
   validates_with AttachmentValidator, if: :changed?
   validates_with AttachmentFilenameDuplicateValidator, if: :changed?
@@ -13,8 +13,8 @@ class Attachment < ActiveRecord::Base
 
   has_one_attached :file
   validates :file, file_content_type: {
-    allow: ['image/jpeg', 'image/png', 'image/gif', 'image/jpg'],
-    if: -> { file.attached? }
+    allow: ["image/jpeg", "image/png", "image/gif", "image/jpg"],
+    if: -> { file.attached? },
   }
 
   before_validation :set_defaults
@@ -31,7 +31,7 @@ class Attachment < ActiveRecord::Base
   end
 
   def generate_sha256
-    XmlUtil.filename_sha(open(url).read)
+    XmlUtil.filename_sha(File.open(url).read)
   end
 
   private

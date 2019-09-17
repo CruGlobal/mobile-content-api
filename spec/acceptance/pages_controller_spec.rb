@@ -1,17 +1,17 @@
 # frozen_string_literal: true
 
-require 'acceptance_helper'
+require "acceptance_helper"
 
-resource 'Pages' do
-  header 'Accept', 'application/vnd.api+json'
-  header 'Content-Type', 'application/vnd.api+json'
+resource "Pages" do
+  header "Accept", "application/vnd.api+json"
+  header "Content-Type", "application/vnd.api+json"
 
   let(:raw_post) { params.to_json }
   let(:authorization) { AuthToken.create!(access_code: AccessCode.find(1)).token }
   let(:test_structure) { '<?xml version="1.0" encoding="UTF-8" ?><page> new page </page>' }
 
-  post 'pages' do
-    let(:attrs) { { filename: 'test.xml', structure: test_structure, resource_id: 2, position: 1 } }
+  post "pages" do
+    let(:attrs) { {filename: "test.xml", structure: test_structure, resource_id: 2, position: 1} }
 
     before do
       allow(Page).to(receive(:create!).with(ActionController::Parameters.new(attrs).permit!)
@@ -25,23 +25,23 @@ resource 'Pages' do
                        .and_return(Page.new(id: 12_345)))
     end
 
-    it 'create page' do
-      do_request data: { type: :page, attributes: attrs }
+    it "create page" do
+      do_request data: {type: :page, attributes: attrs}
 
       expect(status).to eq(201)
-      expect(JSON.parse(response_body)['data']).not_to be_nil
+      expect(JSON.parse(response_body)["data"]).not_to be_nil
     end
 
-    it 'sets location header', document: false do
-      do_request data: { type: :page, attributes: attrs }
+    it "sets location header", document: false do
+      do_request data: {type: :page, attributes: attrs}
 
-      expect(response_headers['Location']).to eq('pages/12345')
+      expect(response_headers["Location"]).to eq("pages/12345")
     end
   end
 
-  put 'pages/:id' do
+  put "pages/:id" do
     let(:id) { 1 }
-    let(:attrs) { { structure: test_structure } }
+    let(:attrs) { {structure: test_structure} }
 
     before do
       p = Page.find(1)
@@ -51,11 +51,11 @@ resource 'Pages' do
 
     requires_authorization
 
-    it 'edit page' do
-      do_request data: { type: :page, attributes: attrs }
+    it "edit page" do
+      do_request data: {type: :page, attributes: attrs}
 
       expect(status).to eq(200)
-      expect(JSON.parse(response_body)['data']).not_to be_nil
+      expect(JSON.parse(response_body)["data"]).not_to be_nil
     end
   end
 end

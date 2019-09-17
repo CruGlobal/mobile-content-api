@@ -9,10 +9,10 @@ class ApplicationController < ActionController::Base
   end
 
   rescue_from Error::BadRequestError,
-              Error::XmlError,
-              ActiveRecord::RecordInvalid,
-              Error::MultipleDraftsError,
-              Error::TranslationError do |exception|
+    Error::XmlError,
+    ActiveRecord::RecordInvalid,
+    Error::MultipleDraftsError,
+    Error::TranslationError do |exception|
 
     render_api_error(exception, :bad_request)
   end
@@ -22,7 +22,7 @@ class ApplicationController < ActionController::Base
   end
 
   def render(**args)
-    response.headers['Content-Type'] = 'application/vnd.api+json' if args.key?(:json)
+    response.headers["Content-Type"] = "application/vnd.api+json" if args.key?(:json)
 
     super
   end
@@ -38,11 +38,11 @@ class ApplicationController < ActionController::Base
   end
 
   def authorize!
-    authorization = AuthToken.find_by(token: request.headers['Authorization'])
+    authorization = AuthToken.find_by(token: request.headers["Authorization"])
     return unless authorization.nil? || expired(authorization)
 
     authorization = AuthToken.new
-    authorization.errors.add(:id, 'Unauthorized')
+    authorization.errors.add(:id, "Unauthorized")
     render_error(authorization, :unauthorized)
   end
 
@@ -55,9 +55,9 @@ class ApplicationController < ActionController::Base
   end
 
   def decode_json_api
-    return if request.headers['REQUEST_METHOD'] == 'GET' ||
-              request.headers['Content-Type'] != 'application/vnd.api+json' ||
-              request.body.read.empty?
+    return if request.headers["REQUEST_METHOD"] == "GET" ||
+      request.headers["Content-Type"] != "application/vnd.api+json" ||
+      request.body.read.empty?
 
     merge_params
   end

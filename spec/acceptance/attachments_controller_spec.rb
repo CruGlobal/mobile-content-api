@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
-require 'acceptance_helper'
+require "acceptance_helper"
 
-resource 'Attachments' do
-  let(:test_file) { Rack::Test::UploadedFile.new("#{fixture_path}/wall.jpg", 'image/png') }
+resource "Attachments" do
+  let(:test_file) { Rack::Test::UploadedFile.new("#{fixture_path}/wall.jpg", "image/png") }
   let(:authorization) { AuthToken.create!(access_code: AccessCode.find(1)).token }
 
   before do
@@ -12,47 +12,47 @@ resource 'Attachments' do
     end
   end
 
-  get 'attachments/:id/download' do
+  get "attachments/:id/download" do
     let(:id) { 1 }
 
-    it 'download an Attachment' do
+    it "download an Attachment" do
       do_request
 
       expect(status).to be(302)
     end
   end
 
-  post 'attachments/' do
+  post "attachments/" do
     before do
-      header 'Authorization', :authorization
+      header "Authorization", :authorization
     end
 
     requires_authorization
 
-    it 'create an Attachment' do
+    it "create an Attachment" do
       do_request file: test_file, multipart: true, resource_id: 2
 
       expect(status).to be(204)
       expect(response_body).to be_empty
     end
 
-    it 'sets location header', document: false do
+    it "sets location header", document: false do
       do_request file: test_file, multipart: true, resource_id: 2
 
-      expect(response_headers['Location']).to match(%r{attachments\/\d+})
+      expect(response_headers["Location"]).to match(%r{attachments\/\d+})
     end
   end
 
-  put 'attachments/:id' do
+  put "attachments/:id" do
     let(:id) { 1 }
 
     before do
-      header 'Authorization', :authorization
+      header "Authorization", :authorization
     end
 
     requires_authorization
 
-    it 'update an Attachment' do
+    it "update an Attachment" do
       do_request file: test_file, multipart: true, resource_id: 2
 
       expect(status).to be(204)
@@ -60,16 +60,16 @@ resource 'Attachments' do
     end
   end
 
-  delete 'attachments/:id' do
+  delete "attachments/:id" do
     let(:id) { 1 }
 
     before do
-      header 'Authorization', :authorization
+      header "Authorization", :authorization
     end
 
     requires_authorization
 
-    it 'delete an Attachment' do
+    it "delete an Attachment" do
       do_request
 
       expect(status).to be(204)

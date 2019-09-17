@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require 'zip'
+require "zip"
 
 class Package
   XPATH_RESOURCES = %w[//@background-image
@@ -8,8 +8,8 @@ class Package
                        //content:image[not(@restrictTo='web')]/@resource].freeze
 
   def self.s3_object(translation)
-    s3 = Aws::S3::Resource.new(region: ENV['AWS_REGION'])
-    bucket = s3.bucket(ENV['MOBILE_CONTENT_API_BUCKET'])
+    s3 = Aws::S3::Resource.new(region: ENV["AWS_REGION"])
+    bucket = s3.bucket(ENV["MOBILE_CONTENT_API_BUCKET"])
     bucket.object(translation.object_name.to_s)
   end
 
@@ -27,7 +27,7 @@ class Package
     upload
 
     PageClient.delete_temp_dir(@directory)
-  rescue StandardError => e
+  rescue => e
     PageClient.delete_temp_dir(@directory)
     raise e
   end
@@ -48,7 +48,7 @@ class Package
   end
 
   def determine_resources(document)
-    nodes = XmlUtil.xpath_namespace(document, XPATH_RESOURCES.join('|'))
+    nodes = XmlUtil.xpath_namespace(document, XPATH_RESOURCES.join("|"))
     nodes.each { |node| @resources << node.content }
   end
 
@@ -87,7 +87,7 @@ class Package
   end
 
   def save_attachment_to_file(attachment)
-    string_io_bytes = open(attachment.url).read
+    string_io_bytes = File.open(attachment.url).read
     sha_filename = attachment.sha256
 
     File.binwrite("#{@directory}/#{sha_filename}", string_io_bytes)
@@ -98,7 +98,7 @@ class Package
     filename = XmlUtil.xml_filename_sha(manifest.document.to_s)
     @translation.manifest_name = filename
 
-    file = File.open("#{@directory}/#{filename}", 'w')
+    file = File.open("#{@directory}/#{filename}", "w")
     manifest.document.write_to(file)
     file.close
 
@@ -109,6 +109,6 @@ class Package
     Rails.logger.info("Uploading zip to OneSky for translation with id: #{@translation.id}")
 
     obj = self.class.s3_object(@translation)
-    obj.upload_file("#{@directory}/#{@translation.zip_name}", acl: 'public-read')
+    obj.upload_file("#{@directory}/#{@translation.zip_name}", acl: "public-read")
   end
 end

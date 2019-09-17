@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require 'page_client'
+require "page_client"
 
 class ResourcesController < ApplicationController
   before_action :authorize!, only: [:create, :update, :push_to_onesky]
@@ -25,7 +25,7 @@ class ResourcesController < ApplicationController
 
   def push_to_onesky
     # TODO: this could be done for individual pages when their structure is updated
-    PageClient.new(load_resource, 'en').push_new_onesky_translation param?('keep-existing-phrases')
+    PageClient.new(load_resource, "en").push_new_onesky_translation param?("keep-existing-phrases")
 
     head :no_content
   end
@@ -33,8 +33,8 @@ class ResourcesController < ApplicationController
   private
 
   def all_resources
-    if params['filter']
-      Resource.system_name(params['filter']['system'])
+    if params["filter"]
+      Resource.system_name(params["filter"]["system"])
     else
       Resource.all
     end

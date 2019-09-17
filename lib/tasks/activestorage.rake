@@ -9,13 +9,13 @@ namespace :activestorage do
       file = attachment.file_file_name
       ext = File.extname(file)
       file_original = CGI.unescape(file.gsub(ext, "_original#{ext}"))
-      s3 = Aws::S3::Client.new(region: ENV['AWS_REGION'], access_key_id: ENV['AWS_ACCESS_KEY_ID'],
-                               secret_access_key: ENV['AWS_SECRET_ACCESS_KEY'])
+      s3 = Aws::S3::Client.new(region: ENV["AWS_REGION"], access_key_id: ENV["AWS_ACCESS_KEY_ID"],
+                               secret_access_key: ENV["AWS_SECRET_ACCESS_KEY"])
       # this url pattern can be changed to reflect whatever service you use
       file_key = format("attachments/files/000/000/%03d/original/#{file}", attachment.id)
       begin
-        File.open("tmp/#{file_original}", 'wb') do |fd|
-          s3.get_object(bucket: ENV['MOBILE_CONTENT_API_BUCKET'], key: file_key) do |chunk|
+        File.open("tmp/#{file_original}", "wb") do |fd|
+          s3.get_object(bucket: ENV["MOBILE_CONTENT_API_BUCKET"], key: file_key) do |chunk|
             fd.write(chunk)
           end
         end
@@ -24,7 +24,7 @@ namespace :activestorage do
                                content_type: attachment.file_content_type)
         attachment.filename = file
         attachment.save!
-      rescue StandardError => error
+      rescue => error
         Rails.logger.warn("#{error.message} #{attachment.class.name} Model => #{file}")
       end
     end

@@ -11,7 +11,7 @@ module XML
     # @raise [Error::TextNotFoundError]
     def translate_node_content(xml, phrases, strict = false)
       XmlUtil.translatable_nodes(xml).each do |node|
-        phrase_id = node['i18n-id']
+        phrase_id = node["i18n-id"]
         translated_phrase = phrases[phrase_id]
 
         if translated_phrase.present?
@@ -34,7 +34,7 @@ module XML
     def translate_node_attributes(xml, phrases, strict = false)
       XmlUtil.translatable_node_attrs(xml).each do |attribute|
         phrase_id = attribute.value
-        new_name = attribute.name.gsub('-i18n-id', '')
+        new_name = attribute.name.gsub("-i18n-id", "")
         translated_phrase = phrases[phrase_id]
 
         if translated_phrase.present?

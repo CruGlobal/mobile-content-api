@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class CustomManifestSerializer < ActiveModel::Serializer
-  type 'custom-manifest'
+  type "custom-manifest"
   attributes :id, :structure
 
   belongs_to :resource

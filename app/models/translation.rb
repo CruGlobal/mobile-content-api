@@ -6,10 +6,10 @@ class Translation < ActiveRecord::Base
   belongs_to :resource
   belongs_to :language
 
-  validates :version, presence: true, uniqueness: { scope: [:resource, :language] }
+  validates :version, presence: true, uniqueness: {scope: [:resource, :language]}
   validates :resource, presence: true
   validates :language, presence: true
-  validates :is_published, inclusion: { in: [true, false] }
+  validates :is_published, inclusion: {in: [true, false]}
   validates_with DraftCreationValidator, on: :create
   validates_with UsesOneskyValidator
 
@@ -61,7 +61,7 @@ class Translation < ActiveRecord::Base
   end
 
   def manifest_translated_phrases
-    @manifest_translated_phrases ||= download_translated_phrases('name_description.xml')
+    @manifest_translated_phrases ||= download_translated_phrases("name_description.xml")
   end
 
   private
@@ -87,9 +87,9 @@ class Translation < ActiveRecord::Base
     logger.info "Updating translated name and description for translation with id: #{id}"
 
     p = manifest_translated_phrases
-    self.translated_name = p['name']
-    self.translated_description = p['description']
-    self.translated_tagline = p['tagline']
+    self.translated_name = p["name"]
+    self.translated_description = p["description"]
+    self.translated_tagline = p["tagline"]
   end
 
   def download_translated_phrases(filename)

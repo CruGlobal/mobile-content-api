@@ -5,7 +5,7 @@ class PagesController < SecureController
     p = Page.create!(params.require(:data).require(:attributes)
                        .permit(:filename, :structure, :resource_id, :position))
 
-    response.headers['Location'] = "pages/#{p.id}"
+    response.headers["Location"] = "pages/#{p.id}"
     render json: p, status: :created
   end
 

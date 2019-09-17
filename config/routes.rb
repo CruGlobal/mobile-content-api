@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 Rails.application.routes.draw do
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
 
@@ -25,12 +26,12 @@ Rails.application.routes.draw do
 
   resources :custom_manifests, only: [:create, :update, :destroy, :show]
 
-  get 'monitors/lb'
-  get 'monitors/commit'
+  get "monitors/lb"
+  get "monitors/commit"
 
-  get 'attachments/:id/download', to: 'attachments#download'
+  get "attachments/:id/download", to: "attachments#download"
 
-  put 'resources/:id/onesky', to: 'resources#push_to_onesky'
+  put "resources/:id/onesky", to: "resources#push_to_onesky"
 
-  mount Raddocs::App => '/docs'
+  mount Raddocs::App => "/docs"
 end

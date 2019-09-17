@@ -1,12 +1,12 @@
 # frozen_string_literal: true
 
-require 'rest-client'
+require "rest-client"
 
 class FollowUp < ActiveRecord::Base
   belongs_to :language
   belongs_to :destination
 
-  validates :email, presence: true, email_format: { message: 'Invalid email address' }
+  validates :email, presence: true, email_format: {message: "Invalid email address"}
   validates :language, presence: true
   validates :destination, presence: true
 
@@ -23,22 +23,22 @@ class FollowUp < ActiveRecord::Base
   end
 
   def auth_params
-    { access_id: destination.access_key_id, access_secret: destination.access_key_secret }
+    {access_id: destination.access_key_id, access_secret: destination.access_key_secret}
   end
 
   def subscriber_params
-    { route_id: destination.route_id, language_code: language.code, email: email }.merge(name_params)
+    {route_id: destination.route_id, language_code: language.code, email: email}.merge(name_params)
   end
 
   def name_params
     return nil if name.nil?
 
-    names = name.split(' ')
-    { first_name: names[0], last_name: names[1] }
+    names = name.split(" ")
+    {first_name: names[0], last_name: names[1]}
   end
 
   def headers
-    { 'Content-Type': 'application/x-www-form-urlencoded' }
+    {'Content-Type': "application/x-www-form-urlencoded"}
   end
 
   def perform_request

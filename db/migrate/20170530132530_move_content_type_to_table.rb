@@ -1,7 +1,7 @@
 class MoveContentTypeToTable < ActiveRecord::Migration[5.0]
   def change
     create_table :resource_types do |t|
-      t.string :name, index: { unique: true }, null: false
+      t.string :name, index: {unique: true}, null: false
       t.string :dtd_file, null: false
     end
 
