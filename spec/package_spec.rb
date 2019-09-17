@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
-require 'equivalent-xml'
-require 'rails_helper'
-require 'package'
-require 'xml_util'
+require "equivalent-xml"
+require "rails_helper"
+require "package"
+require "xml_util"
 
 describe Package do
   let(:translated_page_one) do
@@ -85,12 +85,12 @@ describe Package do
   end
   let(:translation) do
     t = Translation.find(1)
-    t.translated_name = 'Knowing God Personally!'
+    t.translated_name = "Knowing God Personally!"
     allow(t).to(receive(:translated_page).and_return(translated_page_one, translated_page_two))
     t
   end
 
-  let(:guid) { '32ef5884-9004-47d8-9285-bb5b2205e554' }
+  let(:guid) { "32ef5884-9004-47d8-9285-bb5b2205e554" }
   let(:directory) { "pages/#{guid}" }
 
   before do
@@ -112,13 +112,13 @@ describe Package do
     end
   end
 
-  it 'deletes temp directory after successful request' do
+  it "deletes temp directory after successful request" do
     push
 
     pages_dir_nil
   end
 
-  it 'deletes temp directory if error is raised' do
+  it "deletes temp directory if error is raised" do
     object = instance_double(Aws::S3::Object)
     allow(object).to receive(:upload_file).and_raise(StandardError)
     mock_s3(object, translation)
@@ -128,16 +128,16 @@ describe Package do
     pages_dir_nil
   end
 
-  it 'zip file contains all pages' do
+  it "zip file contains all pages" do
     mock_dir_deletion
 
     push
 
-    expect_exists('71edacf514e76a1068454ef9dc219dfa36cd4394757b4a4bf2cee18b9e18559a.xml')
-    expect_exists('f5861440733ca31e99a04b9dd880ba3eeae314560d9197583bdbda0cb5c4c265.xml')
+    expect_exists("71edacf514e76a1068454ef9dc219dfa36cd4394757b4a4bf2cee18b9e18559a.xml")
+    expect_exists("f5861440733ca31e99a04b9dd880ba3eeae314560d9197583bdbda0cb5c4c265.xml")
   end
 
-  it 'zip file contains manifest' do
+  it "zip file contains manifest" do
     mock_dir_deletion
 
     push
@@ -145,15 +145,15 @@ describe Package do
     expect_exists(translation.manifest_name)
   end
 
-  it 'zip file contains all attachments' do
+  it "zip file contains all attachments" do
     mock_dir_deletion
 
     push
 
-    expect_exists('073d78ef4dc421f10d2db375414660d3983f506fabdaaff0887f6ee955aa3bdd')
+    expect_exists("073d78ef4dc421f10d2db375414660d3983f506fabdaaff0887f6ee955aa3bdd")
   end
 
-  context 'manifest' do
+  context "manifest" do
     let(:pages) do
       Nokogiri::XML('<pages xmlns="https://mobile-content-api.cru.org/xmlns/manifest">
         <page filename="04_ThirdPoint.xml" src="71edacf514e76a1068454ef9dc219dfa36cd4394757b4a4bf2cee18b9e18559a.xml"/>
@@ -168,66 +168,66 @@ describe Package do
         <resource filename="wall.jpg" src="073d78ef4dc421f10d2db375414660d3983f506fabdaaff0887f6ee955aa3bdd"/>
       </resources>').root
     end
-    let(:title) { 'this is the kgp' }
+    let(:title) { "this is the kgp" }
 
     before do
       mock_dir_deletion
     end
 
-    it 'contains all pages in order' do
+    it "contains all pages in order" do
       push
 
-      result = XmlUtil.xpath_namespace(load_xml(translation.manifest_name), '//manifest:pages').first
+      result = XmlUtil.xpath_namespace(load_xml(translation.manifest_name), "//manifest:pages").first
       expect(result).to be_equivalent_to(pages)
     end
 
-    it 'contains all referenced resources' do
+    it "contains all referenced resources" do
       push
 
-      result = XmlUtil.xpath_namespace(load_xml(translation.manifest_name), '//manifest:resources').first
+      result = XmlUtil.xpath_namespace(load_xml(translation.manifest_name), "//manifest:resources").first
       expect(result).to be_equivalent_to(resources)
     end
 
-    it 'contains translated title' do
+    it "contains translated title" do
       allow(translation).to receive(:translated_name).and_return(title)
 
       push
 
       manifest = load_xml(translation.manifest_name)
-      result = manifest.xpath('//content:text[@i18n-id=\'89a09d72-114f-4d89-a72c-ca204c796fd9\']').first
+      result = manifest.xpath("//content:text[@i18n-id='89a09d72-114f-4d89-a72c-ca204c796fd9']").first
       expect(result.content).to eq(title)
     end
 
-    context 'resource does not have a manifest file' do
+    context "resource does not have a manifest file" do
       let(:translation) do
         t = Translation.find(8)
         allow(t).to(receive(:translated_page).and_return(translated_page_one, translated_page_two))
         t
       end
 
-      it 'creates manifest node' do
+      it "creates manifest node" do
         mock_onesky translation.resource.onesky_project_id
 
         push
 
         manifest = load_xml(translation.manifest_name)
-        expect(manifest.xpath('/m:manifest', 'm' => XmlUtil::XMLNS_MANIFEST).size).to be(1)
+        expect(manifest.xpath("/m:manifest", "m" => XmlUtil::XMLNS_MANIFEST).size).to be(1)
       end
     end
 
-    context 'page missing resource' do
+    context "page missing resource" do
       let(:translated_page_one) do
         '<?xml version="1.0" encoding="UTF-8"?>
            <page xmlns="https://mobile-content-api.cru.org/xmlns/tract" background-image="missing.jpg"></page>'
       end
 
-      it 'raises an exception' do
-        expect { push }.to raise_error(ActiveRecord::RecordNotFound, 'Attachment not found: missing.jpg')
+      it "raises an exception" do
+        expect { push }.to raise_error(ActiveRecord::RecordNotFound, "Attachment not found: missing.jpg")
       end
     end
 
-    context 'translation missing i18n title' do
-      it 'fails to push' do
+    context "translation missing i18n title" do
+      it "fails to push" do
         translation.translated_name = nil
 
         expect { push }.to raise_error(Error::TextNotFoundError)
@@ -235,7 +235,7 @@ describe Package do
     end
   end
 
-  it 'always uses strict mode' do
+  it "always uses strict mode" do
     push
 
     expect(translation).not_to(have_received(:translated_page).with(any_args, false))
@@ -247,7 +247,8 @@ describe Package do
     Nokogiri::XML(File.open("#{directory}/#{name}"))
   end
 
-  def open_zip_file; end
+  def open_zip_file
+  end
 
   def expect_exists(filename)
     file = Zip::File.open("#{directory}/version_1.zip").get_entry(filename)
@@ -259,7 +260,7 @@ describe Package do
   end
 
   def mock_onesky(project_id = nil)
-    ENV['ONESKY_API_SECRET'] ||= ''
+    ENV["ONESKY_API_SECRET"] ||= ""
     project_id ||= Resource.find(1).onesky_project_id
     response = RestClient::Response.new('{ "1":"value" }')
     response.instance_variable_set :@code, 200

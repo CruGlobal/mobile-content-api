@@ -17,7 +17,7 @@ class CustomPagesController < SecureController
 
   def create_custom_page
     created = CustomPage.create!(permit_params(:language_id, :page_id, :structure))
-    response.headers['Location'] = "custom_pages/#{created.id}"
+    response.headers["Location"] = "custom_pages/#{created.id}"
     render json: created, status: :created
   end
 

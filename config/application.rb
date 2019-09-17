@@ -1,14 +1,15 @@
 # frozen_string_literal: true
-require_relative 'boot'
 
-require 'rails/all'
-require 'fileutils'
+require_relative "boot"
+
+require "rails/all"
+require "fileutils"
 
 # Require the gems listed in Gemfile, including any gems
 # you've limited to :test, :development, or :production.
 Bundler.require(*Rails.groups)
 
-require_relative '../lib/log/logger'
+require_relative "../lib/log/logger"
 module MobileContentApi
   class Application < Rails::Application
     # Initialize configuration defaults for originally generated Rails version.
@@ -19,9 +20,9 @@ module MobileContentApi
     # -- all .rb files in that directory are automatically loaded.
 
     # Enable ougai
-    config.logger = Log::Logger.new(Rails.root.join('log', 'datadog.log'))
+    config.logger = Log::Logger.new(Rails.root.join("log", "datadog.log"))
 
     ActiveModelSerializers.config.adapter = :json_api
-    FileUtils.mkdir_p('pages')
+    FileUtils.mkdir_p("pages")
   end
 end

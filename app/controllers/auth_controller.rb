@@ -4,8 +4,8 @@ class AuthController < ApplicationController
   def create
     code = AccessCode.find_by(code: data_attrs[:code])
 
-    return render_bad_request('Access code not found.') if code.nil?
-    return render_bad_request('Access code expired.') if expired(code)
+    return render_bad_request("Access code not found.") if code.nil?
+    return render_bad_request("Access code expired.") if expired(code)
     render json: AuthToken.create!(access_code: code), status: :created
   end
 

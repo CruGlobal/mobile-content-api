@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 # This file should contain all the record creation needed to seed the database with its default values.
 # The data can then be loaded with the rails db:seed command (or created alongside the database with db:setup).
 #
@@ -71,23 +72,23 @@ beyond_blind_faith_structure = '<?xml version="1.0" encoding="UTF-8" ?>
 <article xmlns="https://mobile-content-api.cru.org/xmlns/article">
 </article>'
 
-tract = ResourceType.find_or_create_by!(name: 'tract', dtd_file: 'tract.xsd')
-article = ResourceType.find_or_create_by!(name: 'article', dtd_file: 'article.xsd')
+tract = ResourceType.find_or_create_by!(name: "tract", dtd_file: "tract.xsd")
+article = ResourceType.find_or_create_by!(name: "article", dtd_file: "article.xsd")
 
-godtools = System.find_or_create_by!(name: 'GodTools')
+godtools = System.find_or_create_by!(name: "GodTools")
 
-kgp = Resource.find_or_create_by!(name: 'Knowing God Personally', resource_type: tract, abbreviation: 'kgp', onesky_project_id: 148_314, system: godtools,
+kgp = Resource.find_or_create_by!(name: "Knowing God Personally", resource_type: tract, abbreviation: "kgp", onesky_project_id: 148_314, system: godtools,
                                   manifest: '<?xml version="1.0"?><manifest xmlns="https://mobile-content-api.cru.org/xmlns/manifest" xmlns:content="https://mobile-content-api.cru.org/xmlns/content"><title><content:text i18n-id="89a09d72-114f-4d89-a72c-ca204c796fd9">Knowing God Personally</content:text></title></manifest>')
-satisfied = Resource.find_or_create_by!(name: 'Satisfied?', resource_type: tract, abbreviation: 'sat', system: godtools, onesky_project_id: 999_999)
-every_student = Resource.find_or_create_by!(name: 'Questions About God', resource_type: article, abbreviation: 'es', system: godtools)
+satisfied = Resource.find_or_create_by!(name: "Satisfied?", resource_type: tract, abbreviation: "sat", system: godtools, onesky_project_id: 999_999)
+every_student = Resource.find_or_create_by!(name: "Questions About God", resource_type: article, abbreviation: "es", system: godtools)
 
-page_13 = Page.find_or_create_by!(filename: '13_FinalPage.xml', resource: kgp, structure: page_13_structure, position: 1)
-page_4 = Page.find_or_create_by!(filename: '04_ThirdPoint.xml', resource: kgp, structure: page_4_structure, position: 0)
+page_13 = Page.find_or_create_by!(filename: "13_FinalPage.xml", resource: kgp, structure: page_13_structure, position: 1)
+page_4 = Page.find_or_create_by!(filename: "04_ThirdPoint.xml", resource: kgp, structure: page_4_structure, position: 0)
 
-english = Language.find_or_create_by!(name: 'English', code: 'en')
-german = Language.find_or_create_by!(name: 'German', code: 'de')
-Language.find_or_create_by!(name: 'Slovak', code: 'sk')
-chinese = Language.find_or_create_by!(name: 'Chinese', code: 'es')
+english = Language.find_or_create_by!(name: "English", code: "en")
+german = Language.find_or_create_by!(name: "German", code: "de")
+Language.find_or_create_by!(name: "Slovak", code: "sk")
+chinese = Language.find_or_create_by!(name: "Chinese", code: "es")
 
 Translation.find_or_create_by!(resource: kgp, language: english, version: 1, is_published: true)
 Translation.find_or_create_by!(resource: kgp, language: german, version: 1, is_published: true)
@@ -108,12 +109,12 @@ TranslatedPage.find_or_create_by!(value: beyond_blind_faith_structure, resource:
 
 AccessCode.find_or_create_by!(code: 123_456)
 
-Attribute.find_or_create_by!(resource: kgp, key: 'Banner_Image', value: 'this is a location')
-attribute = Attribute.find_or_create_by!(resource: kgp, key: 'translate_me', value: 'base language', is_translatable: true)
+Attribute.find_or_create_by!(resource: kgp, key: "Banner_Image", value: "this is a location")
+attribute = Attribute.find_or_create_by!(resource: kgp, key: "translate_me", value: "base language", is_translatable: true)
 
-Attribute.find_or_create_by!(resource: satisfied, key: 'Another_Attribute', value: 'blah blah blah')
+Attribute.find_or_create_by!(resource: satisfied, key: "Another_Attribute", value: "blah blah blah")
 
-TranslatedAttribute.find_or_create_by!(parent_attribute: attribute, translation: german_kgp, value: 'german attribute')
+TranslatedAttribute.find_or_create_by!(parent_attribute: attribute, translation: german_kgp, value: "german attribute")
 
 View.find_or_create_by!(quantity: 550, resource: kgp)
 View.find_or_create_by!(quantity: 718, resource: kgp)
@@ -126,10 +127,10 @@ if Rails.env == "test"
   end
 end
 
-Attachment.create!(resource: kgp, file: Rack::Test::UploadedFile.new('spec/fixtures/wall.jpg', 'image/png'), is_zipped: true)
-Attachment.create!(resource: kgp, file: Rack::Test::UploadedFile.new('spec/fixtures/beal.jpg', 'image/png'))
-Attachment.create!(resource: kgp, file: Rack::Test::UploadedFile.new('spec/fixtures/mobile_only.png', 'image/png'), is_zipped: true)
-Attachment.create!(resource: kgp, file: Rack::Test::UploadedFile.new('spec/fixtures/web_mobile.png', 'image/png'))
-Attachment.create!(resource: kgp, file: Rack::Test::UploadedFile.new('spec/fixtures/both.png', 'image/png'), is_zipped: true)
+Attachment.create!(resource: kgp, file: Rack::Test::UploadedFile.new("spec/fixtures/wall.jpg", "image/png"), is_zipped: true)
+Attachment.create!(resource: kgp, file: Rack::Test::UploadedFile.new("spec/fixtures/beal.jpg", "image/png"))
+Attachment.create!(resource: kgp, file: Rack::Test::UploadedFile.new("spec/fixtures/mobile_only.png", "image/png"), is_zipped: true)
+Attachment.create!(resource: kgp, file: Rack::Test::UploadedFile.new("spec/fixtures/web_mobile.png", "image/png"))
+Attachment.create!(resource: kgp, file: Rack::Test::UploadedFile.new("spec/fixtures/both.png", "image/png"), is_zipped: true)
 
-Destination.find_or_create_by!(url: 'myapi.org', route_id: '100', access_key_id: '12345', access_key_secret: 'hello, world!!')
+Destination.find_or_create_by!(url: "myapi.org", route_id: "100", access_key_id: "12345", access_key_secret: "hello, world!!")

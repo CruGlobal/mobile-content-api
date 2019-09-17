@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 module Log
   class Logger < Ougai::Logger
     class FormatterReadable < Ougai::Formatters::Readable

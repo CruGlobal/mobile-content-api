@@ -3,9 +3,9 @@
 class AttachmentSerializer < ActiveModel::Serializer
   include Rails.application.routes.url_helpers
 
-  type 'attachment'
+  type "attachment"
   attributes :id, :file, :is_zipped, :sha256
-  attribute :filename, key: 'file-file-name'
+  attribute :filename, key: "file-file-name"
 
   def file
     rails_blob_url(object.file)

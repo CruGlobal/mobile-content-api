@@ -5,10 +5,10 @@ class Attribute < ActiveRecord::Base
 
   has_many :translated_attributes
 
-  validates :key, presence: true, format: { with: /\A[[:alpha:]]+(_[[:alpha:]]+)*\z/ }
+  validates :key, presence: true, format: {with: /\A[[:alpha:]]+(_[[:alpha:]]+)*\z/}
   validates :value, presence: true
-  validates :resource, presence: true, uniqueness: { scope: :key }
-  validates :is_translatable, inclusion: { in: [true, false] }
+  validates :resource, presence: true, uniqueness: {scope: :key}
+  validates :is_translatable, inclusion: {in: [true, false]}
 
   before_validation { self.key = key&.downcase }
   before_validation :set_defaults, on: :create
