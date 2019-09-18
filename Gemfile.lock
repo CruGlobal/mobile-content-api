@@ -827,7 +827,7 @@ GEM
     aws-sigv2 (1.0.1)
     aws-sigv4 (1.1.0)
       aws-eventstream (~> 1.0, >= 1.0.2)
-    bindex (0.5.0)
+    bindex (0.8.1)
     bootsnap (1.4.5)
       msgpack (~> 1.0)
     brakeman (4.6.1)
@@ -1074,7 +1074,7 @@ GEM
     url (0.3.2)
     validates_email_format_of (1.6.3)
       i18n
-    web-console (3.5.1)
+    web-console (3.7.0)
       actionview (>= 5.0)
       activemodel (>= 5.0)
       bindex (>= 0.4.0)
