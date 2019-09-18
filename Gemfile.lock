@@ -936,7 +936,7 @@ GEM
       nenv (~> 0.1)
       shellany (~> 0.0)
     oj (3.9.1)
-    ougai (1.8.0)
+    ougai (1.8.2)
       oj (~> 3.4)
     parallel (1.17.0)
     parser (2.6.3.0)
