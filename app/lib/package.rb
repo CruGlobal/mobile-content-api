@@ -87,7 +87,11 @@ class Package
   end
 
   def save_attachment_to_file(attachment)
-    string_io_bytes = File.open(attachment.url).read
+    begin
+      string_io_bytes = URI.parse(attachment.url).open.read
+    rescue NoMethodError
+      string_io_bytes = File.open(attachment.url).read
+    end
     sha_filename = attachment.sha256
 
     File.binwrite("#{@directory}/#{sha_filename}", string_io_bytes)

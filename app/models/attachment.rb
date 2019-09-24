@@ -31,6 +31,8 @@ class Attachment < ActiveRecord::Base
   end
 
   def generate_sha256
+    XmlUtil.filename_sha(URI.parse(url).open.read)
+  rescue NoMethodError
     XmlUtil.filename_sha(File.open(url).read)
   end
 
