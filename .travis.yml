@@ -1,6 +1,6 @@
 sudo: false
 language: ruby
-rvm: 2.5.6
+rvm: 2.6.4
 
 addons:
   postgresql: 9.6
