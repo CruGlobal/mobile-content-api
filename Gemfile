@@ -3,7 +3,7 @@
 source "https://rubygems.org"
 git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
-ruby "2.5.6"
+ruby "2.6.4"
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem "rails", "~> 5.2.3"
@@ -45,10 +45,10 @@ group :development, :test do
   gem "rspec"
   gem "rspec-rails", "~> 3.8"
   gem "rspec_api_documentation"
-  gem "rubocop", "~> 0.66.0", require: false
+  gem "rubocop"
   gem "rubocop-rspec", require: false
   gem "simplecov", require: false
-  gem "standard"
+  gem "standard", "~> 0.1.4"
   gem "webmock", require: false
 end
 

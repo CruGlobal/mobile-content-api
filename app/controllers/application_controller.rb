@@ -13,7 +13,6 @@ class ApplicationController < ActionController::Base
     ActiveRecord::RecordInvalid,
     Error::MultipleDraftsError,
     Error::TranslationError do |exception|
-
     render_api_error(exception, :bad_request)
   end
 
