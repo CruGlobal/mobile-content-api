@@ -935,7 +935,7 @@ GEM
     notiffany (0.1.3)
       nenv (~> 0.1)
       shellany (~> 0.0)
-    oj (3.9.1)
+    oj (3.9.2)
     ougai (1.8.2)
       oj (~> 3.4)
     parallel (1.17.0)
@@ -1112,7 +1112,7 @@ DEPENDENCIES
   lograge
   mini_magick (~> 4.8)
   nokogiri (>= 1.8.5)
-  oj (~> 3.9.1)
+  oj (~> 3.9.2)
   ougai (~> 1.8)
   pg
   puma (~> 3.11)
