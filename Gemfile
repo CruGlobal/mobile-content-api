@@ -57,7 +57,7 @@ gem "raddocs"
 group :development do
   # Access an IRB console on exception pages or by using <%= console %> anywhere in the code.
   gem "awesome_print"
-  gem "listen", "~> 3.1.5"
+  gem "listen", "~> 3.2.0"
   gem "rack-cors", require: "rack/cors"
   gem "web-console", ">= 3.3.0"
   # Spring speeds up development by keeping your application running in the background. Read more: https://github.com/rails/spring
