@@ -945,7 +945,8 @@ GEM
       coderay (~> 1.1.0)
       method_source (~> 0.9.0)
     public_suffix (4.0.1)
-    puma (3.12.1)
+    puma (4.2.1)
+      nio4r (~> 2.0)
     rack (2.0.7)
     rack-cors (1.0.3)
     rack-protection (2.0.2)
@@ -1113,7 +1114,7 @@ DEPENDENCIES
   oj (~> 3.9.2)
   ougai (~> 1.8)
   pg
-  puma (~> 3.11)
+  puma (~> 4.2)
   rack-cors
   raddocs
   rails (~> 5.2.3)
