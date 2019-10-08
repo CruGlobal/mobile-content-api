@@ -9,12 +9,13 @@ module Log
     include LoggerSilence
 
     def initialize(*args)
+      @readable = args[0] == STDOUT
       super
       after_initialize if respond_to? :after_initialize
     end
 
     def create_formatter
-      if Rails.env.development? || Rails.env.test?
+      if @readable
         Log::Logger::FormatterReadable.new(STDOUT)
       else
         Log::Logger::Formatter.new(ENV["PROJECT_NAME"])
