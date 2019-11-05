@@ -838,7 +838,7 @@ GEM
     byebug (11.0.1)
     case_transform (0.2)
       activesupport
-    codecov (0.1.15)
+    codecov (0.1.16)
       json
       simplecov
       url
