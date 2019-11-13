@@ -894,7 +894,7 @@ GEM
       domain_name (~> 0.5)
     i18n (1.7.0)
       concurrent-ruby (~> 1.0)
-    jaro_winkler (1.5.3)
+    jaro_winkler (1.5.4)
     jmespath (1.4.0)
     json (2.2.0)
     jsonapi-renderer (0.2.2)
@@ -1054,7 +1054,7 @@ GEM
       actionpack (>= 4.0)
       activesupport (>= 4.0)
       sprockets (>= 3.0.0)
-    standard (0.1.5)
+    standard (0.1.6)
       rubocop (~> 0.75.0)
       rubocop-performance (~> 1.5.0)
     syslog-logger (1.6.8)
@@ -1128,7 +1128,7 @@ DEPENDENCIES
   simplecov
   spring
   spring-watcher-listen (~> 2.0.0)
-  standard (~> 0.1.5)
+  standard (~> 0.1.6)
   syslog-logger
   tzinfo-data
   validates_email_format_of
