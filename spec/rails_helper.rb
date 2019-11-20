@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 require "simplecov"
+require_relative "./support/test_helpers"
+
 SimpleCov.start
 
 if ENV["CI"] == "true"
