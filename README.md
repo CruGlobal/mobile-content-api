@@ -10,3 +10,13 @@
     * ONESKY_API_KEY
     * ONESKY_API_SECRET
 * You will also need to set AWS credentials.
+
+
+## Local setup
+
+1. `bundle install`
+1. `rake db:create`
+1. `rake db:schema:load`
+1. `RAILS_ENV=test rake db:seed`
+
+Use `rspec` to run tests and check if setup is correct.
