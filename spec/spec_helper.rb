@@ -102,7 +102,7 @@ RSpec.configure do |config|
       /.*/
     end
 
-    # rubocop:disable AbcSize
+    # rubocop:disable Metrics/AbcSize
     def mock_s3(object, translation)
       region = "east"
       bucket_name = "testing bucket"
@@ -116,6 +116,6 @@ RSpec.configure do |config|
 
       allow(Aws::S3::Resource).to receive(:new).with(region: region).and_return(s3)
     end
-    # rubocop:enable AbcSize
+    # rubocop:enable Metrics/AbcSize
   })
 end
