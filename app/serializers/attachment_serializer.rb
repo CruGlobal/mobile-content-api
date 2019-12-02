@@ -8,7 +8,7 @@ class AttachmentSerializer < ActiveModel::Serializer
   attribute :filename, key: "file-file-name"
 
   def file
-    rails_blob_url(object.file, protocol: 'https')
+    rails_blob_url(object.file, protocol: "https")
   end
 
   def filename
