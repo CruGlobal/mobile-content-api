@@ -1019,14 +1019,14 @@ GEM
       activesupport (>= 3.0.0)
       mustache (~> 1.0, >= 0.99.4)
       rspec (~> 3.0)
-    rubocop (0.75.1)
+    rubocop (0.77.0)
       jaro_winkler (~> 1.5.1)
       parallel (~> 1.10)
       parser (>= 2.6)
       rainbow (>= 2.2.2, < 4.0)
       ruby-progressbar (~> 1.7)
       unicode-display_width (>= 1.4.0, < 1.7)
-    rubocop-performance (1.5.0)
+    rubocop-performance (1.5.1)
       rubocop (>= 0.71.0)
     rubocop-rspec (1.37.0)
       rubocop (>= 0.68.1)
@@ -1055,9 +1055,9 @@ GEM
       actionpack (>= 4.0)
       activesupport (>= 4.0)
       sprockets (>= 3.0.0)
-    standard (0.1.6)
-      rubocop (~> 0.75.0)
-      rubocop-performance (~> 1.5.0)
+    standard (0.1.7)
+      rubocop (~> 0.77.0)
+      rubocop-performance (~> 1.5.1)
     syslog-logger (1.6.8)
     temple (0.8.0)
     thor (0.20.3)
@@ -1129,7 +1129,7 @@ DEPENDENCIES
   simplecov
   spring
   spring-watcher-listen (~> 2.0.0)
-  standard (~> 0.1.6)
+  standard (~> 0.1.7)
   syslog-logger
   tzinfo-data
   validates_email_format_of
