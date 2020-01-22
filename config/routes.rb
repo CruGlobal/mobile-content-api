@@ -30,6 +30,7 @@ Rails.application.routes.draw do
   get "monitors/commit"
 
   get "attachments/:id/download", to: "attachments#download"
+  get "/analytics/global", to: "global_activity_analytics#show"
 
   put "resources/:id/onesky", to: "resources#push_to_onesky"
 

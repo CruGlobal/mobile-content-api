@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_08_26_234226) do
+ActiveRecord::Schema.define(version: 2019_11_20_152056) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -105,6 +105,15 @@ ActiveRecord::Schema.define(version: 2019_08_26_234226) do
     t.integer "destination_id", null: false
     t.index ["destination_id"], name: "index_follow_ups_on_destination_id"
     t.index ["language_id"], name: "index_follow_ups_on_language_id"
+  end
+
+  create_table "global_activity_analytics", id: :integer, default: 1, force: :cascade do |t|
+    t.integer "users", default: 0, null: false
+    t.integer "countries", default: 0, null: false
+    t.integer "launches", default: 0, null: false
+    t.integer "gospel_presentations", default: 0, null: false
+    t.datetime "updated_at", null: false
+    t.index ["id"], name: "index_global_activity_analytics_on_id", unique: true
   end
 
   create_table "languages", force: :cascade do |t|
