@@ -1031,7 +1031,7 @@ GEM
     rubocop-rspec (1.37.1)
       rubocop (>= 0.68.1)
     ruby-progressbar (1.10.1)
-    rubyzip (2.1.0)
+    rubyzip (2.2.0)
     safe_yaml (1.0.5)
     shellany (0.0.1)
     simplecov (0.18.0)
