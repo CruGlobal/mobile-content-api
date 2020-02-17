@@ -1026,7 +1026,7 @@ GEM
       rainbow (>= 2.2.2, < 4.0)
       ruby-progressbar (~> 1.7)
       unicode-display_width (>= 1.4.0, < 1.7)
-    rubocop-performance (1.5.1)
+    rubocop-performance (1.5.2)
       rubocop (>= 0.71.0)
     rubocop-rspec (1.38.0)
       rubocop (>= 0.68.1)
@@ -1054,7 +1054,7 @@ GEM
       actionpack (>= 4.0)
       activesupport (>= 4.0)
       sprockets (>= 3.0.0)
-    standard (0.1.7)
+    standard (0.1.8)
       rubocop (~> 0.77.0)
       rubocop-performance (~> 1.5.1)
     syslog-logger (1.6.8)
@@ -1128,7 +1128,7 @@ DEPENDENCIES
   simplecov
   spring
   spring-watcher-listen (~> 2.0.0)
-  standard (~> 0.1.7)
+  standard (~> 0.1.8)
   syslog-logger
   tzinfo-data
   validates_email_format_of
