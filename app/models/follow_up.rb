@@ -43,9 +43,9 @@ class FollowUp < ActiveRecord::Base
 
   def perform_request
     case destination.service_type
-    when 'growth_spaces'
+    when "growth_spaces"
       growth_spaces_perform_request
-    when 'adobe_campaigns'
+    when "adobe_campaigns"
       adobe_campaigns_perform_request
     else
       raise NotImplemented
