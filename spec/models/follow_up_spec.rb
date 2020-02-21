@@ -20,11 +20,11 @@ describe FollowUp do
     expect(result.errors[:email]).to include("Invalid email address")
   end
 
-  describe '#send_to_api' do
+  describe "#send_to_api" do
     context "sends correct values to api" do
       let(:follow_up) { described_class.create(valid_attrs) }
 
-      context 'for service_type growth_spaces' do
+      context "for service_type growth_spaces" do
         let(:destination) { growth_space_destination }
 
         before do
@@ -67,11 +67,11 @@ describe FollowUp do
         end
       end
 
-      context 'for service_type growth_spaces' do
+      context "for service_type growth_spaces" do
         let(:destination) { adobe_campaigns_destination }
-        let(:service) { instance_double('AdobeCampaign') }
+        let(:service) { instance_double("AdobeCampaign") }
 
-        it 'delegates subscription to service class' do
+        it "delegates subscription to service class" do
           expect(AdobeCampaign).to receive(:new).with(follow_up).and_return(service)
           expect(service).to receive(:subscribe!)
           follow_up.send_to_api

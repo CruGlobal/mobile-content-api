@@ -134,5 +134,4 @@ Attachment.create!(resource: kgp, file: Rack::Test::UploadedFile.new("spec/fixtu
 Attachment.create!(resource: kgp, file: Rack::Test::UploadedFile.new("spec/fixtures/both.png", "image/png"), is_zipped: true)
 
 Destination.find_or_create_by!(url: "myapi.org", service_type: :growth_spaces, route_id: "100", access_key_id: "12345", access_key_secret: "hello, world!!")
-Destination.find_or_create_by!(url: 'https://mc.adobe.io/', service_type: :adobe_campaigns)
-                        
+Destination.find_or_create_by!(url: "https://mc.adobe.io/", service_type: :adobe_campaigns)

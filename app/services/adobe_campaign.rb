@@ -1,8 +1,7 @@
 # frozen_string_literal: true
 
 class AdobeCampaign
-
-  SERVICE_NAME = ENV.fetch('ADOBE_SERVICE_NAME')
+  SERVICE_NAME = ENV.fetch("ADOBE_SERVICE_NAME")
 
   attr_accessor :follow_up
 
@@ -16,7 +15,7 @@ class AdobeCampaign
 
   class << self
     def adobe_campaign_service
-      Adobe::Campaign::Service.find(SERVICE_NAME).dig('content', 0)
+      Adobe::Campaign::Service.find(SERVICE_NAME).dig("content", 0)
     end
   end
 
@@ -24,9 +23,9 @@ class AdobeCampaign
 
   def find_adobe_subscription
     profile = find_or_create_adobe_profile
-    prof_subs_url = profile['subscriptions']['href']
-    subscriptions = Adobe::Campaign::Base.get_request(prof_subs_url)['content']
-    subscriptions.find { |sub| sub['serviceName'] == SERVICE_NAME }
+    prof_subs_url = profile["subscriptions"]["href"]
+    subscriptions = Adobe::Campaign::Base.get_request(prof_subs_url)["content"]
+    subscriptions.find { |sub| sub["serviceName"] == SERVICE_NAME }
   end
 
   def find_or_create_adobe_profile
@@ -35,7 +34,7 @@ class AdobeCampaign
   end
 
   def find_on_adobe_campaign
-    Adobe::Campaign::Profile.by_email(follow_up.email)['content'][0]
+    Adobe::Campaign::Profile.by_email(follow_up.email)["content"][0]
   end
 
   def post_to_adobe_campaign
@@ -46,8 +45,7 @@ class AdobeCampaign
 
   def subscribe_to_adobe_campaign
     profile = find_or_create_adobe_profile
-    service_subs_url = V4::User::AdobeCampaign.adobe_campaign_service['subscriptions']['href']
-    Adobe::Campaign::Service.post_subscription(service_subs_url, profile['PKey'])
+    service_subs_url = V4::User::AdobeCampaign.adobe_campaign_service["subscriptions"]["href"]
+    Adobe::Campaign::Service.post_subscription(service_subs_url, profile["PKey"])
   end
-
 end
