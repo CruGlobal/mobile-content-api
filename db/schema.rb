@@ -97,6 +97,7 @@ ActiveRecord::Schema.define(version: 2020_02_20_150100) do
     t.string "access_key_id"
     t.string "access_key_secret"
     t.string "service_type", null: false
+    t.string "adobe_series_name"
   end
 
   create_table "follow_ups", force: :cascade do |t|
