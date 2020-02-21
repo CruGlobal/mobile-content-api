@@ -42,8 +42,23 @@ class FollowUp < ActiveRecord::Base
   end
 
   def perform_request
+    case destination.service_type
+    when 'growth_spaces'
+      growth_spaces_perform_request
+    when 'adobe_campaigns'
+      adobe_campaigns_perform_request
+    else
+      raise NotImplemented
+    end
+  end
+
+  def growth_spaces_perform_request
     code = RestClient.post(destination.url, body, headers).code
     Rails.logger.info "Received response code: #{code} from destination: #{destination.id}"
     raise Error::BadRequestError, "Received response code: #{code} from destination: #{destination.id}" if code != 201
+  end
+
+  def adobe_campaigns_perform_request
+    AdobeCampaign.new(self).subscribe!
   end
 end
