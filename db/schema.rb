@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_11_20_152056) do
+ActiveRecord::Schema.define(version: 2020_02_20_150100) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -96,6 +96,7 @@ ActiveRecord::Schema.define(version: 2019_11_20_152056) do
     t.string "route_id"
     t.string "access_key_id"
     t.string "access_key_secret"
+    t.string "service_type", null: false
   end
 
   create_table "follow_ups", force: :cascade do |t|

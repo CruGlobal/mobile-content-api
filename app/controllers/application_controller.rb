@@ -9,6 +9,7 @@ class ApplicationController < ActionController::Base
   end
 
   rescue_from Error::BadRequestError,
+    RestClient::Exception,
     Error::XmlError,
     ActiveRecord::RecordInvalid,
     Error::MultipleDraftsError,
