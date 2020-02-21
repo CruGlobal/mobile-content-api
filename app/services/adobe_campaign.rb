@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
 class AdobeCampaign
-  SERVICE_NAME = ENV.fetch("ADOBE_SERVICE_NAME")
-
   attr_accessor :follow_up
 
   def initialize(follow_up)
