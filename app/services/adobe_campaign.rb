@@ -14,18 +14,22 @@ class AdobeCampaign
   end
 
   class << self
-    def adobe_campaign_service
-      Adobe::Campaign::Service.find(SERVICE_NAME).dig("content", 0)
+    def adobe_campaign_service(service_name)
+      Adobe::Campaign::Service.find(service_name).dig("content", 0)
     end
   end
 
   private
 
+  def service_name
+    follow_up.destination.adobe_series_name
+  end
+
   def find_adobe_subscription
     profile = find_or_create_adobe_profile
     prof_subs_url = profile["subscriptions"]["href"]
     subscriptions = Adobe::Campaign::Base.get_request(prof_subs_url)["content"]
-    subscriptions.find { |sub| sub["serviceName"] == SERVICE_NAME }
+    subscriptions.find { |sub| sub["serviceName"] == service_name }
   end
 
   def find_or_create_adobe_profile
@@ -45,7 +49,8 @@ class AdobeCampaign
 
   def subscribe_to_adobe_campaign
     profile = find_or_create_adobe_profile
-    service_subs_url = V4::User::AdobeCampaign.adobe_campaign_service["subscriptions"]["href"]
+    service = V4::User::AdobeCampaign.adobe_campaign_service(follow_up.destination)
+    service_subs_url = service["subscriptions"]["href"]
     Adobe::Campaign::Service.post_subscription(service_subs_url, profile["PKey"])
   end
 end
