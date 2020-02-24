@@ -47,7 +47,7 @@ class AdobeCampaign
 
   def subscribe_to_adobe_campaign
     profile = find_or_create_adobe_profile
-    service = V4::User::AdobeCampaign.adobe_campaign_service(follow_up.destination)
+    service = self.class.adobe_campaign_service(follow_up.destination.service_name)
     service_subs_url = service["subscriptions"]["href"]
     Adobe::Campaign::Service.post_subscription(service_subs_url, profile["PKey"])
   end
