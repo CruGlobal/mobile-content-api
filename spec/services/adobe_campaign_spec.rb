@@ -3,4 +3,9 @@
 require "rails_helper"
 
 describe AdobeCampaign do
+  include AdobeCampaignStubHelpers
+
+  describe '#subscribe!' do
+    
+  end
 end

@@ -5,5 +5,5 @@ class Destination < ActiveRecord::Base
 
   validates :url, :service_type, presence: true
   validates :route_id, presence: true, if: :growth_spaces?
-  validates :adobe_series_name, presence: true, if: :adobe_campaigns?
+  validates :service_name, presence: true, if: :adobe_campaigns?
 end

@@ -20,7 +20,7 @@ class AdobeCampaign
   private
 
   def service_name
-    follow_up.destination.adobe_series_name
+    follow_up.destination.service_name
   end
 
   def find_adobe_subscription
