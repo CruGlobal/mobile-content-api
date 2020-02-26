@@ -20,6 +20,6 @@ begin
   else
     Rollbar.warning("Adobe Campaigns was not initialized, check info on destinations table")
   end
-rescue ::ActiveRecord::NoDatabaseError => e
+rescue ::ActiveRecord::NoDatabaseError
   warn("[WARN] database doesn't exist. Skipping AdobeCampaigns initialization")
 end
