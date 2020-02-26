@@ -1034,7 +1034,7 @@ GEM
     rubyzip (2.2.0)
     safe_yaml (1.0.5)
     shellany (0.0.1)
-    simplecov (0.18.4)
+    simplecov (0.18.5)
       docile (~> 1.1)
       simplecov-html (~> 0.11)
     simplecov-html (0.12.1)
