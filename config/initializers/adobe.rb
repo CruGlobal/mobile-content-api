@@ -5,10 +5,10 @@ begin
   destination = Destination.adobe_campaigns.first
   if destination&.access_key_id.present? && destination&.access_key_secret.present?
     Adobe::Campaign.configure do |config|
-      config.org_id = ENV["ADOBE_ORG_ID"]
-      config.org_name = ENV["ADOBE_ORG_NAME"]
-      config.tech_acct = ENV["ADOBE_TECH_ACCT"]
-      config.signed_jwt = ENV["ADOBE_SIGNED_JWT"]
+      config.org_id = ENV["ADOBE_CAMPAIGN_ORG_ID"]
+      config.org_name = ENV["ADOBE_CAMPAIGN_ORG_NAME"]
+      config.tech_acct = ENV["ADOBE_CAMPAIGN_TECH_ACCT"]
+      config.signed_jwt = ENV["ADOBE_CAMPAIGN_SIGNED_JWT"]
       config.api_key = destination.access_key_id
       config.api_secret = destination.access_key_secret
     end

@@ -3,10 +3,10 @@
 require "rails_helper"
 
 Adobe::Campaign.configure do |config|
-  config.org_id = ENV["ADOBE_ORG_ID"]
-  config.org_name = ENV["ADOBE_ORG_NAME"]
-  config.tech_acct = ENV["ADOBE_TECH_ACCT"]
-  config.signed_jwt = ENV["ADOBE_SIGNED_JWT"]
+  config.org_id = ENV["ADOBE_CAMPAIGN_ORG_ID"]
+  config.org_name = ENV["ADOBE_CAMPAIGN_ORG_NAME"]
+  config.tech_acct = ENV["ADOBE_CAMPAIGN_TECH_ACCT"]
+  config.signed_jwt = ENV["ADOBE_CAMPAIGN_SIGNED_JWT"]
   config.api_key = "dummy_api_key"
   config.api_secret = "dummy_api_secret"
 end
