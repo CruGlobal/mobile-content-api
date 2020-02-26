@@ -4,8 +4,8 @@ require "rails_helper"
 require "validates_email_format_of/rspec_matcher"
 
 describe FollowUp do
-  let(:growth_space_destination) { Destination.find(1) }
-  let(:adobe_campaigns_destination) { Destination.find(2) }
+  let(:growth_space_destination) { Destination.growth_spaces.first! }
+  let(:adobe_campaigns_destination) { Destination.adobe_campaigns.first! }
   let(:email) { "bob@test.org" }
   let(:language) { Language.find(2) }
   let(:language_id) { 3 }

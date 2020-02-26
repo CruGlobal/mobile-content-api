@@ -26,8 +26,9 @@ describe AdobeCampaign do
 
     context "profile does not exist on adobe" do
       let(:profile_hash) {
-        {email: follow_up.email,
-         firstName: follow_up.name,
+        {email: email,
+         firstName: "Carlos",
+         lastName: "Kozuszko",
          preferredLanguage: language.code,}
       }
       it "creates profile and subscription" do

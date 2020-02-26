@@ -41,7 +41,8 @@ class AdobeCampaign
 
   def post_to_adobe_campaign
     Adobe::Campaign::Profile.post("email": follow_up.email,
-                                  "firstName": follow_up.name,
+                                  "firstName": follow_up.name_params[:first_name],
+                                  "lastName": follow_up.name_params[:last_name],
                                   "preferredLanguage": follow_up.language.code)
   end
 

@@ -16,6 +16,15 @@ class FollowUp < ActiveRecord::Base
     perform_request
   end
 
+  def name_params
+    return nil if name.nil?
+
+    @name_params ||= begin
+      names = name.split(" ")
+      {first_name: names[0], last_name: names[1]}
+    end
+  end
+
   private
 
   def body
@@ -28,13 +37,6 @@ class FollowUp < ActiveRecord::Base
 
   def subscriber_params
     {route_id: destination.route_id, language_code: language.code, email: email}.merge(name_params)
-  end
-
-  def name_params
-    return nil if name.nil?
-
-    names = name.split(" ")
-    {first_name: names[0], last_name: names[1]}
   end
 
   def headers
