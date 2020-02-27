@@ -5,6 +5,10 @@ class FollowUpsController < ApplicationController
     f = FollowUp.create!(permitted_params)
     f.send_to_api
     head :no_content
+  rescue => e
+    logger.error e.message
+    e.backtrace.each { |line| logger.error line }
+    raise e
   end
 
   private
