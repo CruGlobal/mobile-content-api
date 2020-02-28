@@ -49,8 +49,6 @@ class FollowUp < ActiveRecord::Base
       growth_spaces_perform_request
     when "adobe_campaigns"
       adobe_campaigns_perform_request
-    else
-      raise NotImplemented
     end
   end
 
