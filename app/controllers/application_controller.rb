@@ -14,6 +14,10 @@ class ApplicationController < ActionController::Base
     ActiveRecord::RecordInvalid,
     Error::MultipleDraftsError,
     Error::TranslationError do |exception|
+    if Rails.env.development? || Rails.env.test?
+      logger.error e.message
+      e.backtrace.each { |line| logger.error line }
+    end
     render_api_error(exception, :bad_request)
   end
 
