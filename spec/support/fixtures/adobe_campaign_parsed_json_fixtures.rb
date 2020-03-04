@@ -50,12 +50,6 @@ module AdobeCampaignParsedJsonFixtures
       "cusLink2" => {
         "href" => "https://mc.adobe.io/cru/campaign/profileAndServicesExt/profile/@EJcyhZ11jryZtasdfIAHR2c8foWIzASt5-c9p3FShoTomQPm9e3ETJ_s2pUrH5DVPZuk_Z0W41Q6y_gWBZNXq0tVd1bKDLzkB92oTy7ZdPgYWNvX/cusLink2/",
       },
-      "cusMinistryCode" => "",
-      "cusMinistryCodeGR" => "",
-      "cusMissionHubUser" => "Y",
-      "cusMissionTripslink" => {
-        "href" => "https://mc.adobe.io/cru/campaign/profileAndServicesExt/profile/@EJcyhZ11jryZtasdfIAHR2c8foWIzASt5-c9p3FShoQR8nTDjEp7xY55lHFPiEffYnCm8nsIW0zIvoVt0-3zrQ_GjTs/cusMissionTripslink/",
-      },
       "cusParentAccountNumber" => "",
       "cusPrimaryAccountContactFlag" => "",
       "cusSSOGUID" => "",
@@ -123,7 +117,7 @@ module AdobeCampaignParsedJsonFixtures
       "service" => {
         "PKey" => "@EyJ3Rl7A2R7sb62mI4fNrovCP0asdIsIuoxzeN4Bhg6nW4cpbnBeIZwaJe2Dl5sdfROasd8r98XhFPVUhJBn2cqJ61SvrLZMBOK_iubDqrS0T2d_",
         "href" => "https://mc.adobe.io/cru/campaign/profileAndServicesExt/service/@EyJ3Rl7A2R7sb62mI4fNrovCP0asdIsIuoxzeN4Bhg6nW4cpbnBeIZwaJe2Dl5sdfROasd8r98XhFPVUhJBn2cqJ61SvrLZMBOK_iubDqrS0T2d_",
-        "label" => "Mission Hub Welcome Series",
+        "label" => "Some Welcome Series",
         "name" => campaign_name,
         "title" => "A Really Cool Campaign (#{campaign_name})",
       },
@@ -137,7 +131,7 @@ module AdobeCampaignParsedJsonFixtures
         "title" => "  (test@user.com)",
       },
       "subscriptionDate" => "",
-      "title" => "Mission Hub Welcome Series (#{campaign_name}) /   (test@user.com)",
+      "title" => "Some Welcome Series (#{campaign_name}) /   (test@user.com)",
     }
   end
 
@@ -151,7 +145,7 @@ module AdobeCampaignParsedJsonFixtures
       "href" => "https://mc.adobe.io/cru/campaign/profileAndServices/service/@AyJ3Rl7A2R7sb62mI4fNrovCP0dfyIsIuoxzeN4Bhg6QZBWQCOiscEBMIasdfUdV9cKvfXt5v5CDUtIi46s8uOP0CYPoZM1lhs4sb7gPZCcpSDKd",
       "isExternal" => false,
       "isTemplate" => false,
-      "label" => "Mission Hub Welcome Series",
+      "label" => "Some Welcome Series",
       "lastModified" => "2018-01-26 17:53:27.063Z",
       "limitedDuration" => false,
       "mainDate" => "2017-03-15", "messageType" => "email",
@@ -169,7 +163,7 @@ module AdobeCampaignParsedJsonFixtures
         "title" => "Newsletter (newsletter)",
       },
       "thumbnail" => "/nl/img/thumbnails/defaultService.png",
-      "title" => "Mission Hub Welcome Series (#{campaign_name}) /   (test@user.com)",
+      "title" => "Some Welcome Series (#{campaign_name}) /   (test@user.com)",
       "unsubScenarioEventType" => "EVTNoMessageSent",
       "validityDuration" => "P10D",
     }
