@@ -938,7 +938,7 @@ GEM
     ougai (1.8.2)
       oj (~> 3.4)
     parallel (1.19.1)
-    parser (2.7.0.2)
+    parser (2.7.0.4)
       ast (~> 2.4.0)
     pg (1.2.2)
     pry (0.12.2)
@@ -1054,7 +1054,7 @@ GEM
       actionpack (>= 4.0)
       activesupport (>= 4.0)
       sprockets (>= 3.0.0)
-    standard (0.1.9)
+    standard (0.2.1)
       rubocop (~> 0.79.0)
       rubocop-performance (~> 1.5.1)
     syslog-logger (1.6.8)
@@ -1128,7 +1128,7 @@ DEPENDENCIES
   simplecov
   spring
   spring-watcher-listen (~> 2.0.0)
-  standard (~> 0.1.9)
+  standard (~> 0.2.1)
   syslog-logger
   tzinfo-data
   validates_email_format_of
