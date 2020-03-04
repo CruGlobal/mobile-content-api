@@ -15,19 +15,19 @@
                             <xs:documentation>Adobe Analytics</xs:documentation>
                         </xs:annotation>
                     </xs:enumeration>
-                    <xs:enumeration value="appsee">
+                    <xs:enumeration value="appsflyer">
                         <xs:annotation>
-                            <xs:documentation>Appsee</xs:documentation>
+                            <xs:documentation>AppsFlyer</xs:documentation>
+                        </xs:annotation>
+                    </xs:enumeration>
+                    <xs:enumeration value="facebook">
+                        <xs:annotation>
+                            <xs:documentation>Facebook Analytics</xs:documentation>
                         </xs:annotation>
                     </xs:enumeration>
                     <xs:enumeration value="firebase">
                         <xs:annotation>
                             <xs:documentation>Firebase</xs:documentation>
-                        </xs:annotation>
-                    </xs:enumeration>
-                    <xs:enumeration value="google">
-                        <xs:annotation>
-                            <xs:documentation>Google Analytics</xs:documentation>
                         </xs:annotation>
                     </xs:enumeration>
                     <xs:enumeration value="snowplow">
