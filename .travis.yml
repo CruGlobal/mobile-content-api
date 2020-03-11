@@ -1,25 +1,29 @@
-sudo: false
-language: ruby
-
-addons:
-  postgresql: 9.6
-
-cache:
-  bundler: true
-
-before_script:
-  - bundle exec rake db:create db:setup RAILS_ENV=test
-
-script:
-  - bundle exec rake spec
-  - bundle exec standardrb
-  - bundle exec bundle audit check --update
-  - bundle exec brakeman -A -q --no-pager --ensure-latest
-
 jobs:
   include:
-  - name: "XML Schema Validation"
-    before_script: skip
+  - language: ruby
+
+    addons:
+      postgresql: 9.6
+
+    cache:
+      bundler: true
+
+    before_script: 
+    - bundle exec rake db:create db:setup RAILS_ENV=test
+
     script:
-    - xmllint --schema public/xmlns/manifest.xsd --noout schema_tests/manifest/valid/*.xml
+    - bundle exec rake spec
+    - bundle exec standardrb
+    - bundle exec bundle audit check --update
+    - bundle exec brakeman -A -q --no-pager --ensure-latest
+
+  - name: "XML Schema Validation"
+
+    addons:
+      apt:
+        packages:
+        - libxml2-utils
+
+    script:
+    - xmllint --schema public/xmlns/manifest.xsd --noout schema_tests/manifest/valid/*/*.xml
     - xmllint --schema public/xmlns/tract.xsd --noout schema_tests/tract/valid/*/*.xml
