@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<page xmlns="https://mobile-content-api.cru.org/xmlns/tract"
+    xmlns:content="https://mobile-content-api.cru.org/xmlns/content"
+    background-image="satisfied-tract-bkg-image-7_1x.jpg"
+    background-color="rgba(93,97,101,1)"
+    card-text-color="rgba(50,50,50,1)">
+    <hero>
+        <heading>
+            <content:text i18n-id="976ef295-46ce-4c79-afa7-0c6e141eda35"></content:text>
+        </heading>
+        <content:paragraph>
+            <content:text i18n-id="e2a274bf-1107-4bf1-a355-6b2883c99e35"></content:text>
+        </content:paragraph>
+    </hero>
+
+    <cards>
+        <card>
+            <label>
+                <content:text i18n-id="65b67b82-8fd8-4f2b-8f9d-313b2e836f75"></content:text>
+            </label>
+            <content:paragraph>
+                <content:text i18n-id="8cc0562b-c4e4-4db2-bb10-ed6f5440632c"></content:text>
+            </content:paragraph>
+            <content:paragraph>
+                <content:text i18n-id="d2f2a155-10f6-4ab6-9e91-0da19a7df2f4"></content:text>
+            </content:paragraph>
+            <content:paragraph>
+                <content:text i18n-id="7b3d2b5e-478f-4be0-be58-11e357ba2993"></content:text>
+            </content:paragraph>
+            <content:paragraph>
+                <content:text i18n-id="4f7ddd54-0d79-436d-af0d-8730b03b2015"></content:text>
+            </content:paragraph>
+        </card>
+
+        <card>
+            <label>
+                <content:text i18n-id="1639f0d8-571d-472d-a15a-4fbe00bc7330"></content:text>
+            </label>
+            <content:paragraph>
+                <content:text i18n-id="7dd80a72-7ebf-41f7-9387-2bf3a7650786"></content:text>
+            </content:paragraph>
+        </card>
+
+        <card>
+            <label>
+                <content:text i18n-id="7741d4c6-433c-492c-9eee-473ee301b116"></content:text>
+            </label>
+            <content:paragraph>
+                <content:text i18n-id="5c1304fd-0833-4120-b892-581edc3f6e6a"></content:text>
+            </content:paragraph>
+        </card>
+    </cards>
+</page>

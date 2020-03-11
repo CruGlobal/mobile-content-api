@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<manifest xmlns="https://mobile-content-api.cru.org/xmlns/manifest"
+    xmlns:content="https://mobile-content-api.cru.org/xmlns/content"
+    primary-color="rgba(59,164,219,1)"
+    primary-text-color="rgba(255,255,255,1)"
+    navbar-color="rgba(0,0,0,0)"
+    navbar-control-color="rgba(150,150,150,1)"
+    background-image="kgp-tract-bkg-image-0_1x.jpg">
+    <title>
+        <content:text i18n-id="name">Knowing God Personally</content:text>
+    </title>
+</manifest>

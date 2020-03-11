@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<page xmlns="https://mobile-content-api.cru.org/xmlns/tract"
+    xmlns:content="https://mobile-content-api.cru.org/xmlns/content"
+    background-image="satisfied-tract-bkg-image-6_1x.jpg"
+    background-color="rgba(27,60,75,1)"
+    card-text-color="rgba(50,50,50,1)">
+    <hero>
+        <heading>
+            <content:text i18n-id="42678b4c-638c-4bec-b79b-1fd986687f4f"></content:text>
+        </heading>
+        <content:paragraph>
+            <content:text i18n-id="7f75f499-eee1-4fbb-b710-45a69090ecc3"></content:text>
+        </content:paragraph>
+        <content:paragraph>
+            <content:text i18n-id="81cb4f6c-5ad8-4752-aced-ace06052db69"></content:text>
+        </content:paragraph>
+    </hero>
+
+    <cards>
+        <card>
+            <label>
+                <content:text i18n-id="337761fe-a53d-45f6-9671-7730fc6b22c9"></content:text>
+            </label>
+            <content:paragraph>
+                <content:text i18n-id="82594133-e1aa-49bc-b1f9-49ed6aa19143"></content:text>
+            </content:paragraph>
+            <content:paragraph>
+                <content:text i18n-id="8bb2c274-f56e-4390-9315-e5993dfee529"></content:text>
+            </content:paragraph>
+        </card>
+
+        <card>
+            <label>
+                <content:text i18n-id="60178e6a-473c-43c6-948a-9ff550e3ee8d"></content:text>
+            </label>
+            <content:paragraph>
+                <content:text i18n-id="8eb0d1e4-28b0-4197-b91f-0a17f1783efb"></content:text>
+            </content:paragraph>
+            <content:paragraph>
+                <content:text i18n-id="9b84b400-7b9e-46ac-87c1-0b461afe4be7"></content:text>
+            </content:paragraph>
+            <content:paragraph>
+                <content:text i18n-id="ba9b9748-6af2-4b79-930e-4a9bc2e6351f"></content:text>
+            </content:paragraph>
+            <content:paragraph>
+                <content:text i18n-id="48666f77-a858-4c91-b7e6-8bff7505190a"></content:text>
+            </content:paragraph>
+            <content:paragraph>
+                <content:text i18n-id="668c73bf-960e-43c7-8d44-098435d4e3ea"></content:text>
+            </content:paragraph>
+        </card>
+
+        <card>
+            <label>
+                <content:text i18n-id="5d35e2dc-526b-4d74-b3b3-a3d5eb7ce7e9"></content:text>
+            </label>
+            <content:paragraph>
+                <content:text i18n-id="9bec6779-5db6-4d2c-b7ae-863439079c97"></content:text>
+            </content:paragraph>
+            <content:paragraph>
+                <content:text i18n-id="9f42b753-db57-4a8f-992e-03a6fdb41cb0"></content:text>
+            </content:paragraph>
+        </card>
+
+        <card>
+            <label>
+                <content:text i18n-id="3629b7f7-7ea7-4cf7-a3cc-0f7a0c56644d"></content:text>
+            </label>
+            <content:paragraph>
+                <content:text i18n-id="506d2e46-577c-4cf1-92c8-957152126a64"></content:text>
+            </content:paragraph>
+            <content:paragraph>
+                <content:text i18n-id="bb0d27de-90e6-4e49-9b82-0892d7e0d44e"></content:text>
+            </content:paragraph>
+        </card>
+    </cards>
+
+    <call-to-action>
+        <content:text i18n-id="1bb84af2-b3ad-4c74-b41d-6ee180624873"></content:text>
+    </call-to-action>
+</page>

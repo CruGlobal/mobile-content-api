@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<page xmlns="https://mobile-content-api.cru.org/xmlns/tract"
+    xmlns:content="https://mobile-content-api.cru.org/xmlns/content" 
+    background-image="kgp-us-tract-bkg-image-9_1x.jpg"
+    card-text-color="rgba(50,50,50,1)">
+
+	<header>
+		<title>
+            <content:text i18n-id="7729cd15-f59e-40ba-a849-297ac093438d">Suggestions for Christian Growth</content:text>
+        </title>
+	</header>
+			
+	<hero>
+		<heading>
+			<content:text i18n-id="56ae549a-787a-4a4f-bbb5-8618fb8ad695" text-color="rgba(255,255,255,1)" text-scale="0.75">Spiritual growth results from trusting Jesus Christ. “…The righteous will live by faith” (Galatians 3:11). A life of faith will enable you to trust God increasingly with every detail of your life, and to practice the following:</content:text>
+		</heading>
+	</hero>
+	
+    <cards>
+        <card>
+            <label>
+                <content:text i18n-id="233df032-5e9f-432d-a4a9-743bf1ae6316" text-color="rgba(177,95,90,1)">Go</content:text>
+            </label>
+            <content:paragraph>
+                <content:text i18n-id="ecc48413-ba3d-4f45-93b1-e3d71b975f76">Go to God in prayer daily.</content:text>
+                <content:text i18n-id="fd3eb6ab-c6c6-464a-b608-bd9fff4d975e">John 15:7</content:text>
+            </content:paragraph>
+        </card>
+        
+        <card>
+            <label>
+                <content:text i18n-id="5eb9c2d8-6cf1-4815-bfe3-92e289fed508" text-color="rgba(177,95,90,1)">Read</content:text>
+            </label>
+            <content:paragraph>
+            	<content:text i18n-id="9545abc5-af86-486d-9ec2-70427f1eebb1">Read God's Word daily.</content:text>
+            	<content:text i18n-id="e59d818f-a155-4dfd-b437-d3006795693b">Acts 17:11</content:text>
+            	<content:text i18n-id="7901cd8a-9253-43da-b8ed-6ab63b432917">Begin with the Gospel of John or Mark.</content:text>
+            </content:paragraph>
+        </card>
+        
+		<card>
+            <label>
+                <content:text i18n-id="794ce3eb-3482-4fe5-8635-9dfd6b8261ec" text-color="rgba(177,95,90,1)">Obey</content:text>
+            </label>
+            <content:paragraph>
+            	<content:text i18n-id="ddcf3c20-956b-44cb-ada4-3de9c22ea8a7">Obey God moment by moment.</content:text>
+            	<content:text i18n-id="a1f1dbaf-b534-4a8d-ba22-eda2e7910e64">John 14:21</content:text>
+            </content:paragraph>
+        </card>
+        
+        <card>
+            <label>
+                <content:text i18n-id="81944811-8769-463e-bd26-9fddae3a1d9e" text-color="rgba(177,95,90,1)">Witness</content:text>
+            </label>
+            <content:paragraph>
+            	<content:text i18n-id="df33e560-db64-4872-897e-310a64a31a98">Witness for Christ by your life and words.</content:text>
+            	<content:text i18n-id="ba0dae1f-97d2-4f78-9c40-b95f01a1a123">Matthew 4:19; John 15:8</content:text>
+            </content:paragraph>
+        </card>
+        
+		<card>
+            <label>
+                <content:text i18n-id="501f41f8-729b-488f-9856-f90334c92d26" text-color="rgba(177,95,90,1)">Trust</content:text>
+            </label>
+            <content:paragraph>
+            	<content:text i18n-id="5b03f1a9-6d45-4ab2-8359-292b9c09037f">Trust God for every detail of your life.</content:text>
+            	<content:text i18n-id="1e2a65a9-5cda-4e5a-a371-3e7ee27bcbe9">1 Peter 5:7</content:text>
+            </content:paragraph>
+        </card>
+        
+		<card>
+            <label>
+                <content:text i18n-id="5a6f73d0-adf1-4e34-aa61-f0915d03d36b" text-color="rgba(177,95,90,1)">Holy Spirit</content:text>
+            </label>
+            <content:paragraph>
+            	<content:text i18n-id="5900ae41-fa89-4228-aa41-39e453ee528d">Allow Him to control and empower your daily life and witness. Your walk with Christ depends on what you allow Him to do in and through you empowered by the Holy Spirit, not what you do for Him through self effort. </content:text>
+            	<content:text i18n-id="cdaa1760-8f1a-4ca5-a883-06652ca0c8e2">Galatians 5:16-17; Acts 1:8</content:text>
+            </content:paragraph>
+        </card>
+        
+		<card>
+            <label>
+                <content:text i18n-id="2f41ed24-fb83-4f97-a6b6-e30ade95b65c" text-color="rgba(177,95,90,1)">Fellowship in a good church</content:text>
+            </label>
+            <content:paragraph>
+            	<content:text i18n-id="4f763555-efe6-447c-be4a-16d930878a92">God’s word admonishes us, “Let us not give up meeting together…” (Hebrews 10:25). Several logs burn brightly together; but put one aside on the cold hearth and the fire goes out. So it is with your relationship with other Christians. If you do not belong to a church, do not wait to be invited. Take the initiative; call the pastor of a nearby church where Christ is honored and His Word is preached. Start this week, and make plans to attend regularly.</content:text>
+            </content:paragraph>
+        </card>
+    </cards>
+    
+    <call-to-action>
+    	<content:text i18n-id="53dc44f2-5c65-45c5-ba40-bca22beaad8d">Want to know more?</content:text>
+    </call-to-action>
+</page>

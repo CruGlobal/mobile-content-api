@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<page xmlns="https://mobile-content-api.cru.org/xmlns/tract"
+    xmlns:content="https://mobile-content-api.cru.org/xmlns/content"
+    background-image="satisfied-tract-bkg-image-1_1x.jpg"
+    background-color="rgba(39,51,61,1)"
+    card-text-color="rgba(50,50,50,1)">
+    <hero>
+        <heading>
+            <content:text i18n-id="c01db8f9-37be-4f6b-9a0c-a10d5f2d56ec"></content:text>
+        </heading>
+        <content:paragraph>
+            <content:text i18n-id="645af94c-eee7-4096-bbef-b4ac93f4e1fe"></content:text>
+        </content:paragraph>
+        <content:paragraph>
+            <content:text i18n-id="c9315a8e-c6b4-4396-809c-fc7036fd8aae"></content:text>
+        </content:paragraph>
+    </hero>
+
+    <cards>
+        <card>
+            <label>
+                <content:text i18n-id="c97fec59-c592-4fe1-9cd1-4c66d4cdd1f6">Do you desire more?</content:text>
+            </label>
+            <content:paragraph>
+                <content:text i18n-id="734c56ea-ffc1-4a0a-b298-4e1d635b7708"></content:text>
+            </content:paragraph>
+        </card>
+
+        <card>
+            <label>
+                <content:text i18n-id="61d05ed8-8f4a-4767-bf2b-1a4065d5a71e"></content:text>
+            </label>
+            <content:paragraph>
+                <content:text i18n-id="35ac14b0-fc1b-4598-b233-74c1cd37187d"></content:text>
+            </content:paragraph>
+            <content:paragraph>
+                <content:text i18n-id="a8fc5a97-efb6-42c7-a408-9ded8b20fdbe"></content:text>
+            </content:paragraph>
+        </card>
+
+        <card>
+            <label>
+                <content:text i18n-id="be5e8347-5b45-4167-9e25-5bd1c0479cc9"></content:text>
+            </label>
+            <content:paragraph>
+                <content:text i18n-id="7a7255e6-74cb-46c3-8847-df73976a1a0f"></content:text>
+            </content:paragraph>
+            <content:paragraph>
+                <content:text i18n-id="c41367b1-591b-48c1-8940-f8d7c619009c"></content:text>
+            </content:paragraph>
+        </card>
+    </cards>
+
+    <call-to-action>
+        <content:text i18n-id="3c1f29e9-25ee-49ef-96f5-eec2ca101a6b"></content:text>
+    </call-to-action>
+</page>

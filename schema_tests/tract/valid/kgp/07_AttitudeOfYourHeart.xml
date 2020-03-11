@@ -1,0 +1,129 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+<page xmlns="https://mobile-content-api.cru.org/xmlns/tract"
+    xmlns:analytics="https://mobile-content-api.cru.org/xmlns/analytics"
+    xmlns:content="https://mobile-content-api.cru.org/xmlns/content"
+    background-image="kgp-tract-bkg-image-5_1x.jpg">
+    <header>
+        <title>
+            <content:text i18n-id="c0beaeda-451e-453c-ae46-8524ff73c711">To begin a relationship with God, you must place your trust in Jesus alone.</content:text>
+        </title>
+    </header>
+
+    <hero>
+        <content:paragraph>
+            <content:text i18n-id="37d91324-47f6-46a6-9311-6a569be27661">GOD IS NOT SO CONCERNED WITH YOUR WORDS AS HE IS WITH THE ATTITUDE OF YOUR HEART.</content:text>
+        </content:paragraph>
+
+        <content:paragraph>
+            <content:text i18n-id="09e36daa-998f-4ff7-a931-40d210d3c77e">YOU CAN EXPRESS YOUR ATTITUDE TOWARDS GOD THROUGH PRAYER.</content:text>
+        </content:paragraph>
+
+        <content:paragraph>
+            <content:text i18n-id="5bcdf851-6ba4-452f-b5f8-3ed38758ce61">Prayer is simply talking with God.</content:text>
+        </content:paragraph>
+    </hero>
+
+    <cards>
+        <card>
+            <label>
+                <content:text i18n-id="bbdb4438-4c50-430c-bd47-084bf77294be">Here is a suggested prayer</content:text>
+            </label>
+            <content:paragraph>
+                <content:text i18n-id="88a13a09-c5f6-4dd0-9fb3-88119738cf3c">Lord Jesus,</content:text>
+                <content:text i18n-id="453de523-1828-404b-be29-898ebc0bf8d5">I want to know you personally. </content:text>
+            </content:paragraph>
+            <content:paragraph>
+                <content:text i18n-id="f83226fc-3e6d-476e-a1fd-8b411b1cdcb3">I’m sorry for going my own way. Please forgive me for all my sin.</content:text>
+            </content:paragraph>
+            <content:paragraph>
+                <content:text i18n-id="8020a609-0984-43a7-81a8-be46cd573cc1">Thank you for dying on the cross to pay for my sin.</content:text>
+            </content:paragraph>
+            <content:paragraph>
+                <content:text i18n-id="74fa69ef-1a88-4fee-af2a-1b6884e6677c">I agree to turn from my old ways and follow you as my Savior and Lord. Please come and take first place in my life.</content:text>
+            </content:paragraph>
+            <content:paragraph>
+                <content:image resource="kgp-page-image-card-divider_1x.png" />
+            </content:paragraph>
+            <content:paragraph>
+                <content:text i18n-id="51d896fa-67f7-42e1-aa4d-e0122d46a658">Could you say this to God and mean it?</content:text>
+                <content:text i18n-id="fdbc4e08-8d4f-4ff5-a6c2-f37b765f5351">Is there anything stopping you from saying this right now?</content:text>
+            </content:paragraph>
+        </card>
+        <card dismiss-listeners="followup-form-no">
+            <label>
+                <content:text i18n-id="d9dc4a05-7900-430a-8eaf-ee2d3bdad80e">Did you pray this prayer?</content:text>
+            </label>
+            <content:paragraph>
+                <content:button type="event" events="followup-form-no">
+                    <content:text i18n-id="a1e39205-8092-4aed-91e8-501574819a9b">Not Ready</content:text>
+                </content:button>
+                <content:button type="event" events="followup-form">
+                    <content:text i18n-id="379c1bf4-f5e7-45df-85a4-dfc95dad22ca">Yes</content:text>
+                </content:button>
+            </content:paragraph>
+            <content:paragraph>
+                <content:link events="followup-form">
+                    <content:text i18n-id="c696dbf4-f3d4-43ef-a3ed-59ae8921c3fd" text-align="center">I already made this decision</content:text>
+                    <analytics:events>
+                        <analytics:event system="adobe">
+                            <analytics:attribute key="test"/>
+                        </analytics:event>
+                    </analytics:events>
+                </content:link>
+            </content:paragraph>
+        </card>
+        <card hidden="true" listeners="followup-form">
+            <label>
+                <content:text i18n-id="035c27d5-97a3-48c9-aa10-a969ec12174e">Jesus has come into your life as he promised.</content:text>
+            </label>
+            <content:paragraph>
+                <content:text i18n-id="6b1edf38-25d1-431d-b636-e35f122901dc">Knowing someone better helps a relationship grow. Would you like to sign up for an email series that can help guide you in your new relationship with Jesus Christ?</content:text>
+            </content:paragraph>
+            <content:form>
+                <content:input name="destination_id" type="hidden" value="1" />
+                <content:input type="text" name="name" required="true">
+                    <content:label>
+                        <content:text i18n-id="cb98c9b5-a77f-466c-bee4-57f6289a3b4b">Name</content:text>
+                    </content:label>
+                    <content:placeholder>
+                        <content:text>First Name and Last Name</content:text>
+                    </content:placeholder>
+                </content:input>
+                <content:input type="email" name="email" required="true">
+                    <content:label>
+                        <content:text i18n-id="f5c6c928-edec-4a99-8542-476e1b9da8d5">Email</content:text>
+                    </content:label>
+                    <content:placeholder>
+                        <content:text>Email</content:text>
+                    </content:placeholder>
+                </content:input>
+                <content:button type="event" events="followup:send send-information-modal">
+                    <content:text i18n-id="f9a7f467-0f5b-49c9-aa94-6a51b6119e4c">Send</content:text>
+                </content:button>
+            </content:form>
+        </card>
+    </cards>
+    <modals>
+        <modal listeners="send-information-modal" dismiss-listeners="send-information-modal-close">
+            <title>
+                <content:text i18n-id="42e142ff-f5b2-4348-9125-c37a95535b36">Thank You </content:text>
+            </title>
+
+            <content:paragraph>
+                <content:text i18n-id="459e3b81-7020-4dda-ae37-9a1b721b7d97">Check your email soon for your first study in following Jesus Christ.</content:text>
+            </content:paragraph>
+            <content:paragraph>
+                <content:text i18n-id="60e5c620-d418-427a-9731-e14f0cd07656">If you don’t receive it, please check your spam folder.
+                </content:text>
+            </content:paragraph>
+            <content:paragraph>
+                <content:button type="event" events="send-information-modal-close information-form-card-close">
+                    <content:text i18n-id="8975d598-6578-41c8-8d26-b4bdd2a0dd2a">Done</content:text>
+                </content:button>
+            </content:paragraph>
+            <content:paragraph>
+                <content:text i18n-id="43e52076-d4c6-4fa1-ab4f-3896dbe1ef50" text-scale="0.75">If this sign up occurs offline, you will need to reopen the app while on Wifi to have the signup automatically submit.</content:text>
+            </content:paragraph>
+        </modal>
+    </modals>
+</page>
