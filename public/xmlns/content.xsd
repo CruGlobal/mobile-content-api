@@ -168,6 +168,7 @@
         <xs:choice minOccurs="1" maxOccurs="unbounded">
             <xs:group ref="content:elements" />
         </xs:choice>
+        <xs:attributeGroup ref="content:deviceRestrictions" />
     </xs:complexType>
 
     <!-- Tabbed content -->
@@ -325,6 +326,7 @@
                 </xs:documentation>
             </xs:annotation>
         </xs:attribute>
+        <xs:attributeGroup ref="content:deviceRestrictions" />
     </xs:complexType>
 
     <!-- Link -->
