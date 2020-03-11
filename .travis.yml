@@ -18,6 +18,7 @@ jobs:
     - bundle exec brakeman -A -q --no-pager --ensure-latest
 
   - name: "XML Schema Validation"
+    language: minimal
 
     addons:
       apt:
