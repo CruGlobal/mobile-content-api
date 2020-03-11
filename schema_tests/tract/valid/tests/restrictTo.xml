@@ -15,7 +15,7 @@
             <label>
                 <content:text i18n-id="2c1f7198-f0a1-40cb-b71f-b50237866f15">God loves you</content:text>
             </label>
-            <content:paragraph restrictTo="mobile web">
+            <content:paragraph>
                 <content:text i18n-id="8189a000-f7d3-4bc3-8eea-ef826c53dc5c">"God showed how much he loved us by sending his one and only Son into the world so that we might have eternal life through him."</content:text>
                 <content:text i18n-id="4919a9b7-f874-4362-87d5-c59ec8da754c">- 1 John 4:9</content:text>
             </content:paragraph>
