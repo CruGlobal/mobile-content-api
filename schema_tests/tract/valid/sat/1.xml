@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<page xmlns="https://mobile-content-api.cru.org/xmlns/tract"
+    xmlns:content="https://mobile-content-api.cru.org/xmlns/content"
+    background-color="rgba(182,212,224,1)"
+    background-image="satisfied-tract-bkg-image-0_1x.jpg">
+    <hero>
+        <heading>
+            <content:text i18n-id="a3049b50-0a42-46f1-a286-179c8dea2ee6" text-scale="1.8" text-color="rgba(50,50,50,1)" text-align="center">Satisfied?</content:text>
+        </heading>
+    </hero>
+</page>

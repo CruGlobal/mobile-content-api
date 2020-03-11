@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<page xmlns="https://mobile-content-api.cru.org/xmlns/tract"
+    xmlns:content="https://mobile-content-api.cru.org/xmlns/content"
+    background-color="rgba(200,200,200,1)">
+        <hero>
+        <content:paragraph>
+            <content:text i18n-id="de43404b-3d84-4700-877c-fb919c29a4e1" text-color="rgba(50,50,50,1)" text-align="center">Still not sure who Jesus is?</content:text>
+            <content:button type="url" url="https://www.everystudent.com/">
+                <content:text i18n-id="7993b15a-9210-406e-9280-fe78e9ce71b0">everystudent.com</content:text>
+            </content:button>
+        </content:paragraph>
+
+        <content:paragraph>
+            <content:text i18n-id="a079eabc-c68f-49b7-96dc-6e5a3a197314" text-color="rgba(50,50,50,1)" text-align="center">More about Christianity</content:text>
+            <content:button type="url" url="http://www.startingwithgod.com/">
+                <content:text i18n-id="1044c1d5-ba87-4e07-bb15-630466514f7f">startingwithgod.com</content:text>
+            </content:button>
+        </content:paragraph>
+
+        <content:paragraph>
+            <content:text i18n-id="da53a204-beba-4335-aca4-88285c91320e" text-color="rgba(50,50,50,1)" text-align="center">Read the Bible</content:text>
+            <content:button type="url" url="https://www.bible.com/bible/59/MRK.1">
+                <content:text i18n-id="adb3176c-5daf-49d5-83c9-97baac7f4b3d">bible.com/bible/59/mrk.1</content:text>
+            </content:button>
+        </content:paragraph>
+
+        <content:paragraph>
+            <content:text i18n-id="5569d6a2-62b7-4ac9-a50e-c0af82fa196e" text-color="rgba(50,50,50,1)" text-align="center">Watch a film about Jesus</content:text>
+            <content:button type="url" url="https://www.jesusfilm.org/watch/jesus.html/english.html">
+                <content:text i18n-id="3d3aab07-172e-4f6e-ab9e-e3f6b9f18636">jesusfilm.org/watch/jesus.html/english.html</content:text>
+            </content:button>
+        </content:paragraph>
+    </hero>
+</page>

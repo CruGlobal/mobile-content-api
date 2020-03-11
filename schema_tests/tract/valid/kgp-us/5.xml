@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<page xmlns="https://mobile-content-api.cru.org/xmlns/tract"
+    xmlns:content="https://mobile-content-api.cru.org/xmlns/content" 
+    background-image="kgp-us-tract-bkg-image-5_1x.jpg"
+    card-text-color="rgba(50,50,50,1)">
+
+	<header>
+		<number>
+			<content:text>4</content:text>
+		</number>
+		<title>
+            <content:text i18n-id="dbc57c0c-35c0-4af4-aeba-f1f4d9b331ac">We must individually receive Jesus Christ as Savior and Lord; then we can know God personally and experience His love and plan. </content:text>
+        </title>
+	</header>
+	
+    <cards>
+        <card>
+            <label>
+                <content:text i18n-id="b884a50f-dccb-4e65-aa52-62ecb4024f43" text-color="rgba(177,95,90,1)">We must receive Jesus Christ</content:text>
+            </label>
+            <content:paragraph>
+                <content:text i18n-id="55dc4f51-aeb7-4da2-b768-162a7019e647">“Yet to all who received Him, to those who believed in His name, He gave the right to become children of God.”</content:text>
+                <content:text i18n-id="9066b687-ef7e-4c46-bdaa-a365620238a2">John 1:12</content:text>
+            </content:paragraph>
+        </card>
+
+        <card>
+            <label>
+                <content:text i18n-id="3f659af7-ed07-4a05-ba89-84d6f03ea9af" text-color="rgba(177,95,90,1)">We receive Christ through faith</content:text>
+            </label>
+            <content:paragraph>
+                <content:text i18n-id="c614f942-ecb6-4bcc-9e8a-9a0e9647dc2c">“For it is by grace you have been saved, through faith-and this not from yourselves, it is the gift of God-not by works, so that no one can boast.”</content:text>
+				<content:text i18n-id="1cd40bd8-401f-4966-953b-e5045c8df654">Ephensians 2:8-9</content:text>
+            </content:paragraph>
+        </card>
+        
+		<card>
+            <label>
+                <content:text i18n-id="4f0b216e-917d-4902-a5c5-17d716ae7a68" text-color="rgba(177,95,90,1)">When we receive Christ…</content:text>
+            </label>
+            <content:paragraph>
+                <content:text i18n-id="9d7ba113-e3a0-4792-b9b1-1983532d9215">…we experience a new birth</content:text>
+            </content:paragraph>
+            <content:paragraph>
+				<content:text i18n-id="c0562644-8c6f-48d4-b455-b215cb0ab8a2">“Now there was a Pharisee, a man named Nicodemus who was a member of the Jewish ruling council.  He came to Jesus at night and said, ‘Rabbi, we know that you are a teacher who has come from God. For no one could perform the signs you are doing if God were not with him.’</content:text>
+			</content:paragraph>
+            <content:paragraph>
+				<content:text i18n-id="e35358f1-44a1-4300-849b-d18acf4de7af">Jesus replied, ‘Very truly I tell you, no one can see the kingdom of God unless they are born again.’</content:text>
+			</content:paragraph>
+            <content:paragraph>
+				<content:text i18n-id="41fc278e-3f46-4112-ad9c-630ae3930d58">‘How can someone be born when they are old?’ Nicodemus asked. ‘Surely they cannot enter a second time into their mother’s womb to be born!’</content:text>
+			</content:paragraph>
+            <content:paragraph>
+				<content:text i18n-id="9d8cad7f-4c59-4c9f-afc3-bfee8c0a1256">Jesus answered, ‘Very truly I tell you, no one can enter the kingdom of God unless they are born of water and the Spirit. Flesh gives birth to flesh, but the Spirit gives birth to spirit. You should not be surprised at my saying, ‘You must be born again.’ The wind blows wherever it pleases. You hear its sound, but you cannot tell where it comes from or where it is going. So it is with everyone born of the Spirit.’”</content:text>
+			</content:paragraph>
+            <content:paragraph>
+				<content:text i18n-id="30f47358-1d77-47a6-ba18-d44ca63137a3">John 3:1-8</content:text>
+			</content:paragraph>
+        </card>
+        
+        <card>
+            <label>
+                <content:text i18n-id="f041b1dc-647c-4543-8fc0-bd12b82ca80b" text-color="rgba(177,95,90,1)">We receive Christ by personal invitation</content:text>
+            </label>
+            <content:paragraph>
+                <content:text i18n-id="ec1a3ad3-fcb0-4961-8855-3b08def5bb2c">[Christ speaking] “Behold, I stand at the door and knock; if anyone hears My voice and opens the door, I will come in to him.” </content:text>
+				<content:text i18n-id="c6830879-e234-4c43-b30d-bf06c6064d9d">Revelation 3:20</content:text>
+            </content:paragraph>
+        </card>
+        
+		<card>
+            <label>
+                <content:text i18n-id="b24e6400-7c28-4eb8-b16a-04f40c7c812e" text-color="rgba(177,95,90,1)">Two circles</content:text>
+            </label>
+            <content:paragraph>
+                <content:text i18n-id="d3328795-54a0-4168-8912-58a9b432cb52">“These two circles represent two kinds of lives:</content:text>
+                <content:tabs>
+                    <content:tab>
+                        <content:label>
+                            <content:text>1</content:text>
+                        </content:label>
+                        <content:image resource="kgp-us-graphics-03.png" />
+                        <content:text i18n-id="5ae5b7e5-e495-46d7-a8f6-a223b500fbd1">A life without Jesus Christ</content:text>
+						<content:text i18n-id="2581bf59-2b73-4ac3-9f9a-5303ec45c429">Self is in the center and on the throne. Christ is outside.</content:text>
+                	</content:tab>
+
+                    <content:tab>
+                        <content:label>
+                            <content:text>2</content:text>
+                        </content:label>
+                        <content:image resource="kgp-us-graphics-03.png" />
+                        <content:text i18n-id="ec22e521-66f1-4e3a-b995-77ea997a6d50">A life entrusted to Christ</content:text>
+                        <content:text i18n-id="a2d5e5cd-af9f-49bb-8a66-6dabe95acf1e">Christ is the center and on the throne, and self yields to Christ.</content:text>
+                	</content:tab>
+                </content:tabs>
+            </content:paragraph>
+
+            <content:paragraph>
+                <content:text i18n-id="96f988ad-5280-4dac-9500-2c541aa9a9e3">Which circle best represents your life?</content:text>
+            </content:paragraph>
+            <content:paragraph>
+                <content:text i18n-id="56c9eb79-55c6-46af-8c0f-3e349fa83364">Which circle would you like to have represent your life?</content:text>
+            </content:paragraph>
+        </card>
+    </cards>
+
+    <call-to-action>
+        <content:text i18n-id="75418495-61b5-4b34-904e-9656a96143bc">The following explains how you can receive Christ…</content:text>
+    </call-to-action>
+</page>

@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<page xmlns="https://mobile-content-api.cru.org/xmlns/tract"
+    xmlns:content="https://mobile-content-api.cru.org/xmlns/content"
+    background-image="satisfied-tract-bkg-image-3_1x.jpg"
+    background-color="rgba(64,47,38,1)"
+    card-text-color="rgba(50,50,50,1)">
+    <hero>
+        <heading>
+            <content:text i18n-id="131044e1-064a-4e57-accd-4bca7a0917d8"></content:text>
+        </heading>
+        <content:paragraph>
+            <content:text i18n-id="f606f6fd-8443-44f1-9cea-b5a38e00577e"></content:text>
+        </content:paragraph>
+        <content:paragraph>
+            <content:text i18n-id="92cfd63b-4da6-481f-887e-eec3784f5335"></content:text>
+        </content:paragraph>
+    </hero>
+
+    <cards>
+        <card>
+            <label>
+                <content:text i18n-id="9c8cfc32-6c7f-4516-8d3a-03cea8ff7b03"></content:text>
+            </label>
+            <content:paragraph>
+                <content:text i18n-id="f735b4aa-5691-4d83-861e-f6c98f721f90"></content:text>
+            </content:paragraph>
+            <content:paragraph>
+                <content:text i18n-id="44377ff5-2b02-409a-b169-eaa9a1dfdb1f"></content:text>
+            </content:paragraph>
+        </card>
+
+        <card>
+            <label>
+                <content:text i18n-id="41f67dd2-f053-4a81-900c-09363e0d3934"></content:text>
+            </label>
+            <content:paragraph>
+                <content:text i18n-id="11bb73ff-f34a-462f-a866-c4004ef31c3b"></content:text>
+            </content:paragraph>
+            <content:paragraph>
+                <content:text i18n-id="051243f6-8d73-4caf-a8f5-4facf1b3ed0b"></content:text>
+            </content:paragraph>
+        </card>
+
+        <card>
+            <label>
+                <content:text i18n-id="bc49a797-0467-46af-b836-10f930962859"></content:text>
+            </label>
+            <content:paragraph>
+                <content:text i18n-id="55c57d61-164a-4d08-8ff2-0ae0e14cee68"></content:text>
+            </content:paragraph>
+        </card>
+    </cards>
+
+    <call-to-action>
+        <content:text i18n-id="7cf39e0e-9ad6-48a5-8e4f-c9452b5e6569"></content:text>
+    </call-to-action>
+</page>

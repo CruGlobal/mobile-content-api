@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<page xmlns="https://mobile-content-api.cru.org/xmlns/tract"
+    xmlns:content="https://mobile-content-api.cru.org/xmlns/content"
+    background-image="kgp-tract-bkg-image-6_1x.jpg"
+    background-image-scale-type="fill">
+    <header>
+        <title>
+            <content:text i18n-id="2fdca489-1406-419c-b35b-5ade1afa9f7b">What Happens When You Put Your Trust In Jesus?</content:text>
+        </title>
+    </header>
+
+    <hero>
+        <content:paragraph>
+            <content:text i18n-id="d9b98feb-50ca-4a60-ae9e-435c3849c276">IF YOU ASKED JESUS INTO YOUR LIFE AS SAVIOUR AND LORD, MANY THINGS HAVE HAPPENED, INCLUDING:</content:text>
+        </content:paragraph>
+    </hero>
+
+    <cards>
+        <card>
+            <label>
+                <content:text i18n-id="a2e2e777-39f0-4e59-a427-bcae73a93ef5">Jesus Has Come Into Your Life</content:text>
+            </label>
+
+            <content:paragraph>
+                <content:text i18n-id="5302c48f-e424-4a87-8f1b-5ce617a8aa8c">Jesus has come into your life by the Holy Spirit and he will never leave you.</content:text>
+                <content:text i18n-id="04fb1daf-6990-4153-9f60-7cf793a1e79b">(Hebrews 13:5)</content:text>
+            </content:paragraph>
+        </card>
+
+        <card>
+            <label>
+                <content:text i18n-id="d4a4a53d-d84e-4463-8394-1ed0c3b60095">All your sins have been forgiven.</content:text>
+            </label>
+
+            <content:paragraph>
+                <content:text i18n-id="8ae60223-9586-4dca-96ee-1c3c01614eef">All your sins have been forgiven.</content:text>
+                <content:text i18n-id="f9e251ac-2de8-4e31-a7eb-e6e656b129e0">(Colossians 1:13-14)</content:text>
+            </content:paragraph>
+        </card>
+
+        <card>
+            <label>
+                <content:text i18n-id="d754b66e-f4e6-4bd4-9764-af8b50e0f531">You Are Now a Child of God</content:text>
+            </label>
+            <content:paragraph>
+                <content:text i18n-id="9cb35a1d-04fb-4172-9752-63a8f52012b0">You have become a child of God. He is your heavenly father.</content:text>
+                <content:text i18n-id="fae8031d-d8fe-498e-9d2f-c8c3147bc26a">(Galatians 3:26)</content:text>
+            </content:paragraph>
+        </card>
+
+        <card>
+            <label>
+                <content:text i18n-id="fa829ea2-0ce4-4a97-8b26-79bfbb93733e">You Have Been Empowered</content:text>
+            </label>
+            <content:paragraph>
+                <content:text i18n-id="b61c767f-ef3c-4a5a-bdfb-3d660dea67ff">God has given you new power to live a transformed life.</content:text>
+                <content:text i18n-id="890268cf-4d0f-4b0c-ae62-8efb54f724b2">(2 Corinthians 5:17; Ephesians 3:14-21)</content:text>
+            </content:paragraph>
+        </card>
+
+        <card>
+            <label>
+                <content:text i18n-id="02ae9b80-acdf-4f58-af8a-a33ad348bf4e">You Are Now Friends with God</content:text>
+            </label>
+            <content:paragraph>
+                <content:text i18n-id="7acd2e78-76ab-4b26-a286-51466da85107">You have started a friendship with God that will last forever.</content:text>
+                <content:text i18n-id="a63a4ef6-d990-4ca7-9f68-e22e168d1cf7">(John 17:3)</content:text>
+            </content:paragraph>
+        </card>
+    </cards>
+    <call-to-action>
+        <content:text i18n-id="fcea282c-75f3-4fbc-b1cd-e7e229390ec3">But how do we know this actually happened?</content:text>
+    </call-to-action>
+</page>

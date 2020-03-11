@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<page xmlns="https://mobile-content-api.cru.org/xmlns/tract"
+    xmlns:content="https://mobile-content-api.cru.org/xmlns/content" 
+    background-image="kgp-us-tract-bkg-image-7_1x.jpg"
+    card-text-color="rgba(50,50,50,1)">
+
+	<header>
+		<title>
+            <content:text i18n-id="12a602a2-1227-4106-8a20-a2d9e850e473">How to know that Christ is in your life</content:text>
+        </title>
+	</header>
+			
+    <cards>
+        <card>
+            <label>
+                <content:text i18n-id="bd09626a-ece6-4c38-9ef3-26fe3faee59f" text-color="rgba(177,95,90,1)">Did you receive Christ into your life?</content:text>
+            </label>
+            <content:paragraph>
+                <content:text i18n-id="33d5d13a-f570-4e19-9473-e7b5a45002de">According to His promise as recorded in Revelation 3:20, where is Christ right now in relation to you? Christ said that He would come into your life and be your Savior and friend so you can know Him personally. Would He mislead you? On what authority do you know that God has answered your prayer? (The trustworthiness of God Himself and His Word.)</content:text>
+            </content:paragraph>
+        </card>
+
+        <card>
+            <label>
+                <content:text i18n-id="b04e0bc7-a023-465f-b531-faf4bf48b224" text-color="rgba(177,95,90,1)">The Bible promises Eternal Life to all who receive Christ</content:text>
+            </label>
+            <content:paragraph>
+            	<content:text i18n-id="16737896-d758-43b7-8e9d-5bda44aadc4f">“And this is the testimony: God has given us eternal life, and this life is in His Son. He who has the Son has life; he who does not have the Son of God does not have life. I write these things to you who believe in the name of the Son of God so that you may know that you have eternal life.“</content:text>
+            	<content:text i18n-id="58048331-8316-44c9-b108-0bef8b5248ec">1 John 5:11-13</content:text>
+            </content:paragraph>
+            <content:paragraph>
+            	<content:text i18n-id="f6105b82-31c6-4d7a-a52e-e6060ade3b51">Thank God often that Christ is in your life and that He will never leave you (Hebrews 13:5). You can know on the basis of His promise that Christ lives in you and that you have eternal life from the very moment you invite Him in.</content:text>
+            </content:paragraph>
+            <content:paragraph>
+            	<content:text i18n-id="ba966665-1c3a-4b4c-b37d-8685dbcb3d31">An important reminder…</content:text>
+            </content:paragraph>
+        </card>
+        
+		<card>
+            <label>
+                <content:text i18n-id="ec49bd3b-c6bc-418a-a03f-aab57110b679" text-color="rgba(177,95,90,1)">Do not depend on feelings</content:text>
+            </label>
+            <content:paragraph>
+            	<content:text i18n-id="b07dd23d-056d-4e41-81d0-9245d57e863e">The promise of God’s Word, the Bible-not our feelings-is our authority. The Christian lives by faith (trust) in the trustworthiness of God Himself and His Word. This train diagram illustrates the relationship between fact (God and His Word), faith (our trust in God and His Word), and feeling (the result of our faith and obedience)</content:text>
+            	<content:text i18n-id="8cf79bed-30b2-4dbb-a0e4-f5c0800914c9">John 14:21</content:text>
+            </content:paragraph>
+            <content:paragraph>
+            	<content:text i18n-id="f27505f4-ad57-40cd-a570-0246f36589cd">The train will run with or without the caboose. However, it would be useless to attempt to pull the train by the caboose. In the same way, we, as Christians, do not depend on feelings or emotions, but we place our faith (trust) in the trustworthiness of God and the promise of His Word. </content:text>
+            </content:paragraph>
+        </card>
+    </cards>
+</page>

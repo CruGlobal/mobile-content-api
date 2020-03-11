@@ -1,0 +1,77 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+<page xmlns="https://mobile-content-api.cru.org/xmlns/tract"
+    xmlns:content="https://mobile-content-api.cru.org/xmlns/content"
+    background-image="kgp-tract-bkg-image-8_1x.jpg"
+    background-image-align="top"
+    background-image-scale-type="fill">
+    <header>
+        <title>
+            <content:text i18n-id="ef36067a-1620-407c-8ac5-0bc0175e2110">HOW TO GROW AS A FOLLOWER OF JESUS:</content:text>
+        </title>
+    </header>
+
+    <cards>
+        <card background-image="kgp-page-bkg-image-growth-1_1x.jpg" background-image-align="bottom">
+            <label>
+                <content:text i18n-id="44d1491b-8c6e-4317-b706-181ac178a684">Get to Know God</content:text>
+            </label>
+            <content:paragraph>
+                <content:text i18n-id="680c943f-1c90-4704-9462-ba9aa66b2459">Get to know God by reading the Bible daily. (2 Timothy 3:14-17)</content:text>
+                <content:text i18n-id="455ca736-9082-4b2a-a6c8-ed018b748edb">Begin with the gospel of John or Mark.</content:text>
+            </content:paragraph>
+        </card>
+
+        <card background-image="kgp-page-bkg-image-growth-2_1x.jpg" background-image-align="bottom">
+            <label>
+                <content:text i18n-id="9dfc03e6-1903-4681-9026-7f3f459f49d8">Respond</content:text>
+            </label>
+            <content:paragraph>
+                <content:text i18n-id="933151b5-b6d8-4ba8-afa7-e1466bc3ad99">Respond to God in prayer.</content:text>
+                <content:text i18n-id="b32d7c22-52c2-475e-974c-3fdbfe31c220">(Phillipians 4:6)</content:text>
+            </content:paragraph>
+        </card>
+
+        <card background-image="kgp-page-bkg-image-growth-3_1x.jpg" background-image-align="bottom">
+            <label>
+                <content:text i18n-id="69cf56c1-c44e-47e5-9925-4bbae443738a">Obey</content:text>
+            </label>
+            <content:paragraph>
+                <content:text i18n-id="f8d16954-f28b-49e1-9332-3a8ecc34fa2b">Obey God Moment by Moment</content:text>
+                <content:text i18n-id="4fe11c37-1417-492c-9ad6-93ed9c4b5e8f">(Luke 6:46-49)</content:text>
+            </content:paragraph>
+        </card>
+
+        <card background-image="kgp-page-bkg-image-growth-4_1x.jpg" background-image-align="bottom">
+            <label>
+                <content:text i18n-id="b0b3655d-17cf-4062-acec-55bdd22f4c05">Walk</content:text>
+            </label>
+            <content:paragraph>
+                <content:text i18n-id="5d5bfae0-2d08-41fc-98c9-0342a1e24a71">Walk in the Power of the Holy Spirit.</content:text>
+                <content:text i18n-id="d5aa2a8a-1d2a-444d-a5e5-2b84822cceb1">(Ephesians 3:14-21, 5:18)</content:text>
+            </content:paragraph>
+        </card>
+
+        <card background-image="kgp-page-bkg-image-growth-5_1x.jpg" background-image-align="bottom">
+            <label>
+                <content:text i18n-id="f5b41b17-cf97-4494-be03-ef3421aec8b5">Tell Others</content:text>
+            </label>
+            <content:paragraph>
+                <content:text i18n-id="3e6334e9-b558-4950-ba6f-2411a227e1b3">Tell others about Jesus through your life and words.</content:text>
+                <content:text i18n-id="edd20029-947e-41e5-9220-d76acf73f50b">(Matthew 28:18-20; 2 Corinthians 5:17-20; Ephesians 4:1)</content:text>
+            </content:paragraph>
+        </card>
+
+        <card background-image="kgp-page-bkg-image-growth-6_1x.jpg" background-image-align="bottom">
+            <label>
+                <content:text i18n-id="c8b50534-6b4b-46f5-8232-9fb429ad99ce">Have Fellowship</content:text>
+            </label>
+            <content:paragraph>
+                <content:text i18n-id="e11332aa-e67c-4917-9e86-718c3c3bd629">Have fellowship with other Christians</content:text>
+                <content:text i18n-id="93784cbf-6e2e-479c-8e58-915c7c04fbf1">(Hebrews 10:25; Acts 2:42-47)</content:text>
+            </content:paragraph>
+        </card>
+    </cards>
+    <call-to-action>
+        <content:text i18n-id="16c35b12-5a40-48ed-80dd-dd3066fdb735">Want to know more?</content:text>
+    </call-to-action>
+</page>

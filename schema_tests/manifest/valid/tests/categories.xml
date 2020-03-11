@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<manifest xmlns="https://mobile-content-api.cru.org/xmlns/manifest"
+    xmlns:article="https://mobile-content-api.cru.org/xmlns/article"
+    xmlns:content="https://mobile-content-api.cru.org/xmlns/content">
+    <title>
+        <content:text i18n-id="name">Questions About God</content:text>
+    </title>
+
+    <categories>
+        <category id="about-god" banner="about-god.jpg">
+            <label>
+                <content:text>About God</content:text>
+            </label>
+            <article:aem-tag id="faith-topics:attributes-of-god/god-never-changes" />
+            <article:aem-tag id="faith-topics:share-your-faith/testimony" />
+        </category>
+    </categories>
+</manifest>
