@@ -14,7 +14,7 @@ gem "puma", "~> 3.12"
 # Reduces boot times through caching; required in config/boot.rb
 gem "bootsnap", ">= 1.1.0", require: false
 
-gem "adobe-campaign", "~> 0.2.1"
+gem "adobe-campaign", "~> 0.3.1"
 gem "active_model_serializers", "0.10.10"
 gem "active_storage_validations"
 gem "aws-sdk-s3"

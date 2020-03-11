@@ -51,7 +51,7 @@ GEM
       tzinfo (~> 1.1)
     addressable (2.7.0)
       public_suffix (>= 2.0.2, < 5.0)
-    adobe-campaign (0.2.1)
+    adobe-campaign (0.3.1)
       activesupport (>= 3.1.0)
       jwt (~> 1.0)
       rails (>= 3.1)
@@ -1096,7 +1096,7 @@ PLATFORMS
 DEPENDENCIES
   active_model_serializers (= 0.10.10)
   active_storage_validations
-  adobe-campaign (~> 0.2.1)
+  adobe-campaign (~> 0.3.1)
   awesome_print
   aws-sdk
   aws-sdk-rails

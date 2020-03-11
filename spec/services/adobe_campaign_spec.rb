@@ -19,6 +19,7 @@ describe AdobeCampaign do
 
     let(:destination) { Destination.adobe_campaigns.first! }
     let(:language) { Language.find_by!(code: "en") }
+    let(:mapped_language_code) { Adobe::Campaign::Language.map_code(language.code) }
 
     let(:email) { "carlos.kozuszko@example.com" }
     let(:follow_up_valid_attrs) { {email: email, name: "Carlos Kozuszko", destination_id: destination.id, language_id: language.id} }
@@ -29,7 +30,7 @@ describe AdobeCampaign do
         {email: email,
          firstName: "Carlos",
          lastName: "Kozuszko",
-         preferredLanguage: language.code,}
+         preferredLanguage: mapped_language_code,}
       }
       it "creates profile and subscription" do
         stub_create_a_new_subscription_example(profile_hash, destination.service_name)
