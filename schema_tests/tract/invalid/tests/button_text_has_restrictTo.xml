@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<page xmlns="https://mobile-content-api.cru.org/xmlns/tract" xmlns:content="https://mobile-content-api.cru.org/xmlns/content">
+	<hero>
+		<content:paragraph>
+			<content:button type="url" url="https://www.google.com/">
+				<!-- restrictTo is not valid for a content:button/content:text element -->
+				<content:text restrictTo="web">text</content:text>
+			</content:button>
+		</content:paragraph>
+	</hero>
+</page>
