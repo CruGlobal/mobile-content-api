@@ -1,36 +1,16 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <page xmlns="https://mobile-content-api.cru.org/xmlns/tract"
-    xmlns:content="https://mobile-content-api.cru.org/xmlns/content"
-    background-image="kgp-tract-bkg-image-1_1x.jpg">
-    <header>
-        <number>
-            <content:text>1</content:text>
-        </number>
-        <title>
-            <content:text i18n-id="087b7293-70aa-41c7-b6cc-5d397a4eb41b">God loves you and created you to know him personally.</content:text>
-        </title>
-    </header>
-    <cards>
-        <card>
-            <label>
-                <content:text i18n-id="2c1f7198-f0a1-40cb-b71f-b50237866f15">God loves you</content:text>
-            </label>
-            <content:paragraph>
-                <content:text i18n-id="8189a000-f7d3-4bc3-8eea-ef826c53dc5c">"God showed how much he loved us by sending his one and only Son into the world so that we might have eternal life through him."</content:text>
-                <content:text i18n-id="4919a9b7-f874-4362-87d5-c59ec8da754c">- 1 John 4:9</content:text>
+    xmlns:content="https://mobile-content-api.cru.org/xmlns/content">
+    <hero>
+        <content:paragraph>
+            <content:button type="url" url="https://www.example.com" restrictTo="web">
+                <content:text>Button</content:text>
+            </content:button>
+            <content:image resource="a.jpg" restrictTo="web" />
+            <content:text i18n-id="087b7293-70aa-41c7-b6cc-5d397a4eb41b" restrictTo="web mobile">God loves you and created you to know him personally.</content:text>
+            <content:paragraph restrictTo="mobile">
+                <content:text />
             </content:paragraph>
-        </card>
-        <card>
-            <label>
-                <content:text i18n-id="f0ab9318-ed38-426d-946d-0668adb55f02">God wants you to know him</content:text>
-            </label>
-            <content:paragraph>
-                <content:text i18n-id="90c1f8d1-39c0-49f8-b905-5bd7e850eef8">“Now this is eternal life: that they may know You, the only true God, and Jesus Christ, whom You have sent.”</content:text>
-                <content:text i18n-id="df32c4e8-e832-4026-870e-cbde62215c5b">John 17:3 NIV</content:text>
-            </content:paragraph>
-        </card>
-    </cards>
-    <call-to-action>
-        <content:text i18n-id="fae69b3b-e95b-4184-9bcd-211e35faa71c">Why do you think most people don’t know God personally?</content:text>
-    </call-to-action>
+        </content:paragraph>
+    </hero>
 </page>
