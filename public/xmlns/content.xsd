@@ -225,6 +225,11 @@
             </xs:extension>
         </xs:simpleContent>
     </xs:complexType>
+    <xs:complexType name="textChild">
+        <xs:all>
+            <xs:element name="text" type="content:text" />
+        </xs:all>
+    </xs:complexType>
 
     <!--
         Image
@@ -414,9 +419,4 @@
             <xs:element ref="content:input" />
         </xs:choice>
     </xs:group>
-    <xs:complexType name="textChild">
-        <xs:all>
-            <xs:element ref="content:text" />
-        </xs:all>
-    </xs:complexType>
 </xs:schema>
