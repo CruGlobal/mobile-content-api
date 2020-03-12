@@ -403,7 +403,15 @@
     <!-- Content Elements -->
     <xs:element name="paragraph" type="content:paragraph" />
     <xs:element name="tabs" type="content:tabs" />
-    <xs:element name="text" type="content:text" />
+    <xs:element name="text">
+        <xs:complexType>
+            <xs:complexContent>
+                <xs:extension base="content:text">
+                    <xs:attributeGroup ref="content:deviceRestrictions" />
+                </xs:extension>
+            </xs:complexContent>
+        </xs:complexType>
+    </xs:element>
     <xs:element name="image" type="content:image" />
     <xs:element name="button" type="content:button" />
     <xs:element name="link" type="content:link" />
