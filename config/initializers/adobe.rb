@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+# :nocov:
 begin
   # Get credentials from database
   destination = Destination.adobe_campaigns.first
@@ -23,3 +24,4 @@ begin
 rescue ::ActiveRecord::NoDatabaseError, ::ActiveRecord::StatementInvalid
   warn("[WARN] database doesn't exist. Skipping AdobeCampaigns initialization")
 end
+# :nocov:
