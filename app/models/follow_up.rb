@@ -16,6 +16,15 @@ class FollowUp < ActiveRecord::Base
     perform_request
   end
 
+  def name_params
+    return nil if name.nil?
+
+    @name_params ||= begin
+      names = name.split(" ")
+      {first_name: names[0], last_name: names[1]}
+    end
+  end
+
   private
 
   def body
@@ -30,20 +39,26 @@ class FollowUp < ActiveRecord::Base
     {route_id: destination.route_id, language_code: language.code, email: email}.merge(name_params)
   end
 
-  def name_params
-    return nil if name.nil?
-
-    names = name.split(" ")
-    {first_name: names[0], last_name: names[1]}
-  end
-
   def headers
     {'Content-Type': "application/x-www-form-urlencoded"}
   end
 
   def perform_request
+    case destination.service_type
+    when "growth_spaces"
+      growth_spaces_perform_request
+    when "adobe_campaigns"
+      adobe_campaigns_perform_request
+    end
+  end
+
+  def growth_spaces_perform_request
     code = RestClient.post(destination.url, body, headers).code
     Rails.logger.info "Received response code: #{code} from destination: #{destination.id}"
     raise Error::BadRequestError, "Received response code: #{code} from destination: #{destination.id}" if code != 201
+  end
+
+  def adobe_campaigns_perform_request
+    AdobeCampaign.new(self).subscribe!
   end
 end
