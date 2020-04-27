@@ -4,7 +4,7 @@ MAINTAINER cru.org <wmd@cru.org>
 ARG RAILS_ENV=production
 
 ARG DD_API_KEY
-RUN DD_INSTALL_ONLY=true DD_API_KEY=$DD_API_KEY bash -c "$(curl -L https://raw.githubusercontent.com/DataDog/datadog-agent/master/cmd/agent/install_script.sh)"
+RUN DD_AGENT_MAJOR_VERSION=7 DD_INSTALL_ONLY=true DD_API_KEY=$DD_API_KEY bash -c "$(curl -L https://raw.githubusercontent.com/DataDog/datadog-agent/master/cmd/agent/install_script.sh)"
 
 # Config for logging to datadog
 COPY docker/datadog-agent /etc/datadog-agent
