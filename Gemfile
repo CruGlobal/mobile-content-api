@@ -39,6 +39,7 @@ group :development, :test do
   gem "bundler-audit"
   gem "byebug", platform: :mri
   gem "codecov", require: false
+  gem "database_cleaner-active_record"
   gem "dotenv-rails"
   gem "equivalent-xml", "~> 0.6.0"
   gem "guard-rspec"
