@@ -9,10 +9,10 @@ jobs:
       bundler: true
 
     before_script: 
-    - bundle exec rake db:create db:setup RAILS_ENV=test
+    - bundle exec rake db:create db:schema:load RAILS_ENV=test
 
     script:
-    - bundle exec rake spec
+    - bundle exec rspec
     - bundle exec standardrb
     - bundle exec bundle audit check --update
     - bundle exec brakeman -A -q --no-pager --ensure-latest
