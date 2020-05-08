@@ -1,0 +1,22 @@
+Index Here
+
+<script>
+  function send(page, card) {
+    data = {
+      //identifier: { channel: "publish_channel", code: "12345" },
+      data: {
+        type: "tract_navigation",
+        attributes: {
+          tool: "kgp",
+          language: "en-US",
+          page: page,
+          card: card 
+        }
+      }
+    }
+
+    App.publish.send(data);
+  }
+</script>
+
+<button onClick="send(1, 1)">Go page 1, card 1</button>
