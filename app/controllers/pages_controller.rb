@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class PagesController < SecureController
-  skip_before_action :authorize!
+  skip_before_action :authorize!, only: :publish
 
   def create
     p = Page.create!(params.require(:data).require(:attributes)
