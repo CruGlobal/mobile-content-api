@@ -1,6 +1,8 @@
 GEM
   remote: https://rubygems.org/
   specs:
+    action-cable-testing (0.6.1)
+      actioncable (>= 5.0)
     actioncable (5.2.4.2)
       actionpack (= 5.2.4.2)
       nio4r (~> 2.0)
@@ -1092,6 +1094,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  action-cable-testing
   actioncable
   active_model_serializers (= 0.10.10)
   active_storage_validations
