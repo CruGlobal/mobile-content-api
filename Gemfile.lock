@@ -856,7 +856,7 @@ GEM
     database_cleaner-active_record (1.8.0)
       activerecord
       database_cleaner (~> 1.8.0)
-    ddtrace (0.35.1)
+    ddtrace (0.35.2)
       msgpack
     diff-lcs (1.3)
     docile (1.3.2)
