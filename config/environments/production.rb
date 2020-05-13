@@ -102,6 +102,10 @@ Rails.application.configure do
 
   # Do not dump schema after migrations.
   config.active_record.dump_schema_after_migration = false
+
+  # Action cable
+  config.secret_key_base = ENV["SECRET_KEY_BASE"]
+  config.action_cable.allowed_request_origins = ['https://mobile-content-api.cru.org']
 end
 
 Rails.application.routes.default_url_options = {

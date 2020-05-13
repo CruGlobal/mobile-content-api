@@ -1,3 +1,4 @@
+/*
 App.subscribe = App.cable.subscriptions.create("SubscribeChannel", {
   connected: function() {
     // Called when the subscription is ready for use on the server
@@ -11,3 +12,4 @@ App.subscribe = App.cable.subscriptions.create("SubscribeChannel", {
     // Called when there's incoming data on the websocket for this channel
   }
 });
+*/

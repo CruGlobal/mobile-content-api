@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class PagesController < SecureController
-  skip_before_action :authorize!, only: :publish
+  skip_before_action :authorize!, only: [ :publish, :subscribe ]
 
   def create
     p = Page.create!(params.require(:data).require(:attributes)
@@ -18,5 +18,8 @@ class PagesController < SecureController
   end
 
   def publish
+  end
+
+  def subscribe
   end
 end

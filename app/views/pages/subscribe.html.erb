@@ -1,0 +1,26 @@
+Subscribe Index Here
+
+<script>
+App.subscribe = App.cable.subscriptions.create({ channel: "SubscribeChannel", channelId: "333" }, {
+  connected: function() {
+  },
+
+  disconnected: function() {
+  },
+
+  received: function(data) {
+    console.log('received data: ', data);
+    msg = new Date().toLocaleString() + "<br/>" + JSON.stringify(data) + "<br/>" + "<br/>";
+    document.getElementById('message').innerHTML = document.getElementById('message').innerHTML + msg;
+  }
+});
+
+document.addEventListener('DOMContentLoaded', function(event) {
+  console.log('dom content loaded')
+})
+
+</script>
+
+<p>Message history (new messages at bottom):</p>
+
+<div id="message" style="background-color: grey;"><br/></div>
