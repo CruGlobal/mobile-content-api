@@ -9,11 +9,17 @@ class BaseSharingChannel < ApplicationCable::Channel
 
   def set_metadata(key, value)
     metadata[key] = value
-    puts("BaseSharingChannel#set_metadata @publisher_channel_id: #{@publisher_channel_id.inspect}, key #{key.inspect}, value #{value.inspect}")
     Rails.cache.write(["sharing_metadata", @publisher_channel_id], metadata, expires_in: 2.hours)
   end
 
   def clear_metadata
     Rails.cache.delete(["sharing_metadata", @publisher_channel_id])
+  end
+
+  def format_error(title, detail = nil)
+    inner_hash = { "title" => title }
+    inner_hash["detail"] = detail if detail
+
+    { "errors": [ inner_hash ] }
   end
 end
