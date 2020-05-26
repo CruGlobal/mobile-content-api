@@ -6,6 +6,7 @@ RSpec.describe PublishChannel, type: :channel do
 
   before do
     stub_connection channelId: '12345'
+    Rails.cache.clear
   end
 
   it "successfully subscribes" do
