@@ -1,34 +1,41 @@
 class SubscribeChannel < BaseSharingChannel
   def subscribed
-    puts("[SubscribeChannel#subscibed] #{params.inspect}")
-    subscriber_channel_id = params["channelId"]
-
-    unless subscriber_channel_id.present?
-      reject_unauthorized_connection
-      return
-    end
-
-    # TODO: validate if subscriber_channel_id is long enough/the right format
-
-    @publisher_channel_id = Rails.cache.fetch(["subscriber_to_publisher", subscriber_channel_id])
-    puts(@publisher_channel_id.inspect)
-    puts("current metadata for this channel: #{metadata.inspect}")
+    Rails.logger.info("[SubscribeChannel#subscibed] #{params.inspect}")
+    @subscriber_channel_id = params["channelId"]
+    return unless validate_subscriber_channel_id_format
+    @publisher_channel_id = Rails.cache.fetch(["subscriber_to_publisher", @subscriber_channel_id])
 
     if @publisher_channel_id
       if metadata[:last_used_at] < 2.hours.ago
-        transmit(error: "old channel")
+        transmit(format_error("Old Channel"))
         return
       else
         transmit(metadata[:last_message])
       end
     else
-      transmit(error: "channel not found")
+      transmit(format_error("Channel Not Found"))
       return
     end
 
-    stream_for subscriber_channel_id
+    stream_for @subscriber_channel_id
   end
 
   def unsubscribed
   end
+
+  protected
+
+    def validate_subscriber_channel_id_format
+      if @subscriber_channel_id.blank?
+        Rails.logger.info("transmit block here")
+        transmit(format_error("Subscriber Channel Missing"))
+        false
+      elsif @subscriber_channel_id =~ /...../
+        true
+      else
+        transmit(format_error("Subscriber Channel Invalid"))
+        false
+      end
+    end
+
 end
