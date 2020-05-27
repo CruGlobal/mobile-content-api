@@ -71,15 +71,10 @@ RSpec.configure do |config|
   # config.filter_gems_from_backtrace("gem name")
 
   config.before(:suite) do
-    DatabaseCleaner.strategy = :transaction
-    DatabaseCleaner.clean_with(:truncation)
-
     Rails.application.load_seed # loading seeds
   end
 
-  config.around(:each) do |example|
-    DatabaseCleaner.cleaning do
-      example.run
-    end
+  config.after(:suite) do
+    DatabaseCleaner.clean_with(:truncation)
   end
 end
