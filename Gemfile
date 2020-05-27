@@ -38,6 +38,7 @@ group :development, :test do
   gem "brakeman"
   gem "bundler-audit"
   gem "byebug", platform: :mri
+  gem "pry-byebug"
   gem "codecov", require: false
   gem "database_cleaner-active_record"
   gem "dotenv-rails"
