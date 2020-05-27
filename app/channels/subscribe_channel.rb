@@ -25,17 +25,16 @@ class SubscribeChannel < BaseSharingChannel
 
   protected
 
-    def validate_subscriber_channel_id_format
-      if @subscriber_channel_id.blank?
-        Rails.logger.info("transmit block here")
-        transmit(format_error("Subscriber Channel Missing"))
-        false
-      elsif @subscriber_channel_id =~ /...../
-        true
-      else
-        transmit(format_error("Subscriber Channel Invalid"))
-        false
-      end
+  def validate_subscriber_channel_id_format
+    if @subscriber_channel_id.blank?
+      Rails.logger.info("transmit block here")
+      transmit(format_error("Subscriber Channel Missing"))
+      false
+    elsif /...../.match?(@subscriber_channel_id)
+      true
+    else
+      transmit(format_error("Subscriber Channel Invalid"))
+      false
     end
-
+  end
 end

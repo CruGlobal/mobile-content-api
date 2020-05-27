@@ -26,7 +26,7 @@ module RSpec::Rails::FeatureCheck
     true
   end
 end
-require 'rspec/rails'
+require "rspec/rails"
 
 require "webmock/rspec"
 # Add additional requires below this line. Rails is not loaded until this point!

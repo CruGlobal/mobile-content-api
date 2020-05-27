@@ -53,7 +53,7 @@ group :development, :test do
   gem "simplecov", require: false
   gem "standard", "~> 0.1.9"
   gem "webmock", require: false
-  gem 'action-cable-testing'
+  gem "action-cable-testing"
 end
 
 gem "raddocs"

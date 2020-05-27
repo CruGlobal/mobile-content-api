@@ -105,7 +105,7 @@ Rails.application.configure do
 
   # Action cable
   config.secret_key_base = ENV["SECRET_KEY_BASE"]
-  config.action_cable.allowed_request_origins = ['https://mobile-content-api.cru.org']
+  config.action_cable.allowed_request_origins = ["https://mobile-content-api.cru.org"]
 end
 
 Rails.application.routes.default_url_options = {

@@ -15,7 +15,7 @@ class PublishChannel < BaseSharingChannel
       setup_new_pair
     end
 
-    transmit({ data: { type: "publisher-info", attributes: { subscriberChannelId: metadata[:subscriber_channel_id] } } })
+    transmit({data: {type: "publisher-info", attributes: {subscriberChannelId: metadata[:subscriber_channel_id]}}})
   end
 
   def unsubscribed
@@ -31,14 +31,14 @@ class PublishChannel < BaseSharingChannel
     SubscribeChannel.broadcast_to metadata[:subscriber_channel_id], data
   end
 
-	protected
+  protected
 
   def validate_publisher_channel_id_format
     if @publisher_channel_id.blank?
       Rails.logger.info("transmit block here")
       transmit(format_error("Publisher Channel Missing"))
       false
-    elsif @publisher_channel_id =~ /...../
+    elsif /...../.match?(@publisher_channel_id)
       true
     else
       transmit(format_error("Publisher Channel Invalid"))
