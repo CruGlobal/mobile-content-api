@@ -160,7 +160,7 @@ describe PageClient do
       page_client.push_new_onesky_translation
 
       file = File.new("pages/#{filename_1}")
-      expect(file.read).to eq("{\"#{id_1}\":\"#{phrase_1}\",\"#{id_2}\":\"#{phrase_2}\"}")
+      expect(JSON.parse(file.read)).to eq({id_1.to_s => phrase_1, id_2.to_s => phrase_2})
     end
 
     it "name and description" do
@@ -169,7 +169,7 @@ describe PageClient do
       page_client.push_new_onesky_translation
 
       file = File.new("pages/name_description.xml")
-      expect(file.read).to eq("{\"name\":\"#{name}\",\"description\":\"#{description}\"}")
+      expect(JSON.parse(file.read)).to eq({"name" => name, "description" => description})
     end
 
     it "translatable attributes" do
@@ -178,7 +178,7 @@ describe PageClient do
       page_client.push_new_onesky_translation
 
       file = File.new("pages/attributes.xml")
-      expect(file.read).to eq("{\"#{attr_1.key}\":\"#{attr_1.value}\",\"#{attr_2.key}\":\"#{attr_2.value}\"}")
+      expect(JSON.parse(file.read)).to eq({attr_1.key => attr_1.value, attr_2.key => attr_2.value})
     end
   end
 end
