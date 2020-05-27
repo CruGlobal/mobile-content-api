@@ -24,7 +24,7 @@ ARG TEST_DB_PASSWORD=
 ARG TEST_DB_HOST=localhost
 ARG TEST_DB_PORT=5432
 
-RUN bundle exec rake db:create db:setup docs:generate RAILS_ENV=test
+RUN bundle exec rake db:create db:schema:load docs:generate RAILS_ENV=test
 RUN bundle exec rake assets:clobber assets:precompile RAILS_ENV=test
 
 ## Run this last to make sure permissions are all correct
