@@ -14,7 +14,6 @@ RSpec.describe PublishChannel, type: :channel do
     expect_any_instance_of(PublishChannel).to receive(:new_random_uid).and_return(uid)
 
     subscribe(channelId: "12345")
-    expect(subscription).to be_confirmed
     expect(transmissions.last).to eq("data" => {"type" => "publisher-info", "attributes" => {"subscriberChannelId" => uid}})
   end
 
@@ -51,7 +50,6 @@ RSpec.describe PublishChannel, type: :channel do
     expect_any_instance_of(PublishChannel).to_not receive(:new_random_uid)
 
     subscribe(channelId: "12345")
-    expect(subscription).to be_confirmed
     expect(transmissions.last).to eq({"data" => {"attributes" => {"subscriberChannelId" => uid}, "type" => "publisher-info"}})
   end
 
@@ -65,7 +63,17 @@ RSpec.describe PublishChannel, type: :channel do
     expect_any_instance_of(PublishChannel).to receive(:new_random_uid).and_return(new_uid)
 
     subscribe(channelId: "12345")
-    expect(subscription).to be_confirmed
     expect(transmissions.last).to eq({"data" => {"attributes" => {"subscriberChannelId" => new_uid}, "type" => "publisher-info"}})
+  end
+
+  it "broadcasts a message to subscribers" do
+    uid = "#{SecureRandom.hex(10)}_#{Time.now.to_i}"
+    metadata = { last_used_at: 20.minutes.ago, subscriber_channel_id: uid }
+    Rails.cache.write(["sharing_metadata", "12345"], metadata)
+
+    subscribe(channelId: "12345")
+    data = { "message" => { "body" => "body" }}
+    expect(SubscribeChannel).to receive(:broadcast_to).with(uid, data)
+		perform :receive, data
   end
 end

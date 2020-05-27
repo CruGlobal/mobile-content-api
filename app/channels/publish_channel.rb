@@ -28,6 +28,7 @@ class PublishChannel < BaseSharingChannel
     transmit(confirm: Time.now)
 
     # send message to subscriber
+    data.delete("action")
     SubscribeChannel.broadcast_to metadata[:subscriber_channel_id], data
   end
 
