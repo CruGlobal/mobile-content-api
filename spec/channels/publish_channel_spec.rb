@@ -68,12 +68,12 @@ RSpec.describe PublishChannel, type: :channel do
 
   it "broadcasts a message to subscribers" do
     uid = "#{SecureRandom.hex(10)}_#{Time.now.to_i}"
-    metadata = { last_used_at: 20.minutes.ago, subscriber_channel_id: uid }
+    metadata = {last_used_at: 20.minutes.ago, subscriber_channel_id: uid}
     Rails.cache.write(["sharing_metadata", "12345"], metadata)
 
     subscribe(channelId: "12345")
-    data = { "message" => { "body" => "body" }}
+    data = {"message" => {"body" => "body"}}
     expect(SubscribeChannel).to receive(:broadcast_to).with(uid, data)
-		perform :receive, data
+    perform :receive, data
   end
 end
