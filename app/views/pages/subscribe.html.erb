@@ -1,26 +1,31 @@
-Subscribe Index Here
+Subscribe Index Here<br/><br/>
 
 <script>
-App.subscribe = App.cable.subscriptions.create({ channel: "SubscribeChannel", channelId: "333" }, {
-  connected: function() {
-  },
+function connect() {
+  var channelId = document.getElementById("channelId").value;
 
-  disconnected: function() {
-  },
+  console.log('connect here with subscriber channel id', channelId);
 
-  received: function(data) {
-    console.log('received data: ', data);
-    msg = new Date().toLocaleString() + "<br/>" + JSON.stringify(data) + "<br/>" + "<br/>";
-    document.getElementById('message').innerHTML = document.getElementById('message').innerHTML + msg;
-  }
-});
+  App.subscribe = App.cable.subscriptions.create({ channel: "SubscribeChannel", channelId: channelId }, {
+    connected: function() {
+    },
 
-document.addEventListener('DOMContentLoaded', function(event) {
-  console.log('dom content loaded')
-})
+    disconnected: function() {
+    },
 
+    received: function(data) {
+      console.log('received data: ', data);
+      msg = new Date().toLocaleString() + "<br/>" + JSON.stringify(data) + "<br/>" + "<br/>";
+      document.getElementById('message').innerHTML = document.getElementById('message').innerHTML + msg;
+    }
+  });
+}
 </script>
+
+Subscriber Channel Id: <input type="text" id="channelId" style="width: 300px"></input>
+
+<br/><br/><button onClick="connect()">Connect</button>
 
 <p>Message history (new messages at bottom):</p>
 
-<div id="message" style="background-color: grey;"><br/></div>
+<div id="message" style="background-color: grey; colo: white"><br/></div>

@@ -9,7 +9,7 @@ class SubscribeChannel < BaseSharingChannel
       if metadata[:last_used_at] < 2.hours.ago
         transmit(format_error("Old Channel"))
         return
-      else
+      elsif metadata[:last_message].present?
         transmit(metadata[:last_message])
       end
     else

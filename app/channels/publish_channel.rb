@@ -25,7 +25,7 @@ class PublishChannel < BaseSharingChannel
     @publisher_channel_id = params["channelId"]
     Rails.logger.info("[PublishChannel#receive] received data: #{data}.  Current metadata: #{metadata.inspect}")
     set_metadata(:last_message, data)
-    transmit(confirm: Time.now)
+    transmit({data: {type: "confirm-#{data.dig("data", "type")}", id: data.dig("data", "id")}})
 
     # send message to subscriber
     data.delete("action")

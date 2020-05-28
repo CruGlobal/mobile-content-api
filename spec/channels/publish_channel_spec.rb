@@ -72,8 +72,9 @@ RSpec.describe PublishChannel, type: :channel do
     Rails.cache.write(["sharing_metadata", "12345"], metadata)
 
     subscribe(channelId: "12345")
-    data = {"message" => {"body" => "body"}}
+    data = {"data" => {"type" => "navigation-event", "id" => "111"}}
     expect(SubscribeChannel).to receive(:broadcast_to).with(uid, data)
     perform :receive, data
+    expect(transmissions.last).to eq({"data" => {"type" => "confirm-navigation-event", "id" => "111"}})
   end
 end
