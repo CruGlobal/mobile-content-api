@@ -3,10 +3,10 @@ class SubscribeChannel < BaseSharingChannel
     Rails.logger.info("[SubscribeChannel#subscibed] #{params.inspect}")
     @subscriber_channel_id = params["channelId"]
     return unless validate_subscriber_channel_id_format
-    @publisher_channel_id = Rails.cache.fetch(["subscriber_to_publisher", @subscriber_channel_id])
+    @publisher_channel_id = Rails.cache.fetch([SUBSCRIBER_TO_PUBLISHER, @subscriber_channel_id])
 
     if @publisher_channel_id
-      if metadata[:last_used_at] < 2.hours.ago
+      if metadata[:last_used_at] < METADATA_EXPIRY.ago
         transmit(format_error("Old Channel"))
         return
       elsif metadata[:last_message].present?
@@ -26,15 +26,6 @@ class SubscribeChannel < BaseSharingChannel
   protected
 
   def validate_subscriber_channel_id_format
-    if @subscriber_channel_id.blank?
-      Rails.logger.info("transmit block here")
-      transmit(format_error("Subscriber Channel Missing"))
-      false
-    elsif /...../.match?(@subscriber_channel_id)
-      true
-    else
-      transmit(format_error("Subscriber Channel Invalid"))
-      false
-    end
+    validate_channel_id_format(@subscriber_channel_id, "Subscriber")
   end
 end

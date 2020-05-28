@@ -7,7 +7,7 @@ class PublishChannel < BaseSharingChannel
     stream_for @publisher_channel_id
 
     if metadata[:last_used_at]
-      if metadata[:last_used_at] < 2.hours.ago
+      if metadata[:last_used_at] < METADATA_EXPIRY.ago
         clear_metadata
         setup_new_pair
       end
@@ -24,6 +24,8 @@ class PublishChannel < BaseSharingChannel
   def receive(data)
     @publisher_channel_id = params["channelId"]
     Rails.logger.info("[PublishChannel#receive] received data: #{data}.  Current metadata: #{metadata.inspect}")
+    return unless validate_publisher_channel_id_format
+
     set_metadata(:last_message, data)
     transmit({data: {type: "confirm-#{data.dig("data", "type")}", id: data.dig("data", "id")}})
 
@@ -35,16 +37,7 @@ class PublishChannel < BaseSharingChannel
   protected
 
   def validate_publisher_channel_id_format
-    if @publisher_channel_id.blank?
-      Rails.logger.info("transmit block here")
-      transmit(format_error("Publisher Channel Missing"))
-      false
-    elsif /...../.match?(@publisher_channel_id)
-      true
-    else
-      transmit(format_error("Publisher Channel Invalid"))
-      false
-    end
+    validate_channel_id_format(@publisher_channel_id, "Publisher")
   end
 
   def setup_new_pair
@@ -55,7 +48,7 @@ class PublishChannel < BaseSharingChannel
   end
 
   def remember_subscriber(subscriber_channel_id)
-    Rails.cache.write(["subscriber_to_publisher", subscriber_channel_id], params["channelId"])
+    Rails.cache.write([SUBSCRIBER_TO_PUBLISHER, subscriber_channel_id], params["channelId"])
   end
 
   def new_random_uid
