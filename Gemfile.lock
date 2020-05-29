@@ -913,6 +913,11 @@ GEM
     listen (3.2.1)
       rb-fsevent (~> 0.10, >= 0.10.3)
       rb-inotify (~> 0.9, >= 0.9.10)
+    lograge (0.11.2)
+      actionpack (>= 4)
+      activesupport (>= 4)
+      railties (>= 4)
+      request_store (~> 1.0)
     loofah (2.5.0)
       crass (~> 1.0.2)
       nokogiri (>= 1.5.9)
@@ -997,6 +1002,8 @@ GEM
     rb-inotify (0.10.0)
       ffi (~> 1.0)
     redis (4.1.4)
+    request_store (1.5.0)
+      rack (>= 1.4)
     rest-client (2.1.0)
       http-accept (>= 1.7.0, < 2.0)
       http-cookie (>= 1.0.2, < 2.0)
@@ -1120,6 +1127,7 @@ DEPENDENCIES
   guard-rspec
   guard-rubocop
   listen (~> 3.2.1)
+  lograge
   mini_magick (~> 4.10)
   nokogiri (>= 1.8.5)
   oj (~> 3.10.6)
