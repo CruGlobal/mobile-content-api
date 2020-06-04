@@ -37,7 +37,7 @@ RSpec.describe PublishChannel, type: :channel do
       expect(SecureRandom).to receive(:hex).with(10).and_return(hex)
       now = Time.now
       allow(Time).to receive(:now).and_return(now)
-      expect(subject.send(:new_random_uid)).to eq("#{hex}_#{now.to_i}")
+      expect(subject.send(:new_random_uid)).to eq("#{hex}-#{now.to_i}")
     end
   end
 

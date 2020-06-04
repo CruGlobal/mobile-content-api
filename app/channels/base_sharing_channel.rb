@@ -31,7 +31,7 @@ class BaseSharingChannel < ApplicationCable::Channel
     if channel_id.blank?
       transmit(format_error("#{channel_name.capitalize} Channel Missing"))
       false
-    elsif /...../.match?(channel_id)
+    elsif /\A[a-zA-Z0-9-]{5,200}\z/.match?(channel_id)
       true
     else
       transmit(format_error("#{channel_name.capitalize} Channel Invalid"))

@@ -48,10 +48,10 @@ class PublishChannel < BaseSharingChannel
   end
 
   def remember_subscriber(subscriber_channel_id)
-    Rails.cache.write([SUBSCRIBER_TO_PUBLISHER, subscriber_channel_id], params["channelId"])
+    Rails.cache.write([SUBSCRIBER_TO_PUBLISHER, subscriber_channel_id], @publisher_channel_id)
   end
 
   def new_random_uid
-    "#{SecureRandom.hex(10)}_#{Time.now.to_i}"
+    "#{SecureRandom.hex(10)}-#{Time.now.to_i}"
   end
 end
