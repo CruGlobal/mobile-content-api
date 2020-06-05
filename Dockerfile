@@ -39,6 +39,6 @@ RUN mkdir -p /home/app/webapp/tmp \
                     /home/app/webapp/public/uploads \
                     /home/app/webapp/pages
 
-COPY location.conf /usr/local/openresty/nginx/conf/location.conf
+COPY cable.conf /usr/local/openresty/nginx/conf/location/cable.conf
 
 CMD "/docker-entrypoint.sh"
