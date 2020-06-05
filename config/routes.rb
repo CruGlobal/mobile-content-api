@@ -26,9 +26,6 @@ Rails.application.routes.draw do
 
   resources :custom_manifests, only: [:create, :update, :destroy, :show]
 
-  get "/publish", to: "pages#publish"
-  get "/subscribe", to: "pages#subscribe"
-
   get "monitors/lb"
   get "monitors/commit"
 

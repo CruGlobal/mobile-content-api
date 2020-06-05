@@ -16,10 +16,4 @@ class PagesController < SecureController
     page.update!(params.require(:data).require(:attributes).permit(:structure))
     render json: page, status: :ok
   end
-
-  def publish
-  end
-
-  def subscribe
-  end
 end
