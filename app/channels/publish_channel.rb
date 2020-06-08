@@ -69,9 +69,9 @@ class PublishChannel < BaseSharingChannel
   #
   def validate_receive_message_format(data)
     valid = data.keys == ["data"] &&
-      data["data"].keys.include?("type") &&
-      data["data"].keys.include?("attributes") &&
-      (data["data"].keys - %w(type attributes id)).empty? &&
+      data["data"].key?("type") &&
+      data["data"].key?("attributes") &&
+      (data["data"].keys - %w[type attributes id]).empty? &&
       data["data"]["type"] == "navigation-event"
 
     unless valid

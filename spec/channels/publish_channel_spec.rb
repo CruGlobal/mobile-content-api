@@ -86,7 +86,7 @@ RSpec.describe PublishChannel, type: :channel do
     subscribe(channelId: "12345")
     data = {"other" => {"type" => "navigation-event", "id" => "111", "attributes" => {}}}
     perform :receive, data
-    expect(transmissions.last).to eq("errors" => [{"title"=>"Data format is invalid"}])
+    expect(transmissions.last).to eq("errors" => [{"title" => "Data format is invalid"}])
   end
 
   it "validate message data rejects keys other than type, id and attributes" do
@@ -97,7 +97,7 @@ RSpec.describe PublishChannel, type: :channel do
     subscribe(channelId: "12345")
     data = {"data" => {"type" => "navigation-event", "id" => "111", "attributes" => {}, "something" => "else"}}
     perform :receive, data
-    expect(transmissions.last).to eq("errors" => [{"title"=>"Data format is invalid"}])
+    expect(transmissions.last).to eq("errors" => [{"title" => "Data format is invalid"}])
   end
 
   it "validate message data type can only be navigation-event" do
@@ -108,6 +108,6 @@ RSpec.describe PublishChannel, type: :channel do
     subscribe(channelId: "12345")
     data = {"data" => {"type" => "other-event", "id" => "111", "attributes" => {}}}
     perform :receive, data
-    expect(transmissions.last).to eq("errors" => [{"title"=>"Data format is invalid"}])
+    expect(transmissions.last).to eq("errors" => [{"title" => "Data format is invalid"}])
   end
 end
