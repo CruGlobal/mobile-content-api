@@ -46,7 +46,7 @@ RSpec.describe PublishChannel, type: :channel do
     allow_any_instance_of(PublishChannel).to receive(:new_random_uid).and_return(uid)
 
     metadata = {last_used_at: 119.minutes.ago, subscriber_channel_id: uid}
-    Rails.cache.write(["sharing_metadata", "12345"], metadata)
+    Rails.cache.write([BaseSharingChannel::METADATA_CACHE_PREFIX, "12345"], metadata)
     expect_any_instance_of(PublishChannel).to_not receive(:new_random_uid)
 
     subscribe(channelId: "12345")
@@ -59,7 +59,7 @@ RSpec.describe PublishChannel, type: :channel do
     allow_any_instance_of(PublishChannel).to receive(:new_random_uid).and_return(new_uid)
 
     metadata = {last_used_at: 121.minutes.ago, subscriber_channel_id: old_uid}
-    Rails.cache.write(["sharing_metadata", "12345"], metadata)
+    Rails.cache.write([BaseSharingChannel::METADATA_CACHE_PREFIX, "12345"], metadata)
     expect_any_instance_of(PublishChannel).to receive(:new_random_uid).and_return(new_uid)
 
     subscribe(channelId: "12345")
@@ -69,7 +69,7 @@ RSpec.describe PublishChannel, type: :channel do
   it "broadcasts a message to subscribers" do
     uid = "#{SecureRandom.hex(10)}_#{Time.now.to_i}"
     metadata = {last_used_at: 20.minutes.ago, subscriber_channel_id: uid}
-    Rails.cache.write(["sharing_metadata", "12345"], metadata)
+    Rails.cache.write([BaseSharingChannel::METADATA_CACHE_PREFIX, "12345"], metadata)
 
     subscribe(channelId: "12345")
     data = {"data" => {"type" => "navigation-event", "id" => "111", "attributes" => {"1" => "2"}}}
@@ -81,7 +81,7 @@ RSpec.describe PublishChannel, type: :channel do
   it "validate message only has data as top-level key" do
     uid = "#{SecureRandom.hex(10)}_#{Time.now.to_i}"
     metadata = {last_used_at: 20.minutes.ago, subscriber_channel_id: uid}
-    Rails.cache.write(["sharing_metadata", "12345"], metadata)
+    Rails.cache.write([BaseSharingChannel::METADATA_CACHE_PREFIX, "12345"], metadata)
 
     subscribe(channelId: "12345")
     data = {"other" => {"type" => "navigation-event", "id" => "111", "attributes" => {}}}
@@ -92,7 +92,7 @@ RSpec.describe PublishChannel, type: :channel do
   it "validate message data rejects keys other than type, id and attributes" do
     uid = "#{SecureRandom.hex(10)}_#{Time.now.to_i}"
     metadata = {last_used_at: 20.minutes.ago, subscriber_channel_id: uid}
-    Rails.cache.write(["sharing_metadata", "12345"], metadata)
+    Rails.cache.write([BaseSharingChannel::METADATA_CACHE_PREFIX, "12345"], metadata)
 
     subscribe(channelId: "12345")
     data = {"data" => {"type" => "navigation-event", "id" => "111", "attributes" => {}, "something" => "else"}}
@@ -103,7 +103,7 @@ RSpec.describe PublishChannel, type: :channel do
   it "validate message data type can only be navigation-event" do
     uid = "#{SecureRandom.hex(10)}_#{Time.now.to_i}"
     metadata = {last_used_at: 20.minutes.ago, subscriber_channel_id: uid}
-    Rails.cache.write(["sharing_metadata", "12345"], metadata)
+    Rails.cache.write([BaseSharingChannel::METADATA_CACHE_PREFIX, "12345"], metadata)
 
     subscribe(channelId: "12345")
     data = {"data" => {"type" => "other-event", "id" => "111", "attributes" => {}}}
