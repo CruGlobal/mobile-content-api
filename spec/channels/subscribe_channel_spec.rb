@@ -10,8 +10,8 @@ RSpec.describe SubscribeChannel, type: :channel do
   end
 
   let(:setup_metadata) do
-    Rails.cache.write(["subscriber_to_publisher", "12345"], "99999")
-    Rails.cache.write(["sharing_metadata", "99999"], metadata)
+    Rails.cache.write([BaseSharingChannel::SUBSCRIBER_TO_PUBLISHER, "12345"], "99999")
+    Rails.cache.write([BaseSharingChannel::METADATA_CACHE_PREFIX, "99999"], metadata)
   end
 
   context "active metadata" do
