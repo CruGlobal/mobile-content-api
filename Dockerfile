@@ -25,6 +25,7 @@ ARG TEST_DB_HOST=localhost
 ARG TEST_DB_PORT=5432
 
 RUN bundle exec rake db:create db:schema:load docs:generate RAILS_ENV=test
+RUN bundle exec rake assets:clobber assets:precompile RAILS_ENV=test
 
 ## Run this last to make sure permissions are all correct
 RUN mkdir -p /home/app/webapp/tmp \
@@ -37,5 +38,7 @@ RUN mkdir -p /home/app/webapp/tmp \
                     /home/app/webapp/log \
                     /home/app/webapp/public/uploads \
                     /home/app/webapp/pages
+
+COPY cable.conf /usr/local/openresty/nginx/conf/location/cable.conf
 
 CMD "/docker-entrypoint.sh"

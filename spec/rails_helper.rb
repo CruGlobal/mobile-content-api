@@ -18,7 +18,16 @@ require File.expand_path("../config/environment", File.dirname(__FILE__))
 # Prevent database truncation if the environment is production
 abort("The Rails environment is running in production mode!") if Rails.env.production?
 require "spec_helper"
+
+module RSpec::Rails::FeatureCheck
+  module_function
+
+  def has_action_cable_testing?
+    true
+  end
+end
 require "rspec/rails"
+
 require "webmock/rspec"
 # Add additional requires below this line. Rails is not loaded until this point!
 

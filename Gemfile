@@ -53,6 +53,7 @@ group :development, :test do
   gem "simplecov", require: false
   gem "standard", "~> 0.1.9"
   gem "webmock", require: false
+  gem "action-cable-testing"
 end
 
 gem "raddocs"
@@ -73,3 +74,5 @@ gem "dogstatsd-ruby"
 gem "lograge"
 gem "ougai", "~> 1.8"
 gem "tzinfo-data", platforms: [:mingw, :mswin, :x64_mingw, :jruby]
+gem "actioncable"
+gem "redis"

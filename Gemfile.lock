@@ -1,6 +1,8 @@
 GEM
   remote: https://rubygems.org/
   specs:
+    action-cable-testing (0.6.1)
+      actioncable (>= 5.0)
     actioncable (5.2.4.3)
       actionpack (= 5.2.4.3)
       nio4r (~> 2.0)
@@ -999,7 +1001,8 @@ GEM
     rb-fsevent (0.10.3)
     rb-inotify (0.10.0)
       ffi (~> 1.0)
-    request_store (1.4.1)
+    redis (4.1.4)
+    request_store (1.5.0)
       rack (>= 1.4)
     rest-client (2.1.0)
       http-accept (>= 1.7.0, < 2.0)
@@ -1101,6 +1104,8 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  action-cable-testing
+  actioncable
   active_model_serializers (= 0.10.10)
   active_storage_validations
   adobe-campaign (~> 0.3.2)
@@ -1133,6 +1138,7 @@ DEPENDENCIES
   rack-cors
   raddocs
   rails (~> 5.2.3)
+  redis
   rest-client (~> 2.1.0)
   rollbar
   rspec
