@@ -24,13 +24,13 @@ class PublishChannel < BaseSharingChannel
   def receive(data)
     @publisher_channel_id = params["channelId"]
     Rails.logger.info("[PublishChannel#receive] received data: #{data}.  Current metadata: #{metadata.inspect}")
-    return unless validate_publisher_channel_id_format
+    data.delete("action") # not needed and will break validation
+    return unless validate_publisher_channel_id_format && validate_receive_message_format(data)
 
     set_metadata(:last_message, data)
-    transmit({data: {type: "confirm-#{data.dig("data", "type")}", id: data.dig("data", "id")}})
+    transmit({data: {type: "confirm-#{data.dig("data", "type")}", id: data.dig("data", "id"), attributes: (data.dig("data", "attributes") || {})}})
 
     # send message to subscriber
-    data.delete("action")
     SubscribeChannel.broadcast_to metadata[:subscriber_channel_id], data
   end
 
@@ -53,5 +53,31 @@ class PublishChannel < BaseSharingChannel
 
   def new_random_uid
     "#{SecureRandom.hex(10)}-#{Time.now.to_i}"
+  end
+
+  # validate message is of form
+  #
+  # {
+  #   data: {
+  #     type: "navigation-event"
+  #     attributes: {}
+  #     id: "12345"
+  #   }
+  # }
+  #
+  # but id can be omitted
+  #
+  def validate_receive_message_format(data)
+    valid = data.keys == ["data"] &&
+      data["data"].keys.include?("type") &&
+      data["data"].keys.include?("attributes") &&
+      (data["data"].keys - %w(type attributes id)).empty? &&
+      data["data"]["type"] == "navigation-event"
+
+    unless valid
+      transmit(format_error("Data format is invalid"))
+    end
+
+    valid
   end
 end

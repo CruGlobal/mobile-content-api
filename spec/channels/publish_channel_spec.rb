@@ -72,9 +72,42 @@ RSpec.describe PublishChannel, type: :channel do
     Rails.cache.write(["sharing_metadata", "12345"], metadata)
 
     subscribe(channelId: "12345")
-    data = {"data" => {"type" => "navigation-event", "id" => "111"}}
+    data = {"data" => {"type" => "navigation-event", "id" => "111", "attributes" => {"1" => "2"}}}
     expect(SubscribeChannel).to receive(:broadcast_to).with(uid, data)
     perform :receive, data
-    expect(transmissions.last).to eq({"data" => {"type" => "confirm-navigation-event", "id" => "111"}})
+    expect(transmissions.last).to eq({"data" => {"type" => "confirm-navigation-event", "id" => "111", "attributes" => {"1" => "2"}}})
+  end
+
+  it "validate message only has data as top-level key" do
+    uid = "#{SecureRandom.hex(10)}_#{Time.now.to_i}"
+    metadata = {last_used_at: 20.minutes.ago, subscriber_channel_id: uid}
+    Rails.cache.write(["sharing_metadata", "12345"], metadata)
+
+    subscribe(channelId: "12345")
+    data = {"other" => {"type" => "navigation-event", "id" => "111", "attributes" => {}}}
+    perform :receive, data
+    expect(transmissions.last).to eq("errors" => [{"title"=>"Data format is invalid"}])
+  end
+
+  it "validate message data rejects keys other than type, id and attributes" do
+    uid = "#{SecureRandom.hex(10)}_#{Time.now.to_i}"
+    metadata = {last_used_at: 20.minutes.ago, subscriber_channel_id: uid}
+    Rails.cache.write(["sharing_metadata", "12345"], metadata)
+
+    subscribe(channelId: "12345")
+    data = {"data" => {"type" => "navigation-event", "id" => "111", "attributes" => {}, "something" => "else"}}
+    perform :receive, data
+    expect(transmissions.last).to eq("errors" => [{"title"=>"Data format is invalid"}])
+  end
+
+  it "validate message data type can only be navigation-event" do
+    uid = "#{SecureRandom.hex(10)}_#{Time.now.to_i}"
+    metadata = {last_used_at: 20.minutes.ago, subscriber_channel_id: uid}
+    Rails.cache.write(["sharing_metadata", "12345"], metadata)
+
+    subscribe(channelId: "12345")
+    data = {"data" => {"type" => "other-event", "id" => "111", "attributes" => {}}}
+    perform :receive, data
+    expect(transmissions.last).to eq("errors" => [{"title"=>"Data format is invalid"}])
   end
 end
