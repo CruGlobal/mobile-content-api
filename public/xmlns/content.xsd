@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <xs:schema xmlns:analytics="https://mobile-content-api.cru.org/xmlns/analytics"
-    xmlns:content="https://mobile-content-api.cru.org/xmlns/content" xmlns:xs="http://www.w3.org/2001/XMLSchema"
+    xmlns:content="https://mobile-content-api.cru.org/xmlns/content"
+    xmlns:training="https://mobile-content-api.cru.org/xmlns/training" xmlns:xs="http://www.w3.org/2001/XMLSchema"
     elementFormDefault="qualified" targetNamespace="https://mobile-content-api.cru.org/xmlns/content">
 
     <xs:import namespace="https://mobile-content-api.cru.org/xmlns/analytics" schemaLocation="analytics.xsd" />
+    <xs:import namespace="https://mobile-content-api.cru.org/xmlns/training" schemaLocation="training.xsd" />
 
     <!-- Value definitions -->
     <xs:simpleType name="colorValue">
@@ -427,6 +429,7 @@
             <xs:element ref="content:link" />
             <xs:element ref="content:form" />
             <xs:element ref="content:input" />
+            <xs:group ref="training:contentElements" />
         </xs:choice>
     </xs:group>
 </xs:schema>

@@ -29,4 +29,14 @@
             </xs:all>
         </xs:complexType>
     </xs:element>
+
+    <xs:group name="contentElements">
+        <xs:choice>
+            <xs:element name="tip">
+                <xs:complexType>
+                    <xs:attribute name="id" type="xs:string" use="required" />
+                </xs:complexType>
+            </xs:element>
+        </xs:choice>
+    </xs:group>
 </xs:schema>
