@@ -1,0 +1,47 @@
+<?xml version="1.0"?>
+<manifest locale="en" navbar-color="rgba(0,0,0,0.25)" navbar-control-color="rgba(255,255,255,1)" primary-color="rgba(0,114,147,0)" text-color="rgba(90,90,90,1)" tool="teachmetoshare" type="tract" xmlns="https://mobile-content-api.cru.org/xmlns/manifest" xmlns:content="https://mobile-content-api.cru.org/xmlns/content">
+    <title>
+        <content:text i18n-id="name">Teach Me to Share</content:text>
+    </title>
+    <pages>
+        <page filename="0_introscreen.xml" src="60934c9c91e00553b30b96ca4ba4ca3b6bdf2f328fd7dce0d66001ae840cd1a3.xml"/>
+        <page filename="01_howtoshare.xml" src="b2afdc6e09f6135927e1b7f0f6819cb74c33c6674ff16e68df3fdfc06e00828c.xml"/>
+        <page filename="02_begin.xml" src="fef260d96f0692be1adee2828e7706d3a9f7882400ae32e8359a9a8438e72249.xml"/>
+        <page filename="05_keepinmind.xml" src="155a2ed786cd988158a8f2056e426d02c2f0f71a1b89f323d8dd79f2ce1c5cce.xml"/>
+        <page filename="03_Transition.xml" src="e936ba2fdd07091db78626a45805ed3538127ce2997dacce50d5261d1c695c6a.xml"/>
+        <page filename="04_Picktool.xml" src="626a21e1776625be2441e0c34e2f5be8876deeed7c648985162c9ea32207a312.xml"/>
+        <page filename="06_anythingelse.xml" src="894492cab1c25422d9c516de3413ab2229ef43a2a519293f238ae0a63667ce87.xml"/>
+        <page filename="08_moretotry.xml" src="49259037948a0b2b444a67c4f4d4e74c5c89774249fd9464a57e79db8eefa853.xml"/>
+        <page filename="07_ready.xml" src="fe910935435415a7d493f73818db7b0dc706a056c3b85c911d2bf2f63d419306.xml"/>
+    </pages>
+    <resources>
+        <resource filename="0.1.jpg" src="78e507b11903f4832b7213353e259517c907bd21c0a4a616250de2a52cfa7d5b"/>
+        <resource filename="1tmts.jpg" src="8debacbc3bc1f6051fddd7d91a352de7544fe2586751f27e2f7a6a4661fc8e68"/>
+        <resource filename="4tmts-whichtool.jpg" src="bda6da9a847dd6e3d2e5292d99e139b0efe6c55a0b389cbb8b4cade3e63a52fc"/>
+        <resource filename="Focus_on_God_1.0gt_tmts.png" src="f0ba78fc23416b7b2d0453894b90a844a9388a656551345de0421c1372f0a10e"/>
+        <resource filename="Pray_1.0gt_tmts.png" src="859f90d59c41d464aad87884746ccae7facbe40d72b74523bc0fe57d01101425"/>
+        <resource filename="5tmts-goodexperience.jpg" src="c9c77c6626acd4d2b21772955fc80f8ef32a25b5f28059f734c7a6c105546f3a"/>
+        <resource filename="3tmts-say.jpg" src="9f495e4a3cffe65c3e7e8181436f081ab2cb4f2b1532183f614df7275adcc421"/>
+        <resource filename="Coworker_1.0gt_tmts.png" src="04a0c458d6be2a0d987c949a4e1c704bbfca942b231d3d95e5cf59eb01b2d5ad"/>
+        <resource filename="family_1.0gt_tmts.png" src="4b3151c442595a8c8c609c4ca90092f905e0a8f0e26d58c61e294ed72241f3f5"/>
+        <resource filename="Spiritually_interested_1.0gt_tmts.png" src="6cdd8c63e71cc1a3b3c68e1ca388229c8d94019f985eb3b1a3ceea1b242a8d67"/>
+        <resource filename="Group_outreach_event_1.0gt_tmts.png" src="670ad34798f9ea917fc7253de3f7b27c15878cd6aa41d086766cf1f41bdd4a89"/>
+        <resource filename="Others_to_try_1.0gt_tmts.png" src="b1800b37cf316575a77fd4331421ad1ac6fb623309ec2ace8502445e775c226f"/>
+        <resource filename="8new@2x-min.jpg" src="bf507c58d97db5de6585480c4c8b040aa6c3e7d4ea0ef7d71cc7300acf4bdb02"/>
+        <resource filename="kgpgt_tmts.jpg" src="c3b0e89916537b4078b555e86f8f937eff421dc6062a23a95e301b26c2f63ea2"/>
+        <resource filename="fslgt_tmts.jpg" src="8b859460e80750765b9dae3e615e0417e813fcadec06693fa28c602cf2e3adef"/>
+        <resource filename="thefourgt_tmts.jpg" src="41df02795a0691ba49242c848d691d335e03eb5a80dda5c092dd4fef4112eea4"/>
+        <resource filename="kgpusgt_tmts.jpg" src="0c8fb3fab689a71f8059ddac91f165c7c3ef1518ce05c67e08180f788f5c407d"/>
+        <resource filename="honorgt_tmts.jpg" src="9dceeac9fd7515ca6e1498763dfc229cd3c0fe209d8aa52fdaf8eb93d90f1d12"/>
+        <resource filename="power over fear@1x.jpg" src="c7f807ea3746f21144125369154358d1bdccfeec1f065c2436dc81961fbac600"/>
+        <resource filename="6tmts-whatelse.jpg" src="969c87a1f71d15f094e23eada8f88286ff6f1fb7c560c6b894fb07fa238ce01c"/>
+        <resource filename="example1.png" src="077ad0228ffe5b149d3fad05152f17da3f24d902e741fca5c9f7cdacb1f9e6b4"/>
+        <resource filename="swipeup2.png" src="6d9741ceef1c643d624a4a7e2c7cd89ab30fedf7895b232f297a1578d22a3f95"/>
+        <resource filename="Group_3newicon.png" src="cd2f9d83cc3d675b2d5722e82dbd20e1fb97095b06e4a31d567fc58b70a0114c"/>
+        <resource filename="didyoupraythisprayergt_tmts.jpg" src="5527450b44ef6c1f4b576f1b36463c373b444a05b883e741bcceb1d61009c4f7"/>
+        <resource filename="2tmts.jpg" src="dc2c254d9f80cffee63c7a912fbf6f8f5cc30ffc154ea2bfb76e8503810506c5"/>
+        <resource filename="TeachMetoShare_07_Pray.png" src="cb9d64a27b731cbff8fac8ff7dfe61917ee7e47dd95fae64deb9fed1e23b1b5f"/>
+        <resource filename="TeachMetoShare_07_Share2.png" src="6f9979a44a695517748bfc0af171434f68819933ec68a5284330e6db11e37163"/>
+        <resource filename="7tmts-ready.jpg" src="7189cbf353da0de9ca67427c63f3ab4dd272c565cb0dc1ec67a226b4f58decda"/>
+    </resources>
+</manifest>
