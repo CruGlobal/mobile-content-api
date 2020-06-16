@@ -1,6 +1,11 @@
-<tip xmlns="https://mobile-content-api.cru.org/xmlns/tips">
-	<pages>
-		<page></page>
-		<page></page>
-	</pages>
+<tip xmlns="https://mobile-content-api.cru.org/xmlns/tips"
+    xmlns:content="https://mobile-content-api.cru.org/xmlns/content">
+    <pages>
+        <page>
+            <content:paragraph>
+                <content:text />
+            </content:paragraph>
+        </page>
+        <page></page>
+    </pages>
 </tip>
