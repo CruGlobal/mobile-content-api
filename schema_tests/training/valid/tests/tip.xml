@@ -5,6 +5,7 @@
             <content:paragraph>
                 <content:text />
             </content:paragraph>
+            <content:text />
         </page>
         <page></page>
     </pages>

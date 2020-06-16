@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<manifest xmlns="https://mobile-content-api.cru.org/xmlns/manifest"
+    xmlns:content="https://mobile-content-api.cru.org/xmlns/content">
+    <title>
+        <content:text i18n-id="name">KGP</content:text>
+    </title>
+
+    <pages>
+        <page filename="0_introscreen.xml" src="60934c9c91e00553b30b96ca4ba4ca3b6bdf2f328fd7dce0d66001ae840cd1a3.xml" />
+    </pages>
+
+    <tips>
+        <tip id="tip1" src="asdf.xml" />
+        <tip id="tip2" src="fdsa.xml" />
+    </tips>
+</manifest>

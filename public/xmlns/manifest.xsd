@@ -51,6 +51,13 @@
                     </xs:sequence>
                 </xs:complexType>
             </xs:element>
+            <xs:element name="tips" minOccurs="0">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="tip" minOccurs="0" maxOccurs="unbounded" type="manifest:tipType" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
         </xs:all>
 
         <xs:attributeGroup ref="manifest:toolMetaData" />
@@ -151,6 +158,11 @@
 
     <xs:complexType name="resource">
         <xs:attribute name="filename" type="xs:string" use="required" />
+        <xs:attribute name="src" type="xs:string" use="required" />
+    </xs:complexType>
+
+    <xs:complexType name="tipType">
+        <xs:attribute name="id" type="xs:string" use="required" />
         <xs:attribute name="src" type="xs:string" use="required" />
     </xs:complexType>
 
