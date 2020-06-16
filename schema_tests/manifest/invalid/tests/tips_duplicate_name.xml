@@ -2,6 +2,6 @@
 <manifest xmlns="https://mobile-content-api.cru.org/xmlns/manifest">
     <tips>
         <tip id="tip1" src="asdf.xml" />
-        <tip id="tip2" src="fdsa.xml" />
+        <tip id="tip1" src="fdsa.xml" />
     </tips>
 </manifest>
