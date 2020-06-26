@@ -28,6 +28,7 @@ jobs:
     script:
     - xmllint --schema public/xmlns/manifest.xsd --noout schema_tests/manifest/valid/*/*.xml
     - xmllint --schema public/xmlns/tract.xsd --noout schema_tests/tract/valid/*/*.xml
+    - xmllint --schema public/xmlns/training.xsd --noout schema_tests/training/valid/*/*.xml
     # text invalid XML
     - ./schema_tests/invalid.sh public/xmlns/tract.xsd schema_tests/tract/invalid/*/*.xml
     - ./schema_tests/invalid.sh public/xmlns/manifest.xsd schema_tests/manifest/invalid/*/*.xml

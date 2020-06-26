@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<page xmlns:content="https://mobile-content-api.cru.org/xmlns/content"
+    xmlns:training="https://mobile-content-api.cru.org/xmlns/training"
+    xmlns="https://mobile-content-api.cru.org/xmlns/tract">
+    <hero>
+        <content:paragraph>
+            <content:button type="url" url="https://www.google.com/">
+                <content:text>text</content:text>
+            </content:button>
+            <training:tip id="tip1" />
+        </content:paragraph>
+    </hero>
+</page>

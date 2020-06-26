@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:content="https://mobile-content-api.cru.org/xmlns/content" xmlns:xs="http://www.w3.org/2001/XMLSchema"
+    elementFormDefault="qualified" targetNamespace="https://mobile-content-api.cru.org/xmlns/training">
+
+    <xs:import namespace="https://mobile-content-api.cru.org/xmlns/content" schemaLocation="content.xsd" />
+
+    <xs:element name="tip">
+        <xs:annotation>
+            <xs:documentation>This is the root node that defines a training tip</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:all>
+                <xs:element name="pages">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element name="page" minOccurs="0" maxOccurs="unbounded">
+                                <xs:annotation>
+                                    <xs:documentation>This contains a single page of tip content</xs:documentation>
+                                </xs:annotation>
+                                <xs:complexType>
+                                    <xs:choice minOccurs="0" maxOccurs="unbounded">
+                                        <xs:group ref="content:elements" />
+                                    </xs:choice>
+                                </xs:complexType>
+                            </xs:element>
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+            </xs:all>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:group name="contentElements">
+        <xs:choice>
+            <xs:element name="tip">
+                <xs:complexType>
+                    <xs:attribute name="id" type="xs:string" use="required" />
+                </xs:complexType>
+            </xs:element>
+        </xs:choice>
+    </xs:group>
+</xs:schema>
