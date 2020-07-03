@@ -14,7 +14,7 @@ class Translation < ActiveRecord::Base
   validates_with UsesOneskyValidator
 
   before_destroy :prevent_destroy_published, if: :is_published
-  before_update :push_published_to_s3
+  #before_update :push_published_to_s3
   before_validation :set_defaults, on: :create
 
   def s3_url

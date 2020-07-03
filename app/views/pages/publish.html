@@ -1,0 +1,54 @@
+Publish Test Page<br/><br/>
+
+<script>
+
+function connect() {
+  var channelId = document.getElementById("channelId").value;
+
+  console.log('connect here with channel id', channelId);
+
+  App.publish = App.cable.subscriptions.create({ channel: "PublishChannel", channelId: channelId }, {
+    connected: function() {
+    },
+
+    disconnected: function() {
+    },
+
+    received: function(data) {
+      console.log('received data: ', data);
+      if (data["consumerChannelId"]) {
+        console.log("consumerChannelId: ", data["consumerChannelId"])
+      }
+      msg = new Date().toLocaleString() + "<br/>" + JSON.stringify(data) + "<br/>" + "<br/>";
+      document.getElementById('message').innerHTML = document.getElementById('message').innerHTML + msg;
+    }
+  });
+}
+
+function send(page, card) {
+	data = {
+		data: {
+			type: "navigation-event",
+			attributes: {
+				tool: "kgp",
+				language: "en-US",
+				page: page,
+				card: card
+			}
+		}
+	}
+
+	App.publish.send(data);
+}
+
+</script>
+
+Publisher Id: <input type="text" id="channelId" value="12345"></input>
+
+<br/><br/><button onClick="connect()">Connect</button>
+
+<br/><br/><button onClick="send(1, 1)">Go page 1, card 1</button>
+
+<p>Message history (new messages at bottom):</p>
+
+<div id="message" style="background-color: grey; color: white;"><br/></div>

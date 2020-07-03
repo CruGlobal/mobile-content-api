@@ -54,6 +54,7 @@ group :development, :test do
   gem "standard", "~> 0.1.9"
   gem "webmock", require: false
   gem "action-cable-testing"
+  gem "factory_bot_rails"
 end
 
 gem "raddocs"
@@ -76,3 +77,4 @@ gem "ougai", "~> 1.8"
 gem "tzinfo-data", platforms: [:mingw, :mswin, :x64_mingw, :jruby]
 gem "actioncable"
 gem "redis"
+gem "yaml_db"

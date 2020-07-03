@@ -11,6 +11,7 @@ Rails.application.routes.draw do
   resources :drafts
   resources :translations, only: [:index, :show]
   resources :pages, only: [:create, :update, :show]
+  resources :tips, only: [:create, :update, :show]
   resources :custom_pages, only: [:create, :update, :destroy, :show]
 
   resources :attributes, only: [:create, :update, :destroy, :show]

@@ -24,11 +24,11 @@ class Package
     Rails.logger.info "Starting build of translation with id: #{@translation.id}"
 
     build_zip
-    upload
+    #upload
 
-    PageClient.delete_temp_dir(@directory)
+    #PageClient.delete_temp_dir(@directory)
   rescue => e
-    PageClient.delete_temp_dir(@directory)
+    #PageClient.delete_temp_dir(@directory)
     raise e
   end
 
@@ -113,6 +113,6 @@ class Package
     Rails.logger.info("Uploading zip to OneSky for translation with id: #{@translation.id}")
 
     obj = self.class.s3_object(@translation)
-    obj.upload_file("#{@directory}/#{@translation.zip_name}", acl: "public-read")
+    #obj.upload_file("#{@directory}/#{@translation.zip_name}", acl: "public-read")
   end
 end

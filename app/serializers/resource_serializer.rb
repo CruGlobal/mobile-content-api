@@ -11,6 +11,7 @@ class ResourceSerializer < ActiveModel::Serializer
   has_many :latest_translations, key: "latest-translations"
   has_many :latest_drafts_translations, key: "latest_drafts_translations"
   has_many :pages
+  has_many :tips
   has_many :attachments
   has_many :custom_manifests, key: "custom-manifests"
 
