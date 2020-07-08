@@ -14,7 +14,7 @@ class Translation < ActiveRecord::Base
   validates_with UsesOneskyValidator
 
   before_destroy :prevent_destroy_published, if: :is_published
-  #before_update :push_published_to_s3
+  before_update :push_published_to_s3
   before_validation :set_defaults, on: :create
 
   def s3_url
@@ -27,6 +27,17 @@ class Translation < ActiveRecord::Base
     page = Page.find(page_id)
     phrases = download_translated_phrases(page.filename)
     xml = Nokogiri::XML(page_structure(page_id))
+
+    xml = translate_node_content(xml, phrases, strict)
+    xml = translate_node_attributes(xml, phrases, strict)
+
+    xml.to_s
+  end
+
+  def translated_tip(tip_id, strict)
+    tip = Tip.find(tip_id)
+    phrases = download_translated_phrases(tip.name)
+    xml = Nokogiri::XML(tip_structure(tip_id))
 
     xml = translate_node_content(xml, phrases, strict)
     xml = translate_node_attributes(xml, phrases, strict)
@@ -69,6 +80,12 @@ class Translation < ActiveRecord::Base
   def page_structure(page_id)
     custom_page = language.custom_pages.find_by(page_id: page_id)
     custom_page.nil? ? Page.find(page_id).structure : custom_page.structure
+  end
+
+  def tip_structure(tip_id)
+    #custom_tip = language.custom_tips.find_by(tip_id: tip_id)
+    #custom_tip.nil? ? Tip.find(tip_id).structure : custom_tip.structure
+    Tip.find(tip_id).structure
   end
 
   def prevent_destroy_published

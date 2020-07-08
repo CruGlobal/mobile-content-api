@@ -24,6 +24,10 @@ module XML
       pages_node.add_child(create_file_node(XmlUtil::XMLNS_MANIFEST, "page", filename, sha_filename))
     end
 
+    def add_tip(name, sha_filename)
+      tips_node.add_child(create_file_node(XmlUtil::XMLNS_MANIFEST, "tip", name, sha_filename, "id"))
+    end
+
     def add_resource(filename, sha_filename)
       resources_node.add_child(create_file_node(XmlUtil::XMLNS_MANIFEST, "resource", filename, sha_filename))
     end
@@ -68,14 +72,19 @@ module XML
       @pages = XmlUtil.get_or_create_child(@document.root, XmlUtil::XMLNS_MANIFEST, "pages")
     end
 
+    def tips_node
+      return @tips if @tips
+      @tips = XmlUtil.get_or_create_child(@document.root, XmlUtil::XMLNS_MANIFEST, "tips")
+    end
+
     def resources_node
       return @resources if @resources
       @resources = XmlUtil.get_or_create_child(@document.root, XmlUtil::XMLNS_MANIFEST, "resources")
     end
 
-    def create_file_node(namespace, type, filename, sha_filename)
+    def create_file_node(namespace, type, filename, sha_filename, filename_key = "filename")
       node = @document.create_element(type, xmlns: namespace)
-      node["filename"] = filename
+      node[filename_key] = filename
       node["src"] = sha_filename
       node
     end

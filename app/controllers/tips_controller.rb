@@ -3,7 +3,7 @@
 class TipsController < SecureController
   def create
     p = Tip.create!(params.require(:data).require(:attributes)
-                       .permit(:filename, :structure, :resource_id))
+                       .permit(:name, :structure, :resource_id))
 
     response.headers["Location"] = "tips/#{p.id}"
     render json: p, status: :created

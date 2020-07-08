@@ -10,15 +10,21 @@ module OneSky
   def self.download_translated_phrases(filename, project_id:, language_code:)
     logger.info "Downloading translated phrases for: #{filename} with language: #{language_code}"
 
-    response = RestClient.get "https://platform.api.onesky.io/1/projects/#{project_id}/translations",
-      params: headers(language_code).merge(
-        source_file_name: filename, export_file_name: filename
-      )
+    no_onesky_project = false
+    begin
+      response = RestClient.get "https://platform.api.onesky.io/1/projects/#{project_id}/translations",
+        params: headers(language_code).merge(
+          source_file_name: filename, export_file_name: filename
+        )
+    rescue RestClient::BadRequest
+      no_onesky_project = true
+    end
 
-    if response.code == 204
+    if no_onesky_project || response.code == 204
       logger.info "No translated phrases found for: #{filename} with language: #{language_code}"
       return {}
     end
+
     JSON.parse(response.body)
   end
 

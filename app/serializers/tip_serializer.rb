@@ -2,7 +2,7 @@
 
 class TipSerializer < ActiveModel::Serializer
   type "tip"
-  attributes :id, :filename, :structure
+  attributes :id, :name, :structure
 
   belongs_to :resource
 

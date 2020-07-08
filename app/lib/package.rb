@@ -6,6 +6,7 @@ class Package
   XPATH_RESOURCES = %w[//@background-image
                        //manifest:category/@banner
                        //content:image[not(@restrictTo='web')]/@resource].freeze
+  XPATH_TIPS = %w[//training:tip/@id].freeze
 
   def self.s3_object(translation)
     s3 = Aws::S3::Resource.new(region: ENV["AWS_REGION"])
@@ -16,6 +17,7 @@ class Package
   def initialize(translation)
     @translation = translation
     @resources = []
+    @tips = []
     @directory = "pages/#{SecureRandom.uuid}"
     FileUtils.mkdir_p(@directory)
   end
@@ -40,7 +42,8 @@ class Package
 
     Zip::File.open("#{@directory}/#{@translation.zip_name}", Zip::File::CREATE) do |zip_file|
       add_pages(zip_file, manifest)
-      add_attachments(zip_file, manifest)
+      add_tips(zip_file, manifest)
+      #add_attachments(zip_file, manifest)
 
       manifest_filename = write_manifest_to_file(manifest)
       zip_file.add(manifest_filename, "#{@directory}/#{manifest_filename}")
@@ -50,6 +53,11 @@ class Package
   def determine_resources(document)
     nodes = XmlUtil.xpath_namespace(document, XPATH_RESOURCES.join("|"))
     nodes.each { |node| @resources << node.content }
+  end
+
+  def determine_tips(document)
+    nodes = XmlUtil.xpath_namespace(document, XPATH_TIPS.join("|"))
+    nodes.each { |node| @tips << Tip.find_by(name: node.content) }
   end
 
   def add_pages(zip_file, manifest)
@@ -62,13 +70,35 @@ class Package
     end
   end
 
+  def add_tips(zip_file, manifest)
+    @tips.each do |tip|
+      Rails.logger.info("Adding tip with id: #{tip.id} to package for translation with id: #{@translation.id}")
+
+      sha_filename = write_tip_to_file(tip)
+      zip_file.add(sha_filename, "#{@directory}/#{sha_filename}")
+      manifest.add_tip(tip.name, sha_filename)
+    end
+  end
+
   def write_page_to_file(page)
     translated_page = @translation.translated_page(page.id, true)
     document = Nokogiri::XML(translated_page)
     determine_resources(document)
+    determine_tips(document)
     sha_filename = XmlUtil.xml_filename_sha(translated_page)
 
     File.write("#{@directory}/#{sha_filename}", translated_page)
+
+    sha_filename
+  end
+
+  def write_tip_to_file(tip)
+    translated_tip = @translation.translated_tip(tip.id, true)
+    document = Nokogiri::XML(translated_tip)
+    determine_resources(document)
+    sha_filename = XmlUtil.xml_filename_sha(translated_tip)
+
+    File.write("#{@directory}/#{sha_filename}", translated_tip)
 
     sha_filename
   end
@@ -87,6 +117,8 @@ class Package
   end
 
   def save_attachment_to_file(attachment)
+    puts("Package::save_attachment_to_file #{attachment.inspect}")
+
     begin
       string_io_bytes = URI.parse(attachment.url).open.read
     rescue NoMethodError
