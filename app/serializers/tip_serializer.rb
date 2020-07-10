@@ -6,5 +6,5 @@ class TipSerializer < ActiveModel::Serializer
 
   belongs_to :resource
 
-  #has_many :custom_tips
+  has_many :custom_tips
 end

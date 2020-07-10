@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_06_26_154709) do
+ActiveRecord::Schema.define(version: 2020_07_09_174655) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -92,6 +92,17 @@ ActiveRecord::Schema.define(version: 2020_06_26_154709) do
     t.index ["page_id"], name: "index_custom_pages_on_page_id"
   end
 
+  create_table "custom_tips", force: :cascade do |t|
+    t.string "structure", null: false
+    t.integer "tip_id", null: false
+    t.integer "language_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["language_id"], name: "index_custom_tips_on_language_id"
+    t.index ["tip_id", "language_id"], name: "index_custom_tips_on_tip_id_and_language_id", unique: true
+    t.index ["tip_id"], name: "index_custom_tips_on_tip_id"
+  end
+
   create_table "destinations", id: :serial, force: :cascade do |t|
     t.string "url", null: false
     t.string "route_id"
@@ -165,6 +176,7 @@ ActiveRecord::Schema.define(version: 2020_06_26_154709) do
     t.string "structure"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["resource_id", "name"], name: "index_tips_on_resource_id_and_name", unique: true
   end
 
   create_table "translated_attributes", id: :serial, force: :cascade do |t|

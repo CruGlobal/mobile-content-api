@@ -3,6 +3,7 @@
 class Language < ActiveRecord::Base
   has_many :translations
   has_many :custom_pages
+  has_many :custom_tips
   has_many :translated_pages
 
   validates :name, presence: true

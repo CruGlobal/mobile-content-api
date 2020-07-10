@@ -83,9 +83,8 @@ class Translation < ActiveRecord::Base
   end
 
   def tip_structure(tip_id)
-    #custom_tip = language.custom_tips.find_by(tip_id: tip_id)
-    #custom_tip.nil? ? Tip.find(tip_id).structure : custom_tip.structure
-    Tip.find(tip_id).structure
+    custom_tip = language.custom_tips.find_by(tip_id: tip_id)
+    custom_tip.nil? ? Tip.find(tip_id).structure : custom_tip.structure
   end
 
   def prevent_destroy_published

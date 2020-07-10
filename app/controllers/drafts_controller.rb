@@ -6,7 +6,12 @@ class DraftsController < SecureController
   end
 
   def show
-    render plain: load_translation.translated_page(params[:page_id], false), status: :ok
+    if params[:page_id]
+      resource = load_translation.translated_page(params[:page_id], false)
+    elsif params[:tip_id]
+      resource = load_translation.translated_tip(params[:tip_id], false)
+    end
+    render plain: resource, status: :ok
   end
 
   def create
