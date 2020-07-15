@@ -26,11 +26,11 @@ class Package
     Rails.logger.info "Starting build of translation with id: #{@translation.id}"
 
     build_zip
-    #upload
+    upload
 
-    #PageClient.delete_temp_dir(@directory)
+    PageClient.delete_temp_dir(@directory)
   rescue => e
-    #PageClient.delete_temp_dir(@directory)
+    PageClient.delete_temp_dir(@directory)
     raise e
   end
 
@@ -43,7 +43,7 @@ class Package
     Zip::File.open("#{@directory}/#{@translation.zip_name}", Zip::File::CREATE) do |zip_file|
       add_pages(zip_file, manifest)
       add_tips(zip_file, manifest)
-      #add_attachments(zip_file, manifest)
+      add_attachments(zip_file, manifest)
 
       manifest_filename = write_manifest_to_file(manifest)
       zip_file.add(manifest_filename, "#{@directory}/#{manifest_filename}")
@@ -106,6 +106,7 @@ class Package
   def add_attachments(zip_file, manifest) # rubocop:disable Metrics/AbcSize
     @resources.uniq.each do |filename|
       attachment = @translation.resource.attachments.find_by(filename: filename)
+      puts attachment.inspect
       raise ActiveRecord::RecordNotFound, "Attachment not found: #{filename}" if attachment.nil?
       Rails.logger.info("Adding attachment with id: #{attachment.id} to package " \
                         "for translation with id: #{@translation.id}")
@@ -145,6 +146,6 @@ class Package
     Rails.logger.info("Uploading zip to OneSky for translation with id: #{@translation.id}")
 
     obj = self.class.s3_object(@translation)
-    #obj.upload_file("#{@directory}/#{@translation.zip_name}", acl: "public-read")
+    obj.upload_file("#{@directory}/#{@translation.zip_name}", acl: "public-read")
   end
 end

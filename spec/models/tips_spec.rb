@@ -12,28 +12,23 @@ describe Tip do
   let(:t_3) { "test phrase three" }
 
   let(:structure) do
-    "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>
-<page xmlns=\"https://mobile-content-api.cru.org/xmlns/tract\"
-      xmlns:content=\"https://mobile-content-api.cru.org/xmlns/content\">
-  <hero>
-    <heading>
-      <content:text i18n-id=\"#{id_1}\">#{t_1}</content:text>
-    </heading>
-
-    <content:paragraph>
-      <content:text i18n-id=\"#{id_2}\">#{t_2}</content:text>
-    </content:paragraph>
-
-    <content:paragraph>
-      <content:text i18n-id=\"#{id_3}\">#{t_3}</content:text>
-    </content:paragraph>
-  </hero>
-</page>"
+    %|<tip xmlns="https://mobile-content-api.cru.org/xmlns/training"
+        xmlns:content="https://mobile-content-api.cru.org/xmlns/content">
+          <pages>
+              <page>
+                  <content:paragraph>
+                      <content:text />
+                  </content:paragraph>
+                  <content:text />
+              </page>
+          </pages>
+      </tip>|
   end
 
   it "cannot duplicate a name" do
-    described_class.create(resource_id: 1, name: "name", structure: structure)
+    described_class.create!(resource_id: 1, name: "name", structure: structure)
     result = described_class.create(resource_id: 1, name: "name", structure: structure)
+    result.validate
 
     expect(result.errors["name"]).to include("has already been taken")
   end
