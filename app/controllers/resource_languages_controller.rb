@@ -12,15 +12,15 @@ class ResourceLanguagesController < SecureController
 
   protected
 
-    def get_resource
-      @resource ||= Resource.find(params[:resource_id])
-    end
+  def get_resource
+    @resource ||= Resource.find(params[:resource_id])
+  end
 
-    def get_language
-      @language ||= Language.find(params[:id])
-    end
+  def get_language
+    @language ||= Language.find(params[:id])
+  end
 
-    def build_resource_language
-      @resource_language = ResourceLanguage.new(resource: @resource, language: @language)
-    end
+  def build_resource_language
+    @resource_language = ResourceLanguage.new(resource: @resource, language: @language)
+  end
 end

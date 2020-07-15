@@ -1,6 +1,6 @@
 FactoryBot.define do
   factory :resource do
-		sequence :name do |n|
+    sequence :name do |n|
       "name_#{n}"
     end
 
@@ -8,9 +8,9 @@ FactoryBot.define do
       "abbrv_#{n}"
     end
 
-    system {
+    system do
       System.first || create(:system)
-    }
+    end
 
     association :resource_type, factory: :tract_resource_type
   end

@@ -22,7 +22,6 @@ class CustomTipsController < SecureController
   end
 
   def update_custom_tip
-    byebug
     existing = CustomTip.find_by(language_id: data_attrs[:language_id], tip_id: data_attrs[:tip_id])
     existing.update!(permit_params(:structure))
     render json: existing, status: :ok

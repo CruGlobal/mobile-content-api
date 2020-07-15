@@ -1,5 +1,5 @@
 # frozen_string_literal: true
-#
+
 class ResourceLanguageSerializer < ActiveModel::Serializer
   attributes :id
 

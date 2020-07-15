@@ -14,11 +14,9 @@ class Attribute < ActiveRecord::Base
   before_validation { self.key = key&.downcase }
   before_validation :set_defaults, on: :create
 
-=begin
-  def key
-    super.tr('_', '-')
-  end
-=end
+  #   def key
+  #     super.tr('_', '-')
+  #   end
 
   private
 

@@ -12,7 +12,7 @@ describe Tip do
   let(:t_3) { "test phrase three" }
 
   let(:structure) do
-    %|<tip xmlns="https://mobile-content-api.cru.org/xmlns/training"
+    %(<tip xmlns="https://mobile-content-api.cru.org/xmlns/training"
         xmlns:content="https://mobile-content-api.cru.org/xmlns/content">
           <pages>
               <page>
@@ -22,7 +22,7 @@ describe Tip do
                   <content:text />
               </page>
           </pages>
-      </tip>|
+      </tip>)
   end
 
   it "cannot duplicate a name" do
