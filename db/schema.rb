@@ -62,7 +62,6 @@ ActiveRecord::Schema.define(version: 2020_07_14_175226) do
     t.integer "resource_id", null: false
     t.integer "language_id"
     t.index ["key", "resource_id"], name: "index_attributes_on_key_and_resource_id", unique: true
-    t.index ["resource_id", "language_id", "key"], name: "index_attributes_on_resource_id_and_language_id_and_key"
     t.index ["resource_id"], name: "index_attributes_on_resource_id"
   end
 

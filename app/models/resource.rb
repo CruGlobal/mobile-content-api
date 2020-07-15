@@ -6,7 +6,7 @@ class Resource < ActiveRecord::Base
   has_many :translations
   has_many :pages, -> { order(:position) }, inverse_of: :resource
   has_many :tips
-  has_many :resource_attributes, class_name: "Attribute"
+  has_many :resource_attributes, -> { where(language_id: nil) }, class_name: "Attribute"
   has_many :views
   has_many :attachments
   has_many :translated_pages

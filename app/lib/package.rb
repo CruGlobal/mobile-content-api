@@ -106,7 +106,6 @@ class Package
   def add_attachments(zip_file, manifest) # rubocop:disable Metrics/AbcSize
     @resources.uniq.each do |filename|
       attachment = @translation.resource.attachments.find_by(filename: filename)
-      puts attachment.inspect
       raise ActiveRecord::RecordNotFound, "Attachment not found: #{filename}" if attachment.nil?
       Rails.logger.info("Adding attachment with id: #{attachment.id} to package " \
                         "for translation with id: #{@translation.id}")
@@ -118,8 +117,6 @@ class Package
   end
 
   def save_attachment_to_file(attachment)
-    puts("Package::save_attachment_to_file #{attachment.inspect}")
-
     begin
       string_io_bytes = URI.parse(attachment.url).open.read
     rescue NoMethodError

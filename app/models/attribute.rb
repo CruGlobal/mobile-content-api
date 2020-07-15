@@ -2,6 +2,7 @@
 
 class Attribute < ActiveRecord::Base
   belongs_to :resource
+  belongs_to :language, required: false
 
   has_many :translated_attributes
 
@@ -12,6 +13,12 @@ class Attribute < ActiveRecord::Base
 
   before_validation { self.key = key&.downcase }
   before_validation :set_defaults, on: :create
+
+=begin
+  def key
+    super.tr('_', '-')
+  end
+=end
 
   private
 

@@ -9,8 +9,6 @@ describe PageClient do
 
   let(:name) { "resource name" }
   let(:description) { "resource description" }
-  let(:attr_1) { Attribute.new(key: "roger", value: "test 1", is_translatable: true) }
-  let(:attr_2) { Attribute.new(key: "thor", value: "test 2", is_translatable: true) }
 
   let(:filename_1) { "test_page_1.xml" }
   let(:filename_2) { "test_page_2.xml" }
@@ -48,8 +46,6 @@ describe PageClient do
   end
 
   let(:resource) do
-    attributes = [attr_1, attr_2, Attribute.new(key: "bill", value: "test 3", is_translatable: false)]
-
     pages = [Page.new(filename: filename_1, structure: structure_1, position: 1),
              Page.new(filename: filename_2, structure: structure_2, position: 2),]
 
@@ -57,7 +53,6 @@ describe PageClient do
                                 onesky_project_id: 1,
                                 name: name,
                                 description: description,
-                                resource_attributes: attributes,
                                 resource_type_id: 1,
                                 system_id: 1)
     resource.pages = pages
@@ -154,6 +149,10 @@ describe PageClient do
   end
 
   context "temp files created with" do
+    let!(:attr_1) { FactoryBot.create(:attribute, key: "roger", value: "test 1", resource: resource, is_translatable: true) }
+    let!(:attr_2) { FactoryBot.create(:attribute, key: "thor", value: "test 2", resource: resource, is_translatable: true) }
+    let!(:attr_3) { FactoryBot.create(:attribute, key: "other", value: "test 3", resource: resource, is_translatable: true, language: Language.first) }
+
     it "all OneSky phrases" do
       allow(described_class).to receive(:delete_temp_pages)
 

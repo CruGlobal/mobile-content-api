@@ -8,7 +8,7 @@ Rails.application.routes.draw do
   resources :resource_types, only: [:index, :show]
 
   resources :resources do
-    resources :languages, controller: :resource_languages, only: [:put, :show]
+    resources :languages, controller: :resource_languages, only: [:update, :show]
   end
   resources :drafts
   resources :translations, only: [:index, :show]

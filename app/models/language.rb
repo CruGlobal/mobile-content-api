@@ -5,6 +5,7 @@ class Language < ActiveRecord::Base
   has_many :custom_pages
   has_many :custom_tips
   has_many :translated_pages
+  has_many :language_attributes, class_name: "Attribute"
 
   validates :name, presence: true
   validates :code, presence: true
