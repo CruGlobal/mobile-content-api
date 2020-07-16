@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_07_14_175226) do
+ActiveRecord::Schema.define(version: 2020_07_16_141930) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -60,7 +60,6 @@ ActiveRecord::Schema.define(version: 2020_07_14_175226) do
     t.string "value", null: false
     t.boolean "is_translatable", default: false
     t.integer "resource_id", null: false
-    t.integer "language_id"
     t.index ["key", "resource_id"], name: "index_attributes_on_key_and_resource_id", unique: true
     t.index ["resource_id"], name: "index_attributes_on_resource_id"
   end
@@ -129,6 +128,16 @@ ActiveRecord::Schema.define(version: 2020_07_14_175226) do
     t.integer "gospel_presentations", default: 0, null: false
     t.datetime "updated_at", null: false
     t.index ["id"], name: "index_global_activity_analytics_on_id", unique: true
+  end
+
+  create_table "language_attributes", force: :cascade do |t|
+    t.integer "language_id", null: false
+    t.bigint "resource_id", null: false
+    t.string "key", null: false
+    t.string "value", null: false
+    t.boolean "is_translatable", default: false
+    t.index ["key", "resource_id", "language_id"], name: "index_language_attributes_unique", unique: true
+    t.index ["resource_id"], name: "index_language_attributes_on_resource_id"
   end
 
   create_table "languages", id: :serial, force: :cascade do |t|

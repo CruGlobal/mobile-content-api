@@ -151,7 +151,6 @@ describe PageClient do
   context "temp files created with" do
     let!(:attr_1) { FactoryBot.create(:attribute, key: "roger", value: "test 1", resource: resource, is_translatable: true) }
     let!(:attr_2) { FactoryBot.create(:attribute, key: "thor", value: "test 2", resource: resource, is_translatable: true) }
-    let!(:attr_3) { FactoryBot.create(:attribute, key: "other", value: "test 3", resource: resource, is_translatable: true, language: Language.first) }
 
     it "all OneSky phrases" do
       allow(described_class).to receive(:delete_temp_pages)
