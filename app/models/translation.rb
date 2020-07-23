@@ -36,7 +36,7 @@ class Translation < ActiveRecord::Base
 
   def translated_tip(tip_id, strict)
     tip = Tip.find(tip_id)
-    phrases = download_translated_phrases(tip.name)
+    phrases = download_translated_phrases("tip_#{tip.name}.json")
     xml = Nokogiri::XML(tip_structure(tip_id))
 
     xml = translate_node_content(xml, phrases, strict)

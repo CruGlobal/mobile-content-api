@@ -77,4 +77,3 @@ gem "ougai", "~> 1.8"
 gem "tzinfo-data", platforms: [:mingw, :mswin, :x64_mingw, :jruby]
 gem "actioncable"
 gem "redis"
-gem "yaml_db"

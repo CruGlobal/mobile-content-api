@@ -220,21 +220,30 @@ ActiveRecord::Schema.define(version: 2020_07_16_141930) do
     t.index ["resource_id"], name: "index_translations_on_resource_id"
   end
 
-  create_table "translations_bkup", id: false, force: :cascade do |t|
-    t.integer "id"
-    t.boolean "is_published"
-    t.integer "version"
-    t.integer "resource_id"
-    t.integer "language_id"
-    t.string "translated_name"
-    t.string "translated_description"
-    t.string "manifest_name"
-  end
-
   create_table "views", id: :serial, force: :cascade do |t|
     t.integer "quantity", null: false
     t.integer "resource_id", null: false
     t.index ["resource_id"], name: "index_views_on_resource_id"
   end
 
+  add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "attachments", "resources"
+  add_foreign_key "attributes", "resources"
+  add_foreign_key "auth_tokens", "access_codes"
+  add_foreign_key "custom_manifests", "languages"
+  add_foreign_key "custom_manifests", "resources"
+  add_foreign_key "custom_pages", "languages"
+  add_foreign_key "custom_pages", "pages"
+  add_foreign_key "follow_ups", "destinations"
+  add_foreign_key "follow_ups", "languages"
+  add_foreign_key "pages", "resources"
+  add_foreign_key "resources", "resource_types"
+  add_foreign_key "resources", "systems"
+  add_foreign_key "translated_attributes", "attributes"
+  add_foreign_key "translated_attributes", "translations"
+  add_foreign_key "translated_pages", "languages"
+  add_foreign_key "translated_pages", "resources"
+  add_foreign_key "translations", "languages"
+  add_foreign_key "translations", "resources"
+  add_foreign_key "views", "resources"
 end

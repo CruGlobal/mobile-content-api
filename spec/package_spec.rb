@@ -275,6 +275,29 @@ describe Package do
       end
     end
 
+    context "page missing tip" do
+      let(:translated_page_one) do
+        '<?xml version="1.0" encoding="UTF-8"?>
+    <page xmlns="https://mobile-content-api.cru.org/xmlns/tract"
+          xmlns:content="https://mobile-content-api.cru.org/xmlns/content"
+          xmlns:training="https://mobile-content-api.cru.org/xmlns/training"
+          primary-color="rgba(59,164,219,1)" primary-text-color="rgba(255,255,255,1)"
+          background-image="wall.jpg">
+      <hero>
+        <content:paragraph>
+          <training:tip id="tip1" />
+          <training:tip id="missing" />
+        </content:paragraph>
+      </hero>
+    </page>
+    '
+      end
+
+      it "raises an exception" do
+        expect { push }.to raise_error(ActiveRecord::RecordNotFound, "Tip not found: missing")
+      end
+    end
+
     context "translation missing i18n title" do
       it "fails to push" do
         translation.translated_name = nil

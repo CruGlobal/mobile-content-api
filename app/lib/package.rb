@@ -57,7 +57,11 @@ class Package
 
   def determine_tips(document)
     nodes = XmlUtil.xpath_namespace(document, XPATH_TIPS.join("|"))
-    nodes.each { |node| @tips << Tip.find_by(name: node.content) }
+    nodes.each do |node| 
+      tip = @translation.resource.tips.find_by(name: node.content)
+      raise ActiveRecord::RecordNotFound, "Tip not found: #{node.content}" unless tip
+      @tips << tip
+    end
   end
 
   def add_pages(zip_file, manifest)
@@ -71,7 +75,7 @@ class Package
   end
 
   def add_tips(zip_file, manifest)
-    @tips.each do |tip|
+    @tips.uniq.each do |tip|
       Rails.logger.info("Adding tip with id: #{tip.id} to package for translation with id: #{@translation.id}")
 
       sha_filename = write_tip_to_file(tip)

@@ -15,10 +15,6 @@ class BaseAttribute < ActiveRecord::Base
   before_validation { self.key = key&.downcase }
   before_validation :set_defaults, on: :create
 
-  #   def key
-  #     super.tr('_', '-')
-  #   end
-
   private
 
   def set_defaults
