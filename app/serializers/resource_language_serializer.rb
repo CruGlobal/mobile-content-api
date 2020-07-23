@@ -10,6 +10,14 @@ class ResourceLanguageSerializer < ActiveModel::Serializer
   has_many :custom_pages
   has_many :custom_tips
 
+  def type
+    "resource-language"
+  end
+
+  def id
+    "#{object.resource.id}-#{object.language.id}"
+  end
+
   def attributes(*args)
     hash = super
     object.language_attributes.each { |attribute| hash["attr_#{attribute.key}"] = attribute.value }

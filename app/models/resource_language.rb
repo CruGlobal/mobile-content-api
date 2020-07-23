@@ -11,21 +11,6 @@ class ResourceLanguage < ActiveRecord::Base
   has_many :custom_tips, ->(obj) { joins(:tip).where(tips: {resource_id: obj.resource.id}) }, through: :language
   has_many :language_attributes, ->(obj) { where(resource: obj.resource) }, through: :language
 
-  def type
-    "resource-language"
-  end
-
-  def id
-    "#{resource.id}-#{language.id}"
-  end
-
-  def self.test
-    rl = ResourceLanguage.new
-    rl.resource = Resource.find(3)
-    rl.language = Language.find(12)
-    rl
-  end
-
   def set_data_attributes!(data_attrs)
     data_attrs.each_pair do |key, value|
       attr_name = key.scan(/^attr-(.*)$/).first.first
