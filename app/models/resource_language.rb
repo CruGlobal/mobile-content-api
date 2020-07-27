@@ -13,7 +13,8 @@ class ResourceLanguage < ActiveRecord::Base
 
   def set_data_attributes!(data_attrs)
     data_attrs.each_pair do |key, value|
-      attr_name = key.scan(/^attr-(.*)$/).first.first
+      attr_name = key.scan(/^attr-(.*)$/).first&.first
+      next unless attr_name
       attr_name.tr!("-", "_")
       attribute = language.language_attributes.where(key: attr_name, resource: resource).first_or_initialize
       if value
