@@ -17,11 +17,11 @@ class ResourceLanguage < ActiveRecord::Base
       next unless attr_name
       attr_name.tr!("-", "_")
       attribute = language.language_attributes.where(key: attr_name, resource: resource).first_or_initialize
-      if value
+      if value.nil?
+        attribute.destroy unless attribute.new_record?
+      else
         attribute.value = value.to_s
         attribute.save!
-      elsif !attribute.new_record?
-        attribute.destroy
       end
     end
   end

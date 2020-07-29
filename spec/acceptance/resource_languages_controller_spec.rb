@@ -118,6 +118,7 @@ resource "ResourceLanguage" do
         "attributes": {
           "attr-enable-tips": true,
           "attr-other-key": nil,
+          "attr-set-false": false,
         },
       }
     end
@@ -133,6 +134,9 @@ resource "ResourceLanguage" do
       expect(att.value).to eq("true")
       att = LanguageAttribute.find_by(resource: resource, language: language, key: "other_key")
       expect(att).to be_nil
+      att = LanguageAttribute.find_by(resource: resource, language: language, key: "set_false")
+      expect(att).to_not be_nil
+      expect(att.value).to eq("false")
     end
   end
 end
