@@ -212,6 +212,10 @@ describe Package do
     end
     let(:title) { "this is the kgp" }
 
+    let!(:language_attribute) do
+      FactoryBot.create(:language_attribute, resource: resource, language: translation.language, key: "include_tips", value: "true")
+    end
+
     before do
       mock_dir_deletion
     end
@@ -230,11 +234,23 @@ describe Package do
       expect(result).to be_equivalent_to(resources)
     end
 
-    it "contains all referenced tips" do
-      push
+    context "include_tips false" do
+      it "does not reference tips" do
+        LanguageAttribute.delete_all
+        push
 
-      result = XmlUtil.xpath_namespace(load_xml(translation.manifest_name), "//manifest:tips").first
-      expect(result).to be_equivalent_to(tips)
+        result = XmlUtil.xpath_namespace(load_xml(translation.manifest_name), "//manifest:tips").first
+        expect(result).to_not be_equivalent_to(tips)
+      end
+    end
+
+    context "include_tips true" do
+      it "contains all referenced tips" do
+        push
+
+        result = XmlUtil.xpath_namespace(load_xml(translation.manifest_name), "//manifest:tips").first
+        expect(result).to be_equivalent_to(tips)
+      end
     end
 
     it "contains translated title" do
@@ -293,8 +309,24 @@ describe Package do
     '
       end
 
-      it "raises an exception" do
-        expect { push }.to raise_error(ActiveRecord::RecordNotFound, "Tip not found: missing")
+      context("with include_tips true") do
+        it "raises an exception" do
+          expect { push }.to raise_error(ActiveRecord::RecordNotFound, "Tip not found: missing")
+        end
+      end
+
+      context("with include_tips false") do
+        it "raises an exception" do
+          LanguageAttribute.first.update(value: "false")
+          expect { push }.to_not raise_error(ActiveRecord::RecordNotFound, "Tip not found: missing")
+        end
+      end
+
+      context("with include_tips nil") do
+        it "raises an exception" do
+          LanguageAttribute.delete_all
+          expect { push }.to_not raise_error(ActiveRecord::RecordNotFound, "Tip not found: missing")
+        end
       end
     end
 

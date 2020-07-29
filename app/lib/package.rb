@@ -42,7 +42,7 @@ class Package
 
     Zip::File.open("#{@directory}/#{@translation.zip_name}", Zip::File::CREATE) do |zip_file|
       add_pages(zip_file, manifest)
-      add_tips(zip_file, manifest)
+      add_tips(zip_file, manifest) if include_tips?
       add_attachments(zip_file, manifest)
 
       manifest_filename = write_manifest_to_file(manifest)
@@ -57,7 +57,7 @@ class Package
 
   def determine_tips(document)
     nodes = XmlUtil.xpath_namespace(document, XPATH_TIPS.join("|"))
-    nodes.each do |node| 
+    nodes.each do |node|
       tip = @translation.resource.tips.find_by(name: node.content)
       raise ActiveRecord::RecordNotFound, "Tip not found: #{node.content}" unless tip
       @tips << tip
@@ -88,7 +88,7 @@ class Package
     translated_page = @translation.translated_page(page.id, true)
     document = Nokogiri::XML(translated_page)
     determine_resources(document)
-    determine_tips(document)
+    determine_tips(document) if include_tips?
     sha_filename = XmlUtil.xml_filename_sha(translated_page)
 
     File.write("#{@directory}/#{sha_filename}", translated_page)
@@ -148,5 +148,10 @@ class Package
 
     obj = self.class.s3_object(@translation)
     obj.upload_file("#{@directory}/#{@translation.zip_name}", acl: "public-read")
+  end
+
+  def include_tips?
+    language_attributes = @translation.language.language_attributes.where(resource: @translation.resource)
+    language_attributes.find_by(key: "include_tips")&.value == "true"
   end
 end
