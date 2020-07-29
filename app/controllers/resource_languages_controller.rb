@@ -1,5 +1,6 @@
 class ResourceLanguagesController < SecureController
   before_action :get_resource, :get_language, :build_resource_language
+  skip_before_action :authorize!, only: :show
 
   def show
     render json: @resource_language, include: params[:include], status: :ok

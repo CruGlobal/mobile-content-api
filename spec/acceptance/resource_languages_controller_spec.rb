@@ -49,8 +49,6 @@ resource "ResourceLanguage" do
     let!(:custom_tip) { FactoryBot.create(:custom_tip, tip: tip, structure: tip_structure, language: language) }
     let!(:custom_tip2) { FactoryBot.create(:custom_tip, tip: tip, structure: tip_structure, language: language2) }
 
-    requires_authorization
-
     it "get resource_language data" do
       do_request
 
@@ -132,7 +130,7 @@ resource "ResourceLanguage" do
       expect(JSON.parse(response_body)["data"]).not_to be_nil
       att = LanguageAttribute.find_by(resource: resource, language: language, key: "enable_tips")
       expect(att).to_not be_nil
-      expect(att.value).to eq("t")
+      expect(att.value).to eq("true")
       att = LanguageAttribute.find_by(resource: resource, language: language, key: "other_key")
       expect(att).to be_nil
     end

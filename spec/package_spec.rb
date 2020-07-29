@@ -318,14 +318,14 @@ describe Package do
       context("with include_tips false") do
         it "raises an exception" do
           LanguageAttribute.first.update(value: "false")
-          expect { push }.to_not raise_error(ActiveRecord::RecordNotFound, "Tip not found: missing")
+          expect { push }.to_not raise_error
         end
       end
 
       context("with include_tips nil") do
         it "raises an exception" do
           LanguageAttribute.delete_all
-          expect { push }.to_not raise_error(ActiveRecord::RecordNotFound, "Tip not found: missing")
+          expect { push }.to_not raise_error
         end
       end
     end

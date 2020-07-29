@@ -18,7 +18,7 @@ class ResourceLanguage < ActiveRecord::Base
       attr_name.tr!("-", "_")
       attribute = language.language_attributes.where(key: attr_name, resource: resource).first_or_initialize
       if value
-        attribute.value = value
+        attribute.value = value.to_s
         attribute.save!
       elsif !attribute.new_record?
         attribute.destroy
