@@ -9,6 +9,7 @@ class ResourceLanguage < ActiveRecord::Base
   belongs_to :language
   has_many :custom_pages, ->(obj) { joins(:page).where(pages: {resource_id: obj.resource.id}) }, through: :language
   has_many :custom_tips, ->(obj) { joins(:tip).where(tips: {resource_id: obj.resource.id}) }, through: :language
+  has_one :custom_manifest, through: :resource, source: :custom_manifests
   has_many :language_attributes, ->(obj) { where(resource: obj.resource) }, through: :language
 
   def set_data_attributes!(data_attrs)

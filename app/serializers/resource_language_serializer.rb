@@ -9,6 +9,7 @@ class ResourceLanguageSerializer < ActiveModel::Serializer
   belongs_to :language
   has_many :custom_pages
   has_many :custom_tips
+  has_one :custom_manifest
 
   def type
     "resource-language"

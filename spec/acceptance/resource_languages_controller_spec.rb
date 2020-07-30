@@ -49,6 +49,17 @@ resource "ResourceLanguage" do
     let!(:custom_tip) { FactoryBot.create(:custom_tip, tip: tip, structure: tip_structure, language: language) }
     let!(:custom_tip2) { FactoryBot.create(:custom_tip, tip: tip, structure: tip_structure, language: language2) }
 
+    let(:custom_manifest_structure) do
+			%(<manifest xmlns="https://mobile-content-api.cru.org/xmlns/manifest"
+					xmlns:article="https://mobile-content-api.cru.org/xmlns/article"
+					xmlns:content="https://mobile-content-api.cru.org/xmlns/content">
+				<pages>
+					<article:aem-import src="https://www.cru.org/content/experience-fragments/shared-library/language-masters/bg/how-to-know-god/what-is-christianity/does-god-answer-our-prayers-#" />
+				</pages>
+			</manifest>)
+    end
+    let!(:custom_manifest) { FactoryBot.create(:custom_manifest, language: language, resource: resource, structure: custom_manifest_structure) }
+
     it "get resource_language data" do
       do_request
 
@@ -76,6 +87,12 @@ resource "ResourceLanguage" do
                   "type" => "language",
                 },
               },
+							"custom-manifest" => {
+                "data" => {
+                  "id" => custom_manifest.id.to_s,
+                  "type" => "custom-manifest",
+                }
+							},
               "custom-pages" => {
                 "data" => [
                   {
