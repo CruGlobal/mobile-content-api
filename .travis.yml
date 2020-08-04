@@ -32,3 +32,4 @@ jobs:
     # text invalid XML
     - ./schema_tests/invalid.sh public/xmlns/tract.xsd schema_tests/tract/invalid/*/*.xml
     - ./schema_tests/invalid.sh public/xmlns/manifest.xsd schema_tests/manifest/invalid/*/*.xml
+    - ./schema_tests/invalid.sh public/xmlns/training.xsd schema_tests/training/invalid/*/*.xml
