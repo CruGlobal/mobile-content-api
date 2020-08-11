@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <xs:schema xmlns:analytics="https://mobile-content-api.cru.org/xmlns/analytics"
     xmlns:content="https://mobile-content-api.cru.org/xmlns/content"
-    xmlns:tract="https://mobile-content-api.cru.org/xmlns/tract" xmlns:xs="http://www.w3.org/2001/XMLSchema"
+    xmlns:tract="https://mobile-content-api.cru.org/xmlns/tract"
+    xmlns:training="https://mobile-content-api.cru.org/xmlns/training" xmlns:xs="http://www.w3.org/2001/XMLSchema"
     elementFormDefault="qualified" targetNamespace="https://mobile-content-api.cru.org/xmlns/tract">
 
     <xs:import namespace="https://mobile-content-api.cru.org/xmlns/analytics" schemaLocation="analytics.xsd" />
     <xs:import namespace="https://mobile-content-api.cru.org/xmlns/content" schemaLocation="content.xsd" />
+    <xs:import namespace="https://mobile-content-api.cru.org/xmlns/training" schemaLocation="training.xsd" />
 
     <!-- element nodes -->
     <!--
@@ -239,6 +241,7 @@
                             DEFAULT is the primary-color attribute set at the nearest ancestor either page, or manifest.</xs:documentation>
                     </xs:annotation>
                 </xs:attribute>
+                <xs:attributeGroup ref="training:tractCallToAction" />
             </xs:extension>
         </xs:complexContent>
     </xs:complexType>
