@@ -49,6 +49,8 @@
         </xs:complexType>
     </xs:element>
 
+    <xs:attribute name="tip" type="xs:string"/>
+
     <xs:group name="contentElements">
         <xs:choice>
             <xs:element name="tip">
@@ -58,4 +60,16 @@
             </xs:element>
         </xs:choice>
     </xs:group>
+    <xs:attributeGroup name="tractCallToAction">
+        <xs:annotation>
+            <xs:documentation>This attribute group is the set of attributes that can appear on the call-to-action
+                element in the tract page xml.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:attribute ref="training:tip">
+            <xs:annotation>
+                <xs:documentation>This defines a tip associated with this call-to-action element</xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+    </xs:attributeGroup>
 </xs:schema>
