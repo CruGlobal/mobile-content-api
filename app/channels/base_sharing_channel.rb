@@ -1,6 +1,6 @@
 class BaseSharingChannel < ApplicationCable::Channel
   METADATA_CACHE_PREFIX = "sharing_metadata"
-  METADATA_EXPIRY = 2.hours
+  METADATA_EXPIRY = 24.hours
   SUBSCRIBER_TO_PUBLISHER = "subscriber_to_publisher"
 
   protected
