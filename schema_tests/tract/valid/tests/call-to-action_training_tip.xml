@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<page xmlns="https://mobile-content-api.cru.org/xmlns/tract"
+    xmlns:content="https://mobile-content-api.cru.org/xmlns/content"
+    xmlns:training="https://mobile-content-api.cru.org/xmlns/training">
+    <call-to-action training:tip="tip1">
+        <content:text />
+    </call-to-action>
+</page>
