@@ -50,7 +50,7 @@ resource "ResourceLanguage" do
     let!(:custom_tip2) { FactoryBot.create(:custom_tip, tip: tip, structure: tip_structure, language: language2) }
 
     let(:custom_manifest_structure) do
-			%(<manifest xmlns="https://mobile-content-api.cru.org/xmlns/manifest"
+      %(<manifest xmlns="https://mobile-content-api.cru.org/xmlns/manifest"
 					xmlns:article="https://mobile-content-api.cru.org/xmlns/article"
 					xmlns:content="https://mobile-content-api.cru.org/xmlns/content">
 				<pages>
@@ -87,12 +87,12 @@ resource "ResourceLanguage" do
                   "type" => "language",
                 },
               },
-							"custom-manifest" => {
+              "custom-manifest" => {
                 "data" => {
                   "id" => custom_manifest.id.to_s,
                   "type" => "custom-manifest",
-                }
-							},
+                },
+              },
               "custom-pages" => {
                 "data" => [
                   {
