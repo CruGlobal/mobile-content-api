@@ -26,6 +26,11 @@ module MobileContentApi
       config.logger = Log::Logger.new(Rails.root.join("log", "datadog.log"))
     end
 
+    config.redis_conf = YAML.safe_load(ERB.new(File.read(Rails.root.join("config", "redis.yml"))).result, [Symbol], [], true)
+    redis_cache_conf = config.redis_conf["cache"]
+    redis_cache_conf[:url] = "redis://" + redis_cache_conf[:host] + "/" + redis_cache_conf[:db].to_s
+    config.cache_store = :redis_cache_store, redis_cache_conf
+
     ActiveModelSerializers.config.adapter = :json_api
     FileUtils.mkdir_p("pages")
   end
