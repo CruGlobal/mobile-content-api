@@ -4,6 +4,8 @@ jobs:
 
     addons:
       postgresql: 9.6
+    services:
+      - redis-server
 
     cache:
       bundler: true
