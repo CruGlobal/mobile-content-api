@@ -122,6 +122,7 @@
             <xs:element name="title" type="content:textChild" />
         </xs:sequence>
         <xs:attribute name="background-color" type="content:colorValue" use="optional" />
+        <xs:attributeGroup ref="training:tractHeader" />
     </xs:complexType>
 
     <!--
