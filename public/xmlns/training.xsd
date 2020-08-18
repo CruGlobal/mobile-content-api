@@ -60,6 +60,18 @@
             </xs:element>
         </xs:choice>
     </xs:group>
+    <xs:attributeGroup name="tractHeader">
+        <xs:annotation>
+            <xs:documentation>This attribute group is the set of attributes that can appear on the header
+                element in the tract page xml.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:attribute ref="training:tip">
+            <xs:annotation>
+                <xs:documentation>This defines a tip associated with this header element</xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+    </xs:attributeGroup>
     <xs:attributeGroup name="tractCallToAction">
         <xs:annotation>
             <xs:documentation>This attribute group is the set of attributes that can appear on the call-to-action
