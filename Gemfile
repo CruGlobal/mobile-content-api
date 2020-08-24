@@ -51,7 +51,7 @@ group :development, :test do
   gem "rubocop"
   gem "rubocop-rspec", require: false
   gem "simplecov", require: false
-  gem "standard", "~> 0.1.9"
+  gem "standard", "~> 0.2.2"
   gem "webmock", require: false
   gem "action-cable-testing"
   gem "factory_bot_rails"
