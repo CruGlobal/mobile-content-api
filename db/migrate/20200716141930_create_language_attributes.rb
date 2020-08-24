@@ -7,6 +7,8 @@ class CreateLanguageAttributes < ActiveRecord::Migration[5.2]
       t.string :value, null: false
       t.boolean :is_translatable, default: false
       t.references :resource, null: false
+
+      t.timestamps
     end
 
     add_index :language_attributes, [:key, :resource_id, :language_id], unique: true, name: "index_language_attributes_unique"
