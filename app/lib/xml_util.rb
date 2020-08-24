@@ -4,6 +4,7 @@ module XmlUtil
   XMLNS_CONTENT = "https://mobile-content-api.cru.org/xmlns/content"
   XMLNS_MANIFEST = "https://mobile-content-api.cru.org/xmlns/manifest"
   XMLNS_TRACT = "https://mobile-content-api.cru.org/xmlns/tract"
+  XMLNS_TRAINING = "https://mobile-content-api.cru.org/xmlns/training"
 
   def self.translatable_nodes(xml)
     xml.xpath("//content:text[@i18n-id]")
@@ -22,7 +23,7 @@ module XmlUtil
   end
 
   def self.xpath_namespace(xml, string)
-    xml.xpath(string, "manifest" => XMLNS_MANIFEST, "content" => XMLNS_CONTENT, "tract" => XMLNS_TRACT)
+    xml.xpath(string, "manifest" => XMLNS_MANIFEST, "content" => XMLNS_CONTENT, "tract" => XMLNS_TRACT, "training" => XMLNS_TRAINING)
   end
 
   def self.get_or_create_child(xml, ns, name)

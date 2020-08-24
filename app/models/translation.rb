@@ -34,6 +34,17 @@ class Translation < ActiveRecord::Base
     xml.to_s
   end
 
+  def translated_tip(tip_id, strict)
+    tip = Tip.find(tip_id)
+    phrases = download_translated_phrases("tip_#{tip.name}.json")
+    xml = Nokogiri::XML(tip_structure(tip_id))
+
+    xml = translate_node_content(xml, phrases, strict)
+    xml = translate_node_attributes(xml, phrases, strict)
+
+    xml.to_s
+  end
+
   def create_new_version
     Translation.create!(resource: resource, language: language, version: version + 1)
   end
@@ -69,6 +80,11 @@ class Translation < ActiveRecord::Base
   def page_structure(page_id)
     custom_page = language.custom_pages.find_by(page_id: page_id)
     custom_page.nil? ? Page.find(page_id).structure : custom_page.structure
+  end
+
+  def tip_structure(tip_id)
+    custom_tip = language.custom_tips.find_by(tip_id: tip_id)
+    custom_tip.nil? ? Tip.find(tip_id).structure : custom_tip.structure
   end
 
   def prevent_destroy_published

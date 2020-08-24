@@ -7,11 +7,15 @@ Rails.application.routes.draw do
   resources :languages
   resources :resource_types, only: [:index, :show]
 
-  resources :resources
+  resources :resources do
+    resources :languages, controller: :resource_languages, only: [:update, :show]
+  end
   resources :drafts
   resources :translations, only: [:index, :show]
   resources :pages, only: [:create, :update, :show]
+  resources :tips, only: [:create, :update]
   resources :custom_pages, only: [:create, :update, :destroy, :show]
+  resources :custom_tips, only: [:create, :destroy]
 
   resources :attributes, only: [:create, :update, :destroy, :show]
   resources :translated_attributes, only: [:create, :update, :destroy, :show]

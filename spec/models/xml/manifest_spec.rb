@@ -21,6 +21,11 @@ describe XML::Manifest do
         <page filename="13_FinalPage.xml" src="5ce1cd1be598eb31a76c120724badc90e1e9bafa4b03c33ce40f80ccff756444.xml"/>
       </pages>').root
     end
+    let(:tips) do
+      Nokogiri::XML('<tips xmlns="https://mobile-content-api.cru.org/xmlns/manifest">
+        <tip id="tip_name" src="kt6SxuuCU5M8AYmqpGjcWNNYCiCipEauybniinC5HrhF6h6KOvEZo8f5UhQUnRd.xml"/>
+      </tips>').root
+    end
     let(:resources) do
       Nokogiri::XML('<resources xmlns="https://mobile-content-api.cru.org/xmlns/manifest">
         <resource filename="wall.jpg" src="073d78ef4dc421f10d2db375414660d3983f506fabdaaff0887f6ee955aa3bdd"/>
@@ -31,6 +36,7 @@ describe XML::Manifest do
       m = described_class.new(translation)
       m.add_page("04_ThirdPoint.xml", "790a2170adb13955e67dee0261baff93cc7f045b22a35ad434435bdbdcec036a.xml")
       m.add_page("13_FinalPage.xml", "5ce1cd1be598eb31a76c120724badc90e1e9bafa4b03c33ce40f80ccff756444.xml")
+      m.add_tip("tip_name", "kt6SxuuCU5M8AYmqpGjcWNNYCiCipEauybniinC5HrhF6h6KOvEZo8f5UhQUnRd.xml")
       m.add_resource("wall.jpg", "073d78ef4dc421f10d2db375414660d3983f506fabdaaff0887f6ee955aa3bdd")
       m
     end
@@ -43,6 +49,11 @@ describe XML::Manifest do
     it "contains all resources" do
       result = XmlUtil.xpath_namespace(manifest.document, "//manifest:resources").first
       expect(result).to be_equivalent_to(resources)
+    end
+
+    it "contains all tips in order" do
+      result = XmlUtil.xpath_namespace(manifest.document, "//manifest:tips").first
+      expect(result).to be_equivalent_to(tips)
     end
 
     it "contains tool code" do

@@ -46,6 +46,30 @@ resource "Drafts" do
     end
   end
 
+  get "drafts/:id" do
+    let(:id) { "3" }
+    let(:tip_id) { "1" }
+    let(:result) { '{ \"1\": \"phrase\" }' }
+
+    requires_authorization
+
+    before do
+      translation = double
+      allow(Translation).to receive(:find).with(id).and_return(translation)
+      allow(translation).to(receive(:translated_tip).with(tip_id, false).and_return(result))
+
+      do_request tip_id: tip_id
+    end
+
+    it "get translated page" do
+      expect(response_body).to eq(result)
+    end
+
+    it "returns OK", document: false do
+      expect(status).to be(200)
+    end
+  end
+
   post "drafts" do
     let(:resource_id) { 1 }
     let(:resource) { instance_double(Resource, id: resource_id) }

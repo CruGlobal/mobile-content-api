@@ -54,6 +54,7 @@ group :development, :test do
   gem "standard", "~> 0.1.9"
   gem "webmock", require: false
   gem "action-cable-testing"
+  gem "factory_bot_rails"
 end
 
 gem "raddocs"

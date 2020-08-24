@@ -10,6 +10,7 @@ describe Package do
     '<?xml version="1.0" encoding="UTF-8"?>
 <page xmlns="https://mobile-content-api.cru.org/xmlns/tract"
       xmlns:content="https://mobile-content-api.cru.org/xmlns/content"
+      xmlns:training="https://mobile-content-api.cru.org/xmlns/training"
       primary-color="rgba(59,164,219,1)" primary-text-color="rgba(255,255,255,1)"
       background-image="wall.jpg">
   <header>
@@ -30,6 +31,8 @@ describe Package do
       <content:text>paragraph 1 - line 2</content:text>
       <content:text>paragraph 1 - line 3</content:text>
       <content:text>p1 - l4</content:text>
+      <training:tip id="tip1" />
+      <training:tip id="tip2" />
     </content:paragraph>
     <content:paragraph>
       <content:text>paragraph 2 - line 1</content:text>
@@ -43,7 +46,8 @@ describe Package do
   let(:translated_page_two) do
     '<?xml version="1.0" encoding="UTF-8"?>
 <page xmlns="https://mobile-content-api.cru.org/xmlns/tract"
-      xmlns:content="https://mobile-content-api.cru.org/xmlns/content">
+      xmlns:content="https://mobile-content-api.cru.org/xmlns/content"
+      xmlns:training="https://mobile-content-api.cru.org/xmlns/training">
   <hero>
     <heading>
       <content:text i18n-id="image_restrict_to_title">Image restrictTo testing</content:text>
@@ -92,6 +96,38 @@ describe Package do
 
   let(:guid) { "32ef5884-9004-47d8-9285-bb5b2205e554" }
   let(:directory) { "pages/#{guid}" }
+  let(:resource) { Resource.first }
+  let(:tip_structure) do
+    %(<tip xmlns="https://mobile-content-api.cru.org/xmlns/training"
+        xmlns:content="https://mobile-content-api.cru.org/xmlns/content">
+          <pages>
+              <page>
+                  <content:paragraph>
+                      <content:text />
+                  </content:paragraph>
+                  <content:text />
+              </page>
+          </pages>
+      </tip>)
+  end
+  let!(:tip1) { FactoryBot.create(:tip, name: "tip1", resource: resource, structure: tip_structure) }
+  let(:tip_structure2) do
+    %(<tip xmlns="https://mobile-content-api.cru.org/xmlns/training"
+        xmlns:content="https://mobile-content-api.cru.org/xmlns/content">
+          <pages>
+              <page>
+                  <content:paragraph>
+                      <content:text />
+                  </content:paragraph>
+                  <content:paragraph>
+                      <content:text />
+                  </content:paragraph>
+                  <content:text />
+              </page>
+          </pages>
+      </tip>)
+  end
+  let!(:tip2) { FactoryBot.create(:tip, name: "tip2", resource: resource, structure: tip_structure2) }
 
   before do
     mock_onesky
@@ -133,8 +169,8 @@ describe Package do
 
     push
 
-    expect_exists("71edacf514e76a1068454ef9dc219dfa36cd4394757b4a4bf2cee18b9e18559a.xml")
-    expect_exists("f5861440733ca31e99a04b9dd880ba3eeae314560d9197583bdbda0cb5c4c265.xml")
+    expect_exists("ec9bac08c42c571a4df305171d04e196a5601af87e664600f1afba820b2a1a59.xml")
+    expect_exists("e9a07c177bb189cb1665307fffd770ad7c52316e0284a38fb8fa42f436b29397.xml")
   end
 
   it "zip file contains manifest" do
@@ -156,8 +192,8 @@ describe Package do
   context "manifest" do
     let(:pages) do
       Nokogiri::XML('<pages xmlns="https://mobile-content-api.cru.org/xmlns/manifest">
-        <page filename="04_ThirdPoint.xml" src="71edacf514e76a1068454ef9dc219dfa36cd4394757b4a4bf2cee18b9e18559a.xml"/>
-        <page filename="13_FinalPage.xml" src="f5861440733ca31e99a04b9dd880ba3eeae314560d9197583bdbda0cb5c4c265.xml"/>
+        <page filename="04_ThirdPoint.xml" src="ec9bac08c42c571a4df305171d04e196a5601af87e664600f1afba820b2a1a59.xml"/>
+        <page filename="13_FinalPage.xml" src="e9a07c177bb189cb1665307fffd770ad7c52316e0284a38fb8fa42f436b29397.xml"/>
       </pages>').root
     end
     let(:resources) do
@@ -168,7 +204,17 @@ describe Package do
         <resource filename="wall.jpg" src="073d78ef4dc421f10d2db375414660d3983f506fabdaaff0887f6ee955aa3bdd"/>
       </resources>').root
     end
+    let(:tips) do
+      Nokogiri::XML('<tips xmlns="https://mobile-content-api.cru.org/xmlns/manifest">
+        <tip id="tip1" src="c26f707f414bbfda0656d890867d7da90058d8d0303dce8daef80951760cd56d.xml"/>
+        <tip id="tip2" src="503fa579c48f89d3e7428e3a3f24fae80b43bf97b53318309696a093298ae032.xml"/>
+      </tips>').root
+    end
     let(:title) { "this is the kgp" }
+
+    let!(:language_attribute) do
+      FactoryBot.create(:language_attribute, resource: resource, language: translation.language, key: "include_tips", value: "true")
+    end
 
     before do
       mock_dir_deletion
@@ -186,6 +232,25 @@ describe Package do
 
       result = XmlUtil.xpath_namespace(load_xml(translation.manifest_name), "//manifest:resources").first
       expect(result).to be_equivalent_to(resources)
+    end
+
+    context "include_tips false" do
+      it "does not reference tips" do
+        LanguageAttribute.delete_all
+        push
+
+        result = XmlUtil.xpath_namespace(load_xml(translation.manifest_name), "//manifest:tips").first
+        expect(result).to_not be_equivalent_to(tips)
+      end
+    end
+
+    context "include_tips true" do
+      it "contains all referenced tips" do
+        push
+
+        result = XmlUtil.xpath_namespace(load_xml(translation.manifest_name), "//manifest:tips").first
+        expect(result).to be_equivalent_to(tips)
+      end
     end
 
     it "contains translated title" do
@@ -223,6 +288,45 @@ describe Package do
 
       it "raises an exception" do
         expect { push }.to raise_error(ActiveRecord::RecordNotFound, "Attachment not found: missing.jpg")
+      end
+    end
+
+    context "page missing tip" do
+      let(:translated_page_one) do
+        '<?xml version="1.0" encoding="UTF-8"?>
+    <page xmlns="https://mobile-content-api.cru.org/xmlns/tract"
+          xmlns:content="https://mobile-content-api.cru.org/xmlns/content"
+          xmlns:training="https://mobile-content-api.cru.org/xmlns/training"
+          primary-color="rgba(59,164,219,1)" primary-text-color="rgba(255,255,255,1)"
+          background-image="wall.jpg">
+      <hero>
+        <content:paragraph>
+          <training:tip id="tip1" />
+          <training:tip id="missing" />
+        </content:paragraph>
+      </hero>
+    </page>
+    '
+      end
+
+      context("with include_tips true") do
+        it "raises an exception" do
+          expect { push }.to raise_error(ActiveRecord::RecordNotFound, "Tip not found: missing")
+        end
+      end
+
+      context("with include_tips false") do
+        it "raises an exception" do
+          LanguageAttribute.first.update(value: "false")
+          expect { push }.to_not raise_error
+        end
+      end
+
+      context("with include_tips nil") do
+        it "raises an exception" do
+          LanguageAttribute.delete_all
+          expect { push }.to_not raise_error
+        end
       end
     end
 
