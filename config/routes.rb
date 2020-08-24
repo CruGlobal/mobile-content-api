@@ -13,7 +13,7 @@ Rails.application.routes.draw do
   resources :drafts
   resources :translations, only: [:index, :show]
   resources :pages, only: [:create, :update, :show]
-  resources :tips, only: [:create, :update, :show]
+  resources :tips, only: [:create, :update]
   resources :custom_pages, only: [:create, :update, :destroy, :show]
   resources :custom_tips, only: [:create, :destroy]
 
