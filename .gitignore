@@ -45,3 +45,4 @@ vendor/cache
 public/system
 
 vendor/bundle
+/node_modules
