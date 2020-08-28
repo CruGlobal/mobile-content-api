@@ -2,7 +2,7 @@
 
 class DraftCreationValidator < ActiveModel::Validator
   def validate(model)
-    existing = Translation.find_by(resource: model.resource, language: model.language, is_published: false)
+    existing = Translation.default_scoped.find_by(resource: model.resource, language: model.language, is_published: false)
     return if existing.nil?
 
     model.errors.add(:id,

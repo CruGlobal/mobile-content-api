@@ -43,7 +43,12 @@ class Attachment < ActiveRecord::Base
   end
 
   def save_sha256
-    self.sha256 = generate_sha256
+    sha256 = generate_sha256
+  rescue Errno::ENOENT
+    file = attachment_changes['file'].attachable
+    sha256 = XmlUtil.filename_sha(File.open(file).read)
+  ensure
+    self.sha256 = sha256
   end
 
   def update_filename
