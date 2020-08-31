@@ -33,12 +33,9 @@ class Attachment < ActiveRecord::Base
   def generate_sha256
     XmlUtil.filename_sha(URI.parse(url).open.read)
   rescue NoMethodError
-    begin
-      XmlUtil.filename_sha(File.open(url).read)
-    rescue Errno::ENOENT
-      file = attachment_changes["file"].attachable
-      XmlUtil.filename_sha(File.open(file).read)
-    end
+    file = attachment_changes["file"].attachable
+    file ||= url
+    XmlUtil.filename_sha(File.open(file).read)
   end
 
   private
