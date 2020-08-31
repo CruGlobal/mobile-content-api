@@ -222,17 +222,6 @@ ActiveRecord::Schema.define(version: 2020_08_27_184631) do
     t.index ["resource_id"], name: "index_translations_on_resource_id"
   end
 
-  create_table "translations_bkup", id: false, force: :cascade do |t|
-    t.integer "id"
-    t.boolean "is_published"
-    t.integer "version"
-    t.integer "resource_id"
-    t.integer "language_id"
-    t.string "translated_name"
-    t.string "translated_description"
-    t.string "manifest_name"
-  end
-
   create_table "views", id: :serial, force: :cascade do |t|
     t.integer "quantity", null: false
     t.integer "resource_id", null: false
