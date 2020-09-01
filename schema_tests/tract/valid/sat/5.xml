@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<page xmlns="https://mobile-content-api.cru.org/xmlns/tract"
+    xmlns:analytics="https://mobile-content-api.cru.org/xmlns/analytics"
+    xmlns:content="https://mobile-content-api.cru.org/xmlns/content"
+    background-image="satisfied-tract-bkg-image-4_1x.jpg" background-color="rgba(94,79,56,1)"
+    card-text-color="rgba(50,50,50,1)" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="https://mobile-content-api.cru.org/xmlns/analytics ">
+    <hero>
+        <heading>
+            <content:text i18n-id="2171d7ee-d346-417e-ac4b-ca8ad3c9e906"></content:text>
+        </heading>
+        <content:paragraph>
+            <content:text i18n-id="a73de09d-73f6-4866-a0b7-b3ff61d847a1"></content:text>
+        </content:paragraph>
+        <content:paragraph>
+            <content:text i18n-id="7e6b0467-6ab2-4231-a233-be8299667e17"></content:text>
+        </content:paragraph>
+        <content:paragraph>
+            <content:text i18n-id="b2c4df2b-77b2-4f57-84ef-1ad7bef3fbc8"></content:text>
+        </content:paragraph>
+    </hero>
+
+    <cards>
+        <card>
+            <label>
+                <content:text i18n-id="e56048dc-f8f8-458b-bde9-85ca03e3ee42"></content:text>
+            </label>
+            <content:paragraph>
+                <content:text i18n-id="8f0728a6-e931-4d73-991e-408c03aeea7c"></content:text>
+            </content:paragraph>
+            <content:paragraph>
+                <content:text i18n-id="61343899-7cb0-4202-8a5e-fb5b40696141"></content:text>
+            </content:paragraph>
+        </card>
+
+        <card>
+            <label>
+                <content:text i18n-id="7db0e7cc-7948-4b0b-8116-f480c8015a6b"></content:text>
+            </label>
+            <content:paragraph>
+                <content:text i18n-id="c8aa10b8-b386-44eb-ad1b-50c2c35a1d4f"></content:text>
+            </content:paragraph>
+            <content:paragraph>
+                <content:text i18n-id="54969da5-4168-43df-be20-9818641d4c6a"></content:text>
+            </content:paragraph>
+        </card>
+
+        <card>
+            <label>
+                <content:text i18n-id="9f90ed09-ddb4-4dd3-a225-3e7dd13d94fd"></content:text>
+            </label>
+            <analytics:events>
+                <analytics:event action="KGP-US Gospel Presented" delay="5" system="adobe firebase">
+                    <analytics:attribute key="" value="" />
+                </analytics:event>
+            </analytics:events>
+            <content:paragraph>
+                <content:text i18n-id="f3803aae-3a90-4636-b56c-0f9e97ce670e"></content:text>
+            </content:paragraph>
+        </card>
+
+        <card>
+            <label>
+                <content:text i18n-id="dce3ce01-daf0-4f58-9db9-e8efdd44892d"></content:text>
+            </label>
+            <content:paragraph>
+                <content:text i18n-id="750195c7-587d-4e6f-af81-f383b5fc0016"></content:text>
+            </content:paragraph>
+            <content:paragraph>
+                <content:text i18n-id="f05d29b9-0831-47e7-a550-ea6849d1902c"></content:text>
+            </content:paragraph>
+            <content:paragraph>
+                <content:text i18n-id="ae703380-9fa2-47fc-bd72-d4ecd01b8f0c"></content:text>
+            </content:paragraph>
+            <content:paragraph>
+                <content:text i18n-id="76732ef2-2bf1-447e-8c15-bf34e41dcf06"></content:text>
+            </content:paragraph>
+            <content:paragraph>
+                <content:text i18n-id="27d8462f-d1bf-4766-b216-46a311e98e62"></content:text>
+            </content:paragraph>
+        </card>
+    </cards>
+
+    <call-to-action>
+        <content:text i18n-id="762387bf-0b85-4962-b5b2-8a493a25f60b"></content:text>
+    </call-to-action>
+</page>

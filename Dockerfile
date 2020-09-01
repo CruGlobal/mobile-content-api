@@ -4,7 +4,7 @@ MAINTAINER cru.org <wmd@cru.org>
 ARG RAILS_ENV=production
 
 ARG DD_API_KEY
-RUN DD_INSTALL_ONLY=true DD_API_KEY=$DD_API_KEY bash -c "$(curl -L https://raw.githubusercontent.com/DataDog/datadog-agent/master/cmd/agent/install_script.sh)"
+RUN DD_AGENT_MAJOR_VERSION=7 DD_INSTALL_ONLY=true DD_API_KEY=$DD_API_KEY bash -c "$(curl -L https://raw.githubusercontent.com/DataDog/datadog-agent/master/cmd/agent/install_script.sh)"
 
 # Config for logging to datadog
 COPY docker/datadog-agent /etc/datadog-agent
@@ -24,7 +24,8 @@ ARG TEST_DB_PASSWORD=
 ARG TEST_DB_HOST=localhost
 ARG TEST_DB_PORT=5432
 
-RUN bundle exec rake db:create db:setup docs:generate RAILS_ENV=test
+RUN bundle exec rake db:create db:schema:load docs:generate RAILS_ENV=test
+RUN bundle exec rake assets:clobber assets:precompile RAILS_ENV=test
 
 ## Run this last to make sure permissions are all correct
 RUN mkdir -p /home/app/webapp/tmp \
@@ -37,5 +38,7 @@ RUN mkdir -p /home/app/webapp/tmp \
                     /home/app/webapp/log \
                     /home/app/webapp/public/uploads \
                     /home/app/webapp/pages
+
+COPY cable.conf /usr/local/openresty/nginx/conf/location/cable.conf
 
 CMD "/docker-entrypoint.sh"

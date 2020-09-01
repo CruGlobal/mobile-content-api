@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<page xmlns="https://mobile-content-api.cru.org/xmlns/tract"
+    xmlns:analytics="https://mobile-content-api.cru.org/xmlns/analytics"
+    xmlns:content="https://mobile-content-api.cru.org/xmlns/content">
+    <hero>
+        <content:paragraph>
+            <content:button type="url" url="https://www.google.com/">
+                <content:text>text</content:text>
+                <analytics:events>
+                    <analytics:event action="test" system="adobe" />
+                </analytics:events>
+            </content:button>
+        </content:paragraph>
+    </hero>
+</page>

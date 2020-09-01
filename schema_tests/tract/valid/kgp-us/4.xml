@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<page xmlns="https://mobile-content-api.cru.org/xmlns/tract"
+    xmlns:content="https://mobile-content-api.cru.org/xmlns/content" 
+    background-image="kgp-us-tract-bkg-image-4_1x.jpg"
+    card-text-color="rgba(50,50,50,1)">
+
+	<header>
+		<number>
+			<content:text>3</content:text>
+		</number>
+		<title>
+            <content:text i18n-id="708acabc-c443-4eea-8354-aef6cbfe9c01">Jesus Christ is God’s only provision for our sin. Through Him alone we can know God personally and experience God’s love and plan. </content:text>
+        </title>
+	</header>
+	
+    <cards>
+        <card>
+            <label>
+                <content:text i18n-id="61d0955d-68b9-4f3d-9d51-dc6d6164b65e" text-color="rgba(177,95,90,1)">He died in our place</content:text>
+            </label>
+            <content:paragraph>
+                <content:text i18n-id="ff7100d3-b913-4034-957e-fe5a2b95eca0">“But God demonstrates His own love toward us, in that while we were yet sinners, Christ died for us.”</content:text>
+                <content:text i18n-id="b99bbe62-eed7-48b7-9ca7-da027dfc059a">Romans 5:8</content:text>
+            </content:paragraph>
+        </card>
+
+        <card>
+            <label>
+                <content:text i18n-id="9cb05469-f1ec-4c22-9a6a-5724f28ed474" text-color="rgba(177,95,90,1)">He rose from the dead</content:text>
+            </label>
+            <content:paragraph>
+                <content:text i18n-id="e6cb46d9-e6b1-40b8-b081-525feb9fdcdd">“…Christ died for our sins…He was buried, He was raised on the third day according to the Scriptures…He appeared to Peter, then to the twelve. After that, He appeared to more than five hundred…” </content:text>
+				<content:text i18n-id="002eee16-9631-4a33-8718-6b19c882e7ec">1 Corinthians 15:3-6</content:text>
+            </content:paragraph>
+        </card>
+        
+		<card>
+            <label>
+                <content:text i18n-id="dda84f6e-a201-4eba-96d1-64db7c0f04e8" text-color="rgba(177,95,90,1)">He is the only way to God</content:text>
+            </label>
+            <content:paragraph>
+                <content:text i18n-id="b0b72fec-5b24-48ab-bc8f-03c379a7c98b">“Jesus answered, ‘I am the way, and the truth, and the life; no one comes to the Father, but through Me.’”</content:text>
+				<content:text i18n-id="1c6e5568-d2db-4256-85ec-dabaa2bf0753">John 14:6</content:text>
+            </content:paragraph>
+            <content:paragraph>
+                <content:image resource="kgp-us-graphics-02.png" />
+                <content:text i18n-id="757f2d81-414f-4742-a336-88cb8899811c">This diagram illustrates that God has bridged the gulf that separates us from Him by sending His Son, Jesus Christ, to die on the cross in our place to pay the penalty for our sins.</content:text>
+			</content:paragraph>
+        </card>
+    </cards>
+
+    <call-to-action>
+        <content:text i18n-id="e46cb5f3-3a0b-4377-b51e-3b06ac83ffa8">It is not enough just to know these truths…</content:text>
+    </call-to-action>
+</page>

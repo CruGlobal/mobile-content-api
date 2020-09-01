@@ -7,11 +7,15 @@ Rails.application.routes.draw do
   resources :languages
   resources :resource_types, only: [:index, :show]
 
-  resources :resources
+  resources :resources do
+    resources :languages, controller: :resource_languages, only: [:update, :show]
+  end
   resources :drafts
   resources :translations, only: [:index, :show]
   resources :pages, only: [:create, :update, :show]
+  resources :tips, only: [:create, :update]
   resources :custom_pages, only: [:create, :update, :destroy, :show]
+  resources :custom_tips, only: [:create, :destroy]
 
   resources :attributes, only: [:create, :update, :destroy, :show]
   resources :translated_attributes, only: [:create, :update, :destroy, :show]
@@ -30,8 +34,10 @@ Rails.application.routes.draw do
   get "monitors/commit"
 
   get "attachments/:id/download", to: "attachments#download"
+  get "/analytics/global", to: "global_activity_analytics#show"
 
   put "resources/:id/onesky", to: "resources#push_to_onesky"
 
+  mount ActionCable.server => "/cable"
   mount Raddocs::App => "/docs"
 end

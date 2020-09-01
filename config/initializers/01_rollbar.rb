@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+# This file is named 01_rollbar.rb so it can be used in other initializers after this one
 Rollbar.configure do |config|
   # Without configuration, Rollbar is enabled in all environments.
   # To disable in specific environments, set config.enabled=false.

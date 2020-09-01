@@ -3,7 +3,7 @@
 require "rails_helper"
 
 describe Translation do
-  # rubocop:disable LineLength
+  # rubocop:disable Layout/LineLength
   let(:page_name) { "13_FinalPage.xml" }
   let(:element_one_id) { "f9894df9-df1d-4831-9782-345028c6c9a2" }
   let(:element_two_id) { "9deda19f-c3ee-42ed-a1eb-92423e543352" }
@@ -16,7 +16,7 @@ describe Translation do
   let(:phrase_two_element) { "<content:text i18n-id=\"#{element_two_id}\">#{phrase_two}</content:text>" }
   let(:phrase_three_element) { "<content:button type=\"url\" url=\"#{phrase_three}\">" }
 
-  # rubocop:enable LineLength
+  # rubocop:enable Layout/LineLength
 
   it "cannot duplicate Resource, Translation, and version" do
     t = described_class.find_or_create_by(resource_id: 1, language_id: 1, version: 1, is_published: false)

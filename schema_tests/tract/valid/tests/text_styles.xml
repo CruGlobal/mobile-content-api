@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<page xmlns:content="https://mobile-content-api.cru.org/xmlns/content"
+    xmlns="https://mobile-content-api.cru.org/xmlns/tract">
+    <hero>
+        <content:paragraph>
+            <content:text>Plain Text</content:text>
+            <content:text text-style="">Plain Text</content:text>
+            <content:text text-style="bold">Bold Text</content:text>
+            <content:text text-style="bold italic">Bold Italic Text</content:text>
+            <content:text text-style="bold italic underline">Underline Bold Italic Text</content:text>
+        </content:paragraph>
+    </hero>
+</page>

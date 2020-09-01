@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<page xmlns="https://mobile-content-api.cru.org/xmlns/tract"
+    xmlns:content="https://mobile-content-api.cru.org/xmlns/content" 
+    background-image="kgp-us-tract-bkg-image-3_1x.jpg"
+    card-text-color="rgba(50,50,50,1)">
+
+	<header>
+		<number>
+			<content:text>2</content:text>
+		</number>
+		<title>
+            <content:text i18n-id="d493cc97-8c2f-4fba-a4e8-1167c600d3a6">People are sinful and separated from God, so we cannot know Him personally or experience His love and plan.</content:text>
+        </title>
+	</header>
+	
+    <cards>
+        <card>
+            <label>
+                <content:text i18n-id="3b40406d-07ac-4f6f-a215-514b77898bbe" text-color="rgba(177,95,90,1)">People are sinful</content:text>
+            </label>
+            <content:paragraph>
+                <content:text i18n-id="70880cae-345e-4495-bac4-7dc76dc97f8a">“…for all have sinned and fall short of the glory of God.”</content:text>
+                <content:text i18n-id="f637ff3a-3eb6-432e-a5d7-97d1e095fc85">Romans 3:23</content:text>
+            </content:paragraph>
+            <content:paragraph>
+                <content:text i18n-id="eca97e91-2713-43a0-b075-bf7cca3e0551">People were created to have fellowship with God; but, because of our stubborn self-will, we chose to go our own independent way and fellowship with God was broken. This self-will, characterized by an attitude of active rebellion or passive indifference, is evidence of what the Bible calls sin.</content:text>
+            </content:paragraph>
+        </card>
+
+        <card>
+            <label>
+                <content:text i18n-id="6bf7c361-2c76-4284-a496-60b8aa4d622d" text-color="rgba(177,95,90,1)">People are separated</content:text>
+            </label>
+            <content:paragraph>
+                <content:text i18n-id="7ed1499d-2f8c-45ef-b5e4-f63b592aa1f4">“For the wages of sin is death” [spiritual separation from God].</content:text>
+				<content:text i18n-id="e946f4c9-6fb2-4c03-9938-0c90435d6689">Romans 6:23</content:text>
+            </content:paragraph>
+            <content:paragraph>
+                <content:image resource="kgp-us-graphics-01.png" />
+                <content:text i18n-id="aa3c1337-b688-405e-8215-118943db6a37">This diagram illustrates that God is holy and people are sinful. A great gulf separates the two. The arrows illustrate that people are continually trying to reach God and establish a personal relationship with Him through their own efforts. Such as a good life, philosophy, or religion but we inevitably fail. </content:text>
+            </content:paragraph>
+        </card>
+    </cards>
+
+    <call-to-action>
+        <content:text i18n-id="d0df7f85-7cb7-47ea-acb6-ba3cc09c65ad">The third principle explains the only way to bridge this gulf…</content:text>
+    </call-to-action>
+</page>

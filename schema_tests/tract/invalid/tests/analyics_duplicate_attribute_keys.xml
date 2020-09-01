@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<page xmlns:analytics="https://mobile-content-api.cru.org/xmlns/analytics"
+    xmlns="https://mobile-content-api.cru.org/xmlns/tract">
+    <hero>
+        <analytics:events>
+            <analytics:event system="adobe">
+                <analytics:attribute key="a" value="1" />
+                <analytics:attribute key="a" value="2" />
+            </analytics:event>
+        </analytics:events>
+    </hero>
+</page>

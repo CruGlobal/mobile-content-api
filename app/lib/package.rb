@@ -6,6 +6,9 @@ class Package
   XPATH_RESOURCES = %w[//@background-image
                        //manifest:category/@banner
                        //content:image[not(@restrictTo='web')]/@resource].freeze
+  XPATH_TIPS = %w[//training:tip/@id
+                  //tract:header/@training:tip
+                  //tract:call-to-action/@training:tip].freeze
 
   def self.s3_object(translation)
     s3 = Aws::S3::Resource.new(region: ENV["AWS_REGION"])
@@ -16,6 +19,7 @@ class Package
   def initialize(translation)
     @translation = translation
     @resources = []
+    @tips = []
     @directory = "pages/#{SecureRandom.uuid}"
     FileUtils.mkdir_p(@directory)
   end
@@ -40,6 +44,7 @@ class Package
 
     Zip::File.open("#{@directory}/#{@translation.zip_name}", Zip::File::CREATE) do |zip_file|
       add_pages(zip_file, manifest)
+      add_tips(zip_file, manifest) if include_tips?
       add_attachments(zip_file, manifest)
 
       manifest_filename = write_manifest_to_file(manifest)
@@ -52,6 +57,15 @@ class Package
     nodes.each { |node| @resources << node.content }
   end
 
+  def determine_tips(document)
+    nodes = XmlUtil.xpath_namespace(document, XPATH_TIPS.join("|"))
+    nodes.each do |node|
+      tip = @translation.resource.tips.find_by(name: node.content)
+      raise ActiveRecord::RecordNotFound, "Tip not found: #{node.content}" unless tip
+      @tips << tip
+    end
+  end
+
   def add_pages(zip_file, manifest)
     @translation.resource.pages.order(position: :asc).each do |page|
       Rails.logger.info("Adding page with id: #{page.id} to package for translation with id: #{@translation.id}")
@@ -62,13 +76,35 @@ class Package
     end
   end
 
+  def add_tips(zip_file, manifest)
+    @tips.uniq.each do |tip|
+      Rails.logger.info("Adding tip with id: #{tip.id} to package for translation with id: #{@translation.id}")
+
+      sha_filename = write_tip_to_file(tip)
+      zip_file.add(sha_filename, "#{@directory}/#{sha_filename}")
+      manifest.add_tip(tip.name, sha_filename)
+    end
+  end
+
   def write_page_to_file(page)
     translated_page = @translation.translated_page(page.id, true)
     document = Nokogiri::XML(translated_page)
     determine_resources(document)
+    determine_tips(document) if include_tips?
     sha_filename = XmlUtil.xml_filename_sha(translated_page)
 
     File.write("#{@directory}/#{sha_filename}", translated_page)
+
+    sha_filename
+  end
+
+  def write_tip_to_file(tip)
+    translated_tip = @translation.translated_tip(tip.id, true)
+    document = Nokogiri::XML(translated_tip)
+    determine_resources(document)
+    sha_filename = XmlUtil.xml_filename_sha(translated_tip)
+
+    File.write("#{@directory}/#{sha_filename}", translated_tip)
 
     sha_filename
   end
@@ -114,5 +150,10 @@ class Package
 
     obj = self.class.s3_object(@translation)
     obj.upload_file("#{@directory}/#{@translation.zip_name}", acl: "public-read")
+  end
+
+  def include_tips?
+    language_attributes = @translation.language.language_attributes.where(resource: @translation.resource)
+    language_attributes.find_by(key: "include_tips")&.value == "true"
   end
 end

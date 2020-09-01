@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<manifest xmlns="https://mobile-content-api.cru.org/xmlns/manifest">
+    <tips>
+        <tip id="tip1" src="asdf.xml" />
+        <tip id="tip1" src="fdsa.xml" />
+    </tips>
+</manifest>

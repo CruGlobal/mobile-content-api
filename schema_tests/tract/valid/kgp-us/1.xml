@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<page xmlns="https://mobile-content-api.cru.org/xmlns/tract"
+    xmlns:content="https://mobile-content-api.cru.org/xmlns/content"
+    background-image="kgp-us-tract-bkg-image-1_1x.jpg">
+    <hero>
+        <heading>
+            <content:text i18n-id="a101126d-8dca-4af1-b352-d5357d111615" text-color="rgba(255,255,255,1)" text-scale="1.8">Would you like to Know God Personally?</content:text>
+        </heading>
+
+        <content:paragraph>
+            <content:text i18n-id="0cb1f173-c6bd-4ff4-aaf9-51cc762aac83">The following 4 principles will help you discover how to know God personally and experience the abundant life he promised.</content:text>
+        </content:paragraph>
+    </hero>
+</page>

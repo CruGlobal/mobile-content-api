@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<page xmlns="https://mobile-content-api.cru.org/xmlns/tract"
+    xmlns:content="https://mobile-content-api.cru.org/xmlns/content"
+    background-image="kgp-tract-bkg-image-0_1x.jpg"
+    background-image-align="bottom">
+    <hero>
+        <heading>
+            <content:text i18n-id="45e65db9-957f-4ca5-b4ca-b60c4ce424c1">Knowing God Personally</content:text>
+        </heading>
+
+        <content:paragraph>
+            <content:text i18n-id="778006c5-22a7-4abb-b81e-f04499f942e6">These four points explain how to enter into a personal relationship with God and experience the life for which you were created.</content:text>
+        </content:paragraph>
+    </hero>
+</page>

@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<page xmlns="https://mobile-content-api.cru.org/xmlns/tract"
+    xmlns:content="https://mobile-content-api.cru.org/xmlns/content" 
+    background-image="kgp-us-tract-bkg-image-8_1x.jpg"
+    card-text-color="rgba(50,50,50,1)">
+
+	<header>
+		<title>
+            <content:text i18n-id="3d7f3a12-995d-46b7-a235-30a4e9ab9054">Now that you have entered into a personal relationship with Christ
+The moment that you received Christ by faith, as an act of the will, many things happened, including the following:</content:text>
+        </title>
+	</header>
+			
+    <cards>
+        <card>
+            <label>
+                <content:text i18n-id="97d0521b-cdfa-4fed-a282-8243aadff789" text-color="rgba(177,95,90,1)">Christ came into your life</content:text>
+            </label>
+            <content:paragraph>
+                <content:text i18n-id="ce041037-7813-4e3c-8265-1ec433cc6dc3">[Christ speaking] “Behold, I stand at the door and knock; if anyone hears My voice and opens the door, I will come in to him.”</content:text>
+                <content:text i18n-id="c1a4acba-5608-4e1b-9be7-dea96b90f03e">Revelation 3:20</content:text>
+            </content:paragraph>
+            <content:paragraph>
+                <content:text i18n-id="8888c018-12e7-40ee-b05d-95ab6a1e6019">“To them God has chosen to make known among the Gentiles the glorious riches of this mystery, which is Christ in you, the hope of glory.”</content:text>
+                <content:text i18n-id="de94f9be-b398-47fd-b866-0df4a5fac183">Colossians 1:27</content:text>
+            </content:paragraph>
+        </card>
+        
+        <card>
+            <label>
+                <content:text i18n-id="da79a14e-ed43-4edf-b1bb-29c40e2bef97" text-color="rgba(177,95,90,1)">Your sins were forgiven</content:text>
+            </label>
+            <content:paragraph>
+            	<content:text i18n-id="26c8380c-7733-4683-a7e5-0f8f7e952396">“For he has rescued us from the dominion of darkness and brought us into the kingdom of the Son he loves, 14 in whom we have redemption, the forgiveness of sins.”</content:text>
+            	<content:text i18n-id="6beb7d92-fb8b-4ed8-bbec-5a815345492c">Colossians 1:13-14</content:text>
+            </content:paragraph>
+        </card>
+        
+		<card>
+            <label>
+                <content:text i18n-id="aa55729f-bca3-4603-9e98-0322c75df7b6" text-color="rgba(177,95,90,1)">You became a child of God</content:text>
+            </label>
+            <content:paragraph>
+            	<content:text i18n-id="22d144eb-407e-4202-aeed-a2f9770851e1">“Yet to all who did receive him, to those who believed in his name, he gave the right to become children of God.”</content:text>
+            	<content:text i18n-id="550941b6-593f-4960-8932-911905d6d904">John 1:12</content:text>
+            </content:paragraph>
+        </card>
+        
+        <card>
+            <label>
+                <content:text i18n-id="04414217-3dbe-4088-9d03-c5e82200f1e3" text-color="rgba(177,95,90,1)">You received eternal life</content:text>
+            </label>
+            <content:paragraph>
+            	<content:text i18n-id="1aaef763-7560-42ff-af6f-0756fca432e7">“Very truly I tell you, whoever hears my word and believes him who sent me has eternal life and will not be judged but has crossed over from death to life.”</content:text>
+            	<content:text i18n-id="ece5f0d6-b70b-44e2-9da8-b430d36994a9">John 5:24</content:text>
+            </content:paragraph>
+        </card>
+        
+		<card>
+            <label>
+                <content:text i18n-id="a48c9ccf-461f-436a-88db-bfd42372f0cd" text-color="rgba(177,95,90,1)">You began the great adventure…</content:text>
+            </label>
+            <content:paragraph>
+            	<content:text i18n-id="0b6ed4e0-e9d5-4a44-a112-d4c4392c3041">for which God created you.</content:text>
+            </content:paragraph>
+            <content:paragraph>
+            	<content:text i18n-id="41bb8732-ef18-43bd-a131-fb38f5f376cf">“I have come that they may have life, and have it to the full.” John 10:10</content:text>
+            	<content:text i18n-id="a0dc08d6-ef72-4ff0-a763-8eeba82dfd09"> 2 Corinthians 5:17; 1 Thessalonians 5:18</content:text>
+            </content:paragraph>
+            <content:paragraph>
+            	<content:text i18n-id="d83e1db5-e5e0-477b-a2cd-42383e13fb01">Can you think of anything more wonderful that could happen to you than entering into a personal relationship with Jesus Christ? Would you like to thank God in prayer right now for what He has done for you? By thanking God, you demonstrate your faith.</content:text>
+            </content:paragraph>
+        </card>
+    </cards>
+    
+    <call-to-action>
+    	<content:text i18n-id="aecad30a-0f56-4408-b293-6d891fc92048">To enjoy your new relationship with God…</content:text>
+    </call-to-action>
+</page>

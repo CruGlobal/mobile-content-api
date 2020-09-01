@@ -1,0 +1,12 @@
+<tip xmlns="https://mobile-content-api.cru.org/xmlns/training"
+    xmlns:content="https://mobile-content-api.cru.org/xmlns/content">
+    <pages>
+        <page>
+            <content:paragraph>
+                <content:text />
+            </content:paragraph>
+            <content:text />
+        </page>
+        <page></page>
+    </pages>
+</tip>

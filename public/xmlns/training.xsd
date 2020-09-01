@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:content="https://mobile-content-api.cru.org/xmlns/content"
+    xmlns:training="https://mobile-content-api.cru.org/xmlns/training" xmlns:xs="http://www.w3.org/2001/XMLSchema"
+    elementFormDefault="qualified" targetNamespace="https://mobile-content-api.cru.org/xmlns/training">
+
+    <xs:import namespace="https://mobile-content-api.cru.org/xmlns/content" schemaLocation="content.xsd" />
+
+    <xs:simpleType name="tipType">
+        <xs:annotation>
+            <xs:documentation>The possible tip types</xs:documentation>
+        </xs:annotation>
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="ask" />
+            <xs:enumeration value="consider" />
+            <xs:enumeration value="tip" />
+            <xs:enumeration value="prepare" />
+            <xs:enumeration value="quote" />
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:element name="tip">
+        <xs:annotation>
+            <xs:documentation>This is the root node that defines a training tip</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:all>
+                <xs:element name="pages">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element name="page" minOccurs="0" maxOccurs="unbounded">
+                                <xs:annotation>
+                                    <xs:documentation>This contains a single page of tip content</xs:documentation>
+                                </xs:annotation>
+                                <xs:complexType>
+                                    <xs:choice minOccurs="0" maxOccurs="unbounded">
+                                        <xs:group ref="content:elements" />
+                                    </xs:choice>
+                                </xs:complexType>
+                            </xs:element>
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+            </xs:all>
+            <xs:attribute name="type" type="training:tipType" default="tip">
+                <xs:annotation>
+                    <xs:documentation>Defines the type of this tip. This defaults to tip.</xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:attribute name="tip" type="xs:string"/>
+
+    <xs:group name="contentElements">
+        <xs:choice>
+            <xs:element name="tip">
+                <xs:complexType>
+                    <xs:attribute name="id" type="xs:string" use="required" />
+                </xs:complexType>
+            </xs:element>
+        </xs:choice>
+    </xs:group>
+    <xs:attributeGroup name="tractHeader">
+        <xs:annotation>
+            <xs:documentation>This attribute group is the set of attributes that can appear on the header
+                element in the tract page xml.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:attribute ref="training:tip">
+            <xs:annotation>
+                <xs:documentation>This defines a tip associated with this header element</xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+    </xs:attributeGroup>
+    <xs:attributeGroup name="tractCallToAction">
+        <xs:annotation>
+            <xs:documentation>This attribute group is the set of attributes that can appear on the call-to-action
+                element in the tract page xml.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:attribute ref="training:tip">
+            <xs:annotation>
+                <xs:documentation>This defines a tip associated with this call-to-action element</xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+    </xs:attributeGroup>
+</xs:schema>

@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<page xmlns="https://mobile-content-api.cru.org/xmlns/tract"
+    xmlns:content="https://mobile-content-api.cru.org/xmlns/content" 
+    background-image="kgp-us-tract-bkg-image-2_1x.jpg"
+    card-text-color="rgba(50,50,50,1)">
+
+	<header>
+		<number>
+			<content:text>1</content:text>
+		</number>
+		<title>
+            <content:text i18n-id="af9b0880-e4df-4f85-8107-83e8165df25f">God loves you and created you to know Him personally. He offers a wonderful plan for your life.</content:text>
+        </title>
+	</header>
+	
+    <cards>
+        <card>
+            <label>
+                <content:text i18n-id="a964de0e-b6f0-45fc-9c3a-bc1e67513d2e" text-color="rgba(177,95,90,1)">God’s love</content:text>
+            </label>
+            <content:paragraph>
+                <content:text i18n-id="b81f8cb9-8460-48d1-b4d3-a8d06e1f9294">“For God so loved the world, that He gave His only begotten Son, that whoever believes in Him shall not perish, but have eternal life.“ </content:text>
+            </content:paragraph>
+            <content:paragraph>
+                <content:text i18n-id="26c9c3af-c848-4862-b650-cfcf54e0e80f">John 3:16</content:text>
+            </content:paragraph>
+        </card>
+
+        <card>
+            <label>
+                <content:text i18n-id="5b8905b3-6ad2-4b96-855e-65fcb5d74bf3" text-color="rgba(177,95,90,1)">God’s plan</content:text>
+            </label>
+            <content:paragraph>
+                <content:text i18n-id="f1430c66-d61a-4947-b707-b24d5d7f6e1f">“Now this is eternal life: that they may know You, the only true God, and Jesus Christ, whom You have sent.“</content:text>
+            </content:paragraph>
+            <content:paragraph>
+                <content:text i18n-id="c8d09801-9c58-499b-b382-924ea7c03777">John 17:3</content:text>
+            </content:paragraph>
+        </card>
+    </cards>
+
+    <call-to-action>
+        <content:text i18n-id="9324bb4c-d285-4fcd-a624-9866eb11076b">What prevents us from knowing God personally?</content:text>
+    </call-to-action>
+</page>

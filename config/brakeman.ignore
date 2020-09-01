@@ -3,18 +3,18 @@
     {
       "warning_type": "Unscoped Find",
       "warning_code": 82,
-      "fingerprint": "0c67850b47a6a7969f0225042986a950d0ae21bc73b1afd85b50f01cbd4586dc",
+      "fingerprint": "27ee4f6d0ad789327918244724d7f3559ef10e9583c65b1a54f929ecdcbdfc9b",
       "check_name": "UnscopedFind",
-      "message": "Unscoped call to `Attribute#find`",
-      "file": "app/controllers/attributes_controller.rb",
-      "line": 34,
+      "message": "Unscoped call to `Tip#find`",
+      "file": "app/controllers/tips_controller.rb",
+      "line": 13,
       "link": "https://brakemanscanner.org/docs/warning_types/unscoped_find/",
-      "code": "Attribute.find(params[:id])",
+      "code": "Tip.find(params[:id])",
       "render_path": null,
       "location": {
         "type": "method",
-        "class": "AttributesController",
-        "method": "load_attribute"
+        "class": "TipsController",
+        "method": "update"
       },
       "user_input": "params[:id]",
       "confidence": "Weak",
@@ -143,6 +143,26 @@
     {
       "warning_type": "Unscoped Find",
       "warning_code": 82,
+      "fingerprint": "a4c741c04886cdc328b41fb4a05ad337210c19439bea8552e40717ca859fee72",
+      "check_name": "UnscopedFind",
+      "message": "Unscoped call to `CustomTip#find`",
+      "file": "app/controllers/custom_tips_controller.rb",
+      "line": 11,
+      "link": "https://brakemanscanner.org/docs/warning_types/unscoped_find/",
+      "code": "CustomTip.find(params[:id])",
+      "render_path": null,
+      "location": {
+        "type": "method",
+        "class": "CustomTipsController",
+        "method": "destroy"
+      },
+      "user_input": "params[:id]",
+      "confidence": "Weak",
+      "note": ""
+    },
+    {
+      "warning_type": "Unscoped Find",
+      "warning_code": 82,
       "fingerprint": "c14119ea6a88ea665f2ccf0616a9908ba6d7f503dad61ed82feab0d60b720423",
       "check_name": "UnscopedFind",
       "message": "Unscoped call to `CustomManifest#find`",
@@ -167,7 +187,7 @@
       "check_name": "UnscopedFind",
       "message": "Unscoped call to `Translation#find`",
       "file": "app/controllers/drafts_controller.rb",
-      "line": 50,
+      "line": 55,
       "link": "https://brakemanscanner.org/docs/warning_types/unscoped_find/",
       "code": "Translation.find(params[:id])",
       "render_path": null,
@@ -199,8 +219,28 @@
       "user_input": "params[:id]",
       "confidence": "Weak",
       "note": ""
+    },
+    {
+      "warning_type": "Unscoped Find",
+      "warning_code": 82,
+      "fingerprint": "f501c5dcef74c03b8700d274ea48b9474b6b5e563e90aca467b1c9a7d2ce995d",
+      "check_name": "UnscopedFind",
+      "message": "Unscoped call to `Resource#find`",
+      "file": "app/controllers/resource_languages_controller.rb",
+      "line": 16,
+      "link": "https://brakemanscanner.org/docs/warning_types/unscoped_find/",
+      "code": "Resource.find(params[:resource_id])",
+      "render_path": null,
+      "location": {
+        "type": "method",
+        "class": "ResourceLanguagesController",
+        "method": "get_resource"
+      },
+      "user_input": "params[:resource_id]",
+      "confidence": "Weak",
+      "note": ""
     }
   ],
-  "updated": "2019-09-07 01:11:45 +0200",
-  "brakeman_version": "4.6.1"
+  "updated": "2020-07-20 11:22:36 -0400",
+  "brakeman_version": "4.8.2"
 }

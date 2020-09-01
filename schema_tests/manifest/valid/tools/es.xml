@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<manifest xmlns="https://mobile-content-api.cru.org/xmlns/manifest"
+    xmlns:article="https://mobile-content-api.cru.org/xmlns/article"
+    xmlns:content="https://mobile-content-api.cru.org/xmlns/content">
+    <title>
+        <content:text i18n-id="name">Knowing God Personally</content:text>
+    </title>
+
+    <pages>
+        <article:aem-import src="https://stage.cru.org/content/experience-fragments/questions_about_god/english" />
+    </pages>
+</manifest>

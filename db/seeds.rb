@@ -133,4 +133,5 @@ Attachment.create!(resource: kgp, file: Rack::Test::UploadedFile.new("spec/fixtu
 Attachment.create!(resource: kgp, file: Rack::Test::UploadedFile.new("spec/fixtures/web_mobile.png", "image/png"))
 Attachment.create!(resource: kgp, file: Rack::Test::UploadedFile.new("spec/fixtures/both.png", "image/png"), is_zipped: true)
 
-Destination.find_or_create_by!(url: "myapi.org", route_id: "100", access_key_id: "12345", access_key_secret: "hello, world!!")
+Destination.find_or_create_by!(service_type: :growth_spaces, url: "myapi.org", route_id: "100", access_key_id: "12345", access_key_secret: "hello, world!!")
+Destination.find_or_create_by!(service_type: :adobe_campaigns, url: "https://mc.adobe.io/", service_name: "GodTools New Growth Series", access_key_id: "67890", access_key_secret: "this is a secret")

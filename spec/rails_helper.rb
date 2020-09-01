@@ -1,6 +1,10 @@
 # frozen_string_literal: true
 
 require "simplecov"
+require_relative "./support/test_helpers"
+require_relative "./support/adobe_campaign_stub_helpers"
+require "database_cleaner/active_record"
+
 SimpleCov.start
 
 if ENV["CI"] == "true"
@@ -14,7 +18,16 @@ require File.expand_path("../config/environment", File.dirname(__FILE__))
 # Prevent database truncation if the environment is production
 abort("The Rails environment is running in production mode!") if Rails.env.production?
 require "spec_helper"
+
+module RSpec::Rails::FeatureCheck
+  module_function
+
+  def has_action_cable_testing?
+    true
+  end
+end
 require "rspec/rails"
+
 require "webmock/rspec"
 # Add additional requires below this line. Rails is not loaded until this point!
 
@@ -65,4 +78,12 @@ RSpec.configure do |config|
   config.filter_rails_from_backtrace!
   # arbitrary gems may also be filtered via:
   # config.filter_gems_from_backtrace("gem name")
+
+  config.before(:suite) do
+    Rails.application.load_seed # loading seeds
+  end
+
+  config.after(:suite) do
+    DatabaseCleaner.clean_with(:truncation)
+  end
 end

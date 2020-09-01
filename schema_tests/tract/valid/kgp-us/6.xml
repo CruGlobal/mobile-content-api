@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<page xmlns="https://mobile-content-api.cru.org/xmlns/tract"
+    xmlns:content="https://mobile-content-api.cru.org/xmlns/content"
+    background-image="kgp-us-tract-bkg-image-6_1x.jpg"
+    card-text-color="rgba(50,50,50,1)">
+
+    <header>
+        <title>
+            <content:text i18n-id="28fa6f11-d870-4c12-a34f-63d706c90733">You can receive Christ right now by faith through prayer(prayer is talking with God).</content:text>
+        </title>
+    </header>
+
+    <hero>
+        <heading>
+            <content:text i18n-id="0d7fe262-9931-4040-bca8-c56c35ec7778" text-color="rgba(255,255,255,1)">God knows your heart and is not so concerned with your words as He is with the attitude of your heart. </content:text>
+        </heading>
+    </hero>
+
+    <cards>
+        <card>
+            <label>
+                <content:text i18n-id="5bbda49f-4012-461b-8dc2-adeb34a1682c" text-color="rgba(177,95,90,1)">Here is a suggested prayer</content:text>
+            </label>
+            <content:paragraph>
+                <content:text i18n-id="fba8d7ae-4b27-4b57-9663-43416a7edd15">“Lord Jesus, I want to know you personally. Thank you for dying on the cross for my sins. I open the door of my life and receive You as my Savior and Lord. Thank you for forgiving my sins and giving me eternal life. Take control of the throne of my life. Make me the kind of person You want me to be.”</content:text>
+            </content:paragraph>
+            <content:paragraph>
+                <content:text i18n-id="a89eb6c7-73d9-408e-a522-5c722e9d264a">Does this prayer express the desire of your heart?</content:text>
+            </content:paragraph>
+            <content:paragraph>
+                <content:text i18n-id="bae55f58-0679-4101-9c30-298bb200f235">If it does, pray this prayer right now, and Christ will come into your life, as He promised. </content:text>
+            </content:paragraph>
+        </card>
+
+        <card dismiss-listeners="followup-form-no">
+            <label>
+                <content:text i18n-id="e1ba88d2-3eb7-4ded-a53b-663eee9d7094" text-color="rgba(177,95,90,1)">Did you pray this prayer?</content:text>
+            </label>
+            <content:paragraph>
+                <content:button type="event" events="followup-form-no">
+                    <content:text i18n-id="2045ce6b-4370-45b0-9eb8-68d544ad4fa2">Not Ready</content:text>
+                </content:button>
+                <content:button type="event" events="followup-form">
+                    <content:text i18n-id="228ff9c4-1670-4ee2-9bfd-c8bcb42f980e">Yes</content:text>
+                </content:button>
+                <content:link events="followup-form">
+                    <content:text i18n-id="fc6aadcc-fa18-4388-8549-240b666b081d">I already made this decision</content:text>
+                </content:link>
+            </content:paragraph>
+        </card>
+
+        <card hidden="true" listeners="followup-form">
+            <label>
+                <content:text i18n-id="52fe08b3-5c63-41a1-9f5a-db62ac126223">Jesus has come into your life as he promised.</content:text>
+            </label>
+            <content:paragraph>
+                <content:text i18n-id="04db5e56-d2a1-453b-9398-68250dd5081b">Knowing someone better helps a relationship grow. Would you like to sign up for an email series that can help guide you in your new relationship with Jesus Christ?</content:text>
+            </content:paragraph>
+            <content:form>
+                <content:input type="text" name="name">
+                    <content:label>
+                        <content:text i18n-id="99006111-eff5-4768-9ee7-fec51e784aa5">Name</content:text>
+                    </content:label>
+                    <content:placeholder>
+                        <content:text>First Name and Last Name</content:text>
+                    </content:placeholder>
+                </content:input>
+                <content:input type="email" name="email">
+                    <content:label>
+                        <content:text i18n-id="afa24d0e-2229-4ad3-9288-23f0b87b1a46">Email</content:text>
+                    </content:label>
+                    <content:placeholder>
+                        <content:text>Email</content:text>
+                    </content:placeholder>
+                </content:input>
+                <content:button type="event" events="followup:send send-information-modal">
+                    <content:text i18n-id="a1cbbc2e-00d1-4dd0-910b-ff431ff5b15d">Send</content:text>
+                </content:button>
+            </content:form>
+        </card>
+    </cards>
+    <modals>
+        <modal listeners="send-information-modal" dismiss-listeners="send-information-modal-close">
+            <title>
+                <content:text i18n-id="cc2b60d5-0ee8-4a0b-a015-7fba05fa2b36">Thank You </content:text>
+            </title>
+
+            <content:paragraph>
+                <content:text i18n-id="13d5c53b-5bc2-46b5-9227-89ec2d50e1df">Check your email soon for your first study in following Jesus Christ.</content:text>
+            </content:paragraph>
+            <content:paragraph>
+                <content:text i18n-id="61c530ea-8bf0-4711-bd6d-061f9f96b3ed">If you don’t receive it, please check your spam folder.
+                </content:text>
+            </content:paragraph>
+            <content:paragraph>
+                <content:button type="event" events="send-information-modal-close">
+                    <content:text i18n-id="d8c86316-96ff-4d3b-a419-6a4b2e5ba52f">Done</content:text>
+                </content:button>
+            </content:paragraph>
+            <content:paragraph>
+                <content:text i18n-id="605318fa-9b51-4dfd-b965-96b699e2cf31" text-scale="0.75">If this sign up occurs offline, you will need to reopen the app while on Wifi to have the signup automatically submit.</content:text>
+            </content:paragraph>
+        </modal>
+    </modals>
+
+    <call-to-action>
+        <content:text i18n-id="c8283dd9-c979-4e7b-9df9-a3f578485598">Christ will come into your life, as He promised.</content:text>
+    </call-to-action>
+</page>

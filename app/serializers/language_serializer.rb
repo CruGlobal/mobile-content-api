@@ -6,4 +6,5 @@ class LanguageSerializer < ActiveModel::Serializer
 
   has_many :translations
   has_many :custom_pages
+  has_many :custom_tips
 end

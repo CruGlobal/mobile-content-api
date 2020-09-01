@@ -1,17 +1,37 @@
-sudo: false
-language: ruby
+jobs:
+  include:
+  - language: ruby
 
-addons:
-  postgresql: 9.6
+    addons:
+      postgresql: 9.6
+    services:
+      - redis-server
 
-cache:
-  bundler: true
+    cache:
+      bundler: true
 
-before_script:
-  - bundle exec rake db:create db:setup RAILS_ENV=test
+    before_script: 
+    - bundle exec rake db:create db:schema:load RAILS_ENV=test
 
-script:
-  - bundle exec rake spec
-  - bundle exec standardrb
-  - bundle exec bundle audit check --update
-  - bundle exec brakeman -A -q --no-pager --ensure-latest
+    script:
+    - bundle exec rspec
+    - bundle exec standardrb
+    - bundle exec bundle audit check --update
+    - bundle exec brakeman -A -q --no-pager --ensure-latest
+
+  - name: "XML Schema Validation"
+    language: minimal
+
+    addons:
+      apt:
+        packages:
+        - libxml2-utils
+
+    script:
+    - xmllint --schema public/xmlns/manifest.xsd --noout schema_tests/manifest/valid/*/*.xml
+    - xmllint --schema public/xmlns/tract.xsd --noout schema_tests/tract/valid/*/*.xml
+    - xmllint --schema public/xmlns/training.xsd --noout schema_tests/training/valid/*/*.xml
+    # text invalid XML
+    - ./schema_tests/invalid.sh public/xmlns/tract.xsd schema_tests/tract/invalid/*/*.xml
+    - ./schema_tests/invalid.sh public/xmlns/manifest.xsd schema_tests/manifest/invalid/*/*.xml
+    - ./schema_tests/invalid.sh public/xmlns/training.xsd schema_tests/training/invalid/*/*.xml
