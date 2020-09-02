@@ -4,7 +4,7 @@ require "equivalent-xml"
 require "rails_helper"
 require "xml_util"
 
-describe XML::Manifest do
+describe Xml::Manifest do
   let(:title) { "this is the kgp" }
   let(:translation) do
     t = Translation.find(1)
