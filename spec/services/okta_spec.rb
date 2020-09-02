@@ -20,8 +20,20 @@ RSpec.describe Okta do
   before { stub_request(:get, "https://dev1-signon.okta.com/oauth2/v1/keys").to_return(body: jwk_json) }
 
   describe ".find_user_by_id_token" do
-    it "return a User" do
-      expect(described_class.find_user_by_id_token(id_token)).to be_a User
+    it "return a newly User" do
+      expect {
+        expect(described_class.find_user_by_id_token(id_token)).to be_a User
+      }.to change(User, :count).by(1)
+    end
+
+    context "with existing user" do
+      let!(:user) { FactoryBot.create(:user, okta_id: "qwer") }
+
+      it "returns existing user" do
+        expect {
+          expect(described_class.find_user_by_id_token(id_token)).to eq user
+        }.to change(User, :count).by(0)
+      end
     end
 
     context "with expired token" do
