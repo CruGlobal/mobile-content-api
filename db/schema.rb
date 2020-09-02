@@ -10,9 +10,10 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_08_27_184631) do
+ActiveRecord::Schema.define(version: 2020_09_02_170210) do
 
   # These are extensions that must be enabled in order to support this database
+  enable_extension "citext"
   enable_extension "plpgsql"
   enable_extension "uuid-ossp"
 
@@ -220,6 +221,17 @@ ActiveRecord::Schema.define(version: 2020_08_27_184631) do
     t.index ["language_id"], name: "index_translations_on_language_id"
     t.index ["resource_id", "language_id", "version"], name: "index_translations_on_resource_id_and_language_id_and_version", unique: true
     t.index ["resource_id"], name: "index_translations_on_resource_id"
+  end
+
+  create_table "users", force: :cascade do |t|
+    t.string "first_name"
+    t.string "last_name"
+    t.citext "email"
+    t.string "okta_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["email"], name: "index_users_on_email", unique: true
+    t.index ["okta_id"], name: "index_users_on_okta_id", unique: true
   end
 
   create_table "views", id: :serial, force: :cascade do |t|
