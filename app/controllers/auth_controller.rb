@@ -6,7 +6,7 @@ class AuthController < ApplicationController
 
     return render_bad_request("Access code not found.") if code.nil?
     return render_bad_request("Access code expired.") if expired(code)
-    render json: AuthToken.create!(access_code: code), status: :created
+    render json: AuthToken.new, status: :created
   end
 
   private

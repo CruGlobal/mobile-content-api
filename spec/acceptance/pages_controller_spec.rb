@@ -7,7 +7,7 @@ resource "Pages" do
   header "Content-Type", "application/vnd.api+json"
 
   let(:raw_post) { params.to_json }
-  let(:authorization) { AuthToken.create!(access_code: AccessCode.find(1)).token }
+  let(:authorization) { AuthToken.generic_token }
   let(:test_structure) { '<?xml version="1.0" encoding="UTF-8" ?><page> new page </page>' }
 
   post "pages" do

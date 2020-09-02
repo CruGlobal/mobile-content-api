@@ -2,20 +2,31 @@
 
 require "rails_helper"
 
-describe AuthToken do
-  let(:access_code) { AccessCode.find(1) }
+include ActiveSupport::Testing::TimeHelpers
 
-  it "generates a value for the token" do
-    result = described_class.create!(access_code: access_code)
-    expect(result.token).not_to be_nil
+describe AuthToken do
+  describe '.generic_token' do
+    subject { described_class.generic_token }
+
+    it "generates a jwt" do
+      expect(subject).not_to be_nil
+      expect(AuthToken.jwt?(subject)).to be true
+    end
+
+    it "sets expiration to 24 hours" do
+      decoded = AuthToken.decode(subject).first
+
+      expect(decoded['exp']).to be_within(5.seconds).of(24.hours.from_now.to_i)
+    end
   end
 
-  it "sets expiration to 24 hours after creation" do
-    time = DateTime.current
-    allow(DateTime).to receive(:now).and_return(time)
+  describe 'expiration' do
+    subject { described_class.new.expiration }
 
-    result = described_class.create!(access_code: access_code)
-
-    expect(result.expiration).to eq(time + 24.hours)
+    it "equals 24 hours from now" do
+      travel_to Time.now do
+        expect(subject).to eq 24.hours.from_now
+      end
+    end
   end
 end

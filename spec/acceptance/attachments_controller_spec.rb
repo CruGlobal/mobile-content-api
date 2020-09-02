@@ -4,7 +4,7 @@ require "acceptance_helper"
 
 resource "Attachments" do
   let(:test_file) { Rack::Test::UploadedFile.new("#{fixture_path}/wall.jpg", "image/png") }
-  let(:authorization) { AuthToken.create!(access_code: AccessCode.find(1)).token }
+  let(:authorization) { AuthToken.generic_token }
 
   before do
     allow_any_instance_of(Attachment).to receive(:url) do |attachment|

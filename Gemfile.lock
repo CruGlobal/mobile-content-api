@@ -1130,6 +1130,7 @@ DEPENDENCIES
   file_validators
   guard-rspec
   guard-rubocop
+  jwt
   listen (~> 3.2.1)
   lograge
   mini_magick (~> 4.10)

@@ -7,9 +7,7 @@ resource "Drafts" do
   header "Content-Type", "application/vnd.api+json"
 
   let(:raw_post) { params.to_json }
-  let(:authorization) do
-    AuthToken.create!(access_code: AccessCode.find(1)).token
-  end
+  let(:authorization) { AuthToken.generic_token }
 
   get "drafts/" do
     requires_authorization

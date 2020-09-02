@@ -16,10 +16,7 @@ resource "CustomManifests" do
 </manifest>'
   end
 
-  let(:access_code) { AccessCode.find(1) }
-  let(:authorization) do
-    AuthToken.create!(access_code: access_code).token
-  end
+  let(:authorization) { AuthToken.generic_token }
 
   let(:resource) { Resource.first }
   let(:language) { Language.first }
