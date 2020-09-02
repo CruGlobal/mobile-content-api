@@ -93,7 +93,7 @@ group :development, :test do
   gem "rspec_api_documentation"
   gem "rubocop-rspec", require: false
   gem "simplecov", require: false
-  gem "standard", "~> 0.1.9"
+  gem "standard", "~> 0.5.2"
   gem "webmock", require: false
 end
 
