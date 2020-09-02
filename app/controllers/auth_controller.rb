@@ -8,10 +8,6 @@ class AuthController < ApplicationController
 
   private
 
-  def expired(code)
-    code.expiration < DateTime.now.utc
-  end
-
   def render_bad_request(message)
     code = AccessCode.new
     code.errors.add(:code, message)
@@ -20,19 +16,11 @@ class AuthController < ApplicationController
   end
 
   def auth_with_code
-    code = AccessCode.find_by(code: data_attrs[:code])
-
-    if code.nil?
-      render_bad_request("Access code not found.")
-      return nil
-    end
-
-    if expired(code)
-      render_bad_request("Access code expired.")
-      return nil
-    end
-
+    AccessCode.validate(data_attrs[:code])
     AuthToken.new
+  rescue AccessCode::FailedAuthentication => e
+    render_bad_request e.message
+    nil
   end
 
   def auth_with_okta
