@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class Translation < ActiveRecord::Base
-  include XML::Translatable
+  include Xml::Translatable
 
   belongs_to :resource
   belongs_to :language

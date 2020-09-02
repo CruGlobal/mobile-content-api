@@ -39,7 +39,7 @@ class Package
   private
 
   def build_zip
-    manifest = XML::Manifest.new(@translation)
+    manifest = Xml::Manifest.new(@translation)
     determine_resources(manifest.document)
 
     Zip::File.open("#{@directory}/#{@translation.zip_name}", Zip::File::CREATE) do |zip_file|
