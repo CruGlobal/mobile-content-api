@@ -52,7 +52,7 @@ module OneSky
     {api_key: ENV["ONESKY_API_KEY"],
      timestamp: AuthUtil.epoch_time_seconds,
      dev_hash: HashUtil.dev_hash,
-     locale: language_code,}
+     locale: language_code}
   end
 
   private

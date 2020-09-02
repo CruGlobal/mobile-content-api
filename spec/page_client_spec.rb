@@ -47,7 +47,7 @@ describe PageClient do
 
   let(:resource) do
     pages = [Page.new(filename: filename_1, structure: structure_1, position: 1),
-             Page.new(filename: filename_2, structure: structure_2, position: 2),]
+      Page.new(filename: filename_2, structure: structure_2, position: 2)]
 
     resource = Resource.create!(abbreviation: "test",
                                 onesky_project_id: 1,

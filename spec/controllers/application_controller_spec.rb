@@ -10,11 +10,7 @@ describe ApplicationController do
     public :param?, :params
   end
 
-  # rubocop: disable BeforeAfterAll
-  before(:all) do
-    Mime::Type.register "application/vnd.api+json", :json_api
-  end
-  # rubocop: enable BeforeAfterAll
+  before { Mime::Type.register "application/vnd.api+json", :json_api }
 
   it "params are not merged if no body" do
     set_method_and_jsonapi_headers "DELETE"

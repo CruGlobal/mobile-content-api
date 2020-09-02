@@ -30,7 +30,7 @@ describe AdobeCampaign do
         {email: email,
          firstName: "Carlos",
          lastName: "Kozuszko",
-         preferredLanguage: mapped_language_code,}
+         preferredLanguage: mapped_language_code}
       }
       it "creates profile and subscription" do
         stub_create_a_new_subscription_example(profile_hash, destination.service_name)

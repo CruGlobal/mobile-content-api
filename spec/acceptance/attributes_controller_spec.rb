@@ -25,7 +25,7 @@ resource "Attributes" do
     it "sets location header", document: false do
       do_request data: data
 
-      expect(response_headers["Location"]).to match(%r{attributes\/\d+})
+      expect(response_headers["Location"]).to match(%r{attributes/\d+})
     end
   end
 
