@@ -2,9 +2,9 @@
 
 require "rails_helper"
 
-include ActiveSupport::Testing::TimeHelpers
-
 describe AuthToken do
+  include ActiveSupport::Testing::TimeHelpers
+
   describe ".generic_token" do
     subject { described_class.generic_token }
 
