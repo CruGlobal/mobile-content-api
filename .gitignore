@@ -42,3 +42,5 @@ vendor/cache
 public/system
 
 vendor/bundle
+
+spec/examples.txt
