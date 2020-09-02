@@ -8,6 +8,8 @@ resource "Auth" do
   let(:type) { "auth-token" }
   let(:raw_post) { params.to_json }
   let(:valid_code) { 123_456 }
+  let(:valid_id_token) { "okta_id_token_definitely_a_jwt" }
+  let(:user) { FactoryBot.create(:user) }
 
   post "auth/" do
     it "create a token with valid code" do
@@ -28,6 +30,22 @@ resource "Auth" do
       )
 
       do_request data: {type: type, attributes: {code: valid_code}}
+
+      expect(status).to be(400)
+    end
+
+    it "create a token with a valid Okta id_token" do
+      allow(Okta).to receive(:find_user_by_id_token).with(valid_id_token).and_return(user)
+
+      do_request data: {type: type, attributes: {okta_id_token: valid_id_token}}
+
+      expect(status).to be(201)
+    end
+
+    it "returns error with a expired Okta id_token" do
+      allow(Okta).to receive(:find_user_by_id_token).with(valid_id_token).and_raise(Okta::FailedAuthentication, "expired signature")
+
+      do_request data: {type: type, attributes: {okta_id_token: valid_id_token}}
 
       expect(status).to be(400)
     end

@@ -3,6 +3,8 @@
 class AuthToken < ActiveModelSerializers::Model
   attributes :token, :expiration
 
+  attr_writer :user
+
   class << self
     EXPIRATION_CLAIM = "exp"
     ISSUED_AT_CLAIM = "iat"
@@ -51,7 +53,12 @@ class AuthToken < ActiveModelSerializers::Model
   end
 
   def token
-    self.class.generic_token
+    if @user
+      payload = {user_id: @user.id, exp: expiration.to_i}
+      self.class.encode(payload)
+    else
+      self.class.generic_token
+    end
   end
 
   def expiration
