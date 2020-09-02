@@ -20,13 +20,28 @@ describe AuthToken do
     end
   end
 
-  describe 'expiration' do
+  describe '#expiration' do
     subject { described_class.new.expiration }
 
     it "equals 24 hours from now" do
       travel_to Time.now do
         expect(subject).to eq 24.hours.from_now
       end
+    end
+  end
+
+  describe '.jwt?' do
+    it 'returns true from real jwt' do
+      jwt = AuthToken.encode(data: 'test')
+      expect(AuthToken.jwt?(jwt)).to be true
+    end
+
+    it 'returns false from random string' do
+      expect(AuthToken.jwt?(SecureRandom.uuid)).to be false
+    end
+
+    it 'returns false from nil' do
+      expect(AuthToken.jwt?(nil)).to be false
     end
   end
 end

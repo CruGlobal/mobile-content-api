@@ -19,7 +19,7 @@ class AuthToken < ActiveModelSerializers::Model
     end
 
     def decode!(token)
-      ::JWT.decode(token, password, true, algorithm: HMAC)
+      ::JWT.decode(token.to_s, password, true, algorithm: HMAC)
     end
 
     def decode(token)
