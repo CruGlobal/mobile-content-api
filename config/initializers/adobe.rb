@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 # :nocov:
-begin
+Rails.application.config.to_prepare do
   # Get credentials from database
   destination = Destination.adobe_campaigns.first
   if destination&.access_key_id.present? && destination&.access_key_secret.present?

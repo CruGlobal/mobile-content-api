@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module XML
+module Xml
   module Translatable
     # Translates content in XML nodes.
     #
