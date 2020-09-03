@@ -16,7 +16,7 @@ class Okta
     private
 
     def find_user(user_info)
-      User.find_by(okta_id: user_info[:okta_id])
+      User.find_by(sso_guid: user_info[:sso_guid])
     end
 
     def create_user(user_info)
@@ -24,15 +24,17 @@ class Okta
     end
 
     def validate_okta_id_token(id_token)
-      transform_jwt_payload JWT.decode(id_token, nil, true, jwt_options).first
+      payload = transform_jwt_payload JWT.decode(id_token, nil, true, jwt_options).first
+      raise 'ID Token does not include sso guid, make sure login scope includes profile' unless payload[:sso_guid]
+      payload
     end
 
     def transform_jwt_payload(payload)
       {
-        okta_id: payload["sub"],
         email: payload["email"],
         first_name: payload["given_name"],
-        last_name: payload["family_name"]
+        last_name: payload["family_name"],
+        sso_guid: payload["ssoguid"]
       }.with_indifferent_access
     end
 

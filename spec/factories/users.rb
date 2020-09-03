@@ -3,6 +3,6 @@ FactoryBot.define do
     first_name { "Wonder" }
     last_name { "Woman" }
     email { "diana@themyscira.pi" }
-    okta_id { "1" }
+    sso_guid { SecureRandom.uuid }
   end
 end

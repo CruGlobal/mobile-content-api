@@ -4,10 +4,10 @@ require "json/jwt"
 RSpec.describe Okta do
   let(:okta_user_info) do
     {
-      sub: "qwer",
+      ssoguid: "qwer",
       email: "okta@okta.com",
       first_name: "Okta",
-      lsat_name: "Test"
+      last_name: "Test"
     }
   end
   let(:jwt_payload) { okta_user_info.merge(exp: 1.minute.from_now.to_i) }
@@ -27,7 +27,7 @@ RSpec.describe Okta do
     end
 
     context "with existing user" do
-      let!(:user) { FactoryBot.create(:user, okta_id: "qwer") }
+      let!(:user) { FactoryBot.create(:user, sso_guid: "qwer") }
 
       it "returns existing user" do
         expect {

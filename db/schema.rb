@@ -227,11 +227,11 @@ ActiveRecord::Schema.define(version: 2020_09_02_170210) do
     t.string "first_name"
     t.string "last_name"
     t.citext "email"
-    t.string "okta_id"
+    t.string "sso_guid"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["email"], name: "index_users_on_email", unique: true
-    t.index ["okta_id"], name: "index_users_on_okta_id", unique: true
+    t.index ["sso_guid"], name: "index_users_on_sso_guid", unique: true
   end
 
   create_table "views", id: :serial, force: :cascade do |t|

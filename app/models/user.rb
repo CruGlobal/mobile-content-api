@@ -1,5 +1,5 @@
 class User < ApplicationRecord
-  validates :okta_id, uniqueness: true, presence: true
+  validates :sso_guid, uniqueness: true, presence: true
 
   # while the email needs to be validated case-insensitively, we'll
   # let Rails pass the insensitive check down to postgres's citext type

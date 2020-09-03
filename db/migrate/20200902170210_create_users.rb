@@ -6,12 +6,12 @@ class CreateUsers < ActiveRecord::Migration[5.2]
       t.string :first_name
       t.string :last_name
       t.citext :email
-      t.string :okta_id
+      t.string :sso_guid
 
       t.timestamps
     end
 
     add_index :users, :email, unique: true
-    add_index :users, :okta_id, unique: true
+    add_index :users, :sso_guid, unique: true
   end
 end
