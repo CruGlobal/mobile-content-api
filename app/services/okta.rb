@@ -32,7 +32,7 @@ class Okta
         okta_id: payload["sub"],
         email: payload["email"],
         first_name: payload["given_name"],
-        last_name: payload["family_name"],
+        last_name: payload["family_name"]
       }.with_indifferent_access
     end
 
@@ -49,7 +49,7 @@ class Okta
         verify_not_before: true,
         verify_iat: true,
         verify_jti: false,
-        leeway: LEEWAY,
+        leeway: LEEWAY
       }
     end
 

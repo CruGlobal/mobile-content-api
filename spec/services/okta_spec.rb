@@ -7,7 +7,7 @@ RSpec.describe Okta do
       sub: "qwer",
       email: "okta@okta.com",
       first_name: "Okta",
-      lsat_name: "Test",
+      lsat_name: "Test"
     }
   end
   let(:jwt_payload) { okta_user_info.merge(exp: 1.minute.from_now.to_i) }
