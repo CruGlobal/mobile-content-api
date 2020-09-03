@@ -52,9 +52,7 @@ RSpec.configure do |config|
     end
 
     def expired_token
-      auth = AuthToken.create!(access_code: AccessCode.find(1))
-      auth.update!(expiration: DateTime.now.utc - 25.hours)
-      auth.token
+      AuthToken.encode(exp: 1.hour.ago.to_i)
     end
   })
 end

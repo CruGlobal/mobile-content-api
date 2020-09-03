@@ -7,7 +7,7 @@ resource "Languages" do
   header "Content-Type", "application/vnd.api+json"
 
   let(:raw_post) { params.to_json }
-  let(:authorization) { AuthToken.create!(access_code: AccessCode.find(1)).token }
+  let(:authorization) { AuthToken.generic_token }
 
   get "languages" do
     it "get all languages" do

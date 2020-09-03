@@ -1172,6 +1172,7 @@ DEPENDENCIES
   guard-rspec
   guard-rubocop
   image_processing (~> 1.2)
+  jwt
   listen (~> 3.2)
   lograge
   oj (~> 3.10.8)

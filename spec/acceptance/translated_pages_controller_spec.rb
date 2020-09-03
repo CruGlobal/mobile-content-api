@@ -3,7 +3,7 @@
 require "acceptance_helper"
 
 resource "TranslatedPages" do
-  let(:authorization) { AuthToken.create!(access_code: AccessCode.find(1)).token }
+  let(:authorization) { AuthToken.generic_token }
   let(:article) do
     '<?xml version="1.0" encoding="UTF-8" ?>
 <article xmlns="https://mobile-content-api.cru.org/xmlns/article">

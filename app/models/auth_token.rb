@@ -1,18 +1,60 @@
 # frozen_string_literal: true
 
-class AuthToken < ActiveRecord::Base
-  belongs_to :access_code
+class AuthToken < ActiveModelSerializers::Model
+  attributes :token, :expiration
 
-  validates :access_code, presence: true
-  validates :token, presence: true, uniqueness: true
-  validates :expiration, presence: true
+  class << self
+    EXPIRATION_CLAIM = "exp"
+    ISSUED_AT_CLAIM = "iat"
+    HMAC = "HS256"
 
-  before_validation { self.token = SecureRandom.uuid }
-  before_validation :set_expiration, on: :create
+    def generic_token
+      payload = {exp: new.expiration.to_i}
+      encode(payload)
+    end
 
-  private
+    def encode(payload)
+      payload = add_issued_at(payload)
+      ::JWT.encode(payload, password, HMAC, typ: "JWT")
+    end
 
-  def set_expiration
-    self.expiration = DateTime.now.utc + 24.hours
+    def decode!(token)
+      ::JWT.decode(token.to_s, password, true, algorithm: HMAC)
+    end
+
+    def decode(token)
+      decode!(token)
+    rescue JWT::DecodeError
+      nil
+    end
+
+    def jwt?(token)
+      decode!(token).present?
+    rescue ::JWT::DecodeError => e
+      e.message != "Not enough or too many segments"
+    end
+
+    private
+
+    def password
+      return ENV["JSON_WEB_TOKEN_SECRET"] unless Rails.env.test?
+
+      # in test env we don't want to expose prod secret
+      ENV["JSON_WEB_TOKEN_SECRET_TEST"] || "#{ENV["JSON_WEB_TOKEN_SECRET"]}test"
+    end
+
+    def add_issued_at(payload)
+      payload = payload.with_indifferent_access
+      payload[ISSUED_AT_CLAIM] = Time.zone.now.to_i
+      payload
+    end
+  end
+
+  def token
+    self.class.generic_token
+  end
+
+  def expiration
+    24.hours.from_now
   end
 end

@@ -6,9 +6,7 @@ resource "Attributes" do
   header "Accept", "application/vnd.api+json"
   header "Content-Type", "application/vnd.api+json"
   let(:raw_post) { params.to_json }
-  let(:authorization) do
-    AuthToken.create!(access_code: AccessCode.find(1)).token
-  end
+  let(:authorization) { AuthToken.generic_token }
 
   post "attributes/" do
     let(:data) { {type: :attribute, attributes: {key: "foo", value: "bar", resource_id: 1}} }
