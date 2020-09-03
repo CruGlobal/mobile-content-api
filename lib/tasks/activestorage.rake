@@ -2,7 +2,7 @@
 
 namespace :activestorage do
   task migrate: :environment do
-    Rails.logger = Logger.new(STDOUT)
+    Rails.logger = Logger.new($stdout)
     Attachment.where.not(file_file_name: nil).find_each do |attachment|
       # This step helps us catch any attachments we might have uploaded that
       # don't have an explicit file extension in the filename

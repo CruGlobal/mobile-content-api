@@ -46,7 +46,7 @@ resource "Languages" do
     it "sets location header", document: false do
       do_request data: {type: :language, attributes: {name: "Elvish", code: "ev"}}
 
-      expect(response_headers["Location"]).to match(%r{languages\/\d+})
+      expect(response_headers["Location"]).to match(%r{languages/\d+})
     end
 
     it "cannot duplicate code", document: false do

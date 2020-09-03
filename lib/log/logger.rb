@@ -9,13 +9,13 @@ module Log
     include ActiveSupport::LoggerSilence
 
     def initialize(*args)
-      @readable = args[0] == STDOUT
+      @readable = args[0] == $stdout
       super
     end
 
     def create_formatter
       if @readable
-        Log::Logger::FormatterReadable.new(STDOUT)
+        Log::Logger::FormatterReadable.new($stdout)
       else
         Log::Logger::Formatter.new(ENV["PROJECT_NAME"])
       end

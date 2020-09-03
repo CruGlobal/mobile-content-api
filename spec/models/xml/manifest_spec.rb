@@ -117,7 +117,7 @@ describe Xml::Manifest do
           "about_god" => "O Bohu",
           "about_jesus" => "O Ježišovi",
           "about_life" => "O Živote",
-          "everything" => "Všetko Ostatné",
+          "everything" => "Všetko Ostatné"
         }
         allow(t).to(receive(:manifest_translated_phrases).and_return(phrases))
 

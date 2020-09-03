@@ -18,5 +18,5 @@ Rails.configuration.datadog_trace = {
   trace_agent_hostname: ENV["DATADOG_HOST"],
   trace_agent_port: 8126,
   env: Rails.env,
-  tags: {app: base_name},
+  tags: {app: base_name}
 }

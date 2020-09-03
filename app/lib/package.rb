@@ -4,11 +4,11 @@ require "zip"
 
 class Package
   XPATH_RESOURCES = %w[//@background-image
-                       //manifest:category/@banner
-                       //content:image[not(@restrictTo='web')]/@resource].freeze
+    //manifest:category/@banner
+    //content:image[not(@restrictTo='web')]/@resource].freeze
   XPATH_TIPS = %w[//training:tip/@id
-                  //tract:header/@training:tip
-                  //tract:call-to-action/@training:tip].freeze
+    //tract:header/@training:tip
+    //tract:call-to-action/@training:tip].freeze
 
   def self.s3_object(translation)
     s3 = Aws::S3::Resource.new(region: ENV["AWS_REGION"])
