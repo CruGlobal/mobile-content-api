@@ -44,14 +44,13 @@ RSpec.describe Okta do
       end
 
       it "does not create a user" do
-        # try remove this disable after https://github.com/CruGlobal/mobile-content-api/pull/468 merges
-        # rubocop:disable Standard/SemanticBlocks
-        expect do
-          described_class.find_user_by_id_token(id_token)
-        rescue Okta::FailedAuthentication
-          nil
-        end.to change(User, :count).by(0)
-        # rubocop:enable Standard/SemanticBlocks
+        expect {
+          begin
+            described_class.find_user_by_id_token(id_token)
+          rescue Okta::FailedAuthentication
+            nil
+          end
+        }.to change(User, :count).by(0)
       end
     end
   end
