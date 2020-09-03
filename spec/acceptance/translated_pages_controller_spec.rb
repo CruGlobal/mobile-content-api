@@ -24,7 +24,7 @@ resource "TranslatedPages" do
     it "sets location header", document: false do
       do_request data
 
-      expect(response_headers["Location"]).to match(%r{translated_pages\/\d+})
+      expect(response_headers["Location"]).to match(%r{translated_pages/\d+})
     end
   end
 

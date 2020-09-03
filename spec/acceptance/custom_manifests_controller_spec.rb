@@ -43,7 +43,7 @@ resource "CustomManifests" do
       expect(status).to be(201)
 
       expect(JSON.parse(response_body)["data"]).not_to be_nil
-      expect(response_headers["Location"]).to match(%r{custom_manifests\/\d+})
+      expect(response_headers["Location"]).to match(%r{custom_manifests/\d+})
     end
 
     it "updates a custom manifest" do
