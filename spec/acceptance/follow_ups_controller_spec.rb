@@ -10,7 +10,7 @@ resource "FollowUps" do
   post "follow_ups/" do
     let(:data) do
       {type: type,
-       attributes: {name: "Billy Bob", email: "bob@test.com", language_id: 2, destination_id: 1},}
+       attributes: {name: "Billy Bob", email: "bob@test.com", language_id: 2, destination_id: 1}}
     end
 
     it "create a subscriber" do

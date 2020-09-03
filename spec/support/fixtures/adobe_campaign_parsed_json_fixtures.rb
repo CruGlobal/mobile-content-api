@@ -35,20 +35,20 @@ module AdobeCampaignParsedJsonFixtures
       "cusDonorClass" => "",
       "cusEmployee" => "N",
       "cusEventAttendeelink" => {
-        "href" => "https://mc.adobe.io/cru/campaign/profileAndServicesExt/profile/@EJcyhZ11jryZtasdfIAHR2c8foWIzASt5-c9p3FShoQR8nTDjEp7xY55lHFPiEffYnCm8nsIW0zIvoVt0-3zrQ_GjTs/cusEventAttendeelink/",
+        "href" => "https://mc.adobe.io/cru/campaign/profileAndServicesExt/profile/@EJcyhZ11jryZtasdfIAHR2c8foWIzASt5-c9p3FShoQR8nTDjEp7xY55lHFPiEffYnCm8nsIW0zIvoVt0-3zrQ_GjTs/cusEventAttendeelink/"
       },
       "cusFinanceAccountNumber" => "",
       "cusGCXUrlslinktoProfile" => {
-        "href" => "https://mc.adobe.io/cru/campaign/profileAndServicesExt/profile/@EJcyhZ11jryZtasdfIAHR2c8foWIzASt5-c9p3FShoTry94ItJPgAbfCOQNN4SKxKc2ArQdTul7snRO40-8xGu6pk8SEhPPQuN0FIWm1eszvWUtS/cusGCXUrlslinktoProfile/",
+        "href" => "https://mc.adobe.io/cru/campaign/profileAndServicesExt/profile/@EJcyhZ11jryZtasdfIAHR2c8foWIzASt5-c9p3FShoTry94ItJPgAbfCOQNN4SKxKc2ArQdTul7snRO40-8xGu6pk8SEhPPQuN0FIWm1eszvWUtS/cusGCXUrlslinktoProfile/"
       },
       "cusGlobalID" => "",
       "cusGraduationDate" => "",
       "cusJOBTITLE" => "",
       "cusLink" => {
-        "href" => "https://mc.adobe.io/cru/campaign/profileAndServicesExt/profile/@EJcyhZ11jryZtasdfIAHR2c8foWIzASt5-c9p3FShoQR8nTDjEp7xY55lHFPiEffYnCm8nsIW0zIvoVt0-3zrQ_GjTs/cusLink/",
+        "href" => "https://mc.adobe.io/cru/campaign/profileAndServicesExt/profile/@EJcyhZ11jryZtasdfIAHR2c8foWIzASt5-c9p3FShoQR8nTDjEp7xY55lHFPiEffYnCm8nsIW0zIvoVt0-3zrQ_GjTs/cusLink/"
       },
       "cusLink2" => {
-        "href" => "https://mc.adobe.io/cru/campaign/profileAndServicesExt/profile/@EJcyhZ11jryZtasdfIAHR2c8foWIzASt5-c9p3FShoTomQPm9e3ETJ_s2pUrH5DVPZuk_Z0W41Q6y_gWBZNXq0tVd1bKDLzkB92oTy7ZdPgYWNvX/cusLink2/",
+        "href" => "https://mc.adobe.io/cru/campaign/profileAndServicesExt/profile/@EJcyhZ11jryZtasdfIAHR2c8foWIzASt5-c9p3FShoTomQPm9e3ETJ_s2pUrH5DVPZuk_Z0W41Q6y_gWBZNXq0tVd1bKDLzkB92oTy7ZdPgYWNvX/cusLink2/"
       },
       "cusParentAccountNumber" => "",
       "cusPrimaryAccountContactFlag" => "",
@@ -75,7 +75,7 @@ module AdobeCampaignParsedJsonFixtures
         "city" => "",
         "countryCode" => "",
         "stateCode" => "",
-        "zipCode" => "",
+        "zipCode" => ""
       },
       "middleName" => "",
       "mobilePhone" => "",
@@ -91,16 +91,16 @@ module AdobeCampaignParsedJsonFixtures
         "line4" => "",
         "line5" => "",
         "line6" => "",
-        "serialized" => "Test User\n\n\n\n\n",
+        "serialized" => "Test User\n\n\n\n\n"
       },
       "preferredLanguage" => "none",
       "salutation" => "",
       "subscriptions" => {
-        "href" => "https://mc.adobe.io/cru/campaign/profileAndServicesExt/profile/@EJcyhZ11jryZtasdfIAHR2c8foWIzASt5-c9p3FShoTomQPm9e3ETJ_s2pUrH5DVPZuk_Z0W41Q6y_gWBZNXq0tVd1bKDLzkB92oTy7ZdPgYWNvX/subscriptions/",
+        "href" => "https://mc.adobe.io/cru/campaign/profileAndServicesExt/profile/@EJcyhZ11jryZtasdfIAHR2c8foWIzASt5-c9p3FShoTomQPm9e3ETJ_s2pUrH5DVPZuk_Z0W41Q6y_gWBZNXq0tVd1bKDLzkB92oTy7ZdPgYWNvX/subscriptions/"
       },
       "thumbnail" => "/nl/img/thumbnails/defaultProfil.png",
       "timeZone" => "none",
-      "title" => "Test User (test@user.com)",
+      "title" => "Test User (test@user.com)"
     }
   end
 
@@ -119,7 +119,7 @@ module AdobeCampaignParsedJsonFixtures
         "href" => "https://mc.adobe.io/cru/campaign/profileAndServicesExt/service/@EyJ3Rl7A2R7sb62mI4fNrovCP0asdIsIuoxzeN4Bhg6nW4cpbnBeIZwaJe2Dl5sdfROasd8r98XhFPVUhJBn2cqJ61SvrLZMBOK_iubDqrS0T2d_",
         "label" => "Some Welcome Series",
         "name" => campaign_name,
-        "title" => "A Really Cool Campaign (#{campaign_name})",
+        "title" => "A Really Cool Campaign (#{campaign_name})"
       },
       "serviceName" => campaign_name,
       "subscriber" => {
@@ -128,10 +128,10 @@ module AdobeCampaignParsedJsonFixtures
         "firstName" => "",
         "href" => "https://mc.adobe.io/cru/campaign/profileAndServicesExt/profile/@Ba7hAokNoLpeirz_nSoRL0lzVcXyui_JLGHcujnlPNjYmLLGgpyTOasdM1ioH5p13eCyhkUmtCZW4ywCJQSb93F-Y5E",
         "lastName" => "",
-        "title" => "  (test@user.com)",
+        "title" => "  (test@user.com)"
       },
       "subscriptionDate" => "",
-      "title" => "Some Welcome Series (#{campaign_name}) /   (test@user.com)",
+      "title" => "Some Welcome Series (#{campaign_name}) /   (test@user.com)"
     }
   end
 
@@ -155,17 +155,17 @@ module AdobeCampaignParsedJsonFixtures
       "start" => "2017-03-15",
       "subScenarioEventType" => "EVTNoMessageSent",
       "subscriptions" => {
-        "href" => "https://mc.adobe.io/cru/campaign/profileAndServices/service/@KyJ3Rl7A2R7sb62mI4fNrovCP0hqyIsIqwertN4Bhg6QZBWQCOiscEBMIytndUdVOdMgkFjbFDuSXRKQSewjug_1LPqU-riINCYmOCldu0kUGcTg/subscriptions/",
+        "href" => "https://mc.adobe.io/cru/campaign/profileAndServices/service/@KyJ3Rl7A2R7sb62mI4fNrovCP0hqyIsIqwertN4Bhg6QZBWQCOiscEBMIytndUdVOdMgkFjbFDuSXRKQSewjug_1LPqU-riINCYmOCldu0kUGcTg/subscriptions/"
       },
       "targetResource" => "profile",
       "template" => {
         "PKey" => "@Bd-IpPaCDu9kfK9pz9me5qamtpypnvidHrarzR11Q0JPNxPJuxBnuXOeFYPohiRbyfzW9vHK7MbR3ehUZu7Pp1UGm1d_5vyFdpMgobPzE5GaaNtd",
-        "title" => "Newsletter (newsletter)",
+        "title" => "Newsletter (newsletter)"
       },
       "thumbnail" => "/nl/img/thumbnails/defaultService.png",
       "title" => "Some Welcome Series (#{campaign_name}) /   (test@user.com)",
       "unsubScenarioEventType" => "EVTNoMessageSent",
-      "validityDuration" => "P10D",
+      "validityDuration" => "P10D"
     }
   end
 end

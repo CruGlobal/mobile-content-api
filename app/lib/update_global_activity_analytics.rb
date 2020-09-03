@@ -9,7 +9,7 @@ class UpdateGlobalActivityAnalytics
     users: {name: "metrics/visitors", options: {sort: "desc"}},
     launches: {name: "metrics/mobilelaunches"},
     gospel_presentations: {name: "metrics/event90"},
-    countries: {name: "cm300000683_58877ac221d4771c0d530484"},
+    countries: {name: "cm300000683_58877ac221d4771c0d530484"}
   }.freeze
 
   DATE_RANGE_TEMPLATE = "%{start_year}-01-01T00:00:00.000/%{end_year}-01-01T00:00:00.000"
@@ -20,14 +20,14 @@ class UpdateGlobalActivityAnalytics
       "countRepeatInstances": true,
       "limit": 400,
       "page": 0,
-      "nonesBehavior": "return-nones",
+      "nonesBehavior": "return-nones"
     },
     "statistics": {
       "functions": [
         "col-max",
-        "col-min",
-      ],
-    },
+        "col-min"
+      ]
+    }
   }
 
   def initialize
@@ -55,7 +55,7 @@ class UpdateGlobalActivityAnalytics
       "Content-Type": "application/json",
       "Authorization": "Bearer #{access_token}",
       "x-api-key": @client_id,
-      "x-proxy-global-company-id": @company_id,
+      "x-proxy-global-company-id": @company_id
     }
     res = Net::HTTP.post(URI(@analytics_url), prepare_query.to_json, headers)
     json_from_http_result(res)
@@ -82,7 +82,7 @@ class UpdateGlobalActivityAnalytics
     metrics = FIELDS.map.with_index { |(_, column), index|
       attrs = {
         columnId: index.to_s,
-        id: column[:name],
+        id: column[:name]
       }
       column.fetch(:options, {}).each { |key, val| attrs[key] = val }
       attrs
@@ -98,8 +98,8 @@ class UpdateGlobalActivityAnalytics
     query["globalFilters"] = [
       {
         "type": "dateRange",
-        "dateRange": date_range,
-      },
+        "dateRange": date_range
+      }
     ]
     query["metricContainer"] = {"metrics": metrics}
     query
