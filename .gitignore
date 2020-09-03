@@ -46,3 +46,5 @@ public/system
 
 vendor/bundle
 /node_modules
+
+spec/examples.txt

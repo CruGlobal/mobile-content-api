@@ -109,10 +109,10 @@ TranslatedPage.find_or_create_by!(value: beyond_blind_faith_structure, resource:
 
 AccessCode.find_or_create_by!(code: 123_456)
 
-Attribute.find_or_create_by!(resource: kgp, key: "Banner_Image", value: "this is a location")
+Attribute.find_or_create_by!(resource: kgp, key: "banner_image", value: "this is a location")
 attribute = Attribute.find_or_create_by!(resource: kgp, key: "translate_me", value: "base language", is_translatable: true)
 
-Attribute.find_or_create_by!(resource: satisfied, key: "Another_Attribute", value: "blah blah blah")
+Attribute.find_or_create_by!(resource: satisfied, key: "another_attribute", value: "blah blah blah")
 
 TranslatedAttribute.find_or_create_by!(parent_attribute: attribute, translation: german_kgp, value: "german attribute")
 
@@ -127,11 +127,13 @@ if Rails.env == "test"
   end
 end
 
-Attachment.create!(resource: kgp, file: Rack::Test::UploadedFile.new("spec/fixtures/wall.jpg", "image/png"), is_zipped: true)
-Attachment.create!(resource: kgp, file: Rack::Test::UploadedFile.new("spec/fixtures/beal.jpg", "image/png"))
-Attachment.create!(resource: kgp, file: Rack::Test::UploadedFile.new("spec/fixtures/mobile_only.png", "image/png"), is_zipped: true)
-Attachment.create!(resource: kgp, file: Rack::Test::UploadedFile.new("spec/fixtures/web_mobile.png", "image/png"))
-Attachment.create!(resource: kgp, file: Rack::Test::UploadedFile.new("spec/fixtures/both.png", "image/png"), is_zipped: true)
+unless Attachment.exists?(resource: kgp)
+  Attachment.create!(resource: kgp, file: Rack::Test::UploadedFile.new("spec/fixtures/wall.jpg", "image/png"), is_zipped: true)
+  Attachment.create!(resource: kgp, file: Rack::Test::UploadedFile.new("spec/fixtures/beal.jpg", "image/png"))
+  Attachment.create!(resource: kgp, file: Rack::Test::UploadedFile.new("spec/fixtures/mobile_only.png", "image/png"), is_zipped: true)
+  Attachment.create!(resource: kgp, file: Rack::Test::UploadedFile.new("spec/fixtures/web_mobile.png", "image/png"))
+  Attachment.create!(resource: kgp, file: Rack::Test::UploadedFile.new("spec/fixtures/both.png", "image/png"), is_zipped: true)
+end
 
 Destination.find_or_create_by!(service_type: :growth_spaces, url: "myapi.org", route_id: "100", access_key_id: "12345", access_key_secret: "hello, world!!")
 Destination.find_or_create_by!(service_type: :adobe_campaigns, url: "https://mc.adobe.io/", service_name: "GodTools New Growth Series", access_key_id: "67890", access_key_secret: "this is a secret")
