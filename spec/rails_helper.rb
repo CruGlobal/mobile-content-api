@@ -3,7 +3,6 @@
 require "simplecov"
 require_relative "./support/test_helpers"
 require_relative "./support/adobe_campaign_stub_helpers"
-require "database_cleaner/active_record"
 
 SimpleCov.start
 
@@ -81,9 +80,5 @@ RSpec.configure do |config|
 
   config.before(:suite) do
     Rails.application.load_seed # loading seeds
-  end
-
-  config.after(:suite) do
-    DatabaseCleaner.clean_with(:truncation)
   end
 end

@@ -15,7 +15,7 @@ describe UpdateGlobalActivityAnalytics do
           GlobalActivityAnalytics.instance.users,
           GlobalActivityAnalytics.instance.countries,
           GlobalActivityAnalytics.instance.launches,
-          GlobalActivityAnalytics.instance.gospel_presentations,
+          GlobalActivityAnalytics.instance.gospel_presentations
         ]
       }
     }

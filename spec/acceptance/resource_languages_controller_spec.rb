@@ -72,45 +72,45 @@ resource "ResourceLanguage" do
             "type" => "resource-language",
             "attributes" => {
               "attr-language-attribute" => "language_value",
-              "attr-something-else" => "some_other_value",
+              "attr-something-else" => "some_other_value"
             },
             "relationships" => {
               "resource" => {
                 "data" => {
                   "id" => "1",
-                  "type" => "resource",
-                },
+                  "type" => "resource"
+                }
               },
               "language" => {
                 "data" => {
                   "id" => language.id.to_s,
-                  "type" => "language",
-                },
+                  "type" => "language"
+                }
               },
               "custom-manifest" => {
                 "data" => {
                   "id" => custom_manifest.id.to_s,
-                  "type" => "custom-manifest",
-                },
+                  "type" => "custom-manifest"
+                }
               },
               "custom-pages" => {
                 "data" => [
                   {
                     "id" => custom_page.id.to_s,
-                    "type" => "custom-page",
-                  },
-                ],
+                    "type" => "custom-page"
+                  }
+                ]
               },
               "custom-tips" => {
                 "data" => [
                   {
                     "id" => custom_tip.id.to_s,
-                    "type" => "custom-tip",
-                  },
-                ],
-              },
-            },
-          },
+                    "type" => "custom-tip"
+                  }
+                ]
+              }
+            }
+          }
         }
       )
     end
@@ -135,8 +135,8 @@ resource "ResourceLanguage" do
         "attributes": {
           "attr-enable-tips": true,
           "attr-other-key": nil,
-          "attr-set-false": false,
-        },
+          "attr-set-false": false
+        }
       }
     end
 

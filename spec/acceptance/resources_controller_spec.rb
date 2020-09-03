@@ -90,7 +90,7 @@ resource "Resources" do
       header "Authorization", :authorization
 
       do_request data: {type: :resource,
-                        attributes: {name: "new resource", abbreviation: "r", system_id: 1, resource_type_id: 1},}
+                        attributes: {name: "new resource", abbreviation: "r", system_id: 1, resource_type_id: 1}}
 
       expect(status).to be(201)
       expect(response_body).not_to be_nil

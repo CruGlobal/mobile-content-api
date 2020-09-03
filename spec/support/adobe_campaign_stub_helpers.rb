@@ -26,7 +26,7 @@ module AdobeCampaignStubHelpers
       "count" => {
         "href" => "https://mc.adobe.io/cru/campaign/profileAndServicesExt/profile//byEmail/_count?email=test@user.com&" \
           "_lineStart=@p0BJhFcngt0uJqiMKQFpKjnmAXUWtiMSQnfZJwFOr7MDWWz8",
-        "value" => without_results ? 0 : 1,
+        "value" => without_results ? 0 : 1
       },
       "serverSidePagination" => false
     )
@@ -42,7 +42,7 @@ module AdobeCampaignStubHelpers
           "href" => "https://mc.adobe.io/cru/campaign/profileAndServicesExt/profile/@Ga7hAokNoLpeirz_nSoRL0CKJGFPEHwPfkxSH-6JI3i__49" \
                     "-4qoY-OcQnrq31JC49daKHmf9lVybo__N9gTiPaREcVIuBu794uz7cU21yq3vq7Vz/subscriptions//_count?_lineStart=@a-xJyJp1E7H" \
                     "jLc3TBySO1jY_J3GHc6EdySQtvLYKkhvVmRu4",
-          "value" => without_results ? 0 : 1,
+          "value" => without_results ? 0 : 1
         },
         "serverSidePagination" => false
       )
@@ -54,7 +54,7 @@ module AdobeCampaignStubHelpers
       "count" => {
         "href" => "https://mc.adobe.io/cru/campaign/profileAndServices/service//byText/_count?text=#{campaign_name}" \
                   "&_lineStart=@p0BJhFcngt0uJqiMKQFpKjnmAXUWtiMSQnfZJwFOr7MDWWz8",
-        "value" => 1,
+        "value" => 1
       },
       "serverSidePagination" => true
     )

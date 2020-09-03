@@ -86,7 +86,7 @@ resource "Drafts" do
         allow(resource).to receive(:create_draft)
 
         do_request data: {
-          type: :translation, attributes: {resource_id: resource_id, language_id: language},
+          type: :translation, attributes: {resource_id: resource_id, language_id: language}
         }
       end
 
@@ -108,7 +108,7 @@ resource "Drafts" do
         allow(resource).to receive(:create_draft)
 
         do_request data: {
-          type: :translation, attributes: {resource_id: resource_id, language_ids: [language_one, language_two]},
+          type: :translation, attributes: {resource_id: resource_id, language_ids: [language_one, language_two]}
         }
       end
 

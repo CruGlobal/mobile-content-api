@@ -39,7 +39,7 @@ resource "Attachments" do
     it "sets location header", document: false do
       do_request file: test_file, multipart: true, resource_id: 2
 
-      expect(response_headers["Location"]).to match(%r{attachments\/\d+})
+      expect(response_headers["Location"]).to match(%r{attachments/\d+})
     end
   end
 
