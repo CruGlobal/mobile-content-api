@@ -25,7 +25,7 @@ class Okta
 
     def validate_okta_id_token(id_token)
       payload = transform_jwt_payload JWT.decode(id_token, nil, true, jwt_options).first
-      raise 'ID Token does not include sso guid, make sure login scope includes profile' unless payload[:sso_guid]
+      raise "ID Token does not include sso guid, make sure login scope includes profile" unless payload[:sso_guid]
       payload
     end
 
