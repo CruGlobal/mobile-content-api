@@ -867,7 +867,7 @@ GEM
     case_transform (0.2)
       activesupport
     childprocess (3.0.0)
-    codecov (0.2.10)
+    codecov (0.2.11)
       json
       simplecov
     coderay (1.1.3)
