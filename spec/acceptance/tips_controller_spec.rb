@@ -11,19 +11,7 @@ resource "Tips" do
   let(:resource) { Resource.first }
   let(:resource2) { Resource.second }
 
-  let(:structure) do
-    %(<tip xmlns="https://mobile-content-api.cru.org/xmlns/training"
-        xmlns:content="https://mobile-content-api.cru.org/xmlns/content">
-          <pages>
-              <page>
-                  <content:paragraph>
-                      <content:text />
-                  </content:paragraph>
-                  <content:text />
-              </page>
-          </pages>
-      </tip>)
-  end
+  let(:structure) { FactoryBot.attributes_for(:tip)[:structure] }
 
   post "tips" do
     requires_authorization

@@ -3,7 +3,7 @@
 class CustomTipsController < SecureController
   def create
     create_custom_tip
-  rescue ActiveRecord::RecordNotUnique
+  rescue ActiveRecord::RecordInvalid
     update_custom_tip
   end
 
