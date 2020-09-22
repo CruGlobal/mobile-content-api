@@ -7,10 +7,10 @@ test:
 
 staging:
   adapter: redis
-  url: <%= "redis://#{ENV.fetch('REDIS_PORT_6379_TCP_ADDR')}:#{ENV.fetch('REDIS_PORT_6379_TCP_PORT')}/6" %>
+  url: <%= "redis://#{ENV.fetch('STORAGE_REDIS_HOST')}:#{ENV.fetch('STORAGE_REDIS_PORT')}/#{ENV.fetch('STORAGE_REDIS_DB_INDEX')}" %>
   channel_prefix: mobile_content_api_staging_channel
 
 production:
   adapter: redis
-  url: <%= "redis://#{ENV.fetch('REDIS_PORT_6379_TCP_ADDR')}:#{ENV.fetch('REDIS_PORT_6379_TCP_PORT')}/6" %>
+  url: <%= "redis://#{ENV.fetch('STORAGE_REDIS_HOST')}:#{ENV.fetch('STORAGE_REDIS_PORT')}/#{ENV.fetch('STORAGE_REDIS_DB_INDEX')}" %>
   channel_prefix: mobile_content_api_production_channel
