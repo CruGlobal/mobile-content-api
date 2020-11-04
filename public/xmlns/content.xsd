@@ -165,7 +165,7 @@
     <!-- endregion Value Definitions -->
 
     <!-- region Common Attributes -->
-    <xs:attributeGroup name="deviceRestrictions">
+    <xs:attributeGroup name="contentRestrictions">
         <xs:attribute name="restrictTo" type="content:deviceTypes">
             <xs:annotation>
                 <xs:documentation>This attribute specifies that the element it is on is only rendered on the specified
@@ -185,7 +185,7 @@
             <xs:choice minOccurs="1" maxOccurs="unbounded">
                 <xs:group ref="content:elements" />
             </xs:choice>
-            <xs:attributeGroup ref="content:deviceRestrictions" />
+            <xs:attributeGroup ref="content:contentRestrictions" />
         </xs:complexType>
     </xs:element>
 
@@ -266,7 +266,7 @@
                 <xs:documentation>This attribute defines the events to trigger when the user "clicks" the image.</xs:documentation>
             </xs:annotation>
         </xs:attribute>
-        <xs:attributeGroup ref="content:deviceRestrictions" />
+        <xs:attributeGroup ref="content:contentRestrictions" />
     </xs:complexType>
 
     <!-- Button -->
@@ -349,7 +349,7 @@
                         </xs:documentation>
                     </xs:annotation>
                 </xs:attribute>
-                <xs:attributeGroup ref="content:deviceRestrictions" />
+                <xs:attributeGroup ref="content:contentRestrictions" />
             </xs:extension>
         </xs:complexContent>
     </xs:complexType>
@@ -431,7 +431,7 @@
         <xs:complexType>
             <xs:complexContent>
                 <xs:extension base="content:text">
-                    <xs:attributeGroup ref="content:deviceRestrictions" />
+                    <xs:attributeGroup ref="content:contentRestrictions" />
                 </xs:extension>
             </xs:complexContent>
         </xs:complexType>
