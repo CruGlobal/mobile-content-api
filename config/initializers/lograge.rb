@@ -19,8 +19,8 @@ Rails.application.configure do
   config.lograge.custom_payload do |controller|
     user_id = begin
       controller.respond_to?(:current_user) ? controller.current_user.try(:id) : nil
-              rescue Auth::ApplicationController::AuthenticationError
-                nil
+    rescue Auth::ApplicationController::AuthenticationError
+      nil
     end
     {
       user_id: user_id,
