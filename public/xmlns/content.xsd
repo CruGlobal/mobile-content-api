@@ -139,6 +139,16 @@
                     <xs:documentation>This device type represents a native app on Android or iOS</xs:documentation>
                 </xs:annotation>
             </xs:enumeration>
+            <xs:enumeration value="android">
+                <xs:annotation>
+                    <xs:documentation>This device type represents a native app on Android</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="ios">
+                <xs:annotation>
+                    <xs:documentation>This device type represents a native app on iOS</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
             <xs:enumeration value="web">
                 <xs:annotation>
                     <xs:documentation>This device type represents a web browser</xs:documentation>
