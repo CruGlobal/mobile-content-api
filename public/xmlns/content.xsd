@@ -425,6 +425,19 @@
         <xs:attribute name="value" type="xs:string" use="optional" />
     </xs:complexType>
 
+    <xs:element name="fallback">
+        <xs:annotation>
+            <xs:documentation>This tag provides fallback rendering behavior. The renderer should render the first
+                element that is supported and meets any specified content restrictions.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:choice maxOccurs="unbounded">
+                <xs:group ref="content:elements" />
+            </xs:choice>
+        </xs:complexType>
+    </xs:element>
+
     <!-- Content Elements -->
     <xs:element name="tabs" type="content:tabs" />
     <xs:element name="text">
@@ -451,6 +464,7 @@
             <xs:element ref="content:link" />
             <xs:element ref="content:form" />
             <xs:element ref="content:input" />
+            <xs:element ref="content:fallback" />
             <xs:group ref="training:contentElements" />
         </xs:choice>
     </xs:group>
