@@ -175,13 +175,17 @@
     </xs:attributeGroup>
 
     <!-- element nodes -->
-    <!-- Paragraph - Vertical stack of content with margin/padding on the top and bottom -->
-    <xs:complexType name="paragraph">
-        <xs:choice minOccurs="1" maxOccurs="unbounded">
-            <xs:group ref="content:elements" />
-        </xs:choice>
-        <xs:attributeGroup ref="content:deviceRestrictions" />
-    </xs:complexType>
+    <xs:element name="paragraph">
+        <xs:annotation>
+            <xs:documentation>Vertical stack of content with margin/padding on the top and bottom.</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:choice minOccurs="1" maxOccurs="unbounded">
+                <xs:group ref="content:elements" />
+            </xs:choice>
+            <xs:attributeGroup ref="content:deviceRestrictions" />
+        </xs:complexType>
+    </xs:element>
 
     <!-- Tabbed content -->
     <xs:complexType name="tabs">
@@ -420,7 +424,6 @@
     </xs:complexType>
 
     <!-- Content Elements -->
-    <xs:element name="paragraph" type="content:paragraph" />
     <xs:element name="tabs" type="content:tabs" />
     <xs:element name="text">
         <xs:complexType>
