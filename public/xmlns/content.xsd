@@ -185,6 +185,14 @@
             <xs:choice minOccurs="1" maxOccurs="unbounded">
                 <xs:group ref="content:elements" />
             </xs:choice>
+            <xs:attribute name="fallback" type="xs:boolean" default="false">
+                <xs:annotation>
+                    <xs:documentation>When fallback is set to true this paragraph node should be treated by the renderer
+                        as a fallback content node. This is meant to provide temporary transition support for the new
+                        fallback mode before it is widely supported by deployed apps.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
             <xs:attributeGroup ref="content:contentRestrictions" />
         </xs:complexType>
     </xs:element>
