@@ -4,6 +4,7 @@
     <hero>
         <content:paragraph>
             <content:fallback>
+                <content:text minimumRendererVersion="2">New Renderer</content:text>
                 <content:text restrictTo="android">Android</content:text>
                 <content:text restrictTo="ios">iOS</content:text>
                 <content:text>Unknown</content:text>

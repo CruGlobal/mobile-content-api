@@ -173,6 +173,18 @@
                 </xs:documentation>
             </xs:annotation>
         </xs:attribute>
+        <xs:attribute name="minimumRendererVersion" type="xs:int">
+            <xs:annotation>
+                <xs:documentation>This attribute can be used when a backwards incompatible change to an element is made
+                    and we want to restrict rendering the element to newer versions of the renderer only.
+
+                    The current renderer version is 1.
+
+                    Version History:
+                    1: Base version, no backwards incompatible changes have been made yet.
+                </xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
     </xs:attributeGroup>
     <!-- endregion Common Attributes -->
 
