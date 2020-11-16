@@ -201,7 +201,8 @@
                 <xs:annotation>
                     <xs:documentation>When fallback is set to true this paragraph node should be treated by the renderer
                         as a fallback content node. This is meant to provide temporary transition support for the new
-                        fallback mode before it is widely supported by deployed apps.
+                        fallback mode before it is widely supported by deployed apps. This backwards compatibility is
+                        scheduled for removal after December 2021.
                     </xs:documentation>
                 </xs:annotation>
             </xs:attribute>
