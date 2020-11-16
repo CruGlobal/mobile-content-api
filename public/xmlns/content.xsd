@@ -318,7 +318,9 @@
                 </xs:sequence>
                 <xs:attribute name="type" use="required">
                     <xs:annotation>
-                        <xs:documentation>This attribute determines what type of button this is.</xs:documentation>
+                        <xs:documentation>This attribute determines what type of button this is. Unrecognized button
+                            types should be treated as unsupported by the renderer.
+                        </xs:documentation>
                     </xs:annotation>
                     <xs:simpleType>
                         <xs:restriction base="xs:string">
