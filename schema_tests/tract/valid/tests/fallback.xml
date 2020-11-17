@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<page xmlns="https://mobile-content-api.cru.org/xmlns/tract"
+    xmlns:content="https://mobile-content-api.cru.org/xmlns/content">
+    <hero>
+        <content:paragraph>
+            <content:fallback>
+                <content:text minimumRendererVersion="2">New Renderer</content:text>
+                <content:text restrictTo="android">Android</content:text>
+                <content:text restrictTo="ios">iOS</content:text>
+                <content:text>Unknown</content:text>
+            </content:fallback>
+        </content:paragraph>
+    </hero>
+</page>

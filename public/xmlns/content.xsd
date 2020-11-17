@@ -7,7 +7,7 @@
     <xs:import namespace="https://mobile-content-api.cru.org/xmlns/analytics" schemaLocation="analytics.xsd" />
     <xs:import namespace="https://mobile-content-api.cru.org/xmlns/training" schemaLocation="training.xsd" />
 
-    <!-- Value definitions -->
+    <!-- region Value Definitions -->
     <xs:simpleType name="colorValue">
         <xs:restriction base="xs:string">
             <xs:pattern value="rgba\([0-9]{1,3},\s*[0-9]{1,3},\s*[0-9]{1,3},\s*([01]|0?\.[0-9]*)\)" />
@@ -162,9 +162,10 @@
         </xs:annotation>
         <xs:list itemType="content:deviceType" />
     </xs:simpleType>
+    <!-- endregion Value Definitions -->
 
-    <!-- common attributes -->
-    <xs:attributeGroup name="deviceRestrictions">
+    <!-- region Common Attributes -->
+    <xs:attributeGroup name="contentRestrictions">
         <xs:attribute name="restrictTo" type="content:deviceTypes">
             <xs:annotation>
                 <xs:documentation>This attribute specifies that the element it is on is only rendered on the specified
@@ -172,16 +173,42 @@
                 </xs:documentation>
             </xs:annotation>
         </xs:attribute>
+        <xs:attribute name="minimumRendererVersion" type="xs:int">
+            <xs:annotation>
+                <xs:documentation>This attribute can be used when a backwards incompatible change to an element is made
+                    and we want to restrict rendering the element to newer versions of the renderer only.
+
+                    The current renderer version is 1.
+
+                    Version History:
+                    1: Base version, no backwards incompatible changes have been made yet.
+                </xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
     </xs:attributeGroup>
+    <!-- endregion Common Attributes -->
 
     <!-- element nodes -->
-    <!-- Paragraph - Vertical stack of content with margin/padding on the top and bottom -->
-    <xs:complexType name="paragraph">
-        <xs:choice minOccurs="1" maxOccurs="unbounded">
-            <xs:group ref="content:elements" />
-        </xs:choice>
-        <xs:attributeGroup ref="content:deviceRestrictions" />
-    </xs:complexType>
+    <xs:element name="paragraph">
+        <xs:annotation>
+            <xs:documentation>Vertical stack of content with margin/padding on the top and bottom.</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:choice minOccurs="1" maxOccurs="unbounded">
+                <xs:group ref="content:elements" />
+            </xs:choice>
+            <xs:attribute name="fallback" type="xs:boolean" default="false">
+                <xs:annotation>
+                    <xs:documentation>When fallback is set to true this paragraph node should be treated by the renderer
+                        as a fallback content node. This is meant to provide temporary transition support for the new
+                        fallback mode before it is widely supported by deployed apps. This backwards compatibility is
+                        scheduled for removal after December 2021.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
+            <xs:attributeGroup ref="content:contentRestrictions" />
+        </xs:complexType>
+    </xs:element>
 
     <!-- Tabbed content -->
     <xs:complexType name="tabs">
@@ -260,7 +287,7 @@
                 <xs:documentation>This attribute defines the events to trigger when the user "clicks" the image.</xs:documentation>
             </xs:annotation>
         </xs:attribute>
-        <xs:attributeGroup ref="content:deviceRestrictions" />
+        <xs:attributeGroup ref="content:contentRestrictions" />
     </xs:complexType>
 
     <!-- Button -->
@@ -304,7 +331,9 @@
                 </xs:sequence>
                 <xs:attribute name="type" use="required">
                     <xs:annotation>
-                        <xs:documentation>This attribute determines what type of button this is.</xs:documentation>
+                        <xs:documentation>This attribute determines what type of button this is. Unrecognized button
+                            types should be treated as unsupported by the renderer.
+                        </xs:documentation>
                     </xs:annotation>
                     <xs:simpleType>
                         <xs:restriction base="xs:string">
@@ -343,7 +372,7 @@
                         </xs:documentation>
                     </xs:annotation>
                 </xs:attribute>
-                <xs:attributeGroup ref="content:deviceRestrictions" />
+                <xs:attributeGroup ref="content:contentRestrictions" />
             </xs:extension>
         </xs:complexContent>
     </xs:complexType>
@@ -419,14 +448,26 @@
         <xs:attribute name="value" type="xs:string" use="optional" />
     </xs:complexType>
 
+    <xs:element name="fallback">
+        <xs:annotation>
+            <xs:documentation>This tag provides fallback rendering behavior. The renderer should render the first
+                element that is supported and meets any specified content restrictions.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:choice maxOccurs="unbounded">
+                <xs:group ref="content:elements" />
+            </xs:choice>
+        </xs:complexType>
+    </xs:element>
+
     <!-- Content Elements -->
-    <xs:element name="paragraph" type="content:paragraph" />
     <xs:element name="tabs" type="content:tabs" />
     <xs:element name="text">
         <xs:complexType>
             <xs:complexContent>
                 <xs:extension base="content:text">
-                    <xs:attributeGroup ref="content:deviceRestrictions" />
+                    <xs:attributeGroup ref="content:contentRestrictions" />
                 </xs:extension>
             </xs:complexContent>
         </xs:complexType>
@@ -446,6 +487,7 @@
             <xs:element ref="content:link" />
             <xs:element ref="content:form" />
             <xs:element ref="content:input" />
+            <xs:element ref="content:fallback" />
             <xs:group ref="training:contentElements" />
         </xs:choice>
     </xs:group>
