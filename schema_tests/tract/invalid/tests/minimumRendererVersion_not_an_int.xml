@@ -2,7 +2,7 @@
 <page xmlns="https://mobile-content-api.cru.org/xmlns/tract"
     xmlns:content="https://mobile-content-api.cru.org/xmlns/content">
     <hero>
-        <content:paragraph minimumRendererVersion="a">
+        <content:paragraph version="a">
             <content:text />
         </content:paragraph>
     </hero>

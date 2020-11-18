@@ -165,23 +165,28 @@
     <!-- endregion Value Definitions -->
 
     <!-- region Common Attributes -->
+    <xs:attributeGroup name="baseAttributes">
+        <xs:attribute name="version" type="xs:int" default="1">
+            <xs:annotation>
+                <xs:documentation>This attribute defines the version of a content element. Whenever there is a breaking
+                    change made to a content element, the version of the element should be incremented. This will allow
+                    older renderers to only render supported content elements. This will probably be coupled with a
+                    fallback element to provide a backwards compatible version of the content older renderers can fall
+                    back to.
+
+                    Version History:
+                    1: Base version, no backwards incompatible changes have been made yet.
+                </xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+        <xs:attributeGroup ref="content:contentRestrictions" />
+    </xs:attributeGroup>
+
     <xs:attributeGroup name="contentRestrictions">
         <xs:attribute name="restrictTo" type="content:deviceTypes">
             <xs:annotation>
                 <xs:documentation>This attribute specifies that the element it is on is only rendered on the specified
                     device types. By default elements are rendered on all devices.
-                </xs:documentation>
-            </xs:annotation>
-        </xs:attribute>
-        <xs:attribute name="minimumRendererVersion" type="xs:int">
-            <xs:annotation>
-                <xs:documentation>This attribute can be used when a backwards incompatible change to an element is made
-                    and we want to restrict rendering the element to newer versions of the renderer only.
-
-                    The current renderer version is 1.
-
-                    Version History:
-                    1: Base version, no backwards incompatible changes have been made yet.
                 </xs:documentation>
             </xs:annotation>
         </xs:attribute>
@@ -206,7 +211,7 @@
                     </xs:documentation>
                 </xs:annotation>
             </xs:attribute>
-            <xs:attributeGroup ref="content:contentRestrictions" />
+            <xs:attributeGroup ref="content:baseAttributes" />
         </xs:complexType>
     </xs:element>
 
@@ -287,7 +292,7 @@
                 <xs:documentation>This attribute defines the events to trigger when the user "clicks" the image.</xs:documentation>
             </xs:annotation>
         </xs:attribute>
-        <xs:attributeGroup ref="content:contentRestrictions" />
+        <xs:attributeGroup ref="content:baseAttributes" />
     </xs:complexType>
 
     <!-- Button -->
@@ -372,7 +377,7 @@
                         </xs:documentation>
                     </xs:annotation>
                 </xs:attribute>
-                <xs:attributeGroup ref="content:contentRestrictions" />
+                <xs:attributeGroup ref="content:baseAttributes" />
             </xs:extension>
         </xs:complexContent>
     </xs:complexType>
@@ -467,7 +472,7 @@
         <xs:complexType>
             <xs:complexContent>
                 <xs:extension base="content:text">
-                    <xs:attributeGroup ref="content:contentRestrictions" />
+                    <xs:attributeGroup ref="content:baseAttributes" />
                 </xs:extension>
             </xs:complexContent>
         </xs:complexType>
