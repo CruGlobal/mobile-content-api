@@ -810,6 +810,11 @@
                                 </xs:documentation>
                             </xs:annotation>
                         </xs:enumeration>
+                        <xs:enumeration value="invalid">
+                            <xs:annotation>
+                                <xs:documentation>"invalid" type which is used for testing the renderer on stage.</xs:documentation>
+                            </xs:annotation>
+                        </xs:enumeration>
                     </xs:restriction>
                 </xs:simpleType>
             </xs:attribute>
