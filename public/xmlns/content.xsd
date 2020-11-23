@@ -275,25 +275,24 @@
         </xs:sequence>
     </xs:complexType>
 
-    <!--
-        Image
-            resource:  REQUIRED - the resource id listed in the manifest
-    -->
-    <xs:complexType name="image">
+    <xs:element name="image">
         <xs:annotation>
-            <xs:documentation>This is an image content type. The image is rendered with a width matching the width of
+            <xs:documentation>This is an image content element. The image is rendered with a width matching the width of
                 whatever container it is contained in. This is done to provide the most consistent image size experience
                 across devices of varying screen sizes and densities.
             </xs:documentation>
         </xs:annotation>
-        <xs:attribute name="resource" type="xs:string" use="required" />
-        <xs:attribute name="events" type="content:eventIdsType" use="optional">
-            <xs:annotation>
-                <xs:documentation>This attribute defines the events to trigger when the user "clicks" the image.</xs:documentation>
-            </xs:annotation>
-        </xs:attribute>
-        <xs:attributeGroup ref="content:baseAttributes" />
-    </xs:complexType>
+        <xs:complexType>
+            <xs:attribute name="resource" type="xs:string" use="required" />
+            <xs:attribute name="events" type="content:eventIdsType">
+                <xs:annotation>
+                    <xs:documentation>This attribute defines the events to trigger when the user "clicks" the image.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
+            <xs:attributeGroup ref="content:baseAttributes" />
+        </xs:complexType>
+    </xs:element>
 
     <!-- Button -->
     <!--
@@ -477,7 +476,6 @@
             </xs:complexContent>
         </xs:complexType>
     </xs:element>
-    <xs:element name="image" type="content:image" />
     <xs:element name="button" type="content:button" />
     <xs:element name="link" type="content:link" />
     <xs:element name="form" type="content:form" />
