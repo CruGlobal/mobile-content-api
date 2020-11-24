@@ -294,6 +294,29 @@
         </xs:complexType>
     </xs:element>
 
+    <xs:element name="video">
+        <xs:annotation>
+            <xs:documentation>This is a video content element. The video will be renderer with a width matching the
+                width of whatever container it is contained in.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:attribute name="provider" use="required">
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:enumeration value="youtube">
+                            <xs:annotation>
+                                <xs:documentation>YouTube video.</xs:documentation>
+                            </xs:annotation>
+                        </xs:enumeration>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:attribute>
+            <xs:attribute name="id" type="xs:string" use="required" />
+            <xs:attributeGroup ref="content:baseAttributes" />
+        </xs:complexType>
+    </xs:element>
+
     <!-- Button -->
     <!--
         Samples:
@@ -486,6 +509,7 @@
             <xs:element ref="content:tabs" />
             <xs:element ref="content:text" />
             <xs:element ref="content:image" />
+            <xs:element ref="content:video" />
             <xs:element ref="content:button" />
             <xs:element ref="content:link" />
             <xs:element ref="content:form" />
