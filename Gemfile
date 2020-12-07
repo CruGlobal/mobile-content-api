@@ -58,7 +58,7 @@ gem "tzinfo-data", platforms: [:mingw, :mswin, :x64_mingw, :jruby]
 
 gem "pg"
 
-gem "active_model_serializers", "0.10.10"
+gem "active_model_serializers", "0.10.11"
 gem "active_storage_validations"
 gem "adobe-campaign", "~> 0.3.2"
 gem "aws-sdk"
