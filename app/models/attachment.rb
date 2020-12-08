@@ -13,7 +13,7 @@ class Attachment < ActiveRecord::Base
 
   has_one_attached :file
   validates :file, file_content_type: {
-    allow: ["image/jpeg", "image/png", "image/gif", "image/jpg"],
+    allow: ["image/jpeg", "image/png", "image/gif", "image/jpg", "application/json"],
     if: -> { file.attached? }
   }
 
