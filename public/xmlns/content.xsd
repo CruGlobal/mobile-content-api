@@ -322,6 +322,22 @@
             <xs:attribute name="resource" type="xs:string" use="required" />
             <xs:attribute name="autoplay" type="xs:boolean" default="true" />
             <xs:attribute name="loop" type="xs:boolean" default="true" />
+            <xs:attribute name="events" type="content:eventIdsType">
+                <xs:annotation>
+                    <xs:documentation>This attribute defines the events to trigger when the user "clicks" the animation.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
+            <xs:attribute name="play-listeners" type="content:listenersType">
+                <xs:annotation>
+                    <xs:documentation>event_ids that trigger playback of this animation.</xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
+            <xs:attribute name="stop-listeners" type="content:listenersType">
+                <xs:annotation>
+                    <xs:documentation>event_ids that will stop playback of this animation.</xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
         </xs:complexType>
     </xs:element>
 
