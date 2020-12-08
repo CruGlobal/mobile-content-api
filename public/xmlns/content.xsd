@@ -317,6 +317,14 @@
         </xs:complexType>
     </xs:element>
 
+    <xs:element name="animation">
+        <xs:complexType>
+            <xs:attribute name="resource" type="xs:string" use="required" />
+            <xs:attribute name="autoplay" type="xs:boolean" default="true" />
+            <xs:attribute name="loop" type="xs:boolean" default="true" />
+        </xs:complexType>
+    </xs:element>
+
     <!-- Button -->
     <!--
         Samples:
@@ -510,6 +518,7 @@
             <xs:element ref="content:text" />
             <xs:element ref="content:image" />
             <xs:element ref="content:video" />
+            <xs:element ref="content:animation" />
             <xs:element ref="content:button" />
             <xs:element ref="content:link" />
             <xs:element ref="content:form" />
