@@ -312,7 +312,7 @@
                     </xs:restriction>
                 </xs:simpleType>
             </xs:attribute>
-            <xs:attribute name="videoId" type="xs:string" use="required" />
+            <xs:attribute name="video-id" type="xs:string" use="required" />
             <xs:attributeGroup ref="content:baseAttributes" />
         </xs:complexType>
     </xs:element>
