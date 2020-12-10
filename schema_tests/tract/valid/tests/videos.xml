@@ -3,7 +3,7 @@
     xmlns="https://mobile-content-api.cru.org/xmlns/tract">
     <hero>
         <content:paragraph>
-            <content:video provider="youtube" videoId="asdf" />
+            <content:video provider="youtube" video-id="asdf" />
         </content:paragraph>
     </hero>
 </page>
