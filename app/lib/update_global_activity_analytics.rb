@@ -34,14 +34,14 @@ class UpdateGlobalActivityAnalytics
 
   def initialize
     init_google_instance
+    @analytics = GlobalActivityAnalytics.instance
   end
 
   def perform
-    # return if @analytics.actual?
+    return if @analytics.actual?
 
     data = fetch_data
     counters = fetch_counters(data)
-    return counters
     @analytics.update!(counters)
   end
 
@@ -62,6 +62,18 @@ class UpdateGlobalActivityAnalytics
   end
 
   def init_google_instance
+    service = Google::Apis::AnalyticsreportingV4::AnalyticsReportingService.new
+
+    # Create service account credentials
+    credentials = Google::Auth::ServiceAccountCredentials.make_creds(
+      json_key_io: File.open('config/secure/service_account_cred.json'),
+      scope: 'https://www.googleapis.com/auth/analytics.readonly'
+    )
+  
+    # Authorize with our readonly credentials
+    service.authorization = credentials
+
+    @google_client = service
   end
 
   ### Preliminary Google Analytics Report
@@ -73,7 +85,7 @@ class UpdateGlobalActivityAnalytics
     )
     # Set the metric
     metrics = FIELDS.map { |field| Google::Apis::AnalyticsreportingV4::Metric.new(
-      expression: "ga:#{field}"
+      expression: "ga:#{field}" # use aliases to rename expressions with original adobe names launches, gospel_presentations, etc
     )}
 
     # Set the dimension
@@ -82,7 +94,7 @@ class UpdateGlobalActivityAnalytics
     )
     # Build up our report request and a add country filter
     report_request = Google::Apis::AnalyticsreportingV4::ReportRequest.new(
-      view_id: '234841169',
+      view_id: '234841169', # switch for ENV variable
       sampling_level: 'DEFAULT',
       # filters_expression: "",
       date_ranges: [date_range],
@@ -94,6 +106,6 @@ class UpdateGlobalActivityAnalytics
       { report_requests: [report_request] }
     )
     # Make API call.
-    response = $google_client.batch_get_reports(request)
+    response = @google_client.batch_get_reports(request)
   end
 end
