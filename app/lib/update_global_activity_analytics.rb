@@ -72,7 +72,7 @@ class UpdateGlobalActivityAnalytics
       )]
 
     Google::Apis::AnalyticsreportingV4::ReportRequest.new(
-      view_id: ENV["GOOGLE_ANALYTICS_VIEW_ID"],
+      view_id: ENV.fetch("GOOGLE_ANALYTICS_VIEW_ID"),
       sampling_level: "DEFAULT",
       date_ranges: [date_range],
       metrics: metrics,
@@ -87,7 +87,7 @@ class UpdateGlobalActivityAnalytics
     )]
 
     Google::Apis::AnalyticsreportingV4::ReportRequest.new(
-      view_id: ENV["GOOGLE_ANALYTICS_VIEW_ID"],
+      view_id: ENV.fetch("GOOGLE_ANALYTICS_VIEW_ID"),
       sampling_level: "DEFAULT",
       filters_expression: "ga:eventLabel==Presenting the Gospel",
       date_ranges: [date_range],
@@ -107,7 +107,7 @@ class UpdateGlobalActivityAnalytics
     )
 
     Google::Apis::AnalyticsreportingV4::ReportRequest.new(
-      view_id: ENV["GOOGLE_ANALYTICS_VIEW_ID"],
+      view_id: ENV.fetch("GOOGLE_ANALYTICS_VIEW_ID"),
       sampling_level: "DEFAULT",
       date_ranges: [date_range],
       metrics: metrics,
