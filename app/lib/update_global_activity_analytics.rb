@@ -5,33 +5,6 @@
 # every 24h.
 # The threshold is configurable by `GlobalActivityAnalytics::TTL` constant.
 class UpdateGlobalActivityAnalytics
-  # FIELDS = {
-  #   users: {name: "metrics/visitors", options: {sort: "desc"}},
-  #   launches: {name: "metrics/mobilelaunches"},
-  #   gospel_presentations: {name: "metrics/event90"}, # google this is called "EVENT LABEL: Presenting the Gospel"
-  #   countries: {name: "cm300000683_58877ac221d4771c0d530484"}
-  # }.freeze
-
-  FIELDS = ["users", "sessions", "totalEvents"]
-
-  DATE_RANGE_TEMPLATE = "%{start_year}-01-01T00:00:00.000/%{end_year}-01-01T00:00:00.000"
-  BASE_QUERY = {
-    "rsid": "vrs_cru1_godtoolsmobileapp",
-    "dimension": "variables/geocountry",
-    "settings": {
-      "countRepeatInstances": true,
-      "limit": 400,
-      "page": 0,
-      "nonesBehavior": "return-nones"
-    },
-    "statistics": {
-      "functions": [
-        "col-max",
-        "col-min"
-      ]
-    }
-  }
-
   def initialize
     init_google_instance
     @analytics = GlobalActivityAnalytics.instance
@@ -52,11 +25,16 @@ class UpdateGlobalActivityAnalytics
   end
 
   def fetch_counters(data)
-    report = data.reports.first
-    headers = report.column_header.metric_header.metric_header_entries.map(&:name)
     results = {}
-    headers.each_with_index do |header_name, index|
-      results[header_name.sub('ga:', '')] = report.data.rows.first.metrics.first.values[index]
+    data.reports.each do |report|
+      headers = report.column_header.metric_header.metric_header_entries.map(&:name)
+      headers.each_with_index do |header_name, index|
+        if header_name == "countries"
+          results[header_name] = report.data.rows.count
+        else
+          results[header_name.sub("ga:", "")] = report.data.rows.first.metrics.first.values[index]
+        end
+      end
     end
     results
   end
@@ -66,46 +44,83 @@ class UpdateGlobalActivityAnalytics
 
     # Create service account credentials
     credentials = Google::Auth::ServiceAccountCredentials.make_creds(
-      json_key_io: File.open('config/secure/service_account_cred.json'),
-      scope: 'https://www.googleapis.com/auth/analytics.readonly'
+      json_key_io: File.open("config/secure/service_account_cred.json"),
+      scope: "https://www.googleapis.com/auth/analytics.readonly"
     )
-  
+
     # Authorize with our readonly credentials
     service.authorization = credentials
 
     @google_client = service
   end
 
-  ### Preliminary Google Analytics Report
-  def google_analytics_report
-    # Set the date range - this is always required for report requests
-    date_range = Google::Apis::AnalyticsreportingV4::DateRange.new(
+  def date_range
+    Google::Apis::AnalyticsreportingV4::DateRange.new(
       start_date: Date.today.beginning_of_year.to_s,
       end_date: (Date.today.beginning_of_year + 1.year).to_s
     )
-    # Set the metric
-    metrics = FIELDS.map { |field| Google::Apis::AnalyticsreportingV4::Metric.new(
-      expression: "ga:#{field}" # use aliases to rename expressions with original adobe names launches, gospel_presentations, etc
-    )}
+  end
 
-    # Set the dimension
-    dimension = Google::Apis::AnalyticsreportingV4::Dimension.new(
-      name: "ga:browser"
-    )
-    # Build up our report request and a add country filter
-    report_request = Google::Apis::AnalyticsreportingV4::ReportRequest.new(
-      view_id: '234841169', # switch for ENV variable
-      sampling_level: 'DEFAULT',
-      # filters_expression: "",
+  def sessions_and_users_request
+    metrics = [Google::Apis::AnalyticsreportingV4::Metric.new(
+      expression: "ga:users"
+    ),
+
+      Google::Apis::AnalyticsreportingV4::Metric.new(
+        expression: "ga:sessions",
+        alias: "launches"
+      )]
+
+    Google::Apis::AnalyticsreportingV4::ReportRequest.new(
+      view_id: ENV["GOOGLE_ANALYTICS_VIEW_ID"],
+      sampling_level: "DEFAULT",
       date_ranges: [date_range],
-      metrics: metrics # https://github.com/googleapis/google-api-ruby-client/blob/15add33c34031f8d385d6c10a83b646d8c8632de/google-api-client/generated/google/apis/analyticsreporting_v4/classes.rb#L1346
-      # dimensions: []
+      metrics: metrics,
+      dimensions: []
     )
+  end
+
+  def gospel_presentations_request
+    metrics = [Google::Apis::AnalyticsreportingV4::Metric.new(
+      expression: "ga:totalEvents",
+      alias: "gospel_presentations"
+    )]
+
+    Google::Apis::AnalyticsreportingV4::ReportRequest.new(
+      view_id: ENV["GOOGLE_ANALYTICS_VIEW_ID"],
+      sampling_level: "DEFAULT",
+      filters_expression: "ga:eventLabel==Presenting the Gospel",
+      date_ranges: [date_range],
+      metrics: metrics,
+      dimensions: []
+    )
+  end
+
+  def countries_request
+    metrics = [Google::Apis::AnalyticsreportingV4::Metric.new(
+      expression: "ga:sessions",
+      alias: "countries"
+    )]
+
+    countries_dimesion = Google::Apis::AnalyticsreportingV4::Dimension.new(
+      name: "ga:country"
+    )
+
+    Google::Apis::AnalyticsreportingV4::ReportRequest.new(
+      view_id: ENV["GOOGLE_ANALYTICS_VIEW_ID"],
+      sampling_level: "DEFAULT",
+      date_ranges: [date_range],
+      metrics: metrics,
+      dimensions: [countries_dimesion]
+    )
+  end
+
+  def google_analytics_report
     # Create a new report request
     request = Google::Apis::AnalyticsreportingV4::GetReportsRequest.new(
-      { report_requests: [report_request] }
+      {report_requests: [sessions_and_users_request, gospel_presentations_request, countries_request]}
     )
     # Make API call.
-    response = @google_client.batch_get_reports(request)
+    @google_client.batch_get_reports(request)
   end
 end
