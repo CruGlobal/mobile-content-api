@@ -1,0 +1,172 @@
+{
+    "reports": [
+      {
+        "columnHeader": {
+          "metricHeader": {
+            "metricHeaderEntries": [
+              {
+                "name": "ga:users",
+                "type": "INTEGER"
+              },
+              {
+                "name": "launches",
+                "type": "INTEGER"
+              }
+            ]
+          }
+        },
+        "data": {
+          "rows": [
+            {
+              "metrics": [
+                {
+                  "values": [
+                    "238326",
+                    "966442"
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      },
+      {
+        "columnHeader": {
+          "metricHeader": {
+            "metricHeaderEntries": [
+              {
+                "name": "gospel_presentations",
+                "type": "INTEGER"
+              }
+            ]
+          }
+        },
+        "data": {
+          "rows": [
+            {
+              "metrics": [
+                {
+                  "values": [
+                    "43834"
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      },
+      {
+        "columnHeader": {
+          "dimensions": [
+            "ga:country"
+          ],
+          "metricHeader": {
+            "metricHeaderEntries": [
+              {
+                "name": "countries",
+                "type": "INTEGER"
+              }
+            ]
+          }
+        },
+        "data": {
+          "rows": [
+            {
+              "dimensions": [
+                "(not set)"
+              ],
+              "metrics": [
+                {
+                  "values": [
+                    "52"
+                  ]
+                }
+              ]
+            },
+            {
+              "dimensions": [
+                "Afghanistan"
+              ],
+              "metrics": [
+                {
+                  "values": [
+                    "1"
+                  ]
+                }
+              ]
+            },
+            {
+              "dimensions": [
+                "Albania"
+              ],
+              "metrics": [
+                {
+                  "values": [
+                    "12"
+                  ]
+                }
+              ]
+            },
+            {
+              "dimensions": [
+                "Algeria"
+              ],
+              "metrics": [
+                {
+                  "values": [
+                    "6"
+                  ]
+                }
+              ]
+            },
+            {
+              "dimensions": [
+                "Angola"
+              ],
+              "metrics": [
+                {
+                  "values": [
+                    "5"
+                  ]
+                }
+              ]
+            },
+            {
+              "dimensions": [
+                "Zimbabwe"
+              ],
+              "metrics": [
+                {
+                  "values": [
+                    "24"
+                  ]
+                }
+              ]
+            }
+          ],
+          "totals": [
+            {
+              "values": [
+                "95"
+              ]
+            }
+          ],
+          "rowCount": 6,
+          "minimums": [
+            {
+              "values": [
+                "1"
+              ]
+            }
+          ],
+          "maximums": [
+            {
+              "values": [
+                "1624"
+              ]
+            }
+          ]
+        }
+      }
+    ]
+  }

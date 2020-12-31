@@ -3,15 +3,15 @@ module TestHelpers
     rspec_context.instance_eval do
       analytics_url = "https://analyticsreporting.googleapis.com/v4/reports:batchGet"
       access_token_url = "https://www.googleapis.com/oauth2/v4/token"
-      
+
       allow(ENV).to receive(:fetch).with("GOOGLE_ANALYTICS_VIEW_ID").and_return("234841169")
       allow(ENV).to receive(:fetch).with("GOOGLE_API_USE_RAILS_LOGGER", "true").and_return("false")
 
-      body = File.read(Rails.root.join("spec", "fixtures", "adobe_access_token.json"))
-      stub_request(:post, access_token_url).to_return(status: access_token_status, body: body, headers: { "Content-Type" => "application/json; charset=UTF-8" })
+      body = File.read(Rails.root.join("spec", "fixtures", "google_access_token.json"))
+      stub_request(:post, access_token_url).to_return(status: access_token_status, body: body, headers: {"Content-Type" => "application/json; charset=UTF-8"})
 
-      body = File.read(Rails.root.join("spec", "fixtures", "adobe_analytics_stub.json"))
-      stub_request(:post, analytics_url).to_return(status: analytics_status, body: body, headers: { "Content-Type" => "application/json; charset=UTF-8" })
+      body = File.read(Rails.root.join("spec", "fixtures", "google_analytics_stub.json"))
+      stub_request(:post, analytics_url).to_return(status: analytics_status, body: body, headers: {"Content-Type" => "application/json; charset=UTF-8"})
     end
   end
 end

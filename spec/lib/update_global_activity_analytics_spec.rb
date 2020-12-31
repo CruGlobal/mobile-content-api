@@ -28,7 +28,7 @@ describe UpdateGlobalActivityAnalytics do
     context "when analytics is outdated" do
       context "when response is successful" do
         it "updates counters" do
-          expect { operation.perform }.to change(&counters).from([0, 0, 0, 0]).to([238326, 151, 966442, 43834])
+          expect { operation.perform }.to change(&counters).from([0, 0, 0, 0]).to([238326, 6, 966442, 43834])
         end
       end
 
