@@ -13,16 +13,12 @@ class UpdateGlobalActivityAnalytics
   def perform
     return if @analytics.actual?
 
-    data = fetch_data
+    data = google_analytics_report
     counters = fetch_counters(data)
     @analytics.update!(counters)
   end
 
   private
-
-  def fetch_data
-    google_analytics_report
-  end
 
   def fetch_counters(data)
     results = {}
@@ -118,7 +114,7 @@ class UpdateGlobalActivityAnalytics
   def google_analytics_report
     # Create a new report request
     request = Google::Apis::AnalyticsreportingV4::GetReportsRequest.new(
-      {report_requests: [sessions_and_users_request, gospel_presentations_request, countries_request]}
+      report_requests: [sessions_and_users_request, gospel_presentations_request, countries_request]
     )
     # Make API call.
     @google_client.batch_get_reports(request)
