@@ -5,6 +5,8 @@
 # every 24h.
 # The threshold is configurable by `GlobalActivityAnalytics::TTL` constant.
 class UpdateGlobalActivityAnalytics
+  SERVICE_ACCOUNT_CREDENTIALS_FILE_PATH = "config/secure/service_account_cred.json"
+
   def initialize
     init_google_instance
     @analytics = GlobalActivityAnalytics.instance
@@ -24,11 +26,12 @@ class UpdateGlobalActivityAnalytics
     results = {}
     data.reports.each do |report|
       headers = report.column_header.metric_header.metric_header_entries.map(&:name)
+      first_row = report.data.rows&.first
       headers.each_with_index do |header_name, index|
         if header_name == "countries"
           results[header_name] = report.data.rows.count
         else
-          results[header_name.sub("ga:", "")] = report.data.rows.first.metrics.first.values[index]
+          results[header_name.sub("ga:", "")] = first_row ? first_row.metrics.first.values[index] : 0
         end
       end
     end
@@ -40,7 +43,7 @@ class UpdateGlobalActivityAnalytics
 
     # Create service account credentials
     credentials = Google::Auth::ServiceAccountCredentials.make_creds(
-      json_key_io: File.open("config/secure/service_account_cred.json"),
+      json_key_io: File.open(SERVICE_ACCOUNT_CREDENTIALS_FILE_PATH),
       scope: "https://www.googleapis.com/auth/analytics.readonly"
     )
 
@@ -85,7 +88,7 @@ class UpdateGlobalActivityAnalytics
     Google::Apis::AnalyticsreportingV4::ReportRequest.new(
       view_id: ENV.fetch("GOOGLE_ANALYTICS_VIEW_ID"),
       sampling_level: "DEFAULT",
-      filters_expression: "ga:eventLabel==Presenting the Gospel",
+      filters_expression: "ga:eventLabel==presenting the gospel",
       date_ranges: [date_range],
       metrics: metrics,
       dimensions: []
