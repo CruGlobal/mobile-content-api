@@ -30,11 +30,12 @@ class UpdateGlobalActivityAnalytics
     results = {}
     data.reports.each do |report|
       headers = report.column_header.metric_header.metric_header_entries.map(&:name)
+      first_row = report.data.rows&.first
       headers.each_with_index do |header_name, index|
         if header_name == "countries"
           results[header_name] = report.data.rows.count
         else
-          results[header_name.sub("ga:", "")] = report.data.rows.first.metrics.first.values[index]
+          results[header_name.sub("ga:", "")] = first_row ? first_row.metrics.first.values[index] : 0
         end
       end
     end
@@ -91,7 +92,7 @@ class UpdateGlobalActivityAnalytics
     Google::Apis::AnalyticsreportingV4::ReportRequest.new(
       view_id: ENV.fetch("GOOGLE_ANALYTICS_VIEW_ID"),
       sampling_level: "DEFAULT",
-      filters_expression: "ga:eventLabel==Presenting the Gospel",
+      filters_expression: "ga:eventLabel==presenting the gospel",
       date_ranges: [date_range],
       metrics: metrics,
       dimensions: []
