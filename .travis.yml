@@ -10,8 +10,9 @@ jobs:
     cache:
       bundler: true
 
-    before_script: 
+    before_script:
     - bundle exec rake db:create db:schema:load RAILS_ENV=test
+    - cp spec/fixtures/service_account_cred.json.travis config/secure/service_account_cred.json
 
     script:
     - bundle exec rspec

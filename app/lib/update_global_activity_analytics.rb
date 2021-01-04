@@ -5,6 +5,8 @@
 # every 24h.
 # The threshold is configurable by `GlobalActivityAnalytics::TTL` constant.
 class UpdateGlobalActivityAnalytics
+  SERVICE_ACCOUNT_CREDENTIALS_FILE_PATH = "config/secure/service_account_cred.json"
+
   def initialize
     init_google_instance
     @analytics = GlobalActivityAnalytics.instance
@@ -44,7 +46,7 @@ class UpdateGlobalActivityAnalytics
 
     # Create service account credentials
     credentials = Google::Auth::ServiceAccountCredentials.make_creds(
-      json_key_io: File.open("config/secure/service_account_cred.json"),
+      json_key_io: File.open(SERVICE_ACCOUNT_CREDENTIALS_FILE_PATH),
       scope: "https://www.googleapis.com/auth/analytics.readonly"
     )
 
