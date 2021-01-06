@@ -11,15 +11,6 @@ COPY docker/datadog-agent /etc/datadog-agent
 COPY docker/supervisord-datadog.conf /etc/supervisor/conf.d/supervisord-datadog.conf
 COPY docker/docker-entrypoint.sh /
 
-# note: the sidekiq supervisord config manually loads files from conf.d,
-# so the cred file won't be available in sidekiq envs
-COPY docker/supervisord-secure-sync.conf /etc/supervisor/conf.d/supervisord-secure-sync.conf
-
-RUN apt-get update \
-  && apt-get install --no-install-recommends --fix-missing -y -q awscli \
-  && apt-get clean \
-  && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
-
 COPY Gemfile Gemfile.lock ./
 
 RUN bundle config gems.contribsys.com $SIDEKIQ_CREDS

@@ -43,6 +43,7 @@ class UpdateGlobalActivityAnalytics
 
     # Create service account credentials
     credentials = Google::Auth::ServiceAccountCredentials.make_creds(
+      # this file is downloaded from s3 in production via config/initializers/sync_secure_google_creds.rb
       json_key_io: File.open(SERVICE_ACCOUNT_CREDENTIALS_FILE_PATH),
       scope: "https://www.googleapis.com/auth/analytics.readonly"
     )
