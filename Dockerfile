@@ -35,11 +35,13 @@ RUN mkdir -p /home/app/webapp/tmp \
              /home/app/webapp/db \
              /home/app/webapp/log \
              /home/app/webapp/public/uploads \
+             /home/app/webapp/config/secure \
              /home/app/webapp/pages && \
     chmod -R ugo+rw /home/app/webapp/tmp \
                     /home/app/webapp/db \
                     /home/app/webapp/log \
                     /home/app/webapp/public/uploads \
+                    /home/app/webapp/config/secure \
                     /home/app/webapp/pages
 
 COPY cable.conf /usr/local/openresty/nginx/conf/location/cable.conf
