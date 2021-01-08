@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified"
+    xmlns:content="https://mobile-content-api.cru.org/xmlns/content"
+    targetNamespace="https://mobile-content-api.cru.org/xmlns/lesson">
+    <xs:import namespace="https://mobile-content-api.cru.org/xmlns/content" schemaLocation="content.xsd" />
+
+    <xs:element name="page">
+        <xs:complexType>
+            <xs:all>
+                <xs:element name="content">
+                    <xs:complexType>
+                        <xs:choice>
+                            <xs:choice minOccurs="0" maxOccurs="unbounded">
+                                <xs:group ref="content:elements" />
+                            </xs:choice>
+                        </xs:choice>
+                    </xs:complexType>
+                </xs:element>
+            </xs:all>
+        </xs:complexType>
+    </xs:element>
+</xs:schema>
