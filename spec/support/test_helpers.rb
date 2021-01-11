@@ -1,21 +1,17 @@
 module TestHelpers
   module_function def stub_request_to_analytics(rspec_context, analytics_status: 200, access_token_status: 200)
     rspec_context.instance_eval do
-      analytics_url = "http://test.com/adobe_analytics"
-      access_token_url = "https://ims-na1.adobelogin.com/ims/exchange/jwt"
+      analytics_url = "https://analyticsreporting.googleapis.com/v4/reports:batchGet"
+      access_token_url = "https://www.googleapis.com/oauth2/v4/token"
 
-      allow(ENV).to receive(:fetch).with("ADOBE_ANALYTICS_REPORT_URL").and_return(analytics_url)
-      allow(ENV).to receive(:fetch).with("ADOBE_ANALYTICS_COMPANY_ID").and_return("4")
-      allow(ENV).to receive(:fetch).with("ADOBE_ANALYTICS_CLIENT_ID").and_return("5")
-      allow(ENV).to receive(:fetch).with("ADOBE_ANALYTICS_JWT_TOKEN").and_return("jwt-token")
-      allow(ENV).to receive(:fetch).with("ADOBE_ANALYTICS_CLIENT_SECRET").and_return("secret")
-      allow(ENV).to receive(:fetch).with("ADOBE_ANALYTICS_EXCHANGE_JWT_URL").and_return(access_token_url)
+      allow(ENV).to receive(:fetch).with("GOOGLE_ANALYTICS_VIEW_ID").and_return("234841169")
+      allow(ENV).to receive(:fetch).with("GOOGLE_API_USE_RAILS_LOGGER", "true").and_return("false")
 
-      body = File.read(Rails.root.join("spec", "fixtures", "adobe_access_token.json"))
-      stub_request(:post, access_token_url).to_return(status: access_token_status, body: body)
+      body = File.read(Rails.root.join("spec", "fixtures", "google_access_token.json"))
+      stub_request(:post, access_token_url).to_return(status: access_token_status, body: body, headers: {"Content-Type" => "application/json; charset=UTF-8"})
 
-      body = File.read(Rails.root.join("spec", "fixtures", "adobe_analytics_stub.json"))
-      stub_request(:post, analytics_url).to_return(status: analytics_status, body: body)
+      body = File.read(Rails.root.join("spec", "fixtures", "google_analytics_stub.json"))
+      stub_request(:post, analytics_url).to_return(status: analytics_status, body: body, headers: {"Content-Type" => "application/json; charset=UTF-8"})
     end
   end
 end

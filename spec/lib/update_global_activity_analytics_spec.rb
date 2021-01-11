@@ -28,7 +28,7 @@ describe UpdateGlobalActivityAnalytics do
     context "when analytics is outdated" do
       context "when response is successful" do
         it "updates counters" do
-          expect { operation.perform }.to change(&counters).from([0, 0, 0, 0]).to([238326, 218, 966442, 43834])
+          expect { operation.perform }.to change(&counters).from([0, 0, 0, 0]).to([238326, 6, 966442, 43834])
         end
       end
 
@@ -55,6 +55,14 @@ describe UpdateGlobalActivityAnalytics do
       it "raises exception" do
         expect { operation.perform }.to raise_error(StandardError)
       end
+    end
+  end
+
+  describe "config file" do
+    it "exists" do
+      expect(File.exist?(described_class::SERVICE_ACCOUNT_CREDENTIALS_FILE_PATH)).to be(true),
+        "Service credential file doesn't exist. If you want a dummy file run "\
+        "`cp spec/fixtures/service_account_cred.json.travis #{described_class::SERVICE_ACCOUNT_CREDENTIALS_FILE_PATH}`"
     end
   end
 end

@@ -40,7 +40,7 @@ resource "GlobalActivityAnalytics" do
         expect(data["type"]).to eq("global-activity-analytics")
         expect(data["id"]).to eq("1")
         expect(data["attributes"]["users"]).to eq(238326)
-        expect(data["attributes"]["countries"]).to eq(218)
+        expect(data["attributes"]["countries"]).to eq(6)
         expect(data["attributes"]["launches"]).to eq(966442)
         expect(data["attributes"]["gospel-presentations"]).to eq(43834)
       end
