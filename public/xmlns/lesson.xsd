@@ -10,6 +10,7 @@
                     <xs:complexType>
                         <xs:choice>
                             <xs:choice minOccurs="0" maxOccurs="unbounded">
+                                <xs:element ref="content:spacer" />
                                 <xs:group ref="content:elements" />
                             </xs:choice>
                         </xs:choice>

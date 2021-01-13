@@ -588,6 +588,15 @@
         </xs:complexType>
     </xs:element>
 
+    <xs:element name="spacer">
+        <xs:annotation>
+            <xs:documentation>This tag can be used to vertically space content. The renderer should evenly split any
+                excess vertical whitespace between all spacer elements in a container.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:complexType />
+    </xs:element>
+
     <!-- Content Elements -->
     <xs:element name="tabs" type="content:tabs" />
     <xs:element name="link" type="content:link" />
