@@ -67,9 +67,9 @@ GEM
       zeitwerk (~> 2.2, >= 2.2.2)
     addressable (2.7.0)
       public_suffix (>= 2.0.2, < 5.0)
-    adobe-campaign (0.3.2)
+    adobe-campaign (0.4.0)
       activesupport (>= 3.1.0)
-      jwt (~> 1.0)
+      jwt (>= 1.0, < 3.0)
       rails (>= 3.1)
       rest-client (>= 1.6.0)
     amazing_print (1.2.2)
@@ -217,7 +217,7 @@ GEM
     method_source (1.0.0)
     mime-types (3.3.1)
       mime-types-data (~> 3.2015)
-    mime-types-data (3.2019.1009)
+    mime-types-data (3.2020.1104)
     mimemagic (0.3.5)
     mini_magick (4.11.0)
     mini_mime (1.0.2)
@@ -436,7 +436,7 @@ DEPENDENCIES
   action-cable-testing
   active_model_serializers (= 0.10.12)
   active_storage_validations
-  adobe-campaign (~> 0.3.2)
+  adobe-campaign (~> 0.4.0)
   amazing_print
   aws-sdk-s3
   bootsnap (>= 1.4.2)
