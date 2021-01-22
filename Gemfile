@@ -6,11 +6,11 @@ git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 ruby "2.6.6"
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem "rails", "~> 6.0.3", ">= 6.0.3.2"
+gem "rails", "~> 6.0.3"
 # Use sqlite3 as the database for Active Record
 # gem 'sqlite3', '~> 1.4'
 # Use Puma as the app server
-gem "puma", "~> 4.1"
+gem "puma", "~> 4.3"
 # Use SCSS for stylesheets
 # gem 'sass-rails', '>= 6'
 # Transpile app-like JavaScript. Read more: https://github.com/rails/webpacker
@@ -25,7 +25,7 @@ gem "puma", "~> 4.1"
 # gem 'bcrypt', '~> 3.1.7'
 
 # Use Active Storage variant
-gem "image_processing", "~> 1.2"
+gem "image_processing", "~> 1.12"
 
 # Reduces boot times through caching; required in config/boot.rb
 gem "bootsnap", ">= 1.4.2", require: false
@@ -38,7 +38,7 @@ end
 group :development do
   # Access an interactive console on exception pages or by calling 'console' anywhere in the code.
   gem "web-console", ">= 3.3.0"
-  gem "listen", "~> 3.2"
+  gem "listen", "~> 3.4"
   # Spring speeds up development by keeping your application running in the background. Read more: https://github.com/rails/spring
   gem "spring"
   gem "spring-commands-rspec"
@@ -58,21 +58,20 @@ gem "tzinfo-data", platforms: [:mingw, :mswin, :x64_mingw, :jruby]
 
 gem "pg"
 
-gem "active_model_serializers", "0.10.10"
+gem "active_model_serializers", "0.10.12"
 gem "active_storage_validations"
 gem "adobe-campaign", "~> 0.4.0"
-gem "aws-sdk"
-gem "aws-sdk-rails"
 gem "aws-sdk-s3"
 gem "ddtrace"
 gem "dogstatsd-ruby"
 gem "file_validators"
+gem "google-api-client", "~> 0.53", require: "google/apis/analyticsreporting_v4"
 gem "httparty"
 gem "json-jwt"
 gem "jwt"
 gem "lograge"
-gem "oj", "~> 3.10.8"
-gem "ougai", "~> 1.8"
+gem "oj", "~> 3.11.0"
+gem "ougai", "~> 1.9"
 gem "raddocs"
 gem "redis"
 gem "rest-client", "~> 2.1.0"

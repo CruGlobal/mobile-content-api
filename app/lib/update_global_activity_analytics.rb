@@ -5,107 +5,122 @@
 # every 24h.
 # The threshold is configurable by `GlobalActivityAnalytics::TTL` constant.
 class UpdateGlobalActivityAnalytics
-  FIELDS = {
-    users: {name: "metrics/visitors", options: {sort: "desc"}},
-    launches: {name: "metrics/mobilelaunches"},
-    gospel_presentations: {name: "metrics/event90"},
-    countries: {name: "cm300000683_58877ac221d4771c0d530484"}
-  }.freeze
-
-  DATE_RANGE_TEMPLATE = "%{start_year}-01-01T00:00:00.000/%{end_year}-01-01T00:00:00.000"
-  BASE_QUERY = {
-    "rsid": "vrs_cru1_godtoolsmobileapp",
-    "dimension": "variables/geocountry",
-    "settings": {
-      "countRepeatInstances": true,
-      "limit": 400,
-      "page": 0,
-      "nonesBehavior": "return-nones"
-    },
-    "statistics": {
-      "functions": [
-        "col-max",
-        "col-min"
-      ]
-    }
-  }
+  SERVICE_ACCOUNT_CREDENTIALS_FILE_PATH = "config/secure/service_account_cred.json"
 
   def initialize
+    init_google_instance
     @analytics = GlobalActivityAnalytics.instance
-    @analytics_url = ENV.fetch("ADOBE_ANALYTICS_REPORT_URL")
-    @company_id = ENV.fetch("ADOBE_ANALYTICS_COMPANY_ID")
-    @client_id = ENV.fetch("ADOBE_ANALYTICS_CLIENT_ID")
-    @jwt_token = ENV.fetch("ADOBE_ANALYTICS_JWT_TOKEN")
-    @client_secret = ENV.fetch("ADOBE_ANALYTICS_CLIENT_SECRET")
-    @exchange_jwt_url = ENV.fetch("ADOBE_ANALYTICS_EXCHANGE_JWT_URL")
   end
 
   def perform
     return if @analytics.actual?
 
-    data = fetch_data
+    data = google_analytics_report
     counters = fetch_counters(data)
     @analytics.update!(counters)
   end
 
   private
 
-  def fetch_data
-    headers = {
-      "Content-Type": "application/json",
-      "Authorization": "Bearer #{access_token}",
-      "x-api-key": @client_id,
-      "x-proxy-global-company-id": @company_id
-    }
-    res = Net::HTTP.post(URI(@analytics_url), prepare_query.to_json, headers)
-    json_from_http_result(res)
+  def fetch_counters(data)
+    results = {}
+    data.reports.each do |report|
+      headers = report.column_header.metric_header.metric_header_entries.map(&:name)
+      first_row = report.data.rows&.first
+      headers.each_with_index do |header_name, index|
+        if header_name == "countries"
+          results[header_name] = report.data.rows.count
+        else
+          results[header_name.sub("ga:", "")] = first_row ? first_row.metrics.first.values[index] : 0
+        end
+      end
+    end
+    results
   end
 
-  def access_token
-    uri = URI(@exchange_jwt_url)
-    res = Net::HTTP.start(uri.hostname, uri.port, use_ssl: true) { |http|
-      req = Net::HTTP::Post.new(uri)
-      req["Content-Type"] = "application/x-www-form-urlencoded"
-      req.set_form_data(client_id: @client_id, client_secret: @client_secret, jwt_token: @jwt_token)
-      http.request(req)
-    }
-    json_from_http_result(res)["access_token"]
-  end
+  def init_google_instance
+    service = Google::Apis::AnalyticsreportingV4::AnalyticsReportingService.new
 
-  def json_from_http_result(res)
-    raise res.inspect unless res.is_a?(Net::HTTPSuccess)
-    JSON.parse(res.body)
-  end
-
-  def prepare_query
-    today = Time.zone.today
-    metrics = FIELDS.map.with_index { |(_, column), index|
-      attrs = {
-        columnId: index.to_s,
-        id: column[:name]
-      }
-      column.fetch(:options, {}).each { |key, val| attrs[key] = val }
-      attrs
-    }
-
-    date_range = format(
-      DATE_RANGE_TEMPLATE,
-      start_year: today.year,
-      end_year: (today + 1.year).year
+    # Create service account credentials
+    credentials = Google::Auth::ServiceAccountCredentials.make_creds(
+      # this file is downloaded from s3 in production via config/initializers/sync_secure_google_creds.rb
+      json_key_io: File.open(SERVICE_ACCOUNT_CREDENTIALS_FILE_PATH),
+      scope: "https://www.googleapis.com/auth/analytics.readonly"
     )
 
-    query = BASE_QUERY.clone
-    query["globalFilters"] = [
-      {
-        "type": "dateRange",
-        "dateRange": date_range
-      }
-    ]
-    query["metricContainer"] = {"metrics": metrics}
-    query
+    # Authorize with our readonly credentials
+    service.authorization = credentials
+
+    @google_client = service
   end
 
-  def fetch_counters(data)
-    Hash[FIELDS.keys.zip(data["summaryData"]["totals"].map(&:to_i))]
+  def date_range
+    Google::Apis::AnalyticsreportingV4::DateRange.new(
+      start_date: Date.today.beginning_of_year.to_s,
+      end_date: (Date.today.beginning_of_year + 1.year).to_s
+    )
+  end
+
+  def sessions_and_users_request
+    metrics = [Google::Apis::AnalyticsreportingV4::Metric.new(
+      expression: "ga:users"
+    ),
+
+      Google::Apis::AnalyticsreportingV4::Metric.new(
+        expression: "ga:sessions",
+        alias: "launches"
+      )]
+
+    Google::Apis::AnalyticsreportingV4::ReportRequest.new(
+      view_id: ENV.fetch("GOOGLE_ANALYTICS_VIEW_ID"),
+      sampling_level: "DEFAULT",
+      date_ranges: [date_range],
+      metrics: metrics,
+      dimensions: []
+    )
+  end
+
+  def gospel_presentations_request
+    metrics = [Google::Apis::AnalyticsreportingV4::Metric.new(
+      expression: "ga:totalEvents",
+      alias: "gospel_presentations"
+    )]
+
+    Google::Apis::AnalyticsreportingV4::ReportRequest.new(
+      view_id: ENV.fetch("GOOGLE_ANALYTICS_VIEW_ID"),
+      sampling_level: "DEFAULT",
+      filters_expression: "ga:eventLabel==presenting the gospel",
+      date_ranges: [date_range],
+      metrics: metrics,
+      dimensions: []
+    )
+  end
+
+  def countries_request
+    metrics = [Google::Apis::AnalyticsreportingV4::Metric.new(
+      expression: "ga:sessions",
+      alias: "countries"
+    )]
+
+    countries_dimesion = Google::Apis::AnalyticsreportingV4::Dimension.new(
+      name: "ga:country"
+    )
+
+    Google::Apis::AnalyticsreportingV4::ReportRequest.new(
+      view_id: ENV.fetch("GOOGLE_ANALYTICS_VIEW_ID"),
+      sampling_level: "DEFAULT",
+      date_ranges: [date_range],
+      metrics: metrics,
+      dimensions: [countries_dimesion]
+    )
+  end
+
+  def google_analytics_report
+    # Create a new report request
+    request = Google::Apis::AnalyticsreportingV4::GetReportsRequest.new(
+      report_requests: [sessions_and_users_request, gospel_presentations_request, countries_request]
+    )
+    # Make API call.
+    @google_client.batch_get_reports(request)
   end
 end

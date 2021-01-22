@@ -13,7 +13,7 @@ class Attachment < ActiveRecord::Base
 
   has_one_attached :file
   validates :file, file_content_type: {
-    allow: ["image/jpeg", "image/png", "image/gif", "image/jpg"],
+    allow: ["image/jpeg", "image/png", "image/gif", "image/jpg", "application/json"],
     if: -> { file.attached? }
   }
 
@@ -32,7 +32,7 @@ class Attachment < ActiveRecord::Base
 
   def generate_sha256
     XmlUtil.filename_sha(URI.parse(url).open.read)
-  rescue NoMethodError
+  rescue NoMethodError, OpenURI::HTTPError
     file = attachment_changes["file"].attachable
     file ||= url
     XmlUtil.filename_sha(File.open(file).read)

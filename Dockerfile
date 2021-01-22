@@ -24,7 +24,10 @@ ARG TEST_DB_PASSWORD=
 ARG TEST_DB_HOST=localhost
 ARG TEST_DB_PORT=5432
 
+# just like in travis, we need to copy the fake cred json so that our tests can function
+RUN cp spec/fixtures/service_account_cred.json.travis config/secure/service_account_cred.json
 RUN bundle exec rails db:create db:schema:load docs:generate RAILS_ENV=test
+RUN rm config/secure/service_account_cred.json
 RUN bundle exec rails assets:clobber assets:precompile RAILS_ENV=test
 
 ## Run this last to make sure permissions are all correct
@@ -32,11 +35,13 @@ RUN mkdir -p /home/app/webapp/tmp \
              /home/app/webapp/db \
              /home/app/webapp/log \
              /home/app/webapp/public/uploads \
+             /home/app/webapp/config/secure \
              /home/app/webapp/pages && \
     chmod -R ugo+rw /home/app/webapp/tmp \
                     /home/app/webapp/db \
                     /home/app/webapp/log \
                     /home/app/webapp/public/uploads \
+                    /home/app/webapp/config/secure \
                     /home/app/webapp/pages
 
 COPY cable.conf /usr/local/openresty/nginx/conf/location/cable.conf

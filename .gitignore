@@ -48,3 +48,4 @@ vendor/bundle
 /node_modules
 
 spec/examples.txt
+service_account_cred.json
