@@ -6,7 +6,9 @@ class Package
   XPATH_RESOURCES = %w[//@background-image
     //manifest:category/@banner
     //content:animation/@resource
-    //content:image[not(@restrictTo='web')]/@resource].freeze
+    //content:image[not(@restrictTo='web')]/@resource
+    //content:text/@image-start
+    //content:text/@image-end].freeze
   XPATH_TIPS = %w[//training:tip/@id
     //tract:header/@training:tip
     //tract:call-to-action/@training:tip].freeze
