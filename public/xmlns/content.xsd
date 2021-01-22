@@ -246,11 +246,11 @@
 
     <xs:element name="text">
         <xs:complexType>
-            <xs:complexContent>
+            <xs:simpleContent>
                 <xs:extension base="content:textType">
                     <xs:attributeGroup ref="content:baseAttributes" />
                 </xs:extension>
-            </xs:complexContent>
+            </xs:simpleContent>
         </xs:complexType>
     </xs:element>
     <xs:complexType name="textType">
