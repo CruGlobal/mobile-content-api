@@ -347,8 +347,7 @@
                 <xs:extension base="content:textChild">
                     <xs:annotation>
                         <xs:documentation>The content:text child element is the text content of this button. The
-                            text-color attribute defaults to the primary-text-color of the closest ancestor container.
-                            The text-align attribute for buttons defaults to center.
+                            text-align attribute for buttons defaults to center.
                         </xs:documentation>
                     </xs:annotation>
                     <xs:sequence>
@@ -402,10 +401,46 @@
                             </xs:documentation>
                         </xs:annotation>
                     </xs:attribute>
+                    <xs:attribute name="style" default="contained">
+                        <xs:annotation>
+                            <xs:documentation>This attribute defines the style of the button. It defaults to "contained"
+                                unless otherwise specified.
+                            </xs:documentation>
+                        </xs:annotation>
+                        <xs:simpleType>
+                            <xs:restriction base="xs:string">
+                                <xs:enumeration value="contained">
+                                    <xs:annotation>
+                                        <xs:documentation>This is a solid color button. The button color defines the
+                                            solid color for this button. The button text-color defaults to the
+                                            primary-text-color of the closest styles ancestor.
+                                        </xs:documentation>
+                                    </xs:annotation>
+                                </xs:enumeration>
+                                <xs:enumeration value="outlined">
+                                    <xs:annotation>
+                                        <xs:documentation>This is an outlined button. The button color defines the
+                                            outline color for this button. The button text-color defaults to the
+                                            color of this button.
+                                        </xs:documentation>
+                                    </xs:annotation>
+                                </xs:enumeration>
+                            </xs:restriction>
+                        </xs:simpleType>
+                    </xs:attribute>
                     <xs:attribute name="color" type="content:colorValue" use="optional">
                         <xs:annotation>
                             <xs:documentation>This attribute determines the color of the button. This defaults to the
-                                primary-color of the closest ancestor container.
+                                button-color of the closest ancestor element. If button-color is not defined in the
+                                element hierarchy the color then defaults to the primary-color of the closest ancestor
+                                element.
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:attribute>
+                    <xs:attribute name="background-color" type="content:colorValue" default="rgba(0,0,0,0)">
+                        <xs:annotation>
+                            <xs:documentation>This attribute determines the background color of outlined buttons. This
+                                defaults to rgba(0,0,0,0).
                             </xs:documentation>
                         </xs:annotation>
                     </xs:attribute>
