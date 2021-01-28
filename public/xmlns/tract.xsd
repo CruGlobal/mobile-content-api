@@ -247,8 +247,16 @@
         </xs:complexContent>
     </xs:complexType>
 
-    <!-- Modal - a Modal that is displayed when it's listener is triggered -->
     <xs:complexType name="modal">
+        <xs:annotation>
+            <xs:documentation>A modal that is displayed when it's listener is triggered. Modals have the following
+                default styles:
+                - button-color defaults to rgba(255,255,255,1)
+                - primary-color defaults to rgba(0,0,0,0)
+                - primary-text-color defaults to rgba(255,255,255,1)
+                - Buttons default to the outlined style
+            </xs:documentation>
+        </xs:annotation>
         <xs:sequence>
             <xs:element name="title" minOccurs="0" maxOccurs="1">
                 <xs:annotation>
