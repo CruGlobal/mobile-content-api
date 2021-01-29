@@ -3,7 +3,7 @@
 require "json"
 require "rest-client"
 require "auth_util"
-require "hash_util"
+require "digest/md5"
 
 module OneSky
   # @return [Hash] of translated phrases from OneSky
@@ -51,7 +51,7 @@ module OneSky
   def self.headers(language_code)
     {api_key: ENV["ONESKY_API_KEY"],
      timestamp: AuthUtil.epoch_time_seconds,
-     dev_hash: HashUtil.dev_hash,
+     dev_hash: Digest::MD5.hexdigest(AuthUtil.epoch_time_seconds + ENV["ONESKY_API_SECRET"]),
      locale: language_code}
   end
 
