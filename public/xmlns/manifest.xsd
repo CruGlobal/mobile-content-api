@@ -110,15 +110,17 @@
         </xs:attribute>
         <xs:attribute name="navbar-color" type="content:colorValue" use="optional">
             <xs:annotation>
-                <xs:documentation>This defines the color of the application navigation bar for this tool. This defaults
-                    to the primary-color.
+                <xs:documentation>This defines the color of the application navigation bar for this tool. For lesson
+                    tool types this defaults to transparent, for all other tool types this defaults to the
+                    primary-color.
                 </xs:documentation>
             </xs:annotation>
         </xs:attribute>
         <xs:attribute name="navbar-control-color" type="content:colorValue" use="optional">
             <xs:annotation>
                 <xs:documentation>This defines the color of controls on the application navigation bar for this tool.
-                    This defaults to the primary-text-color.
+                    For lesson tool types this defaults to the primary-color, for all other tool types this defaults to
+                    the primary-text-color.
                 </xs:documentation>
             </xs:annotation>
         </xs:attribute>
