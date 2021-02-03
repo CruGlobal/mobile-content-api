@@ -117,7 +117,7 @@ GEM
     crack (0.4.5)
       rexml
     crass (1.0.6)
-    ddtrace (0.44.0)
+    ddtrace (0.45.0)
       msgpack
     declarative (0.0.20)
     declarative-option (0.1.0)
