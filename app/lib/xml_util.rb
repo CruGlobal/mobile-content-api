@@ -7,7 +7,7 @@ module XmlUtil
   XMLNS_TRAINING = "https://mobile-content-api.cru.org/xmlns/training"
 
   def self.translatable_nodes(xml)
-    xml.xpath("//content:text[@i18n-id]")
+    xpath_namespace(xml, "//content:text[@i18n-id]")
   end
 
   def self.translatable_node_attrs(xml)
