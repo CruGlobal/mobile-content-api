@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<page xmlns:content="https://mobile-content-api.cru.org/xmlns/content"
+    xmlns="https://mobile-content-api.cru.org/xmlns/tract">
+    <hero>
+        <content:paragraph>
+            <content:text start-image="test.png">Start Image</content:text>
+            <content:text start-image="test.png" start-image-size="32">Start Image</content:text>
+            <content:text end-image="test.png">End Image</content:text>
+            <content:text end-image="test.png" end-image-size="32">End Image</content:text>
+        </content:paragraph>
+    </hero>
+</page>
