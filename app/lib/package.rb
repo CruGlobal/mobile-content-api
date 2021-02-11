@@ -7,8 +7,8 @@ class Package
     //manifest:category/@banner
     //content:animation/@resource
     //content:image[not(@restrictTo='web')]/@resource
-    //content:text/@image-start
-    //content:text/@image-end].freeze
+    //content:text/@start-image
+    //content:text/@end-image].freeze
   XPATH_TIPS = %w[//training:tip/@id
     //tract:header/@training:tip
     //tract:call-to-action/@training:tip].freeze

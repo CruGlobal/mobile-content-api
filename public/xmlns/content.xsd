@@ -248,17 +248,41 @@
         <xs:complexType>
             <xs:simpleContent>
                 <xs:extension base="content:textType">
-                    <xs:attribute name="image-start" type="xs:string">
+                    <xs:attribute name="start-image" type="xs:string">
                         <xs:annotation>
                             <xs:documentation>Defines an image to display to the "start" of this text node.
                             </xs:documentation>
                         </xs:annotation>
                     </xs:attribute>
-                    <xs:attribute name="image-end" type="xs:string">
+                    <xs:attribute name="start-image-size" default="40">
+                        <xs:annotation>
+                            <xs:documentation>Defines the size in "density-independent pixels"/"points" of the start
+                                image. This defaults to 40.
+                            </xs:documentation>
+                        </xs:annotation>
+                        <xs:simpleType>
+                            <xs:restriction base="xs:int">
+                                <xs:pattern value="[1-9][0-9]*" />
+                            </xs:restriction>
+                        </xs:simpleType>
+                    </xs:attribute>
+                    <xs:attribute name="end-image" type="xs:string">
                         <xs:annotation>
                             <xs:documentation>Defines an image to display to the "end" of this text node.
                             </xs:documentation>
                         </xs:annotation>
+                    </xs:attribute>
+                    <xs:attribute name="end-image-size" default="40">
+                        <xs:annotation>
+                            <xs:documentation>Defines the size in "density-independent pixels"/"points" of the end
+                                image. This defaults to 40.
+                            </xs:documentation>
+                        </xs:annotation>
+                        <xs:simpleType>
+                            <xs:restriction base="xs:int">
+                                <xs:pattern value="[1-9][0-9]*" />
+                            </xs:restriction>
+                        </xs:simpleType>
                     </xs:attribute>
                     <xs:attributeGroup ref="content:baseAttributes" />
                 </xs:extension>
