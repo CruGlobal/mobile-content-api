@@ -215,34 +215,34 @@
         </xs:complexType>
     </xs:element>
 
-    <!-- Tabbed content -->
-    <xs:complexType name="tabs">
-        <xs:sequence>
-            <xs:element name="tab" minOccurs="1" maxOccurs="3">
-                <xs:complexType>
-                    <xs:sequence>
-                        <xs:element name="label" type="content:textChild" />
-                        <xs:element ref="analytics:events" minOccurs="0" maxOccurs="1">
+    <xs:element name="tabs">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="tab" maxOccurs="3">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element name="label" type="content:textChild" />
+                            <xs:element ref="analytics:events" minOccurs="0">
+                                <xs:annotation>
+                                    <xs:documentation>Analytics Events to trigger for a tab. The default trigger mode
+                                        for tab analytics events is "selected".
+                                    </xs:documentation>
+                                </xs:annotation>
+                            </xs:element>
+                            <xs:choice minOccurs="0" maxOccurs="unbounded">
+                                <xs:group ref="content:elements" />
+                            </xs:choice>
+                        </xs:sequence>
+                        <xs:attribute name="listeners" type="content:listenersType">
                             <xs:annotation>
-                                <xs:documentation>
-                                    Analytics Events to trigger for a tab. The default trigger mode for tab analytics
-                                    events is "selected".
-                                </xs:documentation>
+                                <xs:documentation>event_ids that trigger this tab</xs:documentation>
                             </xs:annotation>
-                        </xs:element>
-                        <xs:choice minOccurs="0" maxOccurs="unbounded">
-                            <xs:group ref="content:elements" />
-                        </xs:choice>
-                    </xs:sequence>
-                    <xs:attribute name="listeners" type="content:listenersType">
-                        <xs:annotation>
-                            <xs:documentation>event_ids that trigger this tab</xs:documentation>
-                        </xs:annotation>
-                    </xs:attribute>
-                </xs:complexType>
-            </xs:element>
-        </xs:sequence>
-    </xs:complexType>
+                        </xs:attribute>
+                    </xs:complexType>
+                </xs:element>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
 
     <xs:element name="text">
         <xs:complexType>
@@ -589,7 +589,6 @@
     </xs:element>
 
     <!-- Content Elements -->
-    <xs:element name="tabs" type="content:tabs" />
     <xs:element name="link" type="content:link" />
     <xs:element name="form" type="content:form" />
     <xs:element name="input" type="content:input" />
