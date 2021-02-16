@@ -244,6 +244,23 @@
         </xs:complexType>
     </xs:element>
 
+    <xs:element name="accordion">
+        <xs:complexType>
+            <xs:choice>
+                <xs:element name="section" maxOccurs="unbounded">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element name="header" type="content:textChild" />
+                            <xs:choice minOccurs="0" maxOccurs="unbounded">
+                                <xs:group ref="content:elements" />
+                            </xs:choice>
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+            </xs:choice>
+        </xs:complexType>
+    </xs:element>
+
     <xs:element name="text">
         <xs:complexType>
             <xs:simpleContent>
@@ -596,6 +613,7 @@
         <xs:choice>
             <xs:element ref="content:paragraph" />
             <xs:element ref="content:tabs" />
+            <xs:element ref="content:accordion" />
             <xs:element ref="content:text" />
             <xs:element ref="content:image" />
             <xs:element ref="content:video" />
