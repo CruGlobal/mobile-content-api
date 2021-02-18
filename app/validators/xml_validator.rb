@@ -2,9 +2,12 @@
 
 class XmlValidator < ActiveModel::EachValidator
   def validate_each(record, attribute, value)
-    xml_errors = xsd(record).validate(Nokogiri::XML(value))
+    xml = Nokogiri::XML(value) { |config| config.strict }
+    xml_errors = xsd(record).validate(xml)
 
     xml_errors.each { |e| record.errors.add(attribute, e.to_s) }
+  rescue Nokogiri::XML::SyntaxError => e
+    record.errors.add(attribute, e.to_s)
   end
 
   private
