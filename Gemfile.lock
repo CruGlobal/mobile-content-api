@@ -254,7 +254,7 @@ GEM
       shellany (~> 0.0)
     oj (3.11.2)
     os (1.1.1)
-    ougai (1.9.1)
+    ougai (2.0.0)
       oj (~> 3.10)
     parallel (1.20.1)
     parser (3.0.0.0)
@@ -474,7 +474,7 @@ DEPENDENCIES
   listen (~> 3.4)
   lograge
   oj (~> 3.11.2)
-  ougai (~> 1.9)
+  ougai (~> 2.0)
   pg
   pry-byebug
   puma (~> 4.3)
