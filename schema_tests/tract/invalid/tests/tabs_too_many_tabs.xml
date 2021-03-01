@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<page xmlns:content="https://mobile-content-api.cru.org/xmlns/content"
+    xmlns="https://mobile-content-api.cru.org/xmlns/tract">
+    <hero>
+        <content:paragraph>
+            <content:tabs>
+                <content:tab><content:label><content:text>1</content:text></content:label></content:tab>
+                <content:tab><content:label><content:text>2</content:text></content:label></content:tab>
+                <content:tab><content:label><content:text>3</content:text></content:label></content:tab>
+                <content:tab><content:label><content:text>4</content:text></content:label></content:tab>
+            </content:tabs>
+        </content:paragraph>
+    </hero>
+</page>
