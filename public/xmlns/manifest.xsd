@@ -130,6 +130,12 @@
             </xs:annotation>
         </xs:attribute>
 
+        <xs:attribute name="dismiss-listeners" type="content:listenersType">
+            <xs:annotation>
+                <xs:documentation>This attribute defines events that will dismiss this tool.</xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+
         <!-- Import any external groups of attributes we want to support -->
         <xs:attributeGroup ref="tract:manifest" />
     </xs:complexType>
