@@ -1,6 +1,26 @@
 {
   "ignored_warnings": [
     {
+      "warning_type": "Weak Hash",
+      "warning_code": 90,
+      "fingerprint": "003c2db09fbe3434813e3efd45799f8072a7cca7139f85d57deb4d287d8639e8",
+      "check_name": "WeakHash",
+      "message": "Weak hashing algorithm used: MD5",
+      "file": "app/lib/one_sky.rb",
+      "line": 54,
+      "link": "https://brakemanscanner.org/docs/warning_types/weak_hash/",
+      "code": "Digest::MD5.hexdigest((AuthUtil.epoch_time_seconds + ENV[\"ONESKY_API_SECRET\"]))",
+      "render_path": null,
+      "location": {
+        "type": "method",
+        "class": "OneSky",
+        "method": "s(:self).headers"
+      },
+      "user_input": null,
+      "confidence": "Medium",
+      "note": ""
+    },
+    {
       "warning_type": "Unscoped Find",
       "warning_code": 82,
       "fingerprint": "27ee4f6d0ad789327918244724d7f3559ef10e9583c65b1a54f929ecdcbdfc9b",
@@ -227,7 +247,7 @@
       "check_name": "UnscopedFind",
       "message": "Unscoped call to `Resource#find`",
       "file": "app/controllers/resource_languages_controller.rb",
-      "line": 16,
+      "line": 17,
       "link": "https://brakemanscanner.org/docs/warning_types/unscoped_find/",
       "code": "Resource.find(params[:resource_id])",
       "render_path": null,
@@ -241,6 +261,6 @@
       "note": ""
     }
   ],
-  "updated": "2020-07-20 11:22:36 -0400",
-  "brakeman_version": "4.8.2"
+  "updated": "2021-01-29 16:05:14 -0500",
+  "brakeman_version": "5.0.0"
 }

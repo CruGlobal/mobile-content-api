@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:content="https://mobile-content-api.cru.org/xmlns/content"
+    elementFormDefault="qualified" targetNamespace="https://mobile-content-api.cru.org/xmlns/lesson">
+    <xs:import namespace="https://mobile-content-api.cru.org/xmlns/content" schemaLocation="content.xsd" />
+
+    <xs:element name="page">
+        <xs:complexType>
+            <xs:all>
+                <xs:element name="content">
+                    <xs:complexType>
+                        <xs:choice minOccurs="0" maxOccurs="unbounded">
+                            <xs:element ref="content:spacer" minOccurs="0" />
+                            <xs:group ref="content:elements" />
+                        </xs:choice>
+                    </xs:complexType>
+                </xs:element>
+            </xs:all>
+            <xs:attribute name="background-color" type="content:colorValue" default="rgba(255, 255, 255, 0)">
+                <xs:annotation>
+                    <xs:documentation>This defines the background color for this page. This background color is layered
+                        on top of any manifest background layers.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
+            <xs:attribute name="background-image" type="xs:string">
+                <xs:annotation>
+                    <xs:documentation>This defines a background image for this page.</xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
+            <xs:attribute name="background-image-align" type="content:imageGravity" default="center">
+                <xs:annotation>
+                    <xs:documentation>This defines how we align the background image. This defaults to center.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
+            <xs:attribute name="background-image-scale-type" type="content:imageScaleType" default="fill-x">
+                <xs:annotation>
+                    <xs:documentation>This defines how we should scale the background image. This defaults to fill-x.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
+            <xs:attribute name="hidden" type="xs:boolean" default="false">
+                <xs:annotation>
+                    <xs:documentation>Is this page hidden until triggered by a listener.</xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
+            <xs:attribute name="listeners" type="content:listenersType">
+                <xs:annotation>
+                    <xs:documentation>event_ids that trigger this page</xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
+        </xs:complexType>
+    </xs:element>
+</xs:schema>

@@ -215,52 +215,123 @@
         </xs:complexType>
     </xs:element>
 
-    <!-- Tabbed content -->
-    <xs:complexType name="tabs">
-        <xs:sequence>
-            <xs:element name="tab" minOccurs="1" maxOccurs="3">
-                <xs:complexType>
-                    <xs:sequence>
-                        <xs:element name="label" type="content:textChild" />
-                        <xs:element ref="analytics:events" minOccurs="0" maxOccurs="1">
+    <xs:element name="tabs">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="tab" maxOccurs="3">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element name="label" type="content:textChild" />
+                            <xs:element ref="analytics:events" minOccurs="0">
+                                <xs:annotation>
+                                    <xs:documentation>Analytics Events to trigger for a tab. The default trigger mode
+                                        for tab analytics events is "selected".
+                                    </xs:documentation>
+                                </xs:annotation>
+                            </xs:element>
+                            <xs:choice minOccurs="0" maxOccurs="unbounded">
+                                <xs:group ref="content:elements" />
+                            </xs:choice>
+                        </xs:sequence>
+                        <xs:attribute name="listeners" type="content:listenersType">
                             <xs:annotation>
-                                <xs:documentation>
-                                    Analytics Events to trigger for a tab. The default trigger mode for tab analytics
-                                    events is "selected".
-                                </xs:documentation>
+                                <xs:documentation>event_ids that trigger this tab</xs:documentation>
                             </xs:annotation>
-                        </xs:element>
-                        <xs:choice minOccurs="0" maxOccurs="unbounded">
-                            <xs:group ref="content:elements" />
-                        </xs:choice>
-                    </xs:sequence>
-                    <xs:attribute name="listeners" type="content:listenersType">
+                        </xs:attribute>
+                    </xs:complexType>
+                </xs:element>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="accordion">
+        <xs:complexType>
+            <xs:choice>
+                <xs:element name="section" maxOccurs="unbounded">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element name="header" type="content:textChild" />
+                            <xs:choice minOccurs="0" maxOccurs="unbounded">
+                                <xs:group ref="content:elements" />
+                            </xs:choice>
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+            </xs:choice>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="text">
+        <xs:complexType>
+            <xs:simpleContent>
+                <xs:extension base="content:textType">
+                    <xs:attribute name="start-image" type="xs:string">
                         <xs:annotation>
-                            <xs:documentation>event_ids that trigger this tab</xs:documentation>
+                            <xs:documentation>Defines an image to display to the "start" of this text node.
+                            </xs:documentation>
                         </xs:annotation>
                     </xs:attribute>
-                </xs:complexType>
-            </xs:element>
-        </xs:sequence>
-    </xs:complexType>
-
-    <!--
-        Text Content
-            i18n-id:    OPTIONAL - OneSky translation id
-            text-color: DEFAULT( inherit text-color )
-            text-scale: DEFAULT( inherit text-scale )
-    -->
-    <xs:complexType name="text">
+                    <xs:attribute name="start-image-size" default="40">
+                        <xs:annotation>
+                            <xs:documentation>Defines the size in "density-independent pixels"/"points" of the start
+                                image. This defaults to 40.
+                            </xs:documentation>
+                        </xs:annotation>
+                        <xs:simpleType>
+                            <xs:restriction base="xs:int">
+                                <xs:pattern value="[1-9][0-9]*" />
+                            </xs:restriction>
+                        </xs:simpleType>
+                    </xs:attribute>
+                    <xs:attribute name="end-image" type="xs:string">
+                        <xs:annotation>
+                            <xs:documentation>Defines an image to display to the "end" of this text node.
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:attribute>
+                    <xs:attribute name="end-image-size" default="40">
+                        <xs:annotation>
+                            <xs:documentation>Defines the size in "density-independent pixels"/"points" of the end
+                                image. This defaults to 40.
+                            </xs:documentation>
+                        </xs:annotation>
+                        <xs:simpleType>
+                            <xs:restriction base="xs:int">
+                                <xs:pattern value="[1-9][0-9]*" />
+                            </xs:restriction>
+                        </xs:simpleType>
+                    </xs:attribute>
+                    <xs:attributeGroup ref="content:baseAttributes" />
+                </xs:extension>
+            </xs:simpleContent>
+        </xs:complexType>
+    </xs:element>
+    <xs:complexType name="textType">
         <xs:simpleContent>
             <xs:extension base="xs:string">
-                <xs:attribute name="i18n-id" type="xs:string" use="optional" />
+                <xs:attribute name="i18n-id" type="xs:string">
+                    <xs:annotation>
+                        <xs:documentation>Defines the OneSky translation id for this text.</xs:documentation>
+                    </xs:annotation>
+                </xs:attribute>
                 <xs:attribute name="text-align" type="content:textAlign" use="optional">
                     <xs:annotation>
                         <xs:documentation>Defines the alignment of the text. This defaults to start.</xs:documentation>
                     </xs:annotation>
                 </xs:attribute>
-                <xs:attribute name="text-color" type="content:colorValue" use="optional" />
-                <xs:attribute name="text-scale" type="xs:float" use="optional" />
+                <xs:attribute name="text-color" type="content:colorValue">
+                    <xs:annotation>
+                        <xs:documentation>Defines the color of the text. This defaults to the text-color of the closest
+                            ancestor container unless otherwise specified.
+                        </xs:documentation>
+                    </xs:annotation>
+                </xs:attribute>
+                <xs:attribute name="text-scale" type="xs:float" default="1.0">
+                    <xs:annotation>
+                        <xs:documentation>Defines how much to scale the font size by. This defaults to 1.
+                        </xs:documentation>
+                    </xs:annotation>
+                </xs:attribute>
                 <xs:attribute name="text-style" type="content:textStyles" default="">
                     <xs:annotation>
                         <xs:documentation>Defines any typeface styles to apply to this text content.</xs:documentation>
@@ -271,7 +342,7 @@
     </xs:complexType>
     <xs:complexType name="textChild">
         <xs:sequence>
-            <xs:element name="text" type="content:text" />
+            <xs:element name="text" type="content:textType" />
         </xs:sequence>
     </xs:complexType>
 
@@ -341,92 +412,114 @@
         </xs:complexType>
     </xs:element>
 
-    <!-- Button -->
-    <!--
-        Samples:
-        <content:button
-            color="rgba(255,0,0,1)"
-            type="url"
-            url="https://www.google.com/">
-            <content:text
-                text-align="center"
-                text-color="rgba(255,255,255,1)">
-                Google
-            </content:text>
-        </content:button>
-
-        <content:button
-            type="event"
-            events="trigger-modal">
-            <content:text>Do something!</content:text>
-        </content:button>
-    -->
-    <xs:complexType name="button">
-        <xs:complexContent>
-            <xs:extension base="content:textChild">
-                <xs:annotation>
-                    <xs:documentation>The content:text child element is the text content of this button.
-                        The text-color attribute defaults to the primary-text-color of the closest ancestor container.
-                        The text-align attribute for buttons defaults to center.
-                    </xs:documentation>
-                </xs:annotation>
-                <xs:sequence>
-                    <xs:element ref="analytics:events" minOccurs="0" maxOccurs="1">
+    <xs:element name="button">
+        <xs:complexType>
+            <xs:complexContent>
+                <xs:extension base="content:textChild">
+                    <xs:annotation>
+                        <xs:documentation>The content:text child element is the text content of this button. The
+                            text-align attribute for buttons defaults to center.
+                        </xs:documentation>
+                    </xs:annotation>
+                    <xs:sequence>
+                        <xs:element ref="analytics:events" minOccurs="0" maxOccurs="1">
+                            <xs:annotation>
+                                <xs:documentation>Define any analytics events that are triggered by this button. The
+                                    default trigger mode for analytics events on buttons is "selected".
+                                </xs:documentation>
+                            </xs:annotation>
+                        </xs:element>
+                    </xs:sequence>
+                    <xs:attribute name="type" use="required">
                         <xs:annotation>
-                            <xs:documentation>
-                                Define any analytics events that are triggered by this button. The default trigger mode
-                                for analytics events on buttons is "selected".
+                            <xs:documentation>This attribute determines what type of button this is. Unrecognized button
+                                types should be treated as unsupported by the renderer.
                             </xs:documentation>
                         </xs:annotation>
-                    </xs:element>
-                </xs:sequence>
-                <xs:attribute name="type" use="required">
-                    <xs:annotation>
-                        <xs:documentation>This attribute determines what type of button this is. Unrecognized button
-                            types should be treated as unsupported by the renderer.
-                        </xs:documentation>
-                    </xs:annotation>
-                    <xs:simpleType>
-                        <xs:restriction base="xs:string">
-                            <xs:enumeration value="event">
-                                <xs:annotation>
-                                    <xs:documentation>"event" type buttons will trigger the events specified.</xs:documentation>
-                                </xs:annotation>
-                            </xs:enumeration>
-                            <xs:enumeration value="url">
-                                <xs:annotation>
-                                    <xs:documentation>"url" type buttons will launch the url specified.</xs:documentation>
-                                </xs:annotation>
-                            </xs:enumeration>
-                        </xs:restriction>
-                    </xs:simpleType>
-                </xs:attribute>
-                <xs:attribute name="events" type="content:eventIdsType" use="optional">
-                    <xs:annotation>
-                        <xs:documentation>This attribute defines the events to trigger for "event" buttons.</xs:documentation>
-                    </xs:annotation>
-                </xs:attribute>
-                <xs:attribute name="url" type="content:uri" use="optional">
-                    <xs:annotation>
-                        <xs:documentation>This attribute defines the url to open for "url" buttons.</xs:documentation>
-                    </xs:annotation>
-                </xs:attribute>
-                <xs:attribute name="url-i18n-id" type="xs:string" use="optional">
-                    <xs:annotation>
-                        <xs:documentation>This attribute defines a OneSky phrase id that contains the url for this button.</xs:documentation>
-                    </xs:annotation>
-                </xs:attribute>
-                <xs:attribute name="color" type="content:colorValue" use="optional">
-                    <xs:annotation>
-                        <xs:documentation>This attribute determines the color of the button. This defaults to the
-                            primary-color of the closest ancestor container.
-                        </xs:documentation>
-                    </xs:annotation>
-                </xs:attribute>
-                <xs:attributeGroup ref="content:baseAttributes" />
-            </xs:extension>
-        </xs:complexContent>
-    </xs:complexType>
+                        <xs:simpleType>
+                            <xs:restriction base="xs:string">
+                                <xs:enumeration value="event">
+                                    <xs:annotation>
+                                        <xs:documentation>"event" type buttons will trigger the events specified.
+                                        </xs:documentation>
+                                    </xs:annotation>
+                                </xs:enumeration>
+                                <xs:enumeration value="url">
+                                    <xs:annotation>
+                                        <xs:documentation>"url" type buttons will launch the url specified.
+                                        </xs:documentation>
+                                    </xs:annotation>
+                                </xs:enumeration>
+                            </xs:restriction>
+                        </xs:simpleType>
+                    </xs:attribute>
+                    <xs:attribute name="events" type="content:eventIdsType" use="optional">
+                        <xs:annotation>
+                            <xs:documentation>This attribute defines the events to trigger for "event" buttons.
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:attribute>
+                    <xs:attribute name="url" type="content:uri" use="optional">
+                        <xs:annotation>
+                            <xs:documentation>This attribute defines the url to open for "url" buttons.
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:attribute>
+                    <xs:attribute name="url-i18n-id" type="xs:string" use="optional">
+                        <xs:annotation>
+                            <xs:documentation>This attribute defines a OneSky phrase id that contains the url for this
+                                button.
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:attribute>
+                    <xs:attribute name="style" default="contained">
+                        <xs:annotation>
+                            <xs:documentation>This attribute defines the style of the button. It defaults to "contained"
+                                unless otherwise specified.
+                            </xs:documentation>
+                        </xs:annotation>
+                        <xs:simpleType>
+                            <xs:restriction base="xs:string">
+                                <xs:enumeration value="contained">
+                                    <xs:annotation>
+                                        <xs:documentation>This is a solid color button. The button color defines the
+                                            solid color for this button. The button text-color defaults to the
+                                            primary-text-color of the closest styles ancestor.
+                                        </xs:documentation>
+                                    </xs:annotation>
+                                </xs:enumeration>
+                                <xs:enumeration value="outlined">
+                                    <xs:annotation>
+                                        <xs:documentation>This is an outlined button. The button color defines the
+                                            outline color for this button. The button text-color defaults to the
+                                            color of this button.
+                                        </xs:documentation>
+                                    </xs:annotation>
+                                </xs:enumeration>
+                            </xs:restriction>
+                        </xs:simpleType>
+                    </xs:attribute>
+                    <xs:attribute name="color" type="content:colorValue" use="optional">
+                        <xs:annotation>
+                            <xs:documentation>This attribute determines the color of the button. This defaults to the
+                                button-color of the closest ancestor element. If button-color is not defined in the
+                                element hierarchy the color then defaults to the primary-color of the closest ancestor
+                                element.
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:attribute>
+                    <xs:attribute name="background-color" type="content:colorValue" default="rgba(0,0,0,0)">
+                        <xs:annotation>
+                            <xs:documentation>This attribute determines the background color of outlined buttons. This
+                                defaults to rgba(0,0,0,0).
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:attribute>
+                    <xs:attributeGroup ref="content:baseAttributes" />
+                </xs:extension>
+            </xs:complexContent>
+        </xs:complexType>
+    </xs:element>
 
     <!-- Link -->
     <xs:complexType name="link">
@@ -512,18 +605,16 @@
         </xs:complexType>
     </xs:element>
 
-    <!-- Content Elements -->
-    <xs:element name="tabs" type="content:tabs" />
-    <xs:element name="text">
-        <xs:complexType>
-            <xs:complexContent>
-                <xs:extension base="content:text">
-                    <xs:attributeGroup ref="content:baseAttributes" />
-                </xs:extension>
-            </xs:complexContent>
-        </xs:complexType>
+    <xs:element name="spacer">
+        <xs:annotation>
+            <xs:documentation>This tag can be used to vertically space content. The renderer should evenly split any
+                excess vertical whitespace between all spacer elements in a container.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:complexType />
     </xs:element>
-    <xs:element name="button" type="content:button" />
+
+    <!-- Content Elements -->
     <xs:element name="link" type="content:link" />
     <xs:element name="form" type="content:form" />
     <xs:element name="input" type="content:input" />
@@ -531,6 +622,7 @@
         <xs:choice>
             <xs:element ref="content:paragraph" />
             <xs:element ref="content:tabs" />
+            <xs:element ref="content:accordion" />
             <xs:element ref="content:text" />
             <xs:element ref="content:image" />
             <xs:element ref="content:video" />
