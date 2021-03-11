@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:content="https://mobile-content-api.cru.org/xmlns/content"
-    elementFormDefault="qualified" targetNamespace="https://mobile-content-api.cru.org/xmlns/lesson">
+    xmlns:lesson="https://mobile-content-api.cru.org/xmlns/lesson" elementFormDefault="qualified"
+    targetNamespace="https://mobile-content-api.cru.org/xmlns/lesson">
     <xs:import namespace="https://mobile-content-api.cru.org/xmlns/content" schemaLocation="content.xsd" />
 
     <xs:element name="page">
@@ -15,6 +16,15 @@
                     </xs:complexType>
                 </xs:element>
             </xs:all>
+
+            <xs:attribute name="control-color" type="content:colorValue">
+                <xs:annotation>
+                    <xs:documentation>This defines the control color for this page. This defaults to the lesson control
+                        color defined on the manifest.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
+
             <xs:attribute name="background-color" type="content:colorValue" default="rgba(255, 255, 255, 0)">
                 <xs:annotation>
                     <xs:documentation>This defines the background color for this page. This background color is layered
@@ -39,6 +49,7 @@
                     </xs:documentation>
                 </xs:annotation>
             </xs:attribute>
+
             <xs:attribute name="hidden" type="xs:boolean" default="false">
                 <xs:annotation>
                     <xs:documentation>Is this page hidden until triggered by a listener.</xs:documentation>
@@ -51,4 +62,21 @@
             </xs:attribute>
         </xs:complexType>
     </xs:element>
+
+    <!-- region external attributes -->
+    <xs:attributeGroup name="manifest">
+        <xs:annotation>
+            <xs:documentation>This attribute group is the set of attributes that can appear on the manifest node in the
+                manifest xml.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:attribute ref="lesson:control-color" use="optional" default="rgba(225, 225, 225, 1)">
+            <xs:annotation>
+                <xs:documentation>This defines the default control color for lessons.</xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+    </xs:attributeGroup>
+
+    <xs:attribute name="control-color" type="content:colorValue" />
+    <!-- endregion external attributes -->
 </xs:schema>

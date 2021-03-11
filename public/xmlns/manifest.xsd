@@ -1,12 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <xs:schema xmlns:article="https://mobile-content-api.cru.org/xmlns/article"
     xmlns:content="https://mobile-content-api.cru.org/xmlns/content"
+    xmlns:lesson="https://mobile-content-api.cru.org/xmlns/lesson"
     xmlns:manifest="https://mobile-content-api.cru.org/xmlns/manifest"
     xmlns:tract="https://mobile-content-api.cru.org/xmlns/tract" xmlns:xs="http://www.w3.org/2001/XMLSchema"
     elementFormDefault="qualified" targetNamespace="https://mobile-content-api.cru.org/xmlns/manifest">
 
     <xs:import namespace="https://mobile-content-api.cru.org/xmlns/article" schemaLocation="article.xsd" />
     <xs:import namespace="https://mobile-content-api.cru.org/xmlns/content" schemaLocation="content.xsd" />
+    <xs:import namespace="https://mobile-content-api.cru.org/xmlns/lesson" schemaLocation="lesson.xsd" />
     <xs:import namespace="https://mobile-content-api.cru.org/xmlns/tract" schemaLocation="tract.xsd" />
 
     <xs:simpleType name="toolType">
@@ -137,6 +139,7 @@
         </xs:attribute>
 
         <!-- Import any external groups of attributes we want to support -->
+        <xs:attributeGroup ref="lesson:manifest" />
         <xs:attributeGroup ref="tract:manifest" />
     </xs:complexType>
 
