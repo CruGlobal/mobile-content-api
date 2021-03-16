@@ -109,19 +109,18 @@ resource "Resources" do
       requires_authorization
 
       it "update resource" do
-        do_request data: {type: :resource, attributes: {description: "hello, world", :"attr-language-attribute" => "language_value",
-                                                        "attr-something-else" => "some_other_value", manifest: manifest}}
-
+        do_request data: {type: :resource, attributes: {:description => "hello, world", :"attr-language-attribute" => "language_value",
+                                                        "attr-something-else" => "some_other_value", :manifest => manifest}}
 
         expect(status).to be(200)
         expect(response_body).not_to be_nil
         resource = Resource.find(id)
         last_two_resource = resource.resource_attributes.last(2)
         expect(last_two_resource.length).to be 2
-        expect(last_two_resource.first.key).to eq('language_attribute')
-        expect(last_two_resource.first.value).to eq('language_value')
-        expect(last_two_resource.second.key).to eq('something_else')
-        expect(last_two_resource.second.value).to eq('some_other_value')
+        expect(last_two_resource.first.key).to eq("language_attribute")
+        expect(last_two_resource.first.value).to eq("language_value")
+        expect(last_two_resource.second.key).to eq("something_else")
+        expect(last_two_resource.second.value).to eq("some_other_value")
       end
     end
 
