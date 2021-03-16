@@ -20,6 +20,10 @@ class ResourcesController < ApplicationController
 
   def update
     r = load_resource.update!(permitted_params)
+    if r
+      load_resource.set_data_attributes!(data_attrs)
+    end
+
     render json: r, status: :ok
   end
 
