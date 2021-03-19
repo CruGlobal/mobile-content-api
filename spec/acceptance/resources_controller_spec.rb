@@ -115,6 +115,7 @@ resource "Resources" do
         expect(status).to be(200)
         expect(response_body).not_to be_nil
         resource = Resource.find(id)
+        expect(resource.description).to eq("hello, world")
         attributes = resource.resource_attributes.pluck(:key, :value).to_h
         expect(attributes).to eq({
           "banner_image" => "this is a location",
@@ -122,6 +123,7 @@ resource "Resources" do
           "something_else" => "some_other_value",
           "translate_me" => "base language"
         })
+        expect(JSON.parse(response_body)["data"]).not_to be_nil
       end
       context "attribute present" do
         let!(:something_else_attribute) { FactoryBot.create(:attribute, resource_id: id, key: "something_else", value: "current_value") }
@@ -130,10 +132,10 @@ resource "Resources" do
           do_request data: {type: :resource, attributes: {:description => "hello, world", :"attr-language-attribute" => "language_value",
                                                           "attr-something-else" => 2, :manifest => manifest}}
 
-          puts response_body.inspect
           expect(status).to be(200)
           expect(response_body).not_to be_nil
           resource = Resource.find(id)
+          expect(resource.description).to eq("hello, world")
           attributes = resource.resource_attributes.pluck(:key, :value).to_h
           expect(attributes).to eq({
             "banner_image" => "this is a location",
@@ -141,22 +143,25 @@ resource "Resources" do
             "something_else" => "2",
             "translate_me" => "base language"
           })
+					expect(JSON.parse(response_body)["data"]).not_to be_nil
+
         end
 
         it "updates resource and deletes attributes" do
           do_request data: {type: :resource, attributes: {:description => "hello, world", :"attr-language-attribute" => "language_value",
                                                           "attr-something-else" => nil, :manifest => manifest}}
 
-          puts response_body.inspect
           expect(status).to be(200)
           expect(response_body).not_to be_nil
           resource = Resource.find(id)
+          expect(resource.description).to eq("hello, world")
           attributes = resource.resource_attributes.pluck(:key, :value).to_h
           expect(attributes).to eq({
             "banner_image" => "this is a location",
             "language_attribute" => "language_value",
             "translate_me" => "base language"
           })
+					expect(JSON.parse(response_body)["data"]).not_to be_nil
         end
       end
     end
