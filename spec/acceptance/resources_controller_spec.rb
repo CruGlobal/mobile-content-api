@@ -108,19 +108,56 @@ resource "Resources" do
     put "resources/:id" do
       requires_authorization
 
-      it "update resource" do
+      it "updates resource and creates new attributes" do
         do_request data: {type: :resource, attributes: {:description => "hello, world", :"attr-language-attribute" => "language_value",
                                                         "attr-something-else" => "some_other_value", :manifest => manifest}}
 
         expect(status).to be(200)
         expect(response_body).not_to be_nil
         resource = Resource.find(id)
-        last_two_resource = resource.resource_attributes.last(2)
-        expect(last_two_resource.length).to be 2
-        expect(last_two_resource.first.key).to eq("language_attribute")
-        expect(last_two_resource.first.value).to eq("language_value")
-        expect(last_two_resource.second.key).to eq("something_else")
-        expect(last_two_resource.second.value).to eq("some_other_value")
+        attributes = resource.resource_attributes.pluck(:key, :value).to_h
+        expect(attributes).to eq({
+          "banner_image" => "this is a location",
+          "language_attribute" => "language_value",
+          "something_else" => "some_other_value",
+          "translate_me" => "base language"
+        })
+      end
+      context "attribute present" do
+        let!(:something_else_attribute) { FactoryBot.create(:attribute, resource_id: id, key: "something_else", value: "current_value") }
+
+        it "updates resource and updates existing attributes" do
+          do_request data: {type: :resource, attributes: {:description => "hello, world", :"attr-language-attribute" => "language_value",
+                                                          "attr-something-else" => 2, :manifest => manifest}}
+
+          puts response_body.inspect
+          expect(status).to be(200)
+          expect(response_body).not_to be_nil
+          resource = Resource.find(id)
+          attributes = resource.resource_attributes.pluck(:key, :value).to_h
+          expect(attributes).to eq({
+            "banner_image" => "this is a location",
+            "language_attribute" => "language_value",
+            "something_else" => "2",
+            "translate_me" => "base language"
+          })
+        end
+
+        it "updates resource and deletes attributes" do
+          do_request data: {type: :resource, attributes: {:description => "hello, world", :"attr-language-attribute" => "language_value",
+                                                          "attr-something-else" => nil, :manifest => manifest}}
+
+          puts response_body.inspect
+          expect(status).to be(200)
+          expect(response_body).not_to be_nil
+          resource = Resource.find(id)
+          attributes = resource.resource_attributes.pluck(:key, :value).to_h
+          expect(attributes).to eq({
+            "banner_image" => "this is a location",
+            "language_attribute" => "language_value",
+            "translate_me" => "base language"
+          })
+        end
       end
     end
 
