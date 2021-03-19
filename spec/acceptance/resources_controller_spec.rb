@@ -143,8 +143,7 @@ resource "Resources" do
             "something_else" => "2",
             "translate_me" => "base language"
           })
-					expect(JSON.parse(response_body)["data"]).not_to be_nil
-
+          expect(JSON.parse(response_body)["data"]).not_to be_nil
         end
 
         it "updates resource and deletes attributes" do
@@ -161,7 +160,7 @@ resource "Resources" do
             "language_attribute" => "language_value",
             "translate_me" => "base language"
           })
-					expect(JSON.parse(response_body)["data"]).not_to be_nil
+          expect(JSON.parse(response_body)["data"]).not_to be_nil
         end
       end
     end
