@@ -19,8 +19,12 @@ class ResourcesController < ApplicationController
   end
 
   def update
-    r = load_resource.update!(permitted_params)
-    render json: r, status: :ok
+    resource = load_resource
+    if resource.update!(permitted_params)
+      resource.set_data_attributes!(data_attrs)
+    end
+
+    render json: resource, status: :ok
   end
 
   def push_to_onesky

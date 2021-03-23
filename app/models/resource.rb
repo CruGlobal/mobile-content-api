@@ -24,6 +24,21 @@ class Resource < ActiveRecord::Base
     where system: System.find_by(t[:name].matches(name))
   }
 
+  def set_data_attributes!(data_attrs)
+    data_attrs.each_pair do |key, value|
+      attr_name = key[/^attr-(.*)$/, 1]
+      next unless attr_name
+      attr_name.tr!("-", "_")
+      attribute = resource_attributes.where(key: attr_name).first_or_initialize
+      if value.nil?
+        attribute.destroy unless attribute.new_record?
+      else
+        attribute.value = value.to_s
+        attribute.save!
+      end
+    end
+  end
+
   def uses_onesky?
     onesky_project_id.present?
   end
