@@ -143,7 +143,7 @@ GEM
       multipart-post (>= 1.2, < 3)
       ruby2_keywords
     faraday-net_http (1.0.1)
-    ffi (1.14.2)
+    ffi (1.15.0)
     file_validators (3.0.0)
       activemodel (>= 3.2)
       mime-types (>= 1.0)
@@ -212,7 +212,7 @@ GEM
     json (2.5.1)
     jsonapi-renderer (0.2.2)
     jwt (2.2.2)
-    listen (3.4.1)
+    listen (3.5.0)
       rb-fsevent (~> 0.10, >= 0.10.3)
       rb-inotify (~> 0.9, >= 0.9.10)
     lograge (0.11.2)
@@ -471,7 +471,7 @@ DEPENDENCIES
   guard-rubocop
   image_processing (~> 1.12)
   jwt
-  listen (~> 3.4)
+  listen (~> 3.5)
   lograge
   oj (~> 3.11.3)
   ougai (~> 2.0)
