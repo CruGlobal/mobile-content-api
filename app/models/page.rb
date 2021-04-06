@@ -7,5 +7,6 @@ class Page < AbstractPage
   validates :filename, presence: true
   validates :resource, presence: true
   validates :position, presence: true, uniqueness: {scope: :resource}
+  validates :filename, presence: true, uniqueness: {scope: :resource}
   validates_with UsesOneskyValidator
 end
