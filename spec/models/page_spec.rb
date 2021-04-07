@@ -38,8 +38,9 @@ describe Page do
   end
 
   it "cannot duplicate Resource ID and Filename" do
-    result = described_class.create(filename: "04_ThirdPoint.xml", resource_id: 1, structure: structure, position: 1)
+    result = described_class.create(filename: "04_ThirdPoint.xml", resource_id: 1, structure: structure, position: 2)
 
+    byebug
     expect(result.errors["filename"]).to include("has already been taken")
   end
 
