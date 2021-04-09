@@ -50,6 +50,12 @@
                 </xs:annotation>
             </xs:attribute>
 
+            <xs:attribute name="text-scale" type="xs:float" default="1">
+                <xs:annotation>
+                    <xs:documentation>Defines how much to scale all the text content on this page by.</xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
+
             <xs:attribute name="hidden" type="xs:boolean" default="false">
                 <xs:annotation>
                     <xs:documentation>Is this page hidden until triggered by a listener.</xs:documentation>
