@@ -2,10 +2,13 @@
     <content>
         <content:spacer mode="fixed" height="20" />
         <content:text />
-        <content:spacer />
+        <content:spacer mode="auto" />
         <content:text />
         <content:spacer />
         <content:spacer />
         <content:text />
+        <content:paragraph>
+            <content:spacer mode="fixed" height="20" />
+        </content:paragraph>
     </content>
 </page>

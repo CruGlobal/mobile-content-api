@@ -1,6 +1,8 @@
 <page xmlns="https://mobile-content-api.cru.org/xmlns/lesson" xmlns:content="https://mobile-content-api.cru.org/xmlns/content">
     <content>
-        <!-- spacers cannot have negative heights -->
-        <content:spacer mode="fixed" height="-20" />
+        <content:paragraph>
+            <!-- spacers need to specify the mode within paragraphs -->
+            <content:spacer />
+        </content:paragraph>
     </content>
 </page>
