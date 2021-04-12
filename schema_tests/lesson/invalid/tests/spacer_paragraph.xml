@@ -1,0 +1,8 @@
+<page xmlns="https://mobile-content-api.cru.org/xmlns/lesson" xmlns:content="https://mobile-content-api.cru.org/xmlns/content">
+    <content>
+        <content:paragraph>
+            <!-- spacers need to specify the mode within paragraphs -->
+            <content:spacer />
+        </content:paragraph>
+    </content>
+</page>

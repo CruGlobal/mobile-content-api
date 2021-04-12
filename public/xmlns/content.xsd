@@ -201,6 +201,7 @@
         <xs:complexType>
             <xs:choice minOccurs="1" maxOccurs="unbounded">
                 <xs:group ref="content:elements" />
+                <xs:group ref="content:fixedSpacerOnly" />
             </xs:choice>
             <xs:attribute name="fallback" type="xs:boolean" default="false">
                 <xs:annotation>
@@ -231,6 +232,7 @@
                             </xs:element>
                             <xs:choice minOccurs="0" maxOccurs="unbounded">
                                 <xs:group ref="content:elements" />
+                                <xs:group ref="content:fixedSpacerOnly" />
                             </xs:choice>
                         </xs:sequence>
                         <xs:attribute name="listeners" type="content:listenersType">
@@ -253,6 +255,7 @@
                             <xs:element name="header" type="content:textChild" />
                             <xs:choice minOccurs="0" maxOccurs="unbounded">
                                 <xs:group ref="content:elements" />
+                                <xs:group ref="content:fixedSpacerOnly" />
                             </xs:choice>
                         </xs:sequence>
                     </xs:complexType>
@@ -557,6 +560,7 @@
         </xs:annotation>
         <xs:choice maxOccurs="unbounded">
             <xs:group ref="content:elements" />
+            <xs:group ref="content:fixedSpacerOnly" />
         </xs:choice>
     </xs:complexType>
 
@@ -601,18 +605,66 @@
         <xs:complexType>
             <xs:choice maxOccurs="unbounded">
                 <xs:group ref="content:elements" />
+                <xs:group ref="content:fixedSpacerOnly" />
             </xs:choice>
         </xs:complexType>
     </xs:element>
 
+    <!-- region spacer -->
     <xs:element name="spacer">
         <xs:annotation>
-            <xs:documentation>This tag can be used to vertically space content. The renderer should evenly split any
-                excess vertical whitespace between all spacer elements in a container.
-            </xs:documentation>
+            <xs:documentation>This tag can be used to vertically space content.</xs:documentation>
         </xs:annotation>
-        <xs:complexType />
+        <xs:complexType>
+            <xs:attribute name="mode" default="auto">
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:enumeration value="auto">
+                            <xs:annotation>
+                                <xs:documentation>The renderer should evenly split any excess vertical whitespace
+                                    between all spacer elements in a container that are using the auto mode.
+                                </xs:documentation>
+                            </xs:annotation>
+                        </xs:enumeration>
+                        <xs:enumeration value="fixed">
+                            <xs:annotation>
+                                <xs:documentation>This element takes up vertical space specified by the height in
+                                    density independent pixels
+                                </xs:documentation>
+                            </xs:annotation>
+                        </xs:enumeration>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:attribute>
+            <xs:attribute name="height" default="0">
+                <xs:annotation>
+                    <xs:documentation>The height of this spacer</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:int">
+                        <xs:minInclusive value="0" />
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:attribute>
+        </xs:complexType>
     </xs:element>
+    <xs:group name="fixedSpacerOnly">
+        <xs:choice>
+            <xs:element name="spacer">
+                <xs:complexType>
+                    <xs:attribute name="mode" type="xs:string" use="required" fixed="fixed" />
+                    <xs:attribute name="height" default="0">
+                        <xs:simpleType>
+                            <xs:restriction base="xs:int">
+                                <xs:minInclusive value="0" />
+                            </xs:restriction>
+                        </xs:simpleType>
+                    </xs:attribute>
+                </xs:complexType>
+            </xs:element>
+        </xs:choice>
+    </xs:group>
+    <!-- endregion spacer -->
 
     <!-- Content Elements -->
     <xs:element name="link" type="content:link" />

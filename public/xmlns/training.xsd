@@ -34,6 +34,7 @@
                                 <xs:complexType>
                                     <xs:choice minOccurs="0" maxOccurs="unbounded">
                                         <xs:group ref="content:elements" />
+                                        <xs:group ref="content:fixedSpacerOnly" />
                                     </xs:choice>
                                 </xs:complexType>
                             </xs:element>
