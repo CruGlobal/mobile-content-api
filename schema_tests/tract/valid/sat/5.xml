@@ -1,14 +1,17 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <page xmlns="https://mobile-content-api.cru.org/xmlns/tract"
-    xmlns:analytics="https://mobile-content-api.cru.org/xmlns/analytics"
     xmlns:content="https://mobile-content-api.cru.org/xmlns/content"
-    background-image="satisfied-tract-bkg-image-4_1x.jpg" background-color="rgba(94,79,56,1)"
-    card-text-color="rgba(50,50,50,1)" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="https://mobile-content-api.cru.org/xmlns/analytics ">
+    background-image="Satisfied4.jpg"
+    background-color="rgba(255,255,255,1)"
+    background-image-scale-type="fill" background-image-align="bottom"
+    card-text-color="rgba(50,50,50,1)">
     <hero>
         <heading>
             <content:text i18n-id="2171d7ee-d346-417e-ac4b-ca8ad3c9e906"></content:text>
         </heading>
+        <content:paragraph>
+            <content:image resource="Web-satisfied-tract-bkg-image-4_1x.png" restrictTo="web" />
+        </content:paragraph>
         <content:paragraph>
             <content:text i18n-id="a73de09d-73f6-4866-a0b7-b3ff61d847a1"></content:text>
         </content:paragraph>
@@ -49,12 +52,11 @@
             <label>
                 <content:text i18n-id="9f90ed09-ddb4-4dd3-a225-3e7dd13d94fd"></content:text>
             </label>
-            <analytics:events>
-                <analytics:event action="KGP-US Gospel Presented" delay="5" system="adobe firebase">
-                    <analytics:attribute key="" value="" />
-                </analytics:event>
-            </analytics:events>
             <content:paragraph>
+                <content:image resource="Web-satisfied-the-christ-centered-life.png" restrictTo="web"/>
+            </content:paragraph>
+            <content:paragraph>
+                <content:image resource="satisfied-the-christ-centered-life.png" restrictTo="mobile" />
                 <content:text i18n-id="f3803aae-3a90-4636-b56c-0f9e97ce670e"></content:text>
             </content:paragraph>
         </card>
