@@ -41,10 +41,10 @@ class AdobeCampaign
 
   def post_to_adobe_campaign
     language_code = Adobe::Campaign::Language.map_code(follow_up.language.code)
-    Adobe::Campaign::Profile.post("email": follow_up.email,
-                                  "firstName": follow_up.name_params[:first_name],
-                                  "lastName": follow_up.name_params[:last_name],
-                                  "preferredLanguage": language_code.presence || follow_up.language.code)
+    Adobe::Campaign::Profile.post(email: follow_up.email,
+                                  firstName: follow_up.name_params[:first_name],
+                                  lastName: follow_up.name_params[:last_name],
+                                  preferredLanguage: language_code.presence || follow_up.language.code)
   end
 
   def subscribe_to_adobe_campaign

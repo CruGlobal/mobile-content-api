@@ -130,9 +130,9 @@ resource "ResourceLanguage" do
     let(:id) { language.id }
     let(:data) do
       {
-        "type": "resource-language",
-        "id": "#{resource.id}-#{language.id}",
-        "attributes": {
+        type: "resource-language",
+        id: "#{resource.id}-#{language.id}",
+        attributes: {
           "attr-enable-tips": true,
           "attr-other-key": nil,
           "attr-set-false": false

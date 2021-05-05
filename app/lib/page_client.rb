@@ -48,7 +48,7 @@ class PageClient
   end
 
   def push_translatable_attributes
-    phrases = Hash[@resource.resource_attributes.where(is_translatable: true).pluck(:key, :value)]
+    phrases = @resource.resource_attributes.where(is_translatable: true).pluck(:key, :value).to_h
     push_page(phrases, "attributes.xml", true)
   end
 

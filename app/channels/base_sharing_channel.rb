@@ -24,7 +24,7 @@ class BaseSharingChannel < ApplicationCable::Channel
     inner_hash = {"title" => title}
     inner_hash["detail"] = detail if detail
 
-    {"errors": [inner_hash]}
+    {errors: [inner_hash]}
   end
 
   def validate_channel_id_format(channel_id, channel_name)
