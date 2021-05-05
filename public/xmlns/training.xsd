@@ -20,7 +20,13 @@
 
     <xs:element name="tip">
         <xs:annotation>
-            <xs:documentation>This is the root node that defines a training tip</xs:documentation>
+            <xs:documentation>This is the root node that defines a training tip.
+
+                Content in a training tip should use the following default colors:
+                - primary-color: rgba(59,164,219,1)
+                - primary-text-color: rgba(255,255,255,1)
+                - text-color: rgba(90,90,90,1)
+            </xs:documentation>
         </xs:annotation>
         <xs:complexType>
             <xs:all>
