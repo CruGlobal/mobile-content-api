@@ -114,6 +114,12 @@
         </xs:restriction>
     </xs:simpleType>
 
+    <xs:simpleType name="stateKey">
+        <xs:restriction base="xs:token">
+            <xs:pattern value="[a-zA-Z][a-zA-Z0-9_]*" />
+        </xs:restriction>
+    </xs:simpleType>
+
     <xs:simpleType name="eventIdsType">
         <xs:list>
             <xs:simpleType>
@@ -532,6 +538,29 @@
         </xs:complexType>
     </xs:element>
 
+    <xs:element name="multiselect">
+        <xs:complexType>
+            <xs:choice maxOccurs="unbounded">
+                <xs:element name="option">
+                    <xs:complexType>
+                        <xs:choice minOccurs="0" maxOccurs="unbounded">
+                            <xs:group ref="content:elements" />
+                        </xs:choice>
+                        <xs:attribute name="value" type="xs:string" use="required" />
+                    </xs:complexType>
+                </xs:element>
+            </xs:choice>
+            <xs:attribute name="state" type="content:stateKey" use="required" />
+            <xs:attribute name="selection-limit" default="1">
+                <xs:simpleType>
+                    <xs:restriction base="xs:int">
+                        <xs:minInclusive value="1" />
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:attribute>
+        </xs:complexType>
+    </xs:element>
+
     <!-- Link -->
     <xs:complexType name="link">
         <xs:sequence>
@@ -689,6 +718,7 @@
             <xs:element ref="content:animation" />
             <xs:element ref="content:button" />
             <xs:element ref="content:link" />
+            <xs:element ref="content:multiselect" />
             <xs:element ref="content:form" />
             <xs:element ref="content:input" />
             <xs:element ref="content:fallback" />
