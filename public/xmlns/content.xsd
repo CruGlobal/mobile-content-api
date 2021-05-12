@@ -120,6 +120,13 @@
                 <xs:restriction base="xs:token">
                     <xs:pattern value="[a-zA-Z0-9_\-]+" />
                     <xs:pattern value="followup:send" />
+                    <xs:pattern value="state:[a-zA-Z][a-zA-Z0-9_]*">
+                        <xs:annotation>
+                            <xs:documentation>State event ids resolve to the value(s) stored in state for the specified
+                                key.
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:pattern>
                 </xs:restriction>
             </xs:simpleType>
         </xs:list>
