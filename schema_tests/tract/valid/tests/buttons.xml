@@ -6,6 +6,9 @@
             <content:button type="url" url="https://www.google.com/">
                 <content:text>text</content:text>
             </content:button>
+            <content:button type="event" events="followup:send jlkasdf">
+                <content:text>text</content:text>
+            </content:button>
         </content:paragraph>
     </hero>
 </page>

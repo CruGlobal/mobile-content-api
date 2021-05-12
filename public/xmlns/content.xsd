@@ -118,7 +118,8 @@
         <xs:list>
             <xs:simpleType>
                 <xs:restriction base="xs:token">
-                    <xs:pattern value="([a-zA-Z0-9_\-]+:)?[a-zA-Z0-9_\-]+" />
+                    <xs:pattern value="[a-zA-Z0-9_\-]+" />
+                    <xs:pattern value="followup:send" />
                 </xs:restriction>
             </xs:simpleType>
         </xs:list>
