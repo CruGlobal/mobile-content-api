@@ -6,7 +6,7 @@ describe AbstractPage do
   it "validates XML strictly" do
     result = Page.create(filename: "test.xml", resource_id: 1, structure: "<open>", position: 1)
 
-    expect(result.errors["structure"]).to include("1:7: FATAL: EndTag: '</' not found")
+    expect(result.errors["structure"]).to include("1:7: FATAL: Premature end of data in tag open line 1")
   end
 
   it "validates XML on create" do
