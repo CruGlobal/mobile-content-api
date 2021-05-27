@@ -11,10 +11,10 @@ Datadog.configure do |c|
 
   # Rails
   c.use :rails,
-        service_name: ENV["PROJECT_NAME"],
-        controller_service: "#{ENV["PROJECT_NAME"]}-controller",
-        cache_service: "#{ENV["PROJECT_NAME"]}-cache",
-        database_service: "#{ENV["PROJECT_NAME"]}-db"
+    service_name: ENV["PROJECT_NAME"],
+    controller_service: "#{ENV["PROJECT_NAME"]}-controller",
+    cache_service: "#{ENV["PROJECT_NAME"]}-cache",
+    database_service: "#{ENV["PROJECT_NAME"]}-db"
 
   # Redis
   c.use :redis, service_name: "#{ENV["PROJECT_NAME"]}-redis"
