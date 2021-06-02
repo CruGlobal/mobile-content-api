@@ -24,6 +24,8 @@ Datadog.configure do |c|
 
   # Net::HTTP
   c.use :http, service_name: "#{ENV["PROJECT_NAME"]}-http"
+
+  c.user :active_model_serializers, service_name: "#{ENV["PROJECT_NAME"]}-ams"
 end
 
 # skipping the health check: if it returns true, the trace is dropped
