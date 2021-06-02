@@ -139,8 +139,6 @@ resource "ResourceLanguage" do
         }
       }
     end
-    let(:language2) { Language.second }
-    let!(:attribute) { FactoryBot.create(:language_attribute, language: language2, resource: resource, key: "enable_tips", value: "false") }
 
     requires_authorization
 
