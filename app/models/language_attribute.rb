@@ -3,5 +3,5 @@
 class LanguageAttribute < BaseAttribute
   belongs_to :language
 
-  validates :resource, presence: true, uniqueness: {scope: [:resource, :language, :key]}
+  validates :resource, presence: true, uniqueness: {scope: [:language, :key]}
 end
