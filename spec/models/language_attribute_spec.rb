@@ -14,7 +14,7 @@ RSpec.describe LanguageAttribute, type: :model do
   end
 
   it "key can be reused by multiple languages for a resource" do
-    attr = described_class.create(resource_id: resource.id, language_id: language2.id, key: "enable_tips", value: "false")
+    attr = described_class.new(resource_id: resource.id, language_id: language2.id, key: "enable_tips", value: "false")
 
     expect(attr).to be_valid
   end
