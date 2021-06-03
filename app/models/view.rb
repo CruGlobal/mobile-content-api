@@ -5,7 +5,6 @@ class View
     unless quantity.is_a?(Numeric) && quantity.positive?
       raise Error::BadRequestError, "quantity must be greater than 0"
     end
-    resource = Resource.find(resource_id)
-    resource.update!(total_views: resource.total_views + quantity)
+    Resource.find(resource_id).increment!(:total_views, quantity)
   end
 end
