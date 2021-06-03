@@ -56,10 +56,6 @@ class Resource < ActiveRecord::Base
     latest
   end
 
-  def total_views
-    views.all.sum(:quantity)
-  end
-
   delegate :name, to: :resource_type, prefix: true
 
   private
