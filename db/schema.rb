@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_06_02_204757) do
+ActiveRecord::Schema.define(version: 2021_06_03_131710) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -172,7 +172,7 @@ ActiveRecord::Schema.define(version: 2021_06_02_204757) do
     t.string "description"
     t.integer "resource_type_id", null: false
     t.string "manifest"
-    t.integer "total_views"
+    t.integer "total_views", default: 0, null: false
     t.index ["abbreviation"], name: "index_resources_on_abbreviation", unique: true
     t.index ["resource_type_id"], name: "index_resources_on_resource_type_id"
     t.index ["system_id"], name: "index_resources_on_system_id"
