@@ -77,7 +77,9 @@ article = ResourceType.find_or_create_by!(name: "article", dtd_file: "article.xs
 
 godtools = System.find_or_create_by!(name: "GodTools")
 
-kgp = Resource.find_or_create_by!(name: "Knowing God Personally", resource_type: tract, abbreviation: "kgp", onesky_project_id: 148_314, system: godtools,
+kgp = Resource.find_or_create_by!(name: "Knowing God Personally", resource_type: tract,
+                                  abbreviation: "kgp", onesky_project_id: 148_314,
+                                  system: godtools, total_views: 1268,
                                   manifest: '<?xml version="1.0"?><manifest xmlns="https://mobile-content-api.cru.org/xmlns/manifest" xmlns:content="https://mobile-content-api.cru.org/xmlns/content"><title><content:text i18n-id="89a09d72-114f-4d89-a72c-ca204c796fd9">Knowing God Personally</content:text></title></manifest>')
 satisfied = Resource.find_or_create_by!(name: "Satisfied?", resource_type: tract, abbreviation: "sat", system: godtools, onesky_project_id: 999_999)
 every_student = Resource.find_or_create_by!(name: "Questions About God", resource_type: article, abbreviation: "es", system: godtools)
@@ -115,9 +117,6 @@ attribute = Attribute.find_or_create_by!(resource: kgp, key: "translate_me", val
 Attribute.find_or_create_by!(resource: satisfied, key: "another_attribute", value: "blah blah blah")
 
 TranslatedAttribute.find_or_create_by!(parent_attribute: attribute, translation: german_kgp, value: "german attribute")
-
-View.find_or_create_by!(quantity: 550, resource: kgp)
-View.find_or_create_by!(quantity: 718, resource: kgp)
 
 if Rails.env == "test"
   Attachment.class_eval do
