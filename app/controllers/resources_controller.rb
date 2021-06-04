@@ -6,11 +6,11 @@ class ResourcesController < ApplicationController
   before_action :authorize!, only: [:create, :update, :push_to_onesky]
 
   def index
-    render json: all_resources.order(name: :asc), include: params[:include], status: :ok
+    render json: all_resources.order(name: :asc), include: params[:include], fields: field_params, status: :ok
   end
 
   def show
-    render json: load_resource, include: params[:include], status: :ok
+    render json: load_resource, include: params[:include], fields: field_params, status: :ok
   end
 
   def create
