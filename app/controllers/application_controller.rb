@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class ApplicationController < ActionController::Base
+  include Fields
+
   skip_before_action :verify_authenticity_token
   before_action :decode_json_api
 

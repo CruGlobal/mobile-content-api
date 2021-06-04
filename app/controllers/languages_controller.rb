@@ -4,11 +4,11 @@ class LanguagesController < ApplicationController
   before_action :authorize!, only: [:create, :destroy]
 
   def index
-    render json: Language.all.order(name: :asc), include: params[:include], status: :ok
+    render json: Language.all.order(name: :asc), include: params[:include], fields: field_params, status: :ok
   end
 
   def show
-    render json: load_language, include: params[:include], status: :ok
+    render json: load_language, include: params[:include], fields: field_params, status: :ok
   end
 
   def create

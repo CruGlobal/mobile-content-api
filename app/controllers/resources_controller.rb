@@ -10,7 +10,7 @@ class ResourcesController < ApplicationController
   end
 
   def show
-    render json: load_resource, include: params[:include], status: :ok
+    render json: load_resource, include: params[:include], fields: field_params, status: :ok
   end
 
   def create
@@ -37,14 +37,17 @@ class ResourcesController < ApplicationController
   private
 
   def cached_index_json
-    cache_key = Resource.index_cache_key(all_resources, include: params[:include])
+    cache_key = Resource.index_cache_key(all_resources,
+                                         include_param: params[:include],
+                                         fields_param: field_params)
     Rails.cache.fetch(cache_key, expires_in: 1.hour) { index_json }
   end
 
   def index_json
     ActiveModelSerializers::SerializableResource.new(
       all_resources.order(name: :asc),
-      include: params[:include]
+      include: params[:include],
+      fields: field_params
     ).to_json
   end
 

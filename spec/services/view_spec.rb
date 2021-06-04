@@ -13,7 +13,7 @@ describe View do
     it "does not change the resource cache key" do
       expect do
         described_class.create!(resource_id: 1, quantity: 100)
-      end.to_not change { Resource.index_cache_key(Resource.all, nil) }
+      end.to_not change { Resource.index_cache_key(Resource.all, include_param: nil, fields_param: nil) }
     end
   end
 end
