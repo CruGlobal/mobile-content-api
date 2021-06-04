@@ -42,6 +42,21 @@ resource "Resources" do
       expect(status).to be(200)
       expect(JSON.parse(response_body)["included"].count).to be(9)
     end
+
+    it "only get name and system of resources" do
+      do_request 'fields[resource]': "name,system"
+
+      expect(status).to be(200)
+      data = JSON.parse(response_body)["data"][1]
+      attrs = data["attributes"]
+      expect(attrs.size).to be(1)
+      expect(attrs["name"]).not_to be_nil
+      expect(attrs["description"]).to be_nil
+      relationships = data["relationships"]
+      expect(relationships.size).to be(1)
+      expect(relationships["system"]).not_to be_nil
+      expect(relationships["translations"]).to be_nil
+    end
   end
 
   get "resources/:id" do
