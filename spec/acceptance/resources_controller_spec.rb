@@ -49,13 +49,9 @@ resource "Resources" do
       expect(status).to be(200)
       data = JSON.parse(response_body)["data"][1]
       attrs = data["attributes"]
-      expect(attrs.size).to be(1)
-      expect(attrs["name"]).not_to be_nil
-      expect(attrs["description"]).to be_nil
+      expect(attrs.keys).to eq ["name"]
       relationships = data["relationships"]
-      expect(relationships.size).to be(1)
-      expect(relationships["system"]).not_to be_nil
-      expect(relationships["translations"]).to be_nil
+      expect(relationships.keys).to eq ["system"]
     end
   end
 
