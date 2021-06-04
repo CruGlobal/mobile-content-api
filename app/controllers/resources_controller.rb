@@ -38,8 +38,8 @@ class ResourcesController < ApplicationController
 
   def cached_index_json
     cache_key = Resource.index_cache_key(all_resources,
-                                         include_param: params[:include],
-                                         fields_param: field_params)
+      include_param: params[:include],
+      fields_param: field_params)
     Rails.cache.fetch(cache_key, expires_in: 1.hour) { index_json }
   end
 
