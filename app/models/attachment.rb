@@ -9,7 +9,7 @@ class Attachment < ActiveRecord::Base
   validates_with AttachmentValidator, if: :changed?
   validates_with AttachmentFilenameDuplicateValidator, if: :changed?
 
-  belongs_to :resource
+  belongs_to :resource, touch: true
 
   has_one_attached :file
   validates :file, file_content_type: {

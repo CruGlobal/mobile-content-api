@@ -3,9 +3,17 @@
 require "rails_helper"
 
 describe View do
-  it "must be greater than zero" do
-    expect do
-      described_class.create!(resource_id: 1, quantity: 0)
-    end.to raise_error(Error::BadRequestError, "quantity must be greater than 0")
+  describe "#create" do
+    it "must be greater than zero" do
+      expect do
+        described_class.create!(resource_id: 1, quantity: 0)
+      end.to raise_error(Error::BadRequestError, "quantity must be greater than 0")
+    end
+
+    it "does not change the resource cache key" do
+      expect do
+        described_class.create!(resource_id: 1, quantity: 100)
+      end.to_not change { Resource.index_cache_key(Resource.all, nil) }
+    end
   end
 end

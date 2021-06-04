@@ -24,6 +24,10 @@ class Resource < ActiveRecord::Base
     where system: System.find_by(t[:name].matches(name))
   }
 
+  def self.index_cache_key(resources, include_param)
+    "cache::#{resources.cache_key_with_version}/#{include_param.hash}"
+  end
+
   def set_data_attributes!(data_attrs)
     data_attrs.each_pair do |key, value|
       attr_name = key[/^attr-(.*)$/, 1]

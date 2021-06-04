@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class TranslatedPage < ActiveRecord::Base
-  belongs_to :resource
+  belongs_to :resource, touch: true
   belongs_to :language
 
   validates :value, presence: true, xml: {if: :value_changed?}
