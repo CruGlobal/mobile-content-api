@@ -48,10 +48,8 @@ resource "Resources" do
 
       expect(status).to be(200)
       data = JSON.parse(response_body)["data"][1]
-      attrs = data["attributes"]
-      expect(attrs.keys).to eq ["name"]
-      relationships = data["relationships"]
-      expect(relationships.keys).to eq ["system"]
+      expect(data["attributes"].keys).to eq ["name"]
+      expect(data["relationships"].keys).to eq ["system"]
     end
   end
 
