@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_06_03_131710) do
+ActiveRecord::Schema.define(version: 2021_06_03_152052) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -223,12 +223,6 @@ ActiveRecord::Schema.define(version: 2021_06_03_131710) do
     t.index ["resource_id"], name: "index_translations_on_resource_id"
   end
 
-  create_table "views", id: :serial, force: :cascade do |t|
-    t.integer "quantity", null: false
-    t.integer "resource_id", null: false
-    t.index ["resource_id"], name: "index_views_on_resource_id"
-  end
-
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "attachments", "resources"
   add_foreign_key "attributes", "resources"
@@ -248,5 +242,4 @@ ActiveRecord::Schema.define(version: 2021_06_03_131710) do
   add_foreign_key "translated_pages", "resources"
   add_foreign_key "translations", "languages"
   add_foreign_key "translations", "resources"
-  add_foreign_key "views", "resources"
 end
