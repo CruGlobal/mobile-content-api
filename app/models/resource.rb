@@ -8,7 +8,6 @@ class Resource < ActiveRecord::Base
   has_many :tips
   has_many :resource_attributes, class_name: "Attribute"
   has_many :language_attributes
-  has_many :views
   has_many :attachments
   has_many :translated_pages
   has_many :custom_manifests
