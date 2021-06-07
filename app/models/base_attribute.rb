@@ -3,7 +3,7 @@
 class BaseAttribute < ActiveRecord::Base
   self.abstract_class = true
 
-  belongs_to :resource
+  belongs_to :resource, touch: true
   belongs_to :language, required: false
 
   has_many :translated_attributes

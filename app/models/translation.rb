@@ -3,7 +3,7 @@
 class Translation < ActiveRecord::Base
   include Xml::Translatable
 
-  belongs_to :resource
+  belongs_to :resource, touch: true
   belongs_to :language
 
   validates :version, presence: true, uniqueness: {scope: [:resource, :language]}

@@ -2,7 +2,7 @@
 
 class CustomManifest < ApplicationRecord
   belongs_to :language
-  belongs_to :resource
+  belongs_to :resource, touch: true
 
   validates :resource, presence: true
   validates :language, presence: true, uniqueness: {scope: :resource}
