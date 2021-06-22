@@ -262,10 +262,12 @@
         <xs:annotation>
             <xs:documentation>A modal that is displayed when it's listener is triggered. Modals have the following
                 default styles:
-                - button-color defaults to rgba(255,255,255,1)
                 - primary-color defaults to rgba(0,0,0,0)
                 - primary-text-color defaults to rgba(255,255,255,1)
                 - Buttons default to the outlined style
+                - button-color defaults to rgba(255,255,255,1)
+                - Text defaults to center alignment
+                - text-color defaults to rgba(255,255,255,1)
             </xs:documentation>
         </xs:annotation>
         <xs:sequence>
