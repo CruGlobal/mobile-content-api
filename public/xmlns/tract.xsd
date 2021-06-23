@@ -262,10 +262,12 @@
         <xs:annotation>
             <xs:documentation>A modal that is displayed when it's listener is triggered. Modals have the following
                 default styles:
-                - button-color defaults to rgba(255,255,255,1)
                 - primary-color defaults to rgba(0,0,0,0)
                 - primary-text-color defaults to rgba(255,255,255,1)
                 - Buttons default to the outlined style
+                - button-color defaults to rgba(255,255,255,1)
+                - Text defaults to center alignment
+                - text-color defaults to rgba(255,255,255,1)
             </xs:documentation>
         </xs:annotation>
         <xs:sequence>
@@ -284,16 +286,17 @@
                     </xs:all>
                 </xs:complexType>
             </xs:element>
-            <!--
-                Content section - OPTIONAL
-                    text-scale: DEFAULT( 1.0 )
-            -->
             <xs:choice minOccurs="0" maxOccurs="unbounded">
                 <xs:element ref="content:paragraph" />
             </xs:choice>
         </xs:sequence>
         <xs:attribute name="listeners" type="content:listenersType" use="required" />
         <xs:attribute name="dismiss-listeners" type="content:listenersType" use="required" />
+        <xs:attribute name="text-scale" type="xs:float" default="1">
+            <xs:annotation>
+                <xs:documentation>Defines how much to scale all the text content in this modal by.</xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
     </xs:complexType>
 
     <!-- attributes -->
