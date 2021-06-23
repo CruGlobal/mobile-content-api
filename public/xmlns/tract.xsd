@@ -168,11 +168,13 @@
     <!-- Tract Card -->
     <xs:complexType name="card">
         <xs:sequence>
-            <!--
-                Card label - REQUIRED
-                    text-color: DEFAULT( primary-text-color )
-            -->
-            <xs:element name="label" type="content:textChild" />
+            <xs:element name="label" type="content:textChild">
+                <xs:annotation>
+                    <xs:documentation>This is the label of a card. The text-color defaults to the primary-color of the
+                        closest ancestor container.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
             <xs:element ref="analytics:events" minOccurs="0" maxOccurs="1">
                 <xs:annotation>
                     <xs:documentation>
