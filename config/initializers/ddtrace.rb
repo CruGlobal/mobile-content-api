@@ -1,22 +1,32 @@
 # frozen_string_literal: true
 
-base_name = ENV["PROJECT_NAME"]
-enabled = ENV["DATADOG_TRACE"].to_s == "true"
+Datadog.configure do |c|
+  # Tracer
+  c.tracer hostname: ENV["DATADOG_HOST"],
+           port: ENV["DATADOG_PORT"],
+           tags: {app: ENV["PROJECT_NAME"]},
+           debug: false,
+           enabled: (ENV["DATADOG_TRACE"].to_s == "true"),
+           env: Rails.env
 
-Rails.configuration.datadog_trace = {
-  enabled: enabled,
-  auto_instrument: true,
-  auto_instrument_redis: true,
-  auto_instrument_grape: false,
-  default_service: base_name,
-  default_controller_service: "#{base_name}-controller",
-  default_cache_service: "rails-cache",
-  default_database_service: "#{base_name}-db",
-  template_base_path: "views/",
-  tracer: Datadog.tracer,
-  debug: false,
-  trace_agent_hostname: ENV["DATADOG_HOST"],
-  trace_agent_port: 8126,
-  env: Rails.env,
-  tags: {app: base_name}
-}
+  # Rails
+  c.use :rails,
+    service_name: ENV["PROJECT_NAME"],
+    controller_service: "#{ENV["PROJECT_NAME"]}-controller",
+    cache_service: "#{ENV["PROJECT_NAME"]}-cache",
+    database_service: "#{ENV["PROJECT_NAME"]}-db"
+
+  # Redis
+  c.use :redis, service_name: "#{ENV["PROJECT_NAME"]}-redis"
+
+  # Sidekiq
+  c.use :sidekiq, service_name: "#{ENV["PROJECT_NAME"]}-sidekiq"
+
+  # Net::HTTP
+  c.use :http, service_name: "#{ENV["PROJECT_NAME"]}-http"
+end
+
+# skipping the health check: if it returns true, the trace is dropped
+Datadog::Pipeline.before_flush(Datadog::Pipeline::SpanFilter.new { |span|
+  span.name == "rack.request" && span.get_tag("http.url") == "/monitors/lb"
+})

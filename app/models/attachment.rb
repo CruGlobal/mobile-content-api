@@ -9,7 +9,7 @@ class Attachment < ActiveRecord::Base
   validates_with AttachmentValidator, if: :changed?
   validates_with AttachmentFilenameDuplicateValidator, if: :changed?
 
-  belongs_to :resource
+  belongs_to :resource, touch: true
 
   has_one_attached :file
   validates :file, file_content_type: {
@@ -32,7 +32,7 @@ class Attachment < ActiveRecord::Base
 
   def generate_sha256
     XmlUtil.filename_sha(URI.parse(url).open.read)
-  rescue NoMethodError, OpenURI::HTTPError
+  rescue NoMethodError, OpenURI::HTTPError, Errno::ECONNREFUSED
     file = attachment_changes["file"].attachable
     file ||= url
     XmlUtil.filename_sha(File.open(file).read)

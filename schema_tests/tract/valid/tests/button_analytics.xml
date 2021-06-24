@@ -7,7 +7,7 @@
             <content:button type="url" url="https://www.google.com/">
                 <content:text>text</content:text>
                 <analytics:events>
-                    <analytics:event action="test" system="adobe" />
+                    <analytics:event action="test" system="firebase" />
                 </analytics:events>
             </content:button>
         </content:paragraph>

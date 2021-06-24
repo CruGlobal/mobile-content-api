@@ -10,7 +10,9 @@ resource "Views" do
 
   post "views/" do
     it "add views" do
-      do_request data: {type: :view, attributes: {resource_id: 1, quantity: 257}}
+      expect do
+        do_request data: {type: :view, attributes: {resource_id: 1, quantity: 257}}
+      end.to change { Resource.find(1).total_views }.by(257)
 
       expect(status).to be(204)
       expect(response_body).to be_empty

@@ -2,7 +2,8 @@
 
 class ViewsController < ApplicationController
   def create
-    View.create!(permit_params(:quantity, :resource_id))
+    params = permit_params(:quantity, :resource_id).to_h.symbolize_keys
+    View.create!(**params)
     head :no_content
   end
 end

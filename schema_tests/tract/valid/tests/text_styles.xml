@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <page xmlns:content="https://mobile-content-api.cru.org/xmlns/content"
-    xmlns="https://mobile-content-api.cru.org/xmlns/tract">
+    xmlns="https://mobile-content-api.cru.org/xmlns/tract" text-scale="1.2345">
     <hero>
         <content:paragraph>
             <content:text>Plain Text</content:text>

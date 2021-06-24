@@ -1,9 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<xs:schema xmlns:article="https://mobile-content-api.cru.org/xmlns/article" xmlns:xs="http://www.w3.org/2001/XMLSchema"
+<xs:schema xmlns:article="https://mobile-content-api.cru.org/xmlns/article"
+    xmlns:content="https://mobile-content-api.cru.org/xmlns/content" xmlns:xs="http://www.w3.org/2001/XMLSchema"
     elementFormDefault="qualified" targetNamespace="https://mobile-content-api.cru.org/xmlns/article">
 
+    <xs:import namespace="https://mobile-content-api.cru.org/xmlns/content" schemaLocation="content.xsd" />
+
     <xs:complexType name="aemImport">
-        <xs:attribute name="src" />
+        <xs:attribute name="src" type="content:uri" />
     </xs:complexType>
     <xs:complexType name="categoryAemTag">
         <xs:attribute name="id" />

@@ -42,6 +42,15 @@ resource "Resources" do
       expect(status).to be(200)
       expect(JSON.parse(response_body)["included"].count).to be(9)
     end
+
+    it "only get name and system of resources" do
+      do_request 'fields[resource]': "name,system"
+
+      expect(status).to be(200)
+      data = JSON.parse(response_body)["data"][1]
+      expect(data["attributes"].keys).to eq ["name"]
+      expect(data["relationships"].keys).to eq ["system"]
+    end
   end
 
   get "resources/:id" do
@@ -108,11 +117,60 @@ resource "Resources" do
     put "resources/:id" do
       requires_authorization
 
-      it "update resource" do
-        do_request data: {type: :resource, attributes: {description: "hello, world", manifest: manifest}}
+      it "updates resource and creates new attributes" do
+        do_request data: {type: :resource, attributes: {:description => "hello, world", :"attr-language-attribute" => "language_value",
+                                                        "attr-something-else" => "some_other_value", :manifest => manifest}}
 
         expect(status).to be(200)
         expect(response_body).not_to be_nil
+        resource = Resource.find(id)
+        expect(resource.description).to eq("hello, world")
+        attributes = resource.resource_attributes.pluck(:key, :value).to_h
+        expect(attributes).to eq({
+          "banner_image" => "this is a location",
+          "language_attribute" => "language_value",
+          "something_else" => "some_other_value",
+          "translate_me" => "base language"
+        })
+        expect(JSON.parse(response_body)["data"]).not_to be_nil
+      end
+      context "attribute present" do
+        let!(:something_else_attribute) { FactoryBot.create(:attribute, resource_id: id, key: "something_else", value: "current_value") }
+
+        it "updates resource and updates existing attributes" do
+          do_request data: {type: :resource, attributes: {:description => "hello, world", :"attr-language-attribute" => "language_value",
+                                                          "attr-something-else" => 2, :manifest => manifest}}
+
+          expect(status).to be(200)
+          expect(response_body).not_to be_nil
+          resource = Resource.find(id)
+          expect(resource.description).to eq("hello, world")
+          attributes = resource.resource_attributes.pluck(:key, :value).to_h
+          expect(attributes).to eq({
+            "banner_image" => "this is a location",
+            "language_attribute" => "language_value",
+            "something_else" => "2",
+            "translate_me" => "base language"
+          })
+          expect(JSON.parse(response_body)["data"]).not_to be_nil
+        end
+
+        it "updates resource and deletes attributes" do
+          do_request data: {type: :resource, attributes: {:description => "hello, world", :"attr-language-attribute" => "language_value",
+                                                          "attr-something-else" => nil, :manifest => manifest}}
+
+          expect(status).to be(200)
+          expect(response_body).not_to be_nil
+          resource = Resource.find(id)
+          expect(resource.description).to eq("hello, world")
+          attributes = resource.resource_attributes.pluck(:key, :value).to_h
+          expect(attributes).to eq({
+            "banner_image" => "this is a location",
+            "language_attribute" => "language_value",
+            "translate_me" => "base language"
+          })
+          expect(JSON.parse(response_body)["data"]).not_to be_nil
+        end
       end
     end
 

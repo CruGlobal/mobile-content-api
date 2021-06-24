@@ -8,7 +8,6 @@ class Resource < ActiveRecord::Base
   has_many :tips
   has_many :resource_attributes, class_name: "Attribute"
   has_many :language_attributes
-  has_many :views
   has_many :attachments
   has_many :translated_pages
   has_many :custom_manifests
@@ -23,6 +22,25 @@ class Resource < ActiveRecord::Base
     t = System.arel_table
     where system: System.find_by(t[:name].matches(name))
   }
+
+  def self.index_cache_key(resources, include_param:, fields_param:)
+    "cache::#{resources.cache_key_with_version}/#{include_param.hash}/#{fields_param.hash}"
+  end
+
+  def set_data_attributes!(data_attrs)
+    data_attrs.each_pair do |key, value|
+      attr_name = key[/^attr-(.*)$/, 1]
+      next unless attr_name
+      attr_name.tr!("-", "_")
+      attribute = resource_attributes.where(key: attr_name).first_or_initialize
+      if value.nil?
+        attribute.destroy unless attribute.new_record?
+      else
+        attribute.value = value.to_s
+        attribute.save!
+      end
+    end
+  end
 
   def uses_onesky?
     onesky_project_id.present?
@@ -39,10 +57,6 @@ class Resource < ActiveRecord::Base
 
   def latest_drafts_translations
     latest
-  end
-
-  def total_views
-    views.all.sum(:quantity)
   end
 
   delegate :name, to: :resource_type, prefix: true

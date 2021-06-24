@@ -6,11 +6,11 @@ class ResourcesController < ApplicationController
   before_action :authorize!, only: [:create, :update, :push_to_onesky]
 
   def index
-    render json: all_resources.order(name: :asc), include: params[:include], status: :ok
+    render json: cached_index_json, status: :ok
   end
 
   def show
-    render json: load_resource, include: params[:include], status: :ok
+    render json: load_resource, include: params[:include], fields: field_params, status: :ok
   end
 
   def create
@@ -19,8 +19,12 @@ class ResourcesController < ApplicationController
   end
 
   def update
-    r = load_resource.update!(permitted_params)
-    render json: r, status: :ok
+    resource = load_resource
+    if resource.update!(permitted_params)
+      resource.set_data_attributes!(data_attrs)
+    end
+
+    render json: resource, status: :ok
   end
 
   def push_to_onesky
@@ -31,6 +35,21 @@ class ResourcesController < ApplicationController
   end
 
   private
+
+  def cached_index_json
+    cache_key = Resource.index_cache_key(all_resources,
+      include_param: params[:include],
+      fields_param: field_params)
+    Rails.cache.fetch(cache_key, expires_in: 1.hour) { index_json }
+  end
+
+  def index_json
+    ActiveModelSerializers::SerializableResource.new(
+      all_resources.order(name: :asc),
+      include: params[:include],
+      fields: field_params
+    ).to_json
+  end
 
   def all_resources
     if params["filter"]
