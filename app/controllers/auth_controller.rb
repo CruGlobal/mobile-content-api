@@ -2,7 +2,7 @@
 
 class AuthController < ApplicationController
   def create
-    token = data_attrs[:okta_id_token] ? auth_with_okta : auth_with_code
+    token = data_attrs[:okta_access_token] ? auth_with_okta : auth_with_code
     render json: token, status: :created if token
   end
 
@@ -24,7 +24,7 @@ class AuthController < ApplicationController
   end
 
   def auth_with_okta
-    user = Okta.find_user_by_id_token(data_attrs[:okta_id_token])
+    user = Okta.find_user_by_access_token(data_attrs[:okta_access_token])
     AuthToken.new(user: user)
   rescue Okta::FailedAuthentication => e
     render_bad_request e.message
