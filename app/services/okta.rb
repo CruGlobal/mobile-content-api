@@ -53,7 +53,7 @@ class Okta
 
     def fetch_account_profile(access_token)
       path = "/oauth2/v1/userinfo"
-      response = get(path, Authorization: "Bearer #{access_token}")
+      response = get(path, headers: { Authorization: "Bearer #{access_token}" })
       raise Okta::FailedAuthentication, "Error validating access_token with Okta" if response.code != 200
       transform_jwt_payload(JSON.parse(response.body))
     end

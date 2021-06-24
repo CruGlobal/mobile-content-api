@@ -16,7 +16,9 @@ RSpec.describe Okta do
   let(:access_token) { JWT.encode(jwt_default_payload.merge(jwt_payload), nil, "none") }
 
   def stub_successful_profile
-    stub_request(:get, "https://dev1-signon.okta.com/oauth2/v1/userinfo").to_return(body: okta_user_info.to_json)
+    stub_request(:get, "https://dev1-signon.okta.com/oauth2/v1/userinfo")
+      .with(headers: { Authorization: "Bearer #{access_token}" })
+      .to_return(body: okta_user_info.to_json)
   end
 
   def stub_unsuccessful_profile
