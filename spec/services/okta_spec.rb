@@ -1,5 +1,4 @@
 require "rails_helper"
-require "json/jwt"
 
 RSpec.describe Okta do
   let(:okta_user_info) do
