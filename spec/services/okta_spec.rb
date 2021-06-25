@@ -17,7 +17,7 @@ RSpec.describe Okta do
 
   def stub_successful_profile
     stub_request(:get, "https://dev1-signon.okta.com/oauth2/v1/userinfo")
-      .with(headers: { Authorization: "Bearer #{access_token}" })
+      .with(headers: {Authorization: "Bearer #{access_token}"})
       .to_return(body: okta_user_info.to_json)
   end
 
