@@ -2,23 +2,32 @@
 
 class AuthController < ApplicationController
   def create
-    code = AccessCode.find_by(code: data_attrs[:code])
-
-    return render_bad_request("Access code not found.") if code.nil?
-    return render_bad_request("Access code expired.") if expired(code)
-    render json: AuthToken.new, status: :created
+    token = data_attrs[:okta_access_token] ? auth_with_okta : auth_with_code
+    render json: token, status: :created if token
   end
 
   private
-
-  def expired(code)
-    code.expiration < DateTime.now.utc
-  end
 
   def render_bad_request(message)
     code = AccessCode.new
     code.errors.add(:code, message)
 
     render_error(code, :bad_request)
+  end
+
+  def auth_with_code
+    AccessCode.validate(data_attrs[:code])
+    AuthToken.new
+  rescue AccessCode::FailedAuthentication => e
+    render_bad_request e.message
+    nil
+  end
+
+  def auth_with_okta
+    user = Okta.find_user_by_access_token(data_attrs[:okta_access_token])
+    AuthToken.new(user: user)
+  rescue Okta::FailedAuthentication => e
+    render_bad_request e.message
+    nil
   end
 end
