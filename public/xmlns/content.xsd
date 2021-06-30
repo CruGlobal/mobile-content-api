@@ -559,6 +559,10 @@
                 </xs:simpleType>
             </xs:attribute>
         </xs:complexType>
+        <xs:unique name="optionValue">
+            <xs:selector xpath="content:option" />
+            <xs:field xpath="@value" />
+        </xs:unique>
     </xs:element>
 
     <!-- Link -->
