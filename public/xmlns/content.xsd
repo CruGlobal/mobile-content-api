@@ -554,6 +554,14 @@
                                 </xs:documentation>
                             </xs:annotation>
                         </xs:attribute>
+                        <xs:attribute name="selected-color" type="content:colorValue">
+                            <xs:annotation>
+                                <xs:documentation>This determines the selected color of this Option. This defaults to
+                                    the Multiselect option-selected-color, or the primary color of the closest ancestor
+                                    container with 100% alpha and the lightness of the HSL color space increased by 40%.
+                                </xs:documentation>
+                            </xs:annotation>
+                        </xs:attribute>
                         <xs:attribute name="value" type="xs:string" use="required" />
                     </xs:complexType>
                 </xs:element>
@@ -574,6 +582,14 @@
                     </xs:documentation>
                 </xs:annotation>
             </xs:attribute>
+            <xs:attribute name="option-selected-color" type="content:colorValue">
+                <xs:annotation>
+                    <xs:documentation>This determines the default selected color of options in this multiselect element.
+                        This defaults to the multiselect-option-selected-color defined on the closest ancestor
+                        container.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
         </xs:complexType>
         <xs:unique name="optionValue">
             <xs:selector xpath="content:option" />
@@ -582,6 +598,7 @@
     </xs:element>
 
     <xs:attribute name="multiselect-option-background-color" type="content:colorValue" />
+    <xs:attribute name="multiselect-option-selected-color" type="content:colorValue" />
     <!-- endregion multiselect -->
 
     <!-- Link -->
@@ -757,6 +774,13 @@
                 </xs:documentation>
             </xs:annotation>
         </xs:attribute>
+        <xs:attribute ref="content:multiselect-option-selected-color">
+            <xs:annotation>
+                <xs:documentation>This defines the default multiselect option-selected-color for this page. This
+                    attribute defaults to the Manifest multiselect-option-selected-color.
+                </xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
     </xs:attributeGroup>
 
     <xs:attributeGroup name="manifest">
@@ -764,6 +788,12 @@
             <xs:annotation>
                 <xs:documentation>This defines the default multiselect option background color for this tool. This
                     defaults to the Manifest background-color
+                </xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+        <xs:attribute ref="content:multiselect-option-selected-color">
+            <xs:annotation>
+                <xs:documentation>This defines the default multiselect option-selected-color for this tool.
                 </xs:documentation>
             </xs:annotation>
         </xs:attribute>
