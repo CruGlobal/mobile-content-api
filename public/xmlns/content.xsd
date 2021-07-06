@@ -538,6 +538,7 @@
         </xs:complexType>
     </xs:element>
 
+    <!-- region multiselect -->
     <xs:element name="multiselect">
         <xs:complexType>
             <xs:choice maxOccurs="unbounded">
@@ -546,6 +547,13 @@
                         <xs:choice minOccurs="0" maxOccurs="unbounded">
                             <xs:group ref="content:elements" />
                         </xs:choice>
+                        <xs:attribute name="background-color" type="content:colorValue">
+                            <xs:annotation>
+                                <xs:documentation>This determines the default background color of Multiselect options.
+                                    This defaults to the option-background-color of the multiselect element.
+                                </xs:documentation>
+                            </xs:annotation>
+                        </xs:attribute>
                         <xs:attribute name="value" type="xs:string" use="required" />
                     </xs:complexType>
                 </xs:element>
@@ -558,12 +566,23 @@
                     </xs:restriction>
                 </xs:simpleType>
             </xs:attribute>
+            <xs:attribute name="option-background-color" type="content:colorValue">
+                <xs:annotation>
+                    <xs:documentation>This determines the default background color of options in this multiselect
+                        element. This defaults to the multiselect-option-background-color defined on the closest
+                        ancestor container.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
         </xs:complexType>
         <xs:unique name="optionValue">
             <xs:selector xpath="content:option" />
             <xs:field xpath="@value" />
         </xs:unique>
     </xs:element>
+
+    <xs:attribute name="multiselect-option-background-color" type="content:colorValue" />
+    <!-- endregion multiselect -->
 
     <!-- Link -->
     <xs:complexType name="link">
@@ -707,7 +726,7 @@
     </xs:group>
     <!-- endregion spacer -->
 
-    <!-- Content Elements -->
+    <!-- region Exports -->
     <xs:element name="link" type="content:link" />
     <xs:element name="form" type="content:form" />
     <xs:element name="input" type="content:input" />
@@ -729,4 +748,25 @@
             <xs:group ref="training:contentElements" />
         </xs:choice>
     </xs:group>
+
+    <xs:attributeGroup name="page">
+        <xs:attribute ref="content:multiselect-option-background-color">
+            <xs:annotation>
+                <xs:documentation>This defines the default multiselect option background color for this page. This
+                    attribute defaults to the Manifest multiselect-option-background-color.
+                </xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+    </xs:attributeGroup>
+
+    <xs:attributeGroup name="manifest">
+        <xs:attribute ref="content:multiselect-option-background-color">
+            <xs:annotation>
+                <xs:documentation>This defines the default multiselect option background color for this tool. This
+                    defaults to the Manifest background-color
+                </xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+    </xs:attributeGroup>
+    <!-- endregion Exports -->
 </xs:schema>
