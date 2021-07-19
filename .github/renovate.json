@@ -5,13 +5,7 @@
         {
             "matchManagers": ["ruby-version"],
             "matchPackageNames": ["ruby"],
-            "enabled": false
-        },
-        {
-            "matchManagers": ["ruby-version"],
-            "matchPackageNames": ["ruby"],
-            "matchUpdateTypes": ["patch"],
-            "enabled": true
+            "allowedVersions": "< 2.8"
         }
     ]
 }
