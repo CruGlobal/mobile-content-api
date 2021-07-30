@@ -148,6 +148,7 @@
         </xs:attribute>
 
         <!-- Import any external groups of attributes we want to support -->
+        <xs:attributeGroup ref="content:manifest" />
         <xs:attributeGroup ref="lesson:manifest" />
         <xs:attributeGroup ref="tract:manifest" />
     </xs:complexType>

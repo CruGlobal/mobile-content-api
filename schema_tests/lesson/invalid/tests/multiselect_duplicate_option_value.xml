@@ -1,0 +1,9 @@
+<page xmlns="https://mobile-content-api.cru.org/xmlns/lesson" xmlns:content="https://mobile-content-api.cru.org/xmlns/content">
+    <content>
+        <content:multiselect state="quiz1">
+            <content:option value="answer1" />
+            <content:option value="answer2" />
+            <content:option value="answer1" />
+        </content:multiselect>
+    </content>
+</page>
