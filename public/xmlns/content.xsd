@@ -211,7 +211,7 @@
 
                     Version History:
                     1: Base version, no backwards incompatible changes have been made yet.
-                    2: Add support for the requiredFeatures contentRestriction on all elements.
+                    2: Add support for the required-features contentRestriction on all elements.
                 </xs:documentation>
             </xs:annotation>
         </xs:attribute>
@@ -226,7 +226,7 @@
                 </xs:documentation>
             </xs:annotation>
         </xs:attribute>
-        <xs:attribute name="requiredFeatures" type="content:features">
+        <xs:attribute name="required-features" type="content:features">
             <xs:annotation>
                 <xs:documentation>This attributes specifies a list of required features in order for this element to be
                     rendered. By default no features are required to render an element.
