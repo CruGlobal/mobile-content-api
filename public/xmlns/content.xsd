@@ -176,6 +176,27 @@
         </xs:annotation>
         <xs:list itemType="content:deviceType" />
     </xs:simpleType>
+
+    <xs:simpleType name="feature">
+        <xs:restriction base="xs:token">
+            <xs:enumeration value="animation">
+                <xs:annotation>
+                    <xs:documentation>The animation content element feature</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="multiselect">
+                <xs:annotation>
+                    <xs:documentation>The multiselect content element feature</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="features">
+        <xs:annotation>
+            <xs:documentation>A space separated list of features</xs:documentation>
+        </xs:annotation>
+        <xs:list itemType="content:feature" />
+    </xs:simpleType>
     <!-- endregion Value Definitions -->
 
     <!-- region Common Attributes -->
@@ -190,6 +211,7 @@
 
                     Version History:
                     1: Base version, no backwards incompatible changes have been made yet.
+                    2: Add support for the requiredFeatures contentRestriction on all elements.
                 </xs:documentation>
             </xs:annotation>
         </xs:attribute>
@@ -201,6 +223,13 @@
             <xs:annotation>
                 <xs:documentation>This attribute specifies that the element it is on is only rendered on the specified
                     device types. By default elements are rendered on all devices.
+                </xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="requiredFeatures" type="content:features">
+            <xs:annotation>
+                <xs:documentation>This attributes specifies a list of required features in order for this element to be
+                    rendered. By default no features are required to render an element.
                 </xs:documentation>
             </xs:annotation>
         </xs:attribute>
