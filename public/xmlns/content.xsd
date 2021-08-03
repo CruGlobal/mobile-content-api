@@ -574,7 +574,7 @@
                             </xs:restriction>
                         </xs:simpleType>
                     </xs:attribute>
-                    <xs:attribute name="icon-gravity">
+                    <xs:attribute name="icon-gravity" default="start">
                         <xs:annotation>
                             <xs:documentation>Defines where the icon is rendered in the button</xs:documentation>
                         </xs:annotation>
