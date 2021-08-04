@@ -325,7 +325,7 @@
                         </xs:annotation>
                         <xs:simpleType>
                             <xs:restriction base="xs:int">
-                                <xs:pattern value="[1-9][0-9]*" />
+                                <xs:minInclusive value="1" />
                             </xs:restriction>
                         </xs:simpleType>
                     </xs:attribute>
@@ -343,7 +343,7 @@
                         </xs:annotation>
                         <xs:simpleType>
                             <xs:restriction base="xs:int">
-                                <xs:pattern value="[1-9][0-9]*" />
+                                <xs:minInclusive value="1" />
                             </xs:restriction>
                         </xs:simpleType>
                     </xs:attribute>
