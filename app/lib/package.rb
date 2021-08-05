@@ -6,6 +6,7 @@ class Package
   XPATH_RESOURCES = %w[//@background-image
     //manifest:category/@banner
     //content:animation/@resource
+    //content:button/@icon
     //content:image[not(@restrictTo='web')]/@resource
     //content:text/@start-image
     //content:text/@end-image].freeze
