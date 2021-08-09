@@ -14,6 +14,15 @@
         </xs:restriction>
     </xs:simpleType>
 
+    <xs:simpleType name="expression" final="#all">
+        <xs:annotation>
+            <xs:documentation>This is an expression that evaluates to true or false. The rules for what are valid are
+                defined by the ANTLR4 grammar StateExpression.g4
+            </xs:documentation>
+        </xs:annotation>
+        <xs:restriction base="xs:string" />
+    </xs:simpleType>
+
     <xs:simpleType name="gravity">
         <xs:annotation>
             <xs:documentation>This type defines common gravity constants that determine how elements are positioned.
@@ -208,6 +217,26 @@
                 </xs:documentation>
             </xs:annotation>
         </xs:attribute>
+
+        <!-- region Element visibility -->
+        <xs:attribute name="hidden-if" type="content:expression">
+            <xs:annotation>
+                <xs:documentation>When this evaluates to true, the element is hidden. Hidden elements are completely
+                    removed from the UI and treated as if they don't exist when rendering the UI. When both hidden-if
+                    and invisible-if evaluate to true, hidden-if takes priority.
+                </xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="invisible-if" type="content:expression">
+            <xs:annotation>
+                <xs:documentation>When this evaluates to true, the element is made invisible. Invisible elements still
+                    take up their original space, but are not visible to the end user. When both hidden-if and
+                    invisible-if evaluate to true, hidden-if takes priority.
+                </xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+        <!-- endregion Element visibility -->
+
         <xs:attributeGroup ref="content:contentRestrictions" />
     </xs:attributeGroup>
 
