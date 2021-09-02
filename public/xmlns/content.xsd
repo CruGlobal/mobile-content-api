@@ -651,6 +651,17 @@
                     </xs:complexType>
                 </xs:element>
             </xs:choice>
+            <xs:attribute name="columns" default="1">
+                <xs:annotation>
+                    <xs:documentation>Defines the number of columns to display the options in.</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:int">
+                        <xs:minInclusive value="1" />
+                        <xs:maxInclusive value="4" />
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:attribute>
             <xs:attribute name="state" type="content:stateKey" use="required" />
             <xs:attribute name="selection-limit" default="1">
                 <xs:simpleType>
