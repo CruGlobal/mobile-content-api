@@ -291,7 +291,7 @@
                             <xs:element ref="analytics:events" minOccurs="0">
                                 <xs:annotation>
                                     <xs:documentation>Analytics Events to trigger for a tab. The default trigger mode
-                                        for tab analytics events is "selected".
+                                        for tab analytics events is "clicked".
                                     </xs:documentation>
                                 </xs:annotation>
                             </xs:element>
@@ -494,7 +494,7 @@
                         <xs:element ref="analytics:events" minOccurs="0" maxOccurs="1">
                             <xs:annotation>
                                 <xs:documentation>Define any analytics events that are triggered by this button. The
-                                    default trigger mode for analytics events on buttons is "selected".
+                                    default trigger mode for analytics events on buttons is "clicked".
                                 </xs:documentation>
                             </xs:annotation>
                         </xs:element>
@@ -711,7 +711,7 @@
                 <xs:annotation>
                     <xs:documentation>
                         Define any analytics events that are triggered by this link. The default trigger mode
-                        for analytics events on links is "selected".
+                        for analytics events on links is "clicked".
                     </xs:documentation>
                 </xs:annotation>
             </xs:element>
