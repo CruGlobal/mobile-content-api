@@ -629,9 +629,16 @@
             <xs:choice maxOccurs="unbounded">
                 <xs:element name="option">
                     <xs:complexType>
-                        <xs:choice minOccurs="0" maxOccurs="unbounded">
-                            <xs:group ref="content:elements" />
-                        </xs:choice>
+                        <xs:sequence>
+                            <xs:element ref="analytics:events" minOccurs="0" maxOccurs="1">
+                                <xs:annotation>
+                                    <xs:documentation>Define any analytics events that are triggered by this option. The
+                                        default trigger mode for analytics events on multiselect options is "clicked".
+                                    </xs:documentation>
+                                </xs:annotation>
+                            </xs:element>
+                            <xs:group ref="content:elements" minOccurs="0" maxOccurs="unbounded" />
+                        </xs:sequence>
                         <xs:attribute name="background-color" type="content:colorValue">
                             <xs:annotation>
                                 <xs:documentation>This determines the default background color of Multiselect options.

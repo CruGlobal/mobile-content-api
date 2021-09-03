@@ -1,8 +1,11 @@
-<page xmlns="https://mobile-content-api.cru.org/xmlns/lesson" xmlns:content="https://mobile-content-api.cru.org/xmlns/content">
+<page xmlns:analytics="https://mobile-content-api.cru.org/xmlns/analytics"
+    xmlns:content="https://mobile-content-api.cru.org/xmlns/content"
+    xmlns="https://mobile-content-api.cru.org/xmlns/lesson">
     <content>
-        <content:multiselect state="quiz1" selection-limit="1">
+        <content:multiselect selection-limit="1" state="quiz1">
             <content:option value="answer1">
                 <content:text>Answer 1</content:text>
+                <content:image resource="a.png" />
             </content:option>
             <content:option value="answer2">
                 <content:text>Answer 2</content:text>
@@ -12,7 +15,19 @@
             </content:option>
         </content:multiselect>
 
-        <content:button type="event" events="state:quiz1">
+        <content:multiselect state="quiz2" columns="4">
+            <content:option value="a">
+                <analytics:events>
+                    <analytics:event system="firebase">
+                        <analytics:attribute key="key" value="value" />
+                    </analytics:event>
+                </analytics:events>
+                <content:text>Test</content:text>
+                <content:image resource="test.png" />
+            </content:option>
+        </content:multiselect>
+
+        <content:button events="state:quiz1" type="event">
             <content:text>Check Answer</content:text>
         </content:button>
     </content>
