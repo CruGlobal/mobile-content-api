@@ -1,12 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
-<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:content="https://mobile-content-api.cru.org/xmlns/content"
-    xmlns:lesson="https://mobile-content-api.cru.org/xmlns/lesson" elementFormDefault="qualified"
+<xs:schema xmlns:analytics="https://mobile-content-api.cru.org/xmlns/analytics"
+    xmlns:content="https://mobile-content-api.cru.org/xmlns/content"
+    xmlns:lesson="https://mobile-content-api.cru.org/xmlns/lesson"
+    xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified"
     targetNamespace="https://mobile-content-api.cru.org/xmlns/lesson">
+    <xs:import namespace="https://mobile-content-api.cru.org/xmlns/analytics" schemaLocation="analytics.xsd" />
     <xs:import namespace="https://mobile-content-api.cru.org/xmlns/content" schemaLocation="content.xsd" />
 
     <xs:element name="page">
         <xs:complexType>
             <xs:all>
+                <xs:element ref="analytics:events" minOccurs="0" maxOccurs="1">
+                    <xs:annotation>
+                        <xs:documentation>
+                            Analytics events to trigger for this page. The default trigger mode for analytics events on
+                            lesson pages is "visible".
+                        </xs:documentation>
+                    </xs:annotation>
+                </xs:element>
                 <xs:element name="content">
                     <xs:complexType>
                         <xs:choice minOccurs="0" maxOccurs="unbounded">
