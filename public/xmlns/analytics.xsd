@@ -105,6 +105,10 @@
                                 <xs:documentation>
                                     This is the former clicked trigger, this is being deprecated for reuse in the
                                     future.
+
+                                    Deprecation Schedule:
+                                    - 9/3/2021 - Deprecated
+                                    - 10/3/2021 - Remove from spec (parser will continue to support this for a year)
                                 </xs:documentation>
                             </xs:annotation>
                         </xs:enumeration>
