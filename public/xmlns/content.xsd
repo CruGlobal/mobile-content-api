@@ -705,27 +705,32 @@
     <xs:attribute name="multiselect-option-selected-color" type="content:colorValue" />
     <!-- endregion multiselect -->
 
-    <!-- Link -->
-    <xs:complexType name="link">
-        <xs:all>
-            <xs:element ref="analytics:events" minOccurs="0">
-                <xs:annotation>
-                    <xs:documentation>
-                        Define any analytics events that are triggered by this link. The default trigger mode
-                        for analytics events on links is "clicked".
-                    </xs:documentation>
-                </xs:annotation>
-            </xs:element>
-            <xs:element name="text" type="content:textType">
-                <xs:annotation>
-                    <xs:documentation>This is the text content of this link. The text-color attribute defaults to the
-                        primary-color of the closest ancestor container.
-                    </xs:documentation>
-                </xs:annotation>
-            </xs:element>
-        </xs:all>
-        <xs:attributeGroup ref="content:clickableElement" />
-    </xs:complexType>
+    <!-- region Link -->
+    <xs:element name="link">
+        <xs:complexType>
+            <xs:all>
+                <xs:element ref="analytics:events" minOccurs="0">
+                    <xs:annotation>
+                        <xs:documentation>
+                            Define any analytics events that are triggered by this link. The default trigger mode for
+                            analytics events on links is "clicked".
+                        </xs:documentation>
+                    </xs:annotation>
+                </xs:element>
+                <xs:element name="text" type="content:textType">
+                    <xs:annotation>
+                        <xs:documentation>This is the text content of this link. The text-color attribute defaults to
+                            the primary-color of the closest ancestor container.
+                        </xs:documentation>
+                    </xs:annotation>
+                </xs:element>
+            </xs:all>
+
+            <xs:attributeGroup ref="content:baseAttributes" />
+            <xs:attributeGroup ref="content:clickableElement" />
+        </xs:complexType>
+    </xs:element>
+    <!-- endregion Link -->
 
     <!--
         Form Content - vertical stacked content with input fields
@@ -847,7 +852,6 @@
     <!-- endregion spacer -->
 
     <!-- region Exports -->
-    <xs:element name="link" type="content:link" />
     <xs:element name="form" type="content:form" />
     <xs:element name="input" type="content:input" />
     <xs:group name="elements">
