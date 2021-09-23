@@ -4,18 +4,21 @@
     xmlns:content="https://mobile-content-api.cru.org/xmlns/content">
     <hero>
         <content:paragraph>
-            <content:button type="url" url="https://www.google.com/">
+            <content:link url="https://www.google.com/">
                 <content:text>text</content:text>
-                <analytics:events>
-                    <analytics:event action="test" system="firebase" />
-                </analytics:events>
-            </content:button>
-            <content:button type="url" url="https://www.google.com/">
+            </content:link>
+            <content:link events="followup:send">
                 <analytics:events>
                     <analytics:event action="test" system="firebase" />
                 </analytics:events>
                 <content:text>text</content:text>
-            </content:button>
+            </content:link>
+            <content:link events="followup:send">
+                <content:text>text</content:text>
+                <analytics:events>
+                    <analytics:event action="test" system="firebase" />
+                </analytics:events>
+            </content:link>
         </content:paragraph>
     </hero>
 </page>
