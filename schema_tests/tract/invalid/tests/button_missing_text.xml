@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<page xmlns="https://mobile-content-api.cru.org/xmlns/tract"
+    xmlns:content="https://mobile-content-api.cru.org/xmlns/content">
+    <hero>
+        <content:paragraph>
+            <content:button type="url" url="https://www.google.com/" />
+        </content:paragraph>
+    </hero>
+</page>
