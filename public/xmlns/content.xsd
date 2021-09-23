@@ -499,124 +499,122 @@
                     </xs:annotation>
                 </xs:element>
             </xs:all>
-                    <xs:attribute name="type" use="required">
-                        <xs:annotation>
-                            <xs:documentation>This attribute determines what type of button this is. Unrecognized button
-                                types should be treated as unsupported by the renderer.
-                            </xs:documentation>
-                        </xs:annotation>
-                        <xs:simpleType>
-                            <xs:restriction base="xs:string">
-                                <xs:enumeration value="event">
-                                    <xs:annotation>
-                                        <xs:documentation>"event" type buttons will trigger the events specified.
-                                        </xs:documentation>
-                                    </xs:annotation>
-                                </xs:enumeration>
-                                <xs:enumeration value="url">
-                                    <xs:annotation>
-                                        <xs:documentation>"url" type buttons will launch the url specified.
-                                        </xs:documentation>
-                                    </xs:annotation>
-                                </xs:enumeration>
-                            </xs:restriction>
-                        </xs:simpleType>
-                    </xs:attribute>
-                    <xs:attribute name="events" type="content:eventIdsType" use="optional">
-                        <xs:annotation>
-                            <xs:documentation>This attribute defines the events to trigger for "event" buttons.
-                            </xs:documentation>
-                        </xs:annotation>
-                    </xs:attribute>
-                    <xs:attribute name="url" type="content:uri" use="optional">
-                        <xs:annotation>
-                            <xs:documentation>This attribute defines the url to open for "url" buttons.
-                            </xs:documentation>
-                        </xs:annotation>
-                    </xs:attribute>
-                    <xs:attribute name="url-i18n-id" type="xs:string" use="optional">
-                        <xs:annotation>
-                            <xs:documentation>This attribute defines a OneSky phrase id that contains the url for this
-                                button.
-                            </xs:documentation>
-                        </xs:annotation>
-                    </xs:attribute>
-                    <xs:attribute name="style" default="contained">
-                        <xs:annotation>
-                            <xs:documentation>This attribute defines the style of the button. It defaults to "contained"
-                                unless otherwise specified.
-                            </xs:documentation>
-                        </xs:annotation>
-                        <xs:simpleType>
-                            <xs:restriction base="xs:string">
-                                <xs:enumeration value="contained">
-                                    <xs:annotation>
-                                        <xs:documentation>This is a solid color button. The button color defines the
-                                            solid color for this button. The button text-color defaults to the
-                                            primary-text-color of the closest styles ancestor.
-                                        </xs:documentation>
-                                    </xs:annotation>
-                                </xs:enumeration>
-                                <xs:enumeration value="outlined">
-                                    <xs:annotation>
-                                        <xs:documentation>This is an outlined button. The button color defines the
-                                            outline color for this button. The button text-color defaults to the
-                                            color of this button.
-                                        </xs:documentation>
-                                    </xs:annotation>
-                                </xs:enumeration>
-                            </xs:restriction>
-                        </xs:simpleType>
-                    </xs:attribute>
-                    <xs:attribute name="color" type="content:colorValue" use="optional">
-                        <xs:annotation>
-                            <xs:documentation>This attribute determines the color of the button. This defaults to the
-                                button-color of the closest ancestor element. If button-color is not defined in the
-                                element hierarchy the color then defaults to the primary-color of the closest ancestor
-                                element.
-                            </xs:documentation>
-                        </xs:annotation>
-                    </xs:attribute>
-                    <xs:attribute name="background-color" type="content:colorValue" default="rgba(0,0,0,0)">
-                        <xs:annotation>
-                            <xs:documentation>This attribute determines the background color of outlined buttons. This
-                                defaults to rgba(0,0,0,0).
-                            </xs:documentation>
-                        </xs:annotation>
-                    </xs:attribute>
+            <xs:attribute name="type" use="required">
+                <xs:annotation>
+                    <xs:documentation>This attribute determines what type of button this is. Unrecognized button
+                        types should be treated as unsupported by the renderer.
+                    </xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:enumeration value="event">
+                            <xs:annotation>
+                                <xs:documentation>"event" type buttons will trigger the events specified.
+                                </xs:documentation>
+                            </xs:annotation>
+                        </xs:enumeration>
+                        <xs:enumeration value="url">
+                            <xs:annotation>
+                                <xs:documentation>"url" type buttons will launch the url specified.
+                                </xs:documentation>
+                            </xs:annotation>
+                        </xs:enumeration>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:attribute>
+            <xs:attribute name="events" type="content:eventIdsType" use="optional">
+                <xs:annotation>
+                    <xs:documentation>This attribute defines the events to trigger for "event" buttons.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
+            <xs:attribute name="url" type="content:uri" use="optional">
+                <xs:annotation>
+                    <xs:documentation>This attribute defines the url to open for "url" buttons.</xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
+            <xs:attribute name="url-i18n-id" type="xs:string" use="optional">
+                <xs:annotation>
+                    <xs:documentation>This attribute defines a OneSky phrase id that contains the url for this
+                        button.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
+            <xs:attribute name="style" default="contained">
+                <xs:annotation>
+                    <xs:documentation>This attribute defines the style of the button. It defaults to "contained" unless
+                        otherwise specified.
+                    </xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:enumeration value="contained">
+                            <xs:annotation>
+                                <xs:documentation>This is a solid color button. The button color defines the solid color
+                                    for this button. The button text-color defaults to the primary-text-color of the
+                                    closest styles ancestor.
+                                </xs:documentation>
+                            </xs:annotation>
+                        </xs:enumeration>
+                        <xs:enumeration value="outlined">
+                            <xs:annotation>
+                                <xs:documentation>This is an outlined button. The button color defines the outline color
+                                    for this button. The button text-color defaults to the color of this button.
+                                </xs:documentation>
+                            </xs:annotation>
+                        </xs:enumeration>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:attribute>
+            <xs:attribute name="color" type="content:colorValue" use="optional">
+                <xs:annotation>
+                    <xs:documentation>This attribute determines the color of the button. This defaults to the
+                        button-color of the closest ancestor element. If button-color is not defined in the
+                        element hierarchy the color then defaults to the primary-color of the closest ancestor
+                        element.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
+            <xs:attribute name="background-color" type="content:colorValue" default="rgba(0,0,0,0)">
+                <xs:annotation>
+                    <xs:documentation>This attribute determines the background color of outlined buttons. This
+                        defaults to rgba(0,0,0,0).
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
 
-                    <!-- region Icon Attributes -->
-                    <xs:attribute name="icon" type="xs:string">
-                        <xs:annotation>
-                            <xs:documentation>Defines an image to display as an icon in this button.</xs:documentation>
-                        </xs:annotation>
-                    </xs:attribute>
-                    <xs:attribute name="icon-size" default="18">
-                        <xs:annotation>
-                            <xs:documentation>Defines the size in "density-independent pixels"/"points" of the icon.
-                                This defaults to 18.
-                            </xs:documentation>
-                        </xs:annotation>
-                        <xs:simpleType>
-                            <xs:restriction base="xs:int">
-                                <xs:minInclusive value="1" />
-                            </xs:restriction>
-                        </xs:simpleType>
-                    </xs:attribute>
-                    <xs:attribute name="icon-gravity" default="start">
-                        <xs:annotation>
-                            <xs:documentation>Defines where the icon is rendered in the button</xs:documentation>
-                        </xs:annotation>
-                        <xs:simpleType>
-                            <xs:restriction base="content:gravity">
-                                <xs:enumeration value="start" />
-                                <xs:enumeration value="end" />
-                            </xs:restriction>
-                        </xs:simpleType>
-                    </xs:attribute>
-                    <!-- endregion Icon Attributes -->
+            <!-- region Icon Attributes -->
+            <xs:attribute name="icon" type="xs:string">
+                <xs:annotation>
+                    <xs:documentation>Defines an image to display as an icon in this button.</xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
+            <xs:attribute name="icon-size" default="18">
+                <xs:annotation>
+                    <xs:documentation>Defines the size in "density-independent pixels"/"points" of the icon. This
+                        defaults to 18.
+                    </xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:int">
+                        <xs:minInclusive value="1" />
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:attribute>
+            <xs:attribute name="icon-gravity" default="start">
+                <xs:annotation>
+                    <xs:documentation>Defines where the icon is rendered in the button</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="content:gravity">
+                        <xs:enumeration value="start" />
+                        <xs:enumeration value="end" />
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:attribute>
+            <!-- endregion Icon Attributes -->
 
-                    <xs:attributeGroup ref="content:baseAttributes" />
+            <xs:attributeGroup ref="content:baseAttributes" />
         </xs:complexType>
     </xs:element>
     <!-- endregion button -->
