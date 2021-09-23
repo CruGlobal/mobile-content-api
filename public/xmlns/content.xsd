@@ -256,6 +256,28 @@
             </xs:annotation>
         </xs:attribute>
     </xs:attributeGroup>
+
+    <xs:attributeGroup name="clickableElement">
+        <xs:attribute name="events" type="content:eventIdsType">
+            <xs:annotation>
+                <xs:documentation>This attribute defines the events to trigger when clicking on this element.
+                </xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="url" type="content:uri">
+            <xs:annotation>
+                <xs:documentation>This attribute defines the url to open when clicking on this element.
+                </xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="url-i18n-id" type="xs:string">
+            <xs:annotation>
+                <xs:documentation>This attribute defines a OneSky phrase id that contains the url for this
+                    element.
+                </xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+    </xs:attributeGroup>
     <!-- endregion Common Attributes -->
 
     <!-- element nodes -->
@@ -522,24 +544,6 @@
                     </xs:restriction>
                 </xs:simpleType>
             </xs:attribute>
-            <xs:attribute name="events" type="content:eventIdsType" use="optional">
-                <xs:annotation>
-                    <xs:documentation>This attribute defines the events to trigger for "event" buttons.
-                    </xs:documentation>
-                </xs:annotation>
-            </xs:attribute>
-            <xs:attribute name="url" type="content:uri" use="optional">
-                <xs:annotation>
-                    <xs:documentation>This attribute defines the url to open for "url" buttons.</xs:documentation>
-                </xs:annotation>
-            </xs:attribute>
-            <xs:attribute name="url-i18n-id" type="xs:string" use="optional">
-                <xs:annotation>
-                    <xs:documentation>This attribute defines a OneSky phrase id that contains the url for this
-                        button.
-                    </xs:documentation>
-                </xs:annotation>
-            </xs:attribute>
             <xs:attribute name="style" default="contained">
                 <xs:annotation>
                     <xs:documentation>This attribute defines the style of the button. It defaults to "contained" unless
@@ -615,6 +619,7 @@
             <!-- endregion Icon Attributes -->
 
             <xs:attributeGroup ref="content:baseAttributes" />
+            <xs:attributeGroup ref="content:clickableElement" />
         </xs:complexType>
     </xs:element>
     <!-- endregion button -->
