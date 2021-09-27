@@ -139,13 +139,14 @@
             </xs:simpleType>
         </xs:list>
     </xs:simpleType>
-    <xs:simpleType name="listener">
-        <xs:restriction base="xs:token">
-            <xs:pattern value="[a-zA-Z0-9_\-]+" />
-        </xs:restriction>
-    </xs:simpleType>
-    <xs:simpleType name="listenersType">
-        <xs:list itemType="content:listener" />
+    <xs:simpleType name="listeners">
+        <xs:list>
+            <xs:simpleType>
+                <xs:restriction base="xs:token">
+                    <xs:pattern value="[a-zA-Z0-9_\-]+" />
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:list>
     </xs:simpleType>
 
     <xs:simpleType name="deviceType">
@@ -322,7 +323,7 @@
                                 <xs:group ref="content:fixedSpacerOnly" />
                             </xs:choice>
                         </xs:sequence>
-                        <xs:attribute name="listeners" type="content:listenersType">
+                        <xs:attribute name="listeners" type="content:listeners">
                             <xs:annotation>
                                 <xs:documentation>event_ids that trigger this tab</xs:documentation>
                             </xs:annotation>
@@ -489,12 +490,12 @@
                     </xs:documentation>
                 </xs:annotation>
             </xs:attribute>
-            <xs:attribute name="play-listeners" type="content:listenersType">
+            <xs:attribute name="play-listeners" type="content:listeners">
                 <xs:annotation>
                     <xs:documentation>event_ids that trigger playback of this animation.</xs:documentation>
                 </xs:annotation>
             </xs:attribute>
-            <xs:attribute name="stop-listeners" type="content:listenersType">
+            <xs:attribute name="stop-listeners" type="content:listeners">
                 <xs:annotation>
                     <xs:documentation>event_ids that will stop playback of this animation.</xs:documentation>
                 </xs:annotation>
