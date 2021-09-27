@@ -94,7 +94,7 @@
                 </xs:documentation>
             </xs:annotation>
         </xs:attribute>
-        <xs:attribute name="listeners" type="content:listenersType" use="optional">
+        <xs:attribute name="listeners" type="content:listeners" use="optional">
             <xs:annotation>
                 <xs:documentation>event_ids that trigger this page</xs:documentation>
             </xs:annotation>
@@ -225,13 +225,13 @@
 
         <!-- hidden: DEFAULT( false ) whether this card is hidden. hidden cards can still be displayed if they have a listener that is triggered. -->
         <xs:attribute name="hidden" type="xs:boolean" use="optional" />
-        <xs:attribute name="listeners" type="content:listenersType" use="optional">
+        <xs:attribute name="listeners" type="content:listeners" use="optional">
             <xs:annotation>
                 <xs:documentation>This attribute defines events that will trigger display of this card.
                 </xs:documentation>
             </xs:annotation>
         </xs:attribute>
-        <xs:attribute name="dismiss-listeners" type="content:listenersType" use="optional">
+        <xs:attribute name="dismiss-listeners" type="content:listeners" use="optional">
             <xs:annotation>
                 <xs:documentation>This attribute defines events that will dismiss this card.</xs:documentation>
             </xs:annotation>
@@ -242,7 +242,7 @@
     <xs:complexType name="callToAction">
         <xs:complexContent>
             <xs:extension base="content:textChild">
-                <xs:attribute name="events" type="content:eventIdsType" use="optional">
+                <xs:attribute name="events" type="content:events" use="optional">
                     <xs:annotation>
                         <xs:documentation>Event ids to trigger when the call to action arrow is pressed. Default
                             behavior is to advance to the next page.
@@ -292,8 +292,8 @@
                 <xs:element ref="content:paragraph" />
             </xs:choice>
         </xs:sequence>
-        <xs:attribute name="listeners" type="content:listenersType" use="required" />
-        <xs:attribute name="dismiss-listeners" type="content:listenersType" use="required" />
+        <xs:attribute name="listeners" type="content:listeners" use="required" />
+        <xs:attribute name="dismiss-listeners" type="content:listeners" use="required" />
         <xs:attribute name="text-scale" type="xs:float" default="1">
             <xs:annotation>
                 <xs:documentation>Defines how much to scale all the text content in this modal by.</xs:documentation>

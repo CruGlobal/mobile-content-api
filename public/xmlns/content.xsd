@@ -99,15 +99,16 @@
         </xs:restriction>
     </xs:simpleType>
 
-    <xs:simpleType name="textStyle">
-        <xs:restriction base="xs:token">
-            <xs:enumeration value="bold" />
-            <xs:enumeration value="italic" />
-            <xs:enumeration value="underline" />
-        </xs:restriction>
-    </xs:simpleType>
     <xs:simpleType name="textStyles">
-        <xs:list itemType="content:textStyle" />
+        <xs:list>
+            <xs:simpleType>
+                <xs:restriction base="xs:token">
+                    <xs:enumeration value="bold" />
+                    <xs:enumeration value="italic" />
+                    <xs:enumeration value="underline" />
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:list>
     </xs:simpleType>
 
     <xs:simpleType name="uri">
@@ -122,7 +123,7 @@
         </xs:restriction>
     </xs:simpleType>
 
-    <xs:simpleType name="eventIdsType">
+    <xs:simpleType name="events">
         <xs:list>
             <xs:simpleType>
                 <xs:restriction base="xs:token">
@@ -139,65 +140,68 @@
             </xs:simpleType>
         </xs:list>
     </xs:simpleType>
-    <xs:simpleType name="listener">
-        <xs:restriction base="xs:token">
-            <xs:pattern value="[a-zA-Z0-9_\-]+" />
-        </xs:restriction>
-    </xs:simpleType>
-    <xs:simpleType name="listenersType">
-        <xs:list itemType="content:listener" />
+    <xs:simpleType name="listeners">
+        <xs:list>
+            <xs:simpleType>
+                <xs:restriction base="xs:token">
+                    <xs:pattern value="[a-zA-Z0-9_\-]+" />
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:list>
     </xs:simpleType>
 
-    <xs:simpleType name="deviceType">
-        <xs:restriction base="xs:token">
-            <xs:enumeration value="mobile">
-                <xs:annotation>
-                    <xs:documentation>This device type represents a native app on Android or iOS</xs:documentation>
-                </xs:annotation>
-            </xs:enumeration>
-            <xs:enumeration value="android">
-                <xs:annotation>
-                    <xs:documentation>This device type represents a native app on Android</xs:documentation>
-                </xs:annotation>
-            </xs:enumeration>
-            <xs:enumeration value="ios">
-                <xs:annotation>
-                    <xs:documentation>This device type represents a native app on iOS</xs:documentation>
-                </xs:annotation>
-            </xs:enumeration>
-            <xs:enumeration value="web">
-                <xs:annotation>
-                    <xs:documentation>This device type represents a web browser</xs:documentation>
-                </xs:annotation>
-            </xs:enumeration>
-        </xs:restriction>
-    </xs:simpleType>
     <xs:simpleType name="deviceTypes">
         <xs:annotation>
             <xs:documentation>A space separated list of device types</xs:documentation>
         </xs:annotation>
-        <xs:list itemType="content:deviceType" />
+        <xs:list>
+            <xs:simpleType>
+                <xs:restriction base="xs:token">
+                    <xs:enumeration value="mobile">
+                        <xs:annotation>
+                            <xs:documentation>This device type represents a native app on Android or iOS</xs:documentation>
+                        </xs:annotation>
+                    </xs:enumeration>
+                    <xs:enumeration value="android">
+                        <xs:annotation>
+                            <xs:documentation>This device type represents a native app on Android</xs:documentation>
+                        </xs:annotation>
+                    </xs:enumeration>
+                    <xs:enumeration value="ios">
+                        <xs:annotation>
+                            <xs:documentation>This device type represents a native app on iOS</xs:documentation>
+                        </xs:annotation>
+                    </xs:enumeration>
+                    <xs:enumeration value="web">
+                        <xs:annotation>
+                            <xs:documentation>This device type represents a web browser</xs:documentation>
+                        </xs:annotation>
+                    </xs:enumeration>
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:list>
     </xs:simpleType>
 
-    <xs:simpleType name="feature">
-        <xs:restriction base="xs:token">
-            <xs:enumeration value="animation">
-                <xs:annotation>
-                    <xs:documentation>The animation content element feature</xs:documentation>
-                </xs:annotation>
-            </xs:enumeration>
-            <xs:enumeration value="multiselect">
-                <xs:annotation>
-                    <xs:documentation>The multiselect content element feature</xs:documentation>
-                </xs:annotation>
-            </xs:enumeration>
-        </xs:restriction>
-    </xs:simpleType>
     <xs:simpleType name="features">
         <xs:annotation>
             <xs:documentation>A space separated list of features</xs:documentation>
         </xs:annotation>
-        <xs:list itemType="content:feature" />
+        <xs:list>
+            <xs:simpleType>
+                <xs:restriction base="xs:token">
+                    <xs:enumeration value="animation">
+                        <xs:annotation>
+                            <xs:documentation>The animation content element feature</xs:documentation>
+                        </xs:annotation>
+                    </xs:enumeration>
+                    <xs:enumeration value="multiselect">
+                        <xs:annotation>
+                            <xs:documentation>The multiselect content element feature</xs:documentation>
+                        </xs:annotation>
+                    </xs:enumeration>
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:list>
     </xs:simpleType>
     <!-- endregion Value Definitions -->
 
@@ -258,7 +262,7 @@
     </xs:attributeGroup>
 
     <xs:attributeGroup name="clickableElement">
-        <xs:attribute name="events" type="content:eventIdsType">
+        <xs:attribute name="events" type="content:events">
             <xs:annotation>
                 <xs:documentation>This attribute defines the events to trigger when clicking on this element.
                 </xs:documentation>
@@ -322,7 +326,7 @@
                                 <xs:group ref="content:fixedSpacerOnly" />
                             </xs:choice>
                         </xs:sequence>
-                        <xs:attribute name="listeners" type="content:listenersType">
+                        <xs:attribute name="listeners" type="content:listeners">
                             <xs:annotation>
                                 <xs:documentation>event_ids that trigger this tab</xs:documentation>
                             </xs:annotation>
@@ -445,7 +449,7 @@
         </xs:annotation>
         <xs:complexType>
             <xs:attribute name="resource" type="xs:string" use="required" />
-            <xs:attribute name="events" type="content:eventIdsType">
+            <xs:attribute name="events" type="content:events">
                 <xs:annotation>
                     <xs:documentation>This attribute defines the events to trigger when the user "clicks" the image.
                     </xs:documentation>
@@ -483,18 +487,18 @@
             <xs:attribute name="resource" type="xs:string" use="required" />
             <xs:attribute name="autoplay" type="xs:boolean" default="true" />
             <xs:attribute name="loop" type="xs:boolean" default="true" />
-            <xs:attribute name="events" type="content:eventIdsType">
+            <xs:attribute name="events" type="content:events">
                 <xs:annotation>
                     <xs:documentation>This attribute defines the events to trigger when the user "clicks" the animation.
                     </xs:documentation>
                 </xs:annotation>
             </xs:attribute>
-            <xs:attribute name="play-listeners" type="content:listenersType">
+            <xs:attribute name="play-listeners" type="content:listeners">
                 <xs:annotation>
                     <xs:documentation>event_ids that trigger playback of this animation.</xs:documentation>
                 </xs:annotation>
             </xs:attribute>
-            <xs:attribute name="stop-listeners" type="content:listenersType">
+            <xs:attribute name="stop-listeners" type="content:listeners">
                 <xs:annotation>
                     <xs:documentation>event_ids that will stop playback of this animation.</xs:documentation>
                 </xs:annotation>
