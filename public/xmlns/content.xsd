@@ -182,25 +182,26 @@
         </xs:list>
     </xs:simpleType>
 
-    <xs:simpleType name="feature">
-        <xs:restriction base="xs:token">
-            <xs:enumeration value="animation">
-                <xs:annotation>
-                    <xs:documentation>The animation content element feature</xs:documentation>
-                </xs:annotation>
-            </xs:enumeration>
-            <xs:enumeration value="multiselect">
-                <xs:annotation>
-                    <xs:documentation>The multiselect content element feature</xs:documentation>
-                </xs:annotation>
-            </xs:enumeration>
-        </xs:restriction>
-    </xs:simpleType>
     <xs:simpleType name="features">
         <xs:annotation>
             <xs:documentation>A space separated list of features</xs:documentation>
         </xs:annotation>
-        <xs:list itemType="content:feature" />
+        <xs:list>
+            <xs:simpleType>
+                <xs:restriction base="xs:token">
+                    <xs:enumeration value="animation">
+                        <xs:annotation>
+                            <xs:documentation>The animation content element feature</xs:documentation>
+                        </xs:annotation>
+                    </xs:enumeration>
+                    <xs:enumeration value="multiselect">
+                        <xs:annotation>
+                            <xs:documentation>The multiselect content element feature</xs:documentation>
+                        </xs:annotation>
+                    </xs:enumeration>
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:list>
     </xs:simpleType>
     <!-- endregion Value Definitions -->
 
