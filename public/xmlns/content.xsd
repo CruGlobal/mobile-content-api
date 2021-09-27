@@ -99,15 +99,16 @@
         </xs:restriction>
     </xs:simpleType>
 
-    <xs:simpleType name="textStyle">
-        <xs:restriction base="xs:token">
-            <xs:enumeration value="bold" />
-            <xs:enumeration value="italic" />
-            <xs:enumeration value="underline" />
-        </xs:restriction>
-    </xs:simpleType>
     <xs:simpleType name="textStyles">
-        <xs:list itemType="content:textStyle" />
+        <xs:list>
+            <xs:simpleType>
+                <xs:restriction base="xs:token">
+                    <xs:enumeration value="bold" />
+                    <xs:enumeration value="italic" />
+                    <xs:enumeration value="underline" />
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:list>
     </xs:simpleType>
 
     <xs:simpleType name="uri">
