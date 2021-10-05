@@ -1,0 +1,18 @@
+<page xmlns="https://mobile-content-api.cru.org/xmlns/lesson"
+    xmlns:analytics="https://mobile-content-api.cru.org/xmlns/analytics"
+    xmlns:content="https://mobile-content-api.cru.org/xmlns/content" listeners="replay-lesson">
+
+    <analytics:events>
+        <analytics:event action="lessongodstory-0" system="appsflyer" />
+    </analytics:events>
+
+    <content>
+        <content:spacer height="40" mode="fixed" />
+        <content:paragraph>
+            <content:text i18n-id="01_phrase1" text-align="center" text-scale="1.5" />
+        </content:paragraph>
+        <content:spacer />
+        <content:image resource="lesson1-main-illustration.png" />
+        <content:spacer />
+    </content>
+</page>
