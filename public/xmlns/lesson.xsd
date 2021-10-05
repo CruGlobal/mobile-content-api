@@ -1,85 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
-<xs:schema xmlns:analytics="https://mobile-content-api.cru.org/xmlns/analytics"
-    xmlns:content="https://mobile-content-api.cru.org/xmlns/content"
+<xs:schema xmlns:content="https://mobile-content-api.cru.org/xmlns/content"
     xmlns:lesson="https://mobile-content-api.cru.org/xmlns/lesson"
-    xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified"
-    targetNamespace="https://mobile-content-api.cru.org/xmlns/lesson">
+    xmlns:page="https://mobile-content-api.cru.org/xmlns/page" xmlns:xs="http://www.w3.org/2001/XMLSchema"
+    elementFormDefault="qualified" targetNamespace="https://mobile-content-api.cru.org/xmlns/lesson">
     <xs:import namespace="https://mobile-content-api.cru.org/xmlns/analytics" schemaLocation="analytics.xsd" />
     <xs:import namespace="https://mobile-content-api.cru.org/xmlns/content" schemaLocation="content.xsd" />
+    <xs:import namespace="https://mobile-content-api.cru.org/xmlns/page" schemaLocation="page.xsd" />
 
     <xs:element name="page">
         <xs:complexType>
-            <xs:all>
-                <xs:element ref="analytics:events" minOccurs="0" maxOccurs="1">
-                    <xs:annotation>
-                        <xs:documentation>
-                            Analytics events to trigger for this page. The default trigger mode for analytics events on
-                            lesson pages is "visible".
-                        </xs:documentation>
-                    </xs:annotation>
-                </xs:element>
-                <xs:element name="content">
-                    <xs:complexType>
-                        <xs:choice minOccurs="0" maxOccurs="unbounded">
-                            <xs:group ref="content:elements" />
-                            <xs:element ref="content:spacer" minOccurs="0" />
-                        </xs:choice>
-                    </xs:complexType>
-                </xs:element>
-            </xs:all>
+            <xs:complexContent>
+                <xs:extension base="page:BasePageType">
+                    <xs:sequence>
+                        <xs:element name="content">
+                            <xs:complexType>
+                                <xs:choice minOccurs="0" maxOccurs="unbounded">
+                                    <xs:group ref="content:elements" />
+                                    <xs:element ref="content:spacer" minOccurs="0" />
+                                </xs:choice>
+                            </xs:complexType>
+                        </xs:element>
+                    </xs:sequence>
 
-            <xs:attribute name="control-color" type="content:colorValue">
-                <xs:annotation>
-                    <xs:documentation>This defines the control color for this page. This defaults to the lesson control
-                        color defined on the manifest.
-                    </xs:documentation>
-                </xs:annotation>
-            </xs:attribute>
+                    <xs:attribute name="control-color" type="content:colorValue">
+                        <xs:annotation>
+                            <xs:documentation>This defines the control color for this page. This defaults to the lesson
+                                control color defined on the manifest.
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:attribute>
 
-            <xs:attribute name="background-color" type="content:colorValue" default="rgba(255, 255, 255, 0)">
-                <xs:annotation>
-                    <xs:documentation>This defines the background color for this page. This background color is layered
-                        on top of any manifest background layers.
-                    </xs:documentation>
-                </xs:annotation>
-            </xs:attribute>
-            <xs:attribute name="background-image" type="xs:string">
-                <xs:annotation>
-                    <xs:documentation>This defines a background image for this page.</xs:documentation>
-                </xs:annotation>
-            </xs:attribute>
-            <xs:attribute name="background-image-align" type="content:imageGravity" default="center">
-                <xs:annotation>
-                    <xs:documentation>This defines how we align the background image. This defaults to center.
-                    </xs:documentation>
-                </xs:annotation>
-            </xs:attribute>
-            <xs:attribute name="background-image-scale-type" type="content:imageScaleType" default="fill-x">
-                <xs:annotation>
-                    <xs:documentation>This defines how we should scale the background image. This defaults to fill-x.
-                    </xs:documentation>
-                </xs:annotation>
-            </xs:attribute>
-
-            <xs:attribute name="text-scale" type="xs:float" default="1">
-                <xs:annotation>
-                    <xs:documentation>Defines how much to scale all the text content on this page by.</xs:documentation>
-                </xs:annotation>
-            </xs:attribute>
-
-            <xs:attribute name="hidden" type="xs:boolean" default="false">
-                <xs:annotation>
-                    <xs:documentation>Is this page hidden until triggered by a listener.</xs:documentation>
-                </xs:annotation>
-            </xs:attribute>
-            <xs:attribute name="listeners" type="content:listeners">
-                <xs:annotation>
-                    <xs:documentation>event_ids that trigger this page</xs:documentation>
-                </xs:annotation>
-            </xs:attribute>
-
-            <!-- Import any external groups of attributes we want to support -->
-            <xs:attributeGroup ref="content:page" />
+                    <xs:attribute name="hidden" type="xs:boolean" default="false">
+                        <xs:annotation>
+                            <xs:documentation>Is this page hidden until triggered by a listener.</xs:documentation>
+                        </xs:annotation>
+                    </xs:attribute>
+                </xs:extension>
+            </xs:complexContent>
         </xs:complexType>
     </xs:element>
 
@@ -90,7 +47,7 @@
                 manifest xml.
             </xs:documentation>
         </xs:annotation>
-        <xs:attribute ref="lesson:control-color" use="optional" default="rgba(225, 225, 225, 1)">
+        <xs:attribute ref="lesson:control-color" default="rgba(225, 225, 225, 1)">
             <xs:annotation>
                 <xs:documentation>This defines the default control color for lessons.</xs:documentation>
             </xs:annotation>
