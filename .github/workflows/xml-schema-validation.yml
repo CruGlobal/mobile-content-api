@@ -1,0 +1,54 @@
+name: XML Schema Validation
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+  workflow_dispatch:
+
+jobs:
+  manifest:
+    name: Manifest XML Schema
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Install xmllint
+      run: sudo apt-get install libxml2-utils
+    - name: Check valid XML
+      run: xmllint --schema public/xmlns/manifest.xsd --noout schema_tests/manifest/valid/*/*.xml
+    - name: Check invalid XML
+      run: ./schema_tests/invalid.sh public/xmlns/manifest.xsd schema_tests/manifest/invalid/*/*.xml
+  lesson:
+    name: Lesson XML Schema
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Install xmllint
+      run: sudo apt-get install libxml2-utils
+    - name: Check valid XML
+      run: xmllint --schema public/xmlns/lesson.xsd --noout schema_tests/lesson/valid/*/*.xml
+    - name: Check invalid XML
+      run: ./schema_tests/invalid.sh public/xmlns/lesson.xsd schema_tests/lesson/invalid/*/*.xml
+  tract:
+    name: Tract XML Schema
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Install xmllint
+      run: sudo apt-get install libxml2-utils
+    - name: Check valid XML
+      run: xmllint --schema public/xmlns/tract.xsd --noout schema_tests/tract/valid/*/*.xml
+    - name: Check invalid XML
+      run: ./schema_tests/invalid.sh public/xmlns/tract.xsd schema_tests/tract/invalid/*/*.xml
+  training:
+    name: Training XML Schema
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Install xmllint
+      run: sudo apt-get install libxml2-utils
+    - name: Check valid XML
+      run: xmllint --schema public/xmlns/training.xsd --noout schema_tests/training/valid/*/*.xml
+    - name: Check invalid XML
+      run: ./schema_tests/invalid.sh public/xmlns/training.xsd schema_tests/training/invalid/*/*.xml
