@@ -22,12 +22,6 @@
                             </xs:complexType>
                         </xs:element>
                     </xs:sequence>
-
-                    <xs:attribute name="hidden" type="xs:boolean" default="false">
-                        <xs:annotation>
-                            <xs:documentation>Is this page hidden until triggered by a listener.</xs:documentation>
-                        </xs:annotation>
-                    </xs:attribute>
                 </xs:extension>
             </xs:complexContent>
         </xs:complexType>
