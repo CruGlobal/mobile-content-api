@@ -1,12 +1,14 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <xs:schema xmlns:analytics="https://mobile-content-api.cru.org/xmlns/analytics"
     xmlns:content="https://mobile-content-api.cru.org/xmlns/content"
+    xmlns:page="https://mobile-content-api.cru.org/xmlns/page"
     xmlns:tract="https://mobile-content-api.cru.org/xmlns/tract"
     xmlns:training="https://mobile-content-api.cru.org/xmlns/training" xmlns:xs="http://www.w3.org/2001/XMLSchema"
     elementFormDefault="qualified" targetNamespace="https://mobile-content-api.cru.org/xmlns/tract">
 
     <xs:import namespace="https://mobile-content-api.cru.org/xmlns/analytics" schemaLocation="analytics.xsd" />
     <xs:import namespace="https://mobile-content-api.cru.org/xmlns/content" schemaLocation="content.xsd" />
+    <xs:import namespace="https://mobile-content-api.cru.org/xmlns/page" schemaLocation="page.xsd" />
     <xs:import namespace="https://mobile-content-api.cru.org/xmlns/training" schemaLocation="training.xsd" />
 
     <!-- element nodes -->
@@ -25,77 +27,47 @@
     -->
     <xs:element name="page">
         <xs:complexType>
-            <xs:sequence>
-                <xs:element name="header" type="tract:pageHeader" minOccurs="0" />
-                <xs:element name="hero" type="tract:pageHero" minOccurs="0" />
-                <xs:element name="cards" minOccurs="0">
-                    <xs:complexType>
-                        <xs:sequence>
-                            <xs:element name="card" type="tract:card" maxOccurs="unbounded" />
-                        </xs:sequence>
-                    </xs:complexType>
-                </xs:element>
-                <xs:element name="modals" minOccurs="0">
-                    <xs:complexType>
-                        <xs:sequence>
-                            <xs:element name="modal" type="tract:modal" maxOccurs="unbounded" />
-                        </xs:sequence>
-                    </xs:complexType>
-                </xs:element>
-                <xs:element name="call-to-action" type="tract:callToAction" minOccurs="0" />
-            </xs:sequence>
-            <xs:attribute name="primary-color" type="content:colorValue" />
-            <xs:attribute name="primary-text-color" type="content:colorValue" />
-            <xs:attribute name="text-color" type="content:colorValue" />
+            <xs:complexContent>
+                <xs:extension base="page:BasePageType">
+                    <xs:sequence>
+                        <xs:element name="header" type="tract:pageHeader" minOccurs="0" />
+                        <xs:element name="hero" type="tract:pageHero" minOccurs="0" />
+                        <xs:element name="cards" minOccurs="0">
+                            <xs:complexType>
+                                <xs:sequence>
+                                    <xs:element name="card" type="tract:card" maxOccurs="unbounded" />
+                                </xs:sequence>
+                            </xs:complexType>
+                        </xs:element>
+                        <xs:element name="modals" minOccurs="0">
+                            <xs:complexType>
+                                <xs:sequence>
+                                    <xs:element name="modal" type="tract:modal" maxOccurs="unbounded" />
+                                </xs:sequence>
+                            </xs:complexType>
+                        </xs:element>
+                        <xs:element name="call-to-action" type="tract:callToAction" minOccurs="0" />
+                    </xs:sequence>
+                    <xs:attribute name="primary-color" type="content:colorValue" />
+                    <xs:attribute name="primary-text-color" type="content:colorValue" />
+                    <xs:attribute name="text-color" type="content:colorValue" />
 
-            <xs:attribute name="background-color" type="content:colorValue" default="rgba(255, 255, 255, 0)">
-                <xs:annotation>
-                    <xs:documentation>This defines the background color for this page. This background color is layered
-                        on top of any manifest background layers.
-                    </xs:documentation>
-                </xs:annotation>
-            </xs:attribute>
-            <xs:attribute name="background-image" type="xs:string" />
-            <xs:attribute name="background-image-align" type="content:imageGravity" default="center">
-                <xs:annotation>
-                    <xs:documentation>This defines how we align the background image. This defaults to center.
-                    </xs:documentation>
-                </xs:annotation>
-            </xs:attribute>
-            <xs:attribute name="background-image-scale-type" type="content:imageScaleType" default="fill-x">
-                <xs:annotation>
-                    <xs:documentation>This defines how we should scale the background image. This defaults to fill-x.
-                    </xs:documentation>
-                </xs:annotation>
-            </xs:attribute>
-
-            <xs:attribute name="text-scale" type="xs:float" default="1">
-                <xs:annotation>
-                    <xs:documentation>Defines how much to scale all the text content on this page by.</xs:documentation>
-                </xs:annotation>
-            </xs:attribute>
-
-            <xs:attribute name="card-text-color" type="content:colorValue">
-                <xs:annotation>
-                    <xs:documentation>This attribute defines the text color for cards on this page. This will default to
-                        the
-                        text-color set for the page.
-                    </xs:documentation>
-                </xs:annotation>
-            </xs:attribute>
-            <xs:attribute name="card-background-color" type="content:colorValue">
-                <xs:annotation>
-                    <xs:documentation>This defines the default background color for any card that appears on this page.
-                        This
-                        defaults to the tract:card-background-color defined on the manifest.
-                    </xs:documentation>
-                </xs:annotation>
-            </xs:attribute>
-            <xs:attribute name="listeners" type="content:listeners">
-                <xs:annotation>
-                    <xs:documentation>event_ids that trigger this page</xs:documentation>
-                </xs:annotation>
-            </xs:attribute>
+                    <xs:attribute name="card-text-color" type="content:colorValue">
+                        <xs:annotation>
+                            <xs:documentation>This attribute defines the text color for cards on this page. This will
+                                default to the text-color set for the page.
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:attribute>
+                    <xs:attribute name="card-background-color" type="content:colorValue">
+                        <xs:annotation>
+                            <xs:documentation>This defines the default background color for any card that appears on
+                                this page. This defaults to the tract:card-background-color defined on the manifest.
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:attribute>
+                </xs:extension>
+            </xs:complexContent>
         </xs:complexType>
     </xs:element>
 
