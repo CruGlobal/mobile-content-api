@@ -3,6 +3,7 @@
     xmlns:lesson="https://mobile-content-api.cru.org/xmlns/lesson"
     xmlns:page="https://mobile-content-api.cru.org/xmlns/page" xmlns:xs="http://www.w3.org/2001/XMLSchema"
     elementFormDefault="qualified" targetNamespace="https://mobile-content-api.cru.org/xmlns/lesson">
+
     <xs:import namespace="https://mobile-content-api.cru.org/xmlns/analytics" schemaLocation="analytics.xsd" />
     <xs:import namespace="https://mobile-content-api.cru.org/xmlns/content" schemaLocation="content.xsd" />
     <xs:import namespace="https://mobile-content-api.cru.org/xmlns/page" schemaLocation="page.xsd" />
@@ -21,14 +22,6 @@
                             </xs:complexType>
                         </xs:element>
                     </xs:sequence>
-
-                    <xs:attribute name="control-color" type="content:colorValue">
-                        <xs:annotation>
-                            <xs:documentation>This defines the control color for this page. This defaults to the lesson
-                                control color defined on the manifest.
-                            </xs:documentation>
-                        </xs:annotation>
-                    </xs:attribute>
 
                     <xs:attribute name="hidden" type="xs:boolean" default="false">
                         <xs:annotation>
@@ -49,7 +42,10 @@
         </xs:annotation>
         <xs:attribute ref="lesson:control-color" default="rgba(225, 225, 225, 1)">
             <xs:annotation>
-                <xs:documentation>This defines the default control color for lessons.</xs:documentation>
+                <xs:documentation>This defines the default control color for lessons.
+
+                    Deprecated in favor of using page:control-color instead. Remove attribute from schema after Dec 2022
+                </xs:documentation>
             </xs:annotation>
         </xs:attribute>
     </xs:attributeGroup>

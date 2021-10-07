@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <xs:schema xmlns:analytics="https://mobile-content-api.cru.org/xmlns/analytics"
-    xmlns:content="https://mobile-content-api.cru.org/xmlns/content" xmlns:xs="http://www.w3.org/2001/XMLSchema"
+    xmlns:content="https://mobile-content-api.cru.org/xmlns/content"
+    xmlns:page="https://mobile-content-api.cru.org/xmlns/page" xmlns:xs="http://www.w3.org/2001/XMLSchema"
     elementFormDefault="qualified" targetNamespace="https://mobile-content-api.cru.org/xmlns/page">
 
     <xs:import namespace="https://mobile-content-api.cru.org/xmlns/analytics" schemaLocation="analytics.xsd" />
@@ -52,6 +53,14 @@
             </xs:annotation>
         </xs:attribute>
 
+        <xs:attribute name="control-color" type="content:colorValue">
+            <xs:annotation>
+                <xs:documentation>This defines the control color for this page. This defaults to the page control color
+                    defined on the manifest.
+                </xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+
         <xs:attribute name="text-scale" type="xs:float" default="1">
             <xs:annotation>
                 <xs:documentation>Defines how much to scale all the text content on this page by.</xs:documentation>
@@ -62,4 +71,27 @@
         <xs:attributeGroup ref="content:page" />
     </xs:complexType>
     <!-- region Page -->
+
+    <!-- region external attributes -->
+    <xs:attributeGroup name="manifest">
+        <xs:annotation>
+            <xs:documentation>This attribute group is the set of attributes that can appear on the manifest node in the
+                manifest xml.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:attribute ref="page:control-color" default="rgba(225, 225, 225, 1)">
+            <xs:annotation>
+                <xs:documentation>
+                    This defines the control color for pages.
+
+                    Deprecated behavior:
+                    Fallback to lesson:control-color for lesson tool types.
+                    Remove this behavior once lesson:control-color is removed.
+                </xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+    </xs:attributeGroup>
+
+    <xs:attribute name="control-color" type="content:colorValue" />
+    <!-- endregion external attributes -->
 </xs:schema>

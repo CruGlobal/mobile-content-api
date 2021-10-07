@@ -1,3 +1,4 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<manifest xmlns="https://mobile-content-api.cru.org/xmlns/manifest" xmlns:lesson="https://mobile-content-api.cru.org/xmlns/lesson"
+<manifest xmlns="https://mobile-content-api.cru.org/xmlns/manifest"
+    xmlns:lesson="https://mobile-content-api.cru.org/xmlns/lesson"
     type="lesson" lesson:control-color="rgba(0, 0, 0, 1)" />
