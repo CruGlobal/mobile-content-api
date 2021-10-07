@@ -117,7 +117,7 @@
                     <content:button type="event" events="followup:send send-information-modal">
                         <content:text i18n-id="f9a7f467-0f5b-49c9-aa94-6a51b6119e4c">Send</content:text>
                         <analytics:events>
-                            <analytics:event action="kgp_email_sign_up" system="firebase" trigger="selected">
+                            <analytics:event action="kgp_email_sign_up" system="firebase">
                                 <analytics:attribute key="cru.emailsignup" value="true" />
                                 <analytics:attribute key="cru.emaillist" value="1" />
                             </analytics:event>
