@@ -9,46 +9,29 @@ on:
 
 jobs:
   manifest:
-    name: Manifest XML Schema
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v2
-    - name: Install xmllint
-      run: sudo apt-get install libxml2-utils
-    - name: Check valid XML
-      run: xmllint --schema public/xmlns/manifest.xsd --noout schema_tests/manifest/valid/*/*.xml
-    - name: Check invalid XML
-      run: ./schema_tests/invalid.sh public/xmlns/manifest.xsd schema_tests/manifest/invalid/*/*.xml
+    name: Manifest
+    uses: CruGlobal/mobile-content-api/.github/workflows/validate-schema.yml@ghaXmlSchemaValidation
+    with:
+      schema: public/xmlns/manifest.xsd
+      test_dir: schema_tests/manifest
+
   lesson:
-    name: Lesson XML Schema
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v2
-    - name: Install xmllint
-      run: sudo apt-get install libxml2-utils
-    - name: Check valid XML
-      run: xmllint --schema public/xmlns/lesson.xsd --noout schema_tests/lesson/valid/*/*.xml
-    - name: Check invalid XML
-      run: ./schema_tests/invalid.sh public/xmlns/lesson.xsd schema_tests/lesson/invalid/*/*.xml
+    name: Lesson
+    uses: CruGlobal/mobile-content-api/.github/workflows/validate-schema.yml@ghaXmlSchemaValidation
+    with:
+      schema: public/xmlns/lesson.xsd
+      test_dir: schema_tests/lesson
+
   tract:
-    name: Tract XML Schema
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v2
-    - name: Install xmllint
-      run: sudo apt-get install libxml2-utils
-    - name: Check valid XML
-      run: xmllint --schema public/xmlns/tract.xsd --noout schema_tests/tract/valid/*/*.xml
-    - name: Check invalid XML
-      run: ./schema_tests/invalid.sh public/xmlns/tract.xsd schema_tests/tract/invalid/*/*.xml
+    name: Tract
+    uses: CruGlobal/mobile-content-api/.github/workflows/validate-schema.yml@ghaXmlSchemaValidation
+    with:
+      schema: public/xmlns/tract.xsd
+      test_dir: schema_tests/tract
+
   training:
-    name: Training XML Schema
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v2
-    - name: Install xmllint
-      run: sudo apt-get install libxml2-utils
-    - name: Check valid XML
-      run: xmllint --schema public/xmlns/training.xsd --noout schema_tests/training/valid/*/*.xml
-    - name: Check invalid XML
-      run: ./schema_tests/invalid.sh public/xmlns/training.xsd schema_tests/training/invalid/*/*.xml
+    name: Training
+    uses: CruGlobal/mobile-content-api/.github/workflows/validate-schema.yml@ghaXmlSchemaValidation
+    with:
+      schema: public/xmlns/training.xsd
+      test_dir: schema_tests/training
