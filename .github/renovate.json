@@ -1,6 +1,7 @@
 {
     "extends": ["config:base"],
     "labels": [ "dependencies" ],
+    "dependencyDashboard": true,
     "packageRules": [
         {
             "matchManagers": ["ruby-version"],
