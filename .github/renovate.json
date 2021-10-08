@@ -1,6 +1,5 @@
 {
     "extends": ["config:base"],
-    "enabledManagers": ["ruby-version"],
     "packageRules": [
         {
             "matchManagers": ["ruby-version"],
