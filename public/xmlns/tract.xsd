@@ -11,20 +11,6 @@
     <xs:import namespace="https://mobile-content-api.cru.org/xmlns/page" schemaLocation="page.xsd" />
     <xs:import namespace="https://mobile-content-api.cru.org/xmlns/training" schemaLocation="training.xsd" />
 
-    <!-- element nodes -->
-    <!--
-        Page node
-            primary-color:          tract:header background, tract:card title font color,
-                                    event button background, input field border/highlight.
-                                    Renderer may lighten/darken to create highlight/hover colors
-                                    DEFAULT( inherited from manifest )
-
-            primary-text-color:     Color used for text inside primary-color background, for contrast.
-                                    DEFAULT( inherited from manifest )
-
-            text-color:             Color used for content:text fields
-                                    DEFAULT( inherited from manifest )
-    -->
     <xs:element name="page">
         <xs:complexType>
             <xs:complexContent>
@@ -48,9 +34,6 @@
                         </xs:element>
                         <xs:element name="call-to-action" type="tract:callToAction" minOccurs="0" />
                     </xs:sequence>
-                    <xs:attribute name="primary-color" type="content:colorValue" />
-                    <xs:attribute name="primary-text-color" type="content:colorValue" />
-                    <xs:attribute name="text-color" type="content:colorValue" />
 
                     <xs:attribute name="card-text-color" type="content:colorValue">
                         <xs:annotation>
