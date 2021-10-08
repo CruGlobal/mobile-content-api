@@ -1,0 +1,37 @@
+name: XML Schema Validation
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+  workflow_dispatch:
+
+jobs:
+  manifest:
+    name: Manifest
+    uses: CruGlobal/mobile-content-api/.github/workflows/validate-schema.yml@ghaXmlSchemaValidation
+    with:
+      schema: public/xmlns/manifest.xsd
+      test_dir: schema_tests/manifest
+
+  lesson:
+    name: Lesson
+    uses: CruGlobal/mobile-content-api/.github/workflows/validate-schema.yml@ghaXmlSchemaValidation
+    with:
+      schema: public/xmlns/lesson.xsd
+      test_dir: schema_tests/lesson
+
+  tract:
+    name: Tract
+    uses: CruGlobal/mobile-content-api/.github/workflows/validate-schema.yml@ghaXmlSchemaValidation
+    with:
+      schema: public/xmlns/tract.xsd
+      test_dir: schema_tests/tract
+
+  training:
+    name: Training
+    uses: CruGlobal/mobile-content-api/.github/workflows/validate-schema.yml@ghaXmlSchemaValidation
+    with:
+      schema: public/xmlns/training.xsd
+      test_dir: schema_tests/training

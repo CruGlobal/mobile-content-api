@@ -1,0 +1,22 @@
+on:
+  workflow_call:
+    inputs:
+      schema:
+        required: true
+        type: string
+      test_dir:
+        required: true
+        type: string
+
+jobs:
+  validate_schema:
+    name: Validate XML Schema
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Install xmllint
+        run: sudo apt-get install libxml2-utils
+      - name: Check valid XML
+        run: xmllint --schema ${{ inputs.schema }} --noout ${{ inputs.test_dir }}/valid/*/*.xml
+      - name: Check invalid XML
+        run: ./schema_tests/invalid.sh ${{ inputs.schema }} ${{ inputs.test_dir }}/invalid/*/*.xml
