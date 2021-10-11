@@ -3,11 +3,11 @@
 Datadog.configure do |c|
   # Tracer
   c.tracer hostname: ENV["DATADOG_HOST"],
-           port: ENV["DATADOG_PORT"],
-           tags: {app: ENV["PROJECT_NAME"]},
-           debug: false,
-           enabled: (ENV["DATADOG_TRACE"].to_s == "true"),
-           env: Rails.env
+    port: ENV["DATADOG_PORT"],
+    tags: {app: ENV["PROJECT_NAME"]},
+    debug: false,
+    enabled: (ENV["DATADOG_TRACE"].to_s == "true"),
+    env: Rails.env
 
   # Rails
   c.use :rails,

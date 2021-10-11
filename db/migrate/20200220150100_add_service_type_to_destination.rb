@@ -7,8 +7,8 @@ class AddServiceTypeToDestination < ActiveRecord::Migration[5.2]
     Destination.update_all service_type: :growth_spaces
 
     Destination.create! url: "https://mc.adobe.io/",
-                        service_type: :adobe_campaigns,
-                        service_name: "GodTools New Growth Series"
+      service_type: :adobe_campaigns,
+      service_name: "GodTools New Growth Series"
 
     change_column_null :destinations, :service_type, false
   end

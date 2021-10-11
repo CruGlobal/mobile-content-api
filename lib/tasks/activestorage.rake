@@ -10,7 +10,7 @@ namespace :activestorage do
       ext = File.extname(file)
       file_original = CGI.unescape(file.gsub(ext, "_original#{ext}"))
       s3 = Aws::S3::Client.new(region: ENV["AWS_REGION"], access_key_id: ENV["AWS_ACCESS_KEY_ID"],
-                               secret_access_key: ENV["AWS_SECRET_ACCESS_KEY"])
+        secret_access_key: ENV["AWS_SECRET_ACCESS_KEY"])
       # this url pattern can be changed to reflect whatever service you use
       file_key = format("attachments/files/000/000/%03d/original/#{file}", attachment.id)
       begin
@@ -20,8 +20,8 @@ namespace :activestorage do
           end
         end
         attachment.file.attach(io: open("tmp/#{file_original}"),
-                               filename: attachment.file_file_name,
-                               content_type: attachment.file_content_type)
+          filename: attachment.file_file_name,
+          content_type: attachment.file_content_type)
         attachment.filename = file
         attachment.save!
       rescue => error

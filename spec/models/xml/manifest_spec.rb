@@ -10,7 +10,7 @@ describe Xml::Manifest do
     t = Translation.find(1)
     allow(t).to(receive(:translated_name).and_return(title))
     allow(t).to(receive(:manifest_translated_phrases).and_return("name" => "Knowing God Personally",
-                                                                 "description" => ""))
+      "description" => ""))
     t
   end
 

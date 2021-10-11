@@ -15,8 +15,8 @@ describe OneSky do
   it "downloads translated phrases" do
     stub_request(:get, "https://platform.api.onesky.io/1/projects/123/translations")
       .with(query: hash_including("export_file_name" => "sample.xml",
-                                  "source_file_name" => "sample.xml",
-                                  "locale" => "en"))
+        "source_file_name" => "sample.xml",
+        "locale" => "en"))
       .to_return(status: 200, body: '{ "foo":"bar" }')
 
     result = target.download_translated_phrases "sample.xml", project_id: 123, language_code: "en"
