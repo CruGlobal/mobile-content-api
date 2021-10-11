@@ -60,7 +60,7 @@ gem "pg"
 
 gem "active_model_serializers", "0.10.12"
 gem "active_storage_validations"
-gem "adobe-campaign", "~> 0.4.0"
+gem "adobe-campaign", "~> 0.4.1"
 gem "aws-sdk-s3"
 gem "ddtrace"
 gem "dogstatsd-ruby"
