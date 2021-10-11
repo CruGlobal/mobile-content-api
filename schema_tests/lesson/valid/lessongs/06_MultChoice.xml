@@ -1,0 +1,38 @@
+<page xmlns="https://mobile-content-api.cru.org/xmlns/lesson"
+    xmlns:content="https://mobile-content-api.cru.org/xmlns/content">
+    <content>
+        <content:spacer height="40" mode="fixed" />
+        <content:paragraph>
+            <content:text i18n-id="06_phrase5" />
+        </content:paragraph>
+
+        <content:paragraph required-features="multiselect" version="2">
+            <content:text i18n-id="06_phrase4" text-color="rgba(59,164,219,1)" text-scale=".75" text-style="bold" />
+        </content:paragraph>
+
+        <content:fallback>
+            <content:multiselect option-selected-color="rgba(163,219,249,1)" selection-limit="1" state="godstoryquiz1">
+                <content:option value="quiz_anxiousfriend_summercamp">
+                    <content:text i18n-id="06_phrase1" text-scale=".70" />
+                </content:option>
+                <content:option value="quiz_anxiousfriend_coworkerconflict">
+                    <content:text i18n-id="06_phrase2" text-scale=".70" />
+                </content:option>
+            </content:multiselect>
+            <content:paragraph>
+                <content:paragraph>
+                    <content:text i18n-id="06_phrase1" start-image="1.png" start-image-size="25" text-scale=".85" />
+                </content:paragraph>
+                <content:paragraph>
+                    <content:text i18n-id="06_phrase2" start-image="2.png" start-image-size="25" text-scale=".85" />
+                </content:paragraph>
+            </content:paragraph>
+        </content:fallback>
+        <content:spacer />
+        <content:paragraph required-features="multiselect" version="2">
+            <content:button type="event" events="state:godstoryquiz1" invisible-if="1>values(godstoryquiz1)">
+                <content:text i18n-id="06_phrase3" />
+            </content:button>
+        </content:paragraph>
+    </content>
+</page>

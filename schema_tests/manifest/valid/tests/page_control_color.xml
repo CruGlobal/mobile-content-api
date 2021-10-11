@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<manifest xmlns="https://mobile-content-api.cru.org/xmlns/manifest"
+    xmlns:page="https://mobile-content-api.cru.org/xmlns/page"
+    type="lesson" page:control-color="rgba(0, 0, 0, 1)" />

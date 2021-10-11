@@ -1,0 +1,40 @@
+<page xmlns="https://mobile-content-api.cru.org/xmlns/lesson"
+    xmlns:content="https://mobile-content-api.cru.org/xmlns/content" text-scale=".90">
+    <content>
+        <content:spacer height="40" mode="fixed" />
+        <content:paragraph>
+            <content:text i18n-id="13_phrase1" />
+        </content:paragraph>
+        <content:spacer height="40" mode="fixed" />
+
+        <content:accordion>
+            <content:section>
+                <content:header>
+                    <content:text i18n-id="13_phrase2" text-scale=".80" text-style="bold" />
+                </content:header>
+                <content:text i18n-id="13_phrase3" text-scale=".70" />
+            </content:section>
+
+            <content:section>
+                <content:header>
+                    <content:text i18n-id="13_phrase4" text-scale=".80" text-style="bold" />
+                </content:header>
+                <content:text i18n-id="13_phrase5" text-scale=".70" />
+            </content:section>
+
+            <content:section>
+                <content:header>
+                    <content:text i18n-id="13_phrase6" text-scale=".80" text-style="bold" />
+                </content:header>
+                <content:text i18n-id="13_phrase7" text-scale=".70" />
+            </content:section>
+
+            <content:section>
+                <content:header>
+                    <content:text i18n-id="13_phrase8" text-scale=".80" text-style="bold" />
+                </content:header>
+                <content:text i18n-id="13_phrase9" text-scale=".70" />
+            </content:section>
+        </content:accordion>
+    </content>
+</page>
