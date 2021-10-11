@@ -50,11 +50,11 @@ describe PageClient do
       Page.new(filename: filename_2, structure: structure_2, position: 2)]
 
     resource = Resource.create!(abbreviation: "test",
-                                onesky_project_id: 1,
-                                name: name,
-                                description: description,
-                                resource_type_id: 1,
-                                system_id: 1)
+      onesky_project_id: 1,
+      name: name,
+      description: description,
+      resource_type_id: 1,
+      system_id: 1)
     resource.pages = pages
     resource
   end

@@ -46,7 +46,7 @@ describe Attachment do
   context "cannot have two attachments with the same sha256 for the same package" do
     it "creating" do
       result = described_class.create(resource_id: 1,
-                                      file: Rack::Test::UploadedFile.new("#{fixture_path}/wall_2.jpg", "image/png"))
+        file: Rack::Test::UploadedFile.new("#{fixture_path}/wall_2.jpg", "image/png"))
 
       expect(result.errors["file"]).to include("This file already exists for this resource")
     end
