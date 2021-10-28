@@ -35,6 +35,20 @@
         </xs:attribute>
         <xs:attribute name="dismiss-listeners" type="content:listeners" />
 
+        <xs:attribute name="primary-color" type="content:colorValue">
+            <xs:annotation>
+                <xs:documentation>The primary color for this page. Defaults to the primary-color of the Manifest.
+                </xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="primary-text-color" type="content:colorValue">
+            <xs:annotation>
+                <xs:documentation>The text color for text displayed on top of the primary-color. Defaults to the
+                    primary-text-color of the Manifest.
+                </xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+
         <xs:attribute name="background-color" type="content:colorValue" default="rgba(255, 255, 255, 0)">
             <xs:annotation>
                 <xs:documentation>This defines the background color for this page. This background color is layered on
@@ -68,6 +82,13 @@
             </xs:annotation>
         </xs:attribute>
 
+        <xs:attribute name="text-color" type="content:colorValue">
+            <xs:annotation>
+                <xs:documentation>The default text color for text content on this page. Defaults to the Manifest
+                    text-color.
+                </xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
         <xs:attribute name="text-scale" type="xs:float" default="1">
             <xs:annotation>
                 <xs:documentation>Defines how much to scale all the text content on this page by.</xs:documentation>
