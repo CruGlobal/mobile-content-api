@@ -1,8 +1,5 @@
 # frozen_string_literal: true
 
-# rubocop:disable Metrics/ModuleLength
-# rubocop:disable Metrics/MethodLength
-# rubocop:disable Layout/LineLength
 module AdobeCampaignParsedJsonFixtures
   def adobe_campaign_profile
     {

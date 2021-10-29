@@ -104,7 +104,6 @@ RSpec.configure do |config|
       /.*/
     end
 
-    # rubocop:disable Metrics/AbcSize
     def mock_s3(object, translation)
       region = "east"
       bucket_name = "testing bucket"

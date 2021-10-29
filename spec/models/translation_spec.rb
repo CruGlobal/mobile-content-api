@@ -3,7 +3,6 @@
 require "rails_helper"
 
 describe Translation do
-  # rubocop:disable Layout/LineLength
   let(:page_name) { "13_FinalPage.xml" }
   let(:element_one_id) { "f9894df9-df1d-4831-9782-345028c6c9a2" }
   let(:element_two_id) { "9deda19f-c3ee-42ed-a1eb-92423e543352" }
