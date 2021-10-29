@@ -68,7 +68,6 @@ describe ApplicationController do
     expect(controller.param?(:bar)).to be false
   end
 
-  # rubocop:disable Naming/AccessorMethodName
   def set_method_and_jsonapi_headers(method = "GET")
     request.headers["REQUEST-METHOD"] = method
     request.headers["Content-Type"] = "application/vnd.api+json"
