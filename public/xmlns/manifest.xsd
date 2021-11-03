@@ -16,6 +16,7 @@
     <xs:simpleType name="toolType">
         <xs:restriction base="xs:token">
             <xs:enumeration value="article" />
+            <xs:enumeration value="cyoa" />
             <xs:enumeration value="lesson" />
             <xs:enumeration value="tract" />
         </xs:restriction>

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<xs:schema xmlns:content="https://mobile-content-api.cru.org/xmlns/content"
+    xmlns:page="https://mobile-content-api.cru.org/xmlns/page" xmlns:xs="http://www.w3.org/2001/XMLSchema"
+    elementFormDefault="qualified" targetNamespace="https://mobile-content-api.cru.org/xmlns/page">
+
+    <xs:import namespace="https://mobile-content-api.cru.org/xmlns/content" schemaLocation="content.xsd" />
+    <xs:include schemaLocation="page.xsd" />
+
+    <xs:complexType name="cardcollection">
+        <xs:complexContent>
+            <xs:extension base="page:BasePageType">
+                <xs:sequence>
+                    <xs:element name="cards">
+                        <xs:complexType>
+                            <xs:sequence maxOccurs="unbounded">
+                                <xs:element name="card">
+                                    <xs:complexType>
+                                        <xs:choice minOccurs="0" maxOccurs="unbounded">
+                                            <xs:group ref="content:elements" />
+                                            <xs:element ref="content:spacer" />
+                                        </xs:choice>
+                                        <xs:attribute name="id" />
+                                    </xs:complexType>
+                                </xs:element>
+                            </xs:sequence>
+                        </xs:complexType>
+                    </xs:element>
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+</xs:schema>
