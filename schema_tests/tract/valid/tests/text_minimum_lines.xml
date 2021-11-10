@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<page xmlns:content="https://mobile-content-api.cru.org/xmlns/content"
+    xmlns="https://mobile-content-api.cru.org/xmlns/tract">
+    <hero>
+        <content:paragraph>
+            <content:text minimum-lines="0">0 Lines</content:text>
+            <content:text minimum-lines="5">5 Lines</content:text>
+        </content:paragraph>
+    </hero>
+</page>
