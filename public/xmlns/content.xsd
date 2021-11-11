@@ -194,6 +194,11 @@
                             <xs:documentation>The animation content element feature</xs:documentation>
                         </xs:annotation>
                     </xs:enumeration>
+                    <xs:enumeration value="flow">
+                        <xs:annotation>
+                            <xs:documentation>The flow content element feature</xs:documentation>
+                        </xs:annotation>
+                    </xs:enumeration>
                     <xs:enumeration value="multiselect">
                         <xs:annotation>
                             <xs:documentation>The multiselect content element feature</xs:documentation>
@@ -336,6 +341,48 @@
             </xs:sequence>
         </xs:complexType>
     </xs:element>
+
+    <!-- region flow -->
+    <xs:element name="flow">
+        <xs:annotation>
+            <xs:documentation>A list of content items that will flow horizontally and automatically wrap to the next
+                line.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:choice minOccurs="0" maxOccurs="unbounded">
+                <xs:element name="item">
+                    <xs:annotation>
+                        <xs:documentation>A content stack that is treated as a single item within this flow. This is
+                            optional if it contains only a single item and there aren't any custom attributes being
+                            defined for this item.
+                        </xs:documentation>
+                    </xs:annotation>
+                    <xs:complexType>
+                        <xs:choice minOccurs="0" maxOccurs="unbounded">
+                            <xs:group ref="content:elements" />
+                            <xs:group ref="content:fixedSpacerOnly" />
+                        </xs:choice>
+                    </xs:complexType>
+                </xs:element>
+
+                <xs:group ref="content:elements" />
+                <xs:group ref="content:fixedSpacerOnly" />
+            </xs:choice>
+            <xs:attribute name="columns" default="1">
+                <xs:annotation>
+                    <xs:documentation>Defines the number of "columns" to split the items into.</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:int">
+                        <xs:minInclusive value="1" />
+                        <xs:maxInclusive value="4" />
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:attribute>
+        </xs:complexType>
+    </xs:element>
+    <!-- endregion flow -->
 
     <xs:element name="accordion">
         <xs:complexType>
