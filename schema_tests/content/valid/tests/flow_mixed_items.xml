@@ -1,0 +1,10 @@
+<content:flow xmlns:content="https://mobile-content-api.cru.org/xmlns/content">
+    <content:spacer height="20" mode="fixed" />
+    <content:item>
+        <content:text>Test</content:text>
+        <content:spacer height="20" mode="fixed" />
+    </content:item>
+    <content:paragraph>
+        <content:text />
+    </content:paragraph>
+</content:flow>
