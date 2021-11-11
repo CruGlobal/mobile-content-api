@@ -15,6 +15,13 @@ jobs:
       schema: public/xmlns/manifest.xsd
       test_dir: schema_tests/manifest
 
+  content:
+    name: Content
+    uses: CruGlobal/mobile-content-api/.github/workflows/validate-schema.yml@master
+    with:
+      schema: public/xmlns/content.xsd
+      test_dir: schema_tests/content
+
   cyoa:
     name: Choose Your Own Adventure
     uses: CruGlobal/mobile-content-api/.github/workflows/validate-schema.yml@master
