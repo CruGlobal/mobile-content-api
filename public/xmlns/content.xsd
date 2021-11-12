@@ -901,6 +901,7 @@
     <xs:group name="elements">
         <xs:choice>
             <xs:element ref="content:paragraph" />
+            <xs:element ref="content:flow" />
             <xs:element ref="content:tabs" />
             <xs:element ref="content:accordion" />
             <xs:element ref="content:text" />
