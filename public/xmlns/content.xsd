@@ -14,6 +14,14 @@
         </xs:restriction>
     </xs:simpleType>
 
+    <xs:simpleType name="dimension">
+        <xs:restriction base="xs:token">
+            <xs:pattern value="[0-9]+" />
+            <xs:pattern value="[0-9]{1,2}%" />
+            <xs:pattern value="100%" />
+        </xs:restriction>
+    </xs:simpleType>
+
     <xs:simpleType name="expression" final="#all">
         <xs:annotation>
             <xs:documentation>This is an expression that evaluates to true or false. The rules for what are valid are
@@ -363,6 +371,14 @@
                             <xs:group ref="content:elements" />
                             <xs:group ref="content:fixedSpacerOnly" />
                         </xs:choice>
+
+                        <xs:attribute name="width" type="content:dimension">
+                            <xs:annotation>
+                                <xs:documentation>This attribute defines how wide an item is in a flow. This defaults to
+                                    the width of a column for this flow.
+                                </xs:documentation>
+                            </xs:annotation>
+                        </xs:attribute>
                     </xs:complexType>
                 </xs:element>
 
