@@ -36,6 +36,10 @@ RSpec.configure do |config|
       after do
         header "Authorization", nil
       end
+
+      it "returns unauthorized if no user" do
+        no_user
+      end
     end
   })
   config.include(Module.new {
@@ -63,6 +67,15 @@ RSpec.configure do |config|
 
     def expired_token
       AuthToken.encode(exp: 1.hour.ago.to_i)
+    end
+
+    def no_user
+      header "Authorization", AuthToken.encode({})
+      
+      do_request
+
+      expect(status).to be(401)
+      expect(JSON.parse(response_body)["data"]).to be nil
     end
   })
 end
