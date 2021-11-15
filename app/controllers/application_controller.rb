@@ -44,15 +44,25 @@ class ApplicationController < ActionController::Base
   end
 
   def authorize!
-    authorization = AuthToken.decode(request.headers["Authorization"])
-
-    if authorization
-      user_id = authorization.first.with_indifferent_access[:user_id]
-      return unless user_id # requested is authorized if using generic JWT
-      return if User.find_by(id: user_id)&.admin
-    end
+    # requested is authorized if using generic JWT (current_user_id will be nil)
+    return if authorization && (current_user_id.nil? || current_user&.admin)
 
     render_unauthorized
+  end
+
+  def authorization
+    @authorization ||= AuthToken.decode(request.headers["Authorization"])
+  end
+
+  def current_user_id
+    @user_id ||= authorization && authorization.is_a?(Array) && authorization.first.is_a?(Hash) && authorization.first.with_indifferent_access[:user_id]
+  end
+
+  def current_user
+    return @user if @user
+    return nil unless current_user_id
+
+    @user = User.find_by(id: current_user_id)
   end
 
   def render_unauthorized

@@ -27,6 +27,16 @@ RSpec.configure do |config|
         expired
       end
     end
+
+    def requires_okta_authorization
+      before do
+        header "Authorization", AuthToken.encode({user_id: user.id})
+      end
+
+      after do
+        header "Authorization", nil
+      end
+    end
   })
   config.include(Module.new {
     def type
