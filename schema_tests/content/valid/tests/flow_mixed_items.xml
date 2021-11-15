@@ -7,9 +7,9 @@
     <content:paragraph>
         <content:text />
     </content:paragraph>
-    <content:item width="0%" />
+    <content:item width="1%" />
     <content:item width="13%" />
     <content:item width="100%" />
-    <content:item width="0" />
+    <content:item width="1" />
     <content:item width="12345" />
 </content:flow>
