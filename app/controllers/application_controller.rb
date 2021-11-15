@@ -55,7 +55,7 @@ class ApplicationController < ActionController::Base
   end
 
   def current_user_id
-    @user_id ||= authorization && authorization.is_a?(Array) && authorization.first.is_a?(Hash) && authorization.first.with_indifferent_access[:user_id]
+    @user_id ||= authorization.is_a?(Array) && authorization.first.is_a?(Hash) && authorization.first.with_indifferent_access[:user_id]
   end
 
   def current_user
