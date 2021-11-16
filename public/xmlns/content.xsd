@@ -377,7 +377,7 @@
                         <xs:attribute name="width" type="content:dimension">
                             <xs:annotation>
                                 <xs:documentation>This attribute defines how wide an item is in a flow. This defaults to
-                                    the width of a column for this flow.
+                                    the "item-width" defined on the flow.
                                 </xs:documentation>
                             </xs:annotation>
                         </xs:attribute>
@@ -387,16 +387,12 @@
                 <xs:group ref="content:elements" />
                 <xs:group ref="content:fixedSpacerOnly" />
             </xs:choice>
-            <xs:attribute name="columns" default="1">
+            <xs:attribute name="item-width" type="content:dimension" default="100%">
                 <xs:annotation>
-                    <xs:documentation>Defines the number of "columns" to split the items into.</xs:documentation>
+                    <xs:documentation>This attribute defines the default width of items is this flow. This defaults to
+                        '100%'.
+                    </xs:documentation>
                 </xs:annotation>
-                <xs:simpleType>
-                    <xs:restriction base="xs:int">
-                        <xs:minInclusive value="1" />
-                        <xs:maxInclusive value="4" />
-                    </xs:restriction>
-                </xs:simpleType>
             </xs:attribute>
             <xs:attribute name="row-gravity" type="content:horizontalGravity" default="start">
                 <xs:annotation>

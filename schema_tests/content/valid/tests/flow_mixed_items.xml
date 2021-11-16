@@ -1,4 +1,4 @@
-<content:flow xmlns:content="https://mobile-content-api.cru.org/xmlns/content" columns="2" row-gravity="center">
+<content:flow xmlns:content="https://mobile-content-api.cru.org/xmlns/content" item-width="50%" row-gravity="center">
     <content:spacer height="20" mode="fixed" />
     <content:item width="3">
         <content:text>Test</content:text>
