@@ -11,8 +11,21 @@ end
 RSpec.configure do |config|
   config.extend(Module.new {
     def requires_authorization
+      # make an admin user to use if no user has been defined so far
+      unless defined?(user)
+        let(:user) { FactoryBot.create(:user, admin: true) }
+      end
+      requires_okta_login
+    end
+
+    def requires_okta_login
       before do
-        header "Authorization", :authorization
+        # make a basic user to use if no user has been defined so far
+        unless defined?(user)
+          let(:user) { FactoryBot.create(:user, admin: false) }
+        end
+
+        header "Authorization", AuthToken.encode({user_id: user.id})
       end
 
       after do
@@ -25,20 +38,6 @@ RSpec.configure do |config|
 
       it "cannot use an expired token", document: false do
         expired
-      end
-    end
-
-    def requires_okta_authorization
-      before do
-        header "Authorization", AuthToken.encode({user_id: user.id})
-      end
-
-      after do
-        header "Authorization", nil
-      end
-
-      it "returns unauthorized if no user" do
-        no_user
       end
     end
   })

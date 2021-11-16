@@ -39,12 +39,12 @@ describe SecureController do
     expect(response).to have_http_status(:unauthorized)
   end
 
-  it "successes if token is generic" do
+  it "unauthorized if token is generic" do
     request.headers["Authorization"] = generic_token
 
     get :index
 
-    expect(response).to have_http_status(:ok)
+    expect(response).to have_http_status(:unauthorized)
   end
 
   it "successes if token is for admin user" do

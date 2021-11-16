@@ -44,8 +44,8 @@ class ApplicationController < ActionController::Base
   end
 
   def authorize!
-    # requested is authorized if using generic JWT (current_user_id will be nil)
-    return if authorization && (current_user_id.nil? || current_user&.admin)
+    # requested is authorized if using okta and user is admin
+    return if current_user&.admin
 
     render_unauthorized
   end

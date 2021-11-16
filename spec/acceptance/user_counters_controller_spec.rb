@@ -19,7 +19,7 @@ resource "UserCounters" do
   patch "user/counters/:id" do
     let(:id) { "tool_opens.kgp" }
     let(:user) { FactoryBot.create(:user) }
-    requires_okta_authorization
+    requires_okta_login
 
     it "create user_counter" do
       expect {
