@@ -3,7 +3,6 @@
 class UserCountersController < WithUserController
   def update
     counter = current_user.user_counters.where(counter_name: counter_name).first_or_initialize
-    counter.count ||= 0
     counter.count += permitted_params[:increment].to_f
     counter.save!
     render json: counter, status: :ok
