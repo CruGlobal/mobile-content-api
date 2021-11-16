@@ -71,7 +71,7 @@ RSpec.configure do |config|
 
     def no_user
       header "Authorization", AuthToken.encode({})
-      
+
       do_request
 
       expect(status).to be(401)
