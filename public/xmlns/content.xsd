@@ -399,6 +399,8 @@
                     <xs:documentation>This defines how each row in the flow is aligned.</xs:documentation>
                 </xs:annotation>
             </xs:attribute>
+
+            <xs:attributeGroup ref="content:baseAttributes" />
         </xs:complexType>
     </xs:element>
     <!-- endregion flow -->
