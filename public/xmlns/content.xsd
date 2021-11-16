@@ -59,6 +59,13 @@
             <xs:enumeration value="bottom" />
         </xs:restriction>
     </xs:simpleType>
+    <xs:simpleType name="horizontalGravity">
+        <xs:restriction base="content:gravity">
+            <xs:enumeration value="start" />
+            <xs:enumeration value="center" />
+            <xs:enumeration value="end" />
+        </xs:restriction>
+    </xs:simpleType>
 
     <xs:simpleType name="imageScaleType">
         <xs:restriction base="xs:string">
@@ -100,14 +107,6 @@
                 </xs:documentation>
             </xs:annotation>
         </xs:list>
-    </xs:simpleType>
-
-    <xs:simpleType name="textAlign">
-        <xs:restriction base="xs:token">
-            <xs:enumeration value="start" />
-            <xs:enumeration value="end" />
-            <xs:enumeration value="center" />
-        </xs:restriction>
     </xs:simpleType>
 
     <xs:simpleType name="textStyles">
@@ -399,6 +398,11 @@
                     </xs:restriction>
                 </xs:simpleType>
             </xs:attribute>
+            <xs:attribute name="row-gravity" type="content:horizontalGravity" default="start">
+                <xs:annotation>
+                    <xs:documentation>This defines how each row in the flow is aligned.</xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
         </xs:complexType>
     </xs:element>
     <!-- endregion flow -->
@@ -474,7 +478,7 @@
                         <xs:documentation>Defines the OneSky translation id for this text.</xs:documentation>
                     </xs:annotation>
                 </xs:attribute>
-                <xs:attribute name="text-align" type="content:textAlign" use="optional">
+                <xs:attribute name="text-align" type="content:horizontalGravity" use="optional">
                     <xs:annotation>
                         <xs:documentation>Defines the alignment of the text. This defaults to start.</xs:documentation>
                     </xs:annotation>
@@ -673,7 +677,7 @@
                     <xs:documentation>Defines where the icon is rendered in the button</xs:documentation>
                 </xs:annotation>
                 <xs:simpleType>
-                    <xs:restriction base="content:gravity">
+                    <xs:restriction base="content:horizontalGravity">
                         <xs:enumeration value="start" />
                         <xs:enumeration value="end" />
                     </xs:restriction>
