@@ -154,7 +154,6 @@
         <xs:attributeGroup ref="content:manifest" />
         <xs:attributeGroup ref="lesson:manifest" />
         <xs:attributeGroup ref="page:manifest" />
-        <xs:attributeGroup ref="tract:manifest" />
     </xs:complexType>
 
     <xs:complexType name="category">
