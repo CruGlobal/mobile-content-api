@@ -746,8 +746,8 @@
                         </xs:sequence>
                         <xs:attribute name="background-color" type="content:colorValue">
                             <xs:annotation>
-                                <xs:documentation>This determines the default background color of Multiselect options.
-                                    This defaults to the option-background-color of the multiselect element.
+                                <xs:documentation>This determines the background color of this Option. This defaults to
+                                    the option-background-color of the multiselect element.
                                 </xs:documentation>
                             </xs:annotation>
                         </xs:attribute>
