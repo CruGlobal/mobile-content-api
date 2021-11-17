@@ -403,6 +403,33 @@
         </xs:complexType>
     </xs:element>
 
+    <!-- region card -->
+    <xs:element name="card">
+        <xs:annotation>
+            <xs:documentation>Card UI element that contains other elements.</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:choice minOccurs="0" maxOccurs="unbounded">
+                <xs:group ref="content:elements" />
+                <xs:group ref="content:fixedSpacerOnly" />
+            </xs:choice>
+
+            <xs:attribute name="background-color" type="content:colorValue">
+                <xs:annotation>
+                    <xs:documentation>This determines the background color of this Card. This defaults to the
+                        card-background-color defined on the closest ancestor container.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
+
+            <xs:attributeGroup ref="content:baseAttributes" />
+            <xs:attributeGroup ref="content:clickableElement" />
+        </xs:complexType>
+    </xs:element>
+
+    <xs:attribute name="card-background-color" type="content:colorValue" />
+    <!-- endregion card -->
+
     <xs:element name="accordion">
         <xs:complexType>
             <xs:choice>
@@ -931,6 +958,7 @@
             <xs:element ref="content:flow" />
             <xs:element ref="content:tabs" />
             <xs:element ref="content:accordion" />
+            <xs:element ref="content:card" />
             <xs:element ref="content:text" />
             <xs:element ref="content:image" />
             <xs:element ref="content:video" />
@@ -946,6 +974,14 @@
     </xs:group>
 
     <xs:attributeGroup name="page">
+        <xs:attribute ref="content:card-background-color">
+            <xs:annotation>
+                <xs:documentation>This defines the default card background color for this page. This attribute defaults
+                    to the Manifest content:card-background-color.
+                </xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+
         <xs:attribute ref="content:multiselect-option-background-color">
             <xs:annotation>
                 <xs:documentation>This defines the default multiselect option background color for this page. This
@@ -963,6 +999,14 @@
     </xs:attributeGroup>
 
     <xs:attributeGroup name="manifest">
+        <xs:attribute ref="content:card-background-color">
+            <xs:annotation>
+                <xs:documentation>This defines the default card background color for this tool. This attribute defaults
+                    to the Manifest background-color.
+                </xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+
         <xs:attribute ref="content:multiselect-option-background-color">
             <xs:annotation>
                 <xs:documentation>This defines the default multiselect option background color for this tool. This
