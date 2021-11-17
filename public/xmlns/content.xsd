@@ -299,7 +299,7 @@
     </xs:attributeGroup>
     <!-- endregion Common Attributes -->
 
-    <!-- element nodes -->
+    <!-- region Elements -->
     <xs:element name="paragraph">
         <xs:annotation>
             <xs:documentation>Vertical stack of content with margin/padding on the top and bottom.</xs:documentation>
@@ -352,7 +352,6 @@
         </xs:complexType>
     </xs:element>
 
-    <!-- region flow -->
     <xs:element name="flow">
         <xs:annotation>
             <xs:documentation>A list of content items that will flow horizontally and automatically wrap to the next
@@ -403,7 +402,6 @@
             <xs:attributeGroup ref="content:baseAttributes" />
         </xs:complexType>
     </xs:element>
-    <!-- endregion flow -->
 
     <xs:element name="accordion">
         <xs:complexType>
@@ -583,7 +581,6 @@
         </xs:complexType>
     </xs:element>
 
-    <!-- region button -->
     <xs:element name="button">
         <xs:complexType>
             <xs:all>
@@ -703,7 +700,6 @@
             <xs:attributeGroup ref="content:clickableElement" />
         </xs:complexType>
     </xs:element>
-    <!-- endregion button -->
 
     <!-- region multiselect -->
     <xs:element name="multiselect">
@@ -786,7 +782,6 @@
     <xs:attribute name="multiselect-option-selected-color" type="content:colorValue" />
     <!-- endregion multiselect -->
 
-    <!-- region Link -->
     <xs:element name="link">
         <xs:complexType>
             <xs:all>
@@ -811,11 +806,9 @@
             <xs:attributeGroup ref="content:clickableElement" />
         </xs:complexType>
     </xs:element>
-    <!-- endregion Link -->
 
-    <!--
-        Form Content - vertical stacked content with input fields
-    -->
+    <!-- region form -->
+    <xs:element name="form" type="content:form" />
     <xs:complexType name="form">
         <xs:annotation>
             <xs:documentation>This element wraps a collection of descendant input elements. Whenever a "followup:send"
@@ -829,20 +822,17 @@
             <xs:group ref="content:fixedSpacerOnly" />
         </xs:choice>
     </xs:complexType>
+    <!-- endregion form -->
 
-    <!--
-        Input
-            name:  REQUIRED - input key name
-            type:  (text|email|phone|hidden) DEFAULT( text )
-            value: OPTIONAL DEFAULT( empty_string )
-    -->
+    <!-- region input -->
+    <xs:element name="input" type="content:input" />
     <xs:complexType name="input">
         <xs:all>
             <xs:element name="label" maxOccurs="1" minOccurs="0" type="content:textChild" />
             <xs:element name="placeholder" maxOccurs="1" minOccurs="0" type="content:textChild" />
         </xs:all>
         <xs:attribute name="name" type="xs:string" use="required" />
-        <xs:attribute name="type" use="optional">
+        <xs:attribute name="type" default="text">
             <xs:simpleType>
                 <xs:restriction base="xs:string">
                     <xs:enumeration value="text" />
@@ -852,15 +842,16 @@
                 </xs:restriction>
             </xs:simpleType>
         </xs:attribute>
-        <xs:attribute name="required" type="xs:boolean" use="optional" default="false">
+        <xs:attribute name="required" type="xs:boolean" default="false">
             <xs:annotation>
                 <xs:documentation>Is this input required or not. A required field must contain at least one
                     non-whitespace character
                 </xs:documentation>
             </xs:annotation>
         </xs:attribute>
-        <xs:attribute name="value" type="xs:string" use="optional" />
+        <xs:attribute name="value" type="xs:string" />
     </xs:complexType>
+    <!-- endregion input -->
 
     <xs:element name="fallback">
         <xs:annotation>
@@ -931,10 +922,9 @@
         </xs:choice>
     </xs:group>
     <!-- endregion spacer -->
+    <!-- endregion Elements -->
 
     <!-- region Exports -->
-    <xs:element name="form" type="content:form" />
-    <xs:element name="input" type="content:input" />
     <xs:group name="elements">
         <xs:choice>
             <xs:element ref="content:paragraph" />
