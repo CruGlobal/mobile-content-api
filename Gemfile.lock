@@ -118,9 +118,10 @@ GEM
     crack (0.4.5)
       rexml
     crass (1.0.6)
-    ddtrace (0.53.0)
-      ffi (~> 1.0)
+    ddtrace (0.54.0)
+      debase-ruby_core_source (= 0.10.12)
       msgpack
+    debase-ruby_core_source (0.10.12)
     declarative (0.0.20)
     declarative-option (0.1.0)
     diff-lcs (1.4.4)
