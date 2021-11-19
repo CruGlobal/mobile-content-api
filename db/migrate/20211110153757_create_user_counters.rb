@@ -4,10 +4,11 @@ class CreateUserCounters < ActiveRecord::Migration[6.0]
       t.integer :user_id
       t.string :counter_name
       t.integer :count, default: 0
-      t.float :decayed_count
-      t.date :last_decay
+      t.float :decayed_count, default: 0
+      t.date :last_decay, default: -> { "NOW()" }
 
       t.timestamps
     end
+    add_index :user_counters, [:user_id, :counter_name], unique: true
   end
 end

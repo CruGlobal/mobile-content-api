@@ -230,10 +230,11 @@ ActiveRecord::Schema.define(version: 2021_11_10_153757) do
     t.integer "user_id"
     t.string "counter_name"
     t.integer "count", default: 0
-    t.float "decayed_count"
-    t.date "last_decay"
+    t.float "decayed_count", default: 0.0
+    t.date "last_decay", default: -> { "now()" }
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.index ["user_id", "counter_name"], name: "index_user_counters_on_user_id_and_counter_name", unique: true
   end
 
   create_table "users", force: :cascade do |t|
