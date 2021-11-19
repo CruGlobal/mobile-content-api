@@ -1,14 +1,12 @@
-<?xml version="1.0" encoding="UTF-8" ?>
 <manifest xmlns="https://mobile-content-api.cru.org/xmlns/manifest"
     xmlns:content="https://mobile-content-api.cru.org/xmlns/content"
-    xmlns:tract="https://mobile-content-api.cru.org/xmlns/tract"
-    navbar-color="rgba(0,0,0,0.3)"
-    navbar-control-color="rgba(255,255,255,1)"
     primary-color="rgba(59,164,219,1)"
     primary-text-color="rgba(255,255,255,1)"
-    text-color="rgba(255,255,255,1)"
-    tract:card-background-color="rgba(255,255,255,1)">
+    text-color="rgba(98,96,98,1)"
+    navbar-color="rgba(0,0,0,0.3)"
+    navbar-control-color="rgba(255,255,255,1)">
     <title>
+        <!-- the name variable is from the name_description file in OneSky and needs to be .xml -->
         <content:text i18n-id="name">Satisfied?</content:text>
     </title>
 </manifest>
