@@ -7,6 +7,4 @@ class UserCounterSerializer < ActiveModel::Serializer
   def id
     object.counter_name
   end
-
-  belongs_to :user
 end
