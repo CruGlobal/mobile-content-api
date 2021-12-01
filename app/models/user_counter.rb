@@ -7,6 +7,7 @@ class UserCounter < ApplicationRecord
 
   def decay
     date_now = Date.today
+    self.last_decay ||= Date.today
     days_to_decay = date_now - last_decay
 
     if days_to_decay > 0

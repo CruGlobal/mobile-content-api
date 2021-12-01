@@ -24,7 +24,12 @@ resource "UserCounters" do
       }.to change { UserCounter.count }.by(1)
 
       expect(status).to eq(200)
-      expect(JSON.parse(response_body)["data"]).not_to be_nil
+      json_response = JSON.parse(response_body)["data"]
+      expect(json_response).not_to be_nil
+      expect(json_response["id"]).to eq("tool_opens.kgp")
+      expect(json_response["attributes"]["count"]).to eq(20)
+      expect(json_response["attributes"]["decayed-count"]).to eq(20)
+      expect(json_response["attributes"]["last-decay"]).to eq(Date.today.to_s)
       expect(UserCounter.last.counter_name).to eq("tool_opens.kgp")
       expect(UserCounter.last.count).to eq(20)
       expect(UserCounter.last.decayed_count).to eq(20)
@@ -40,10 +45,15 @@ resource "UserCounters" do
         }.to_not change { user_counter.count }
 
         expect(status).to eq(200)
-        expect(JSON.parse(response_body)["data"]).not_to be_nil
+        json_response = JSON.parse(response_body)["data"]
+        expect(json_response).not_to be_nil
+        expect(json_response["id"]).to eq("tool_opens.kgp")
+        expect(json_response["attributes"]["count"]).to eq(70)
+        expect((json_response["attributes"]["decayed-count"] - 45).abs).to be <= 0.004 # look within 0.004, close enough
+        expect(json_response["attributes"]["last-decay"]).to eq(Date.today.to_s)
         expect(UserCounter.last.count).to eq(70)
         # get close to 45 -- original value of 50 should decay to 25 with the 90 day half-life, then +20 from the patch count incremement
-        expect((UserCounter.last.decayed_count - 45).abs).to be <= 0.004 # look within 0.004, close enough
+        expect((UserCounter.last.decayed_count - 45).abs).to be <= 0.004
         expect(UserCounter.last.last_decay).to eq(Date.today)
       end
     end

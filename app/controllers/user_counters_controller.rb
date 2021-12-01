@@ -5,7 +5,7 @@ class UserCountersController < WithUserController
     counter = current_user.user_counters.where(counter_name: counter_name).first_or_initialize
     increment = permitted_params[:increment].to_f
     counter.count += increment
-    counter.decay unless counter.new_record?
+    counter.decay
     counter.decayed_count += increment
     counter.save!
     render json: counter, status: :ok
