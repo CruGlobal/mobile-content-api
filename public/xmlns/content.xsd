@@ -210,11 +210,6 @@
                             </xs:documentation>
                         </xs:annotation>
                     </xs:enumeration>
-                    <xs:enumeration value="flow">
-                        <xs:annotation>
-                            <xs:documentation>The flow content element feature</xs:documentation>
-                        </xs:annotation>
-                    </xs:enumeration>
                     <xs:enumeration value="multiselect">
                         <xs:annotation>
                             <xs:documentation>The multiselect content element feature.
