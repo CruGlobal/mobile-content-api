@@ -41,7 +41,7 @@ jobs:
           bundle exec rails db:schema:load
 
       - name: Dummy service credential
-        run: cp spec/fixtures/service_account_cred.json.travis config/secure/service_account_cred.json
+        run: cp spec/fixtures/service_account_cred.json.actions config/secure/service_account_cred.json
 
       - name: RSpec tests
         run: bundle exec rspec --color

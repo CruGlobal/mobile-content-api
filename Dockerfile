@@ -24,8 +24,8 @@ ARG TEST_DB_PASSWORD=
 ARG TEST_DB_HOST=localhost
 ARG TEST_DB_PORT=5432
 
-# just like in travis, we need to copy the fake cred json so that our tests can function
-RUN cp spec/fixtures/service_account_cred.json.travis config/secure/service_account_cred.json
+# just like in Actions, we need to copy the fake cred json so that our tests can function
+RUN cp spec/fixtures/service_account_cred.json.actions config/secure/service_account_cred.json
 RUN bundle exec rails db:create db:schema:load docs:generate RAILS_ENV=test
 RUN rm config/secure/service_account_cred.json
 RUN bundle exec rails assets:clobber assets:precompile RAILS_ENV=test
