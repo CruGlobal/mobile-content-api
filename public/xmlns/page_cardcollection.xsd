@@ -46,5 +46,12 @@
         </xs:sequence>
 
         <xs:attribute name="id" />
+        <xs:attribute name="background-color" type="content:colorValue">
+            <xs:annotation>
+                <xs:documentation>This determines the background color of this Card. This defaults to the
+                    card-background-color defined on the page.
+                </xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
     </xs:complexType>
 </xs:schema>
