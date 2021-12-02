@@ -14,6 +14,17 @@
         </xs:restriction>
     </xs:simpleType>
 
+    <xs:simpleType name="dimension">
+        <xs:restriction base="xs:token">
+            <!-- Percent -->
+            <xs:pattern value="[1-9]%" />
+            <xs:pattern value="[1-9][0-9]%" />
+            <xs:pattern value="100%" />
+            <!-- Pixels -->
+            <xs:pattern value="[1-9][0-9]*" />
+        </xs:restriction>
+    </xs:simpleType>
+
     <xs:simpleType name="expression" final="#all">
         <xs:annotation>
             <xs:documentation>This is an expression that evaluates to true or false. The rules for what are valid are
@@ -46,6 +57,13 @@
             </xs:enumeration>
             <xs:enumeration value="top" />
             <xs:enumeration value="bottom" />
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="horizontalGravity">
+        <xs:restriction base="content:gravity">
+            <xs:enumeration value="start" />
+            <xs:enumeration value="center" />
+            <xs:enumeration value="end" />
         </xs:restriction>
     </xs:simpleType>
 
@@ -89,14 +107,6 @@
                 </xs:documentation>
             </xs:annotation>
         </xs:list>
-    </xs:simpleType>
-
-    <xs:simpleType name="textAlign">
-        <xs:restriction base="xs:token">
-            <xs:enumeration value="start" />
-            <xs:enumeration value="end" />
-            <xs:enumeration value="center" />
-        </xs:restriction>
     </xs:simpleType>
 
     <xs:simpleType name="textStyles">
@@ -191,12 +201,24 @@
                 <xs:restriction base="xs:token">
                     <xs:enumeration value="animation">
                         <xs:annotation>
-                            <xs:documentation>The animation content element feature</xs:documentation>
+                            <xs:documentation>The animation content element feature.
+
+                                Platform support:
+                                - Android since v5.4.1 (Dec 2020)
+                                - iOS not yet
+                                - Web Supported
+                            </xs:documentation>
                         </xs:annotation>
                     </xs:enumeration>
                     <xs:enumeration value="multiselect">
                         <xs:annotation>
-                            <xs:documentation>The multiselect content element feature</xs:documentation>
+                            <xs:documentation>The multiselect content element feature.
+
+                                Platform support:
+                                - Android since v5.6.0 (Sept 2021)
+                                - iOS since v5.7.6 (maybe earlier)
+                                - Web Not Supported
+                            </xs:documentation>
                         </xs:annotation>
                     </xs:enumeration>
                 </xs:restriction>
@@ -284,7 +306,7 @@
     </xs:attributeGroup>
     <!-- endregion Common Attributes -->
 
-    <!-- element nodes -->
+    <!-- region Elements -->
     <xs:element name="paragraph">
         <xs:annotation>
             <xs:documentation>Vertical stack of content with margin/padding on the top and bottom.</xs:documentation>
@@ -337,6 +359,84 @@
         </xs:complexType>
     </xs:element>
 
+    <xs:element name="flow">
+        <xs:annotation>
+            <xs:documentation>A list of content items that will flow horizontally and automatically wrap to the next
+                line.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:choice minOccurs="0" maxOccurs="unbounded">
+                <xs:element name="item">
+                    <xs:annotation>
+                        <xs:documentation>A content stack that is treated as a single item within this flow. This is
+                            optional if it contains only a single item and there aren't any custom attributes being
+                            defined for this item.
+                        </xs:documentation>
+                    </xs:annotation>
+                    <xs:complexType>
+                        <xs:choice minOccurs="0" maxOccurs="unbounded">
+                            <xs:group ref="content:elements" />
+                            <xs:group ref="content:fixedSpacerOnly" />
+                        </xs:choice>
+
+                        <xs:attribute name="width" type="content:dimension">
+                            <xs:annotation>
+                                <xs:documentation>This attribute defines how wide an item is in a flow. This defaults to
+                                    the "item-width" defined on the flow.
+                                </xs:documentation>
+                            </xs:annotation>
+                        </xs:attribute>
+                    </xs:complexType>
+                </xs:element>
+
+                <xs:group ref="content:elements" />
+                <xs:group ref="content:fixedSpacerOnly" />
+            </xs:choice>
+            <xs:attribute name="item-width" type="content:dimension" default="100%">
+                <xs:annotation>
+                    <xs:documentation>This attribute defines the default width of items is this flow. This defaults to
+                        '100%'.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
+            <xs:attribute name="row-gravity" type="content:horizontalGravity" default="start">
+                <xs:annotation>
+                    <xs:documentation>This defines how each row in the flow is aligned.</xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
+
+            <xs:attributeGroup ref="content:baseAttributes" />
+        </xs:complexType>
+    </xs:element>
+
+    <!-- region card -->
+    <xs:element name="card">
+        <xs:annotation>
+            <xs:documentation>Card UI element that contains other elements.</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:choice minOccurs="0" maxOccurs="unbounded">
+                <xs:group ref="content:elements" />
+                <xs:group ref="content:fixedSpacerOnly" />
+            </xs:choice>
+
+            <xs:attribute name="background-color" type="content:colorValue">
+                <xs:annotation>
+                    <xs:documentation>This determines the background color of this Card. This defaults to the
+                        card-background-color defined on the closest ancestor container.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
+
+            <xs:attributeGroup ref="content:baseAttributes" />
+            <xs:attributeGroup ref="content:clickableElement" />
+        </xs:complexType>
+    </xs:element>
+
+    <xs:attribute name="card-background-color" type="content:colorValue" />
+    <!-- endregion card -->
+
     <xs:element name="accordion">
         <xs:complexType>
             <xs:choice>
@@ -355,6 +455,7 @@
         </xs:complexType>
     </xs:element>
 
+    <!-- region text -->
     <xs:element name="text">
         <xs:complexType>
             <xs:simpleContent>
@@ -395,6 +496,20 @@
                             </xs:restriction>
                         </xs:simpleType>
                     </xs:attribute>
+
+                    <xs:attribute name="minimum-lines" default="0">
+                        <xs:annotation>
+                            <xs:documentation>Defines the minimum number of lines to reserve vertical space for when
+                                rendering this text element.
+                            </xs:documentation>
+                        </xs:annotation>
+                        <xs:simpleType>
+                            <xs:restriction base="xs:int">
+                                <xs:minInclusive value="0" />
+                            </xs:restriction>
+                        </xs:simpleType>
+                    </xs:attribute>
+
                     <xs:attributeGroup ref="content:baseAttributes" />
                 </xs:extension>
             </xs:simpleContent>
@@ -408,7 +523,7 @@
                         <xs:documentation>Defines the OneSky translation id for this text.</xs:documentation>
                     </xs:annotation>
                 </xs:attribute>
-                <xs:attribute name="text-align" type="content:textAlign" use="optional">
+                <xs:attribute name="text-align" type="content:horizontalGravity" use="optional">
                     <xs:annotation>
                         <xs:documentation>Defines the alignment of the text. This defaults to start.</xs:documentation>
                     </xs:annotation>
@@ -439,6 +554,7 @@
             <xs:element name="text" type="content:textType" />
         </xs:sequence>
     </xs:complexType>
+    <!-- endregion text -->
 
     <xs:element name="image">
         <xs:annotation>
@@ -449,13 +565,9 @@
         </xs:annotation>
         <xs:complexType>
             <xs:attribute name="resource" type="xs:string" use="required" />
-            <xs:attribute name="events" type="content:events">
-                <xs:annotation>
-                    <xs:documentation>This attribute defines the events to trigger when the user "clicks" the image.
-                    </xs:documentation>
-                </xs:annotation>
-            </xs:attribute>
+
             <xs:attributeGroup ref="content:baseAttributes" />
+            <xs:attributeGroup ref="content:clickableElement" />
         </xs:complexType>
     </xs:element>
 
@@ -487,12 +599,6 @@
             <xs:attribute name="resource" type="xs:string" use="required" />
             <xs:attribute name="autoplay" type="xs:boolean" default="true" />
             <xs:attribute name="loop" type="xs:boolean" default="true" />
-            <xs:attribute name="events" type="content:events">
-                <xs:annotation>
-                    <xs:documentation>This attribute defines the events to trigger when the user "clicks" the animation.
-                    </xs:documentation>
-                </xs:annotation>
-            </xs:attribute>
             <xs:attribute name="play-listeners" type="content:listeners">
                 <xs:annotation>
                     <xs:documentation>event_ids that trigger playback of this animation.</xs:documentation>
@@ -503,10 +609,12 @@
                     <xs:documentation>event_ids that will stop playback of this animation.</xs:documentation>
                 </xs:annotation>
             </xs:attribute>
+
+            <xs:attributeGroup ref="content:baseAttributes" />
+            <xs:attributeGroup ref="content:clickableElement" />
         </xs:complexType>
     </xs:element>
 
-    <!-- region button -->
     <xs:element name="button">
         <xs:complexType>
             <xs:all>
@@ -614,7 +722,7 @@
                     <xs:documentation>Defines where the icon is rendered in the button</xs:documentation>
                 </xs:annotation>
                 <xs:simpleType>
-                    <xs:restriction base="content:gravity">
+                    <xs:restriction base="content:horizontalGravity">
                         <xs:enumeration value="start" />
                         <xs:enumeration value="end" />
                     </xs:restriction>
@@ -626,7 +734,6 @@
             <xs:attributeGroup ref="content:clickableElement" />
         </xs:complexType>
     </xs:element>
-    <!-- endregion button -->
 
     <!-- region multiselect -->
     <xs:element name="multiselect">
@@ -646,8 +753,8 @@
                         </xs:sequence>
                         <xs:attribute name="background-color" type="content:colorValue">
                             <xs:annotation>
-                                <xs:documentation>This determines the default background color of Multiselect options.
-                                    This defaults to the option-background-color of the multiselect element.
+                                <xs:documentation>This determines the background color of this Option. This defaults to
+                                    the option-background-color of the multiselect element.
                                 </xs:documentation>
                             </xs:annotation>
                         </xs:attribute>
@@ -709,7 +816,6 @@
     <xs:attribute name="multiselect-option-selected-color" type="content:colorValue" />
     <!-- endregion multiselect -->
 
-    <!-- region Link -->
     <xs:element name="link">
         <xs:complexType>
             <xs:all>
@@ -734,11 +840,9 @@
             <xs:attributeGroup ref="content:clickableElement" />
         </xs:complexType>
     </xs:element>
-    <!-- endregion Link -->
 
-    <!--
-        Form Content - vertical stacked content with input fields
-    -->
+    <!-- region form -->
+    <xs:element name="form" type="content:form" />
     <xs:complexType name="form">
         <xs:annotation>
             <xs:documentation>This element wraps a collection of descendant input elements. Whenever a "followup:send"
@@ -752,20 +856,17 @@
             <xs:group ref="content:fixedSpacerOnly" />
         </xs:choice>
     </xs:complexType>
+    <!-- endregion form -->
 
-    <!--
-        Input
-            name:  REQUIRED - input key name
-            type:  (text|email|phone|hidden) DEFAULT( text )
-            value: OPTIONAL DEFAULT( empty_string )
-    -->
+    <!-- region input -->
+    <xs:element name="input" type="content:input" />
     <xs:complexType name="input">
         <xs:all>
             <xs:element name="label" maxOccurs="1" minOccurs="0" type="content:textChild" />
             <xs:element name="placeholder" maxOccurs="1" minOccurs="0" type="content:textChild" />
         </xs:all>
         <xs:attribute name="name" type="xs:string" use="required" />
-        <xs:attribute name="type" use="optional">
+        <xs:attribute name="type" default="text">
             <xs:simpleType>
                 <xs:restriction base="xs:string">
                     <xs:enumeration value="text" />
@@ -775,15 +876,16 @@
                 </xs:restriction>
             </xs:simpleType>
         </xs:attribute>
-        <xs:attribute name="required" type="xs:boolean" use="optional" default="false">
+        <xs:attribute name="required" type="xs:boolean" default="false">
             <xs:annotation>
                 <xs:documentation>Is this input required or not. A required field must contain at least one
                     non-whitespace character
                 </xs:documentation>
             </xs:annotation>
         </xs:attribute>
-        <xs:attribute name="value" type="xs:string" use="optional" />
+        <xs:attribute name="value" type="xs:string" />
     </xs:complexType>
+    <!-- endregion input -->
 
     <xs:element name="fallback">
         <xs:annotation>
@@ -854,15 +956,16 @@
         </xs:choice>
     </xs:group>
     <!-- endregion spacer -->
+    <!-- endregion Elements -->
 
     <!-- region Exports -->
-    <xs:element name="form" type="content:form" />
-    <xs:element name="input" type="content:input" />
     <xs:group name="elements">
         <xs:choice>
             <xs:element ref="content:paragraph" />
+            <xs:element ref="content:flow" />
             <xs:element ref="content:tabs" />
             <xs:element ref="content:accordion" />
+            <xs:element ref="content:card" />
             <xs:element ref="content:text" />
             <xs:element ref="content:image" />
             <xs:element ref="content:video" />
@@ -878,6 +981,14 @@
     </xs:group>
 
     <xs:attributeGroup name="page">
+        <xs:attribute ref="content:card-background-color">
+            <xs:annotation>
+                <xs:documentation>This defines the default card background color for this page. This attribute defaults
+                    to the Manifest content:card-background-color.
+                </xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+
         <xs:attribute ref="content:multiselect-option-background-color">
             <xs:annotation>
                 <xs:documentation>This defines the default multiselect option background color for this page. This
@@ -895,6 +1006,14 @@
     </xs:attributeGroup>
 
     <xs:attributeGroup name="manifest">
+        <xs:attribute ref="content:card-background-color">
+            <xs:annotation>
+                <xs:documentation>This defines the default card background color for this tool. This attribute defaults
+                    to the Manifest background-color.
+                </xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+
         <xs:attribute ref="content:multiselect-option-background-color">
             <xs:annotation>
                 <xs:documentation>This defines the default multiselect option background color for this tool. This
