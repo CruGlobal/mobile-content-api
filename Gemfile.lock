@@ -121,7 +121,7 @@ GEM
     crack (0.4.5)
       rexml
     crass (1.0.6)
-    ddtrace (0.54.0)
+    ddtrace (0.54.1)
       debase-ruby_core_source (= 0.10.12)
       msgpack
     debase-ruby_core_source (0.10.12)
