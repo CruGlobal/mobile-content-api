@@ -4,6 +4,10 @@
     "dependencyDashboard": true,
     "packageRules": [
         {
+            "matchManagers": ["bundler"],
+            "rangeStrategy": "update-lockfile"
+        },
+        {
             "matchManagers": ["ruby-version"],
             "matchPackageNames": ["ruby"],
             "allowedVersions": "< 2.8"

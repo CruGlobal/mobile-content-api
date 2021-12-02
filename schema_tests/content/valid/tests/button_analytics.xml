@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<content:paragraph xmlns:analytics="https://mobile-content-api.cru.org/xmlns/analytics"
+    xmlns:content="https://mobile-content-api.cru.org/xmlns/content">
+    <content:button type="url" url="https://www.google.com/">
+        <content:text>text</content:text>
+        <analytics:events>
+            <analytics:event action="test" system="firebase" />
+        </analytics:events>
+    </content:button>
+    <content:button type="url" url="https://www.google.com/">
+        <analytics:events>
+            <analytics:event action="test" system="firebase" />
+        </analytics:events>
+        <content:text>text</content:text>
+    </content:button>
+</content:paragraph>

@@ -62,7 +62,7 @@ describe UpdateGlobalActivityAnalytics do
     it "exists" do
       expect(File.exist?(described_class::SERVICE_ACCOUNT_CREDENTIALS_FILE_PATH)).to be(true),
         "Service credential file doesn't exist. If you want a dummy file run "\
-        "`cp spec/fixtures/service_account_cred.json.travis #{described_class::SERVICE_ACCOUNT_CREDENTIALS_FILE_PATH}`"
+        "`cp spec/fixtures/service_account_cred.json.actions #{described_class::SERVICE_ACCOUNT_CREDENTIALS_FILE_PATH}`"
     end
   end
 end

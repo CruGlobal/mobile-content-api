@@ -1,0 +1,67 @@
+name: Ruby
+
+on:
+  pull_request:
+    branches: [master]
+  push:
+    branches: [staging]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    env:
+      TEST_DB_HOST: localhost
+      TEST_DB_USER: postgres
+      TEST_DB_PASSWORD: postgres
+      TEST_DB_NAME: postgres
+      RAILS_ENV: test
+
+    services:
+      postgres:
+        image: postgres:13
+        env:
+          POSTGRES_PASSWORD: postgres
+        options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
+        ports:
+          - 5432:5432
+
+    steps:
+      - name: Check out files
+        uses: actions/checkout@v2
+
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          bundler-cache: true
+
+      - name: Set up DB
+        run: |
+          bundle exec rails db:create
+          bundle exec rails db:schema:load
+
+      - name: Dummy service credential
+        run: cp spec/fixtures/service_account_cred.json.actions config/secure/service_account_cred.json
+
+      - name: RSpec tests
+        run: bundle exec rspec --color
+
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out files
+        uses: actions/checkout@v2
+
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          bundler-cache: true
+
+      - name: Bundle audit
+        run: bundle exec bundle audit check --update --ignore CVE-2015-9284
+
+      - name: Brakeman
+        run: bundle exec brakeman -A -q --ensure-latest --no-pager
+
+      - name: StandardRB
+        run: bundle exec standardrb --format simple
