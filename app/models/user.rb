@@ -1,4 +1,6 @@
 class User < ApplicationRecord
+  has_many :user_counters
+
   validates :sso_guid, uniqueness: true, presence: true
 
   # while the email needs to be validated case-insensitively, we'll

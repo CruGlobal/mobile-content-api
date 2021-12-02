@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_06_03_195344) do
+ActiveRecord::Schema.define(version: 2021_11_10_153757) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
@@ -224,6 +224,17 @@ ActiveRecord::Schema.define(version: 2021_06_03_195344) do
     t.index ["language_id"], name: "index_translations_on_language_id"
     t.index ["resource_id", "language_id", "version"], name: "index_translations_on_resource_id_and_language_id_and_version", unique: true
     t.index ["resource_id"], name: "index_translations_on_resource_id"
+  end
+
+  create_table "user_counters", force: :cascade do |t|
+    t.integer "user_id"
+    t.string "counter_name"
+    t.integer "count", default: 0
+    t.float "decayed_count", default: 0.0
+    t.date "last_decay", default: -> { "now()" }
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["user_id", "counter_name"], name: "index_user_counters_on_user_id_and_counter_name", unique: true
   end
 
   create_table "users", force: :cascade do |t|

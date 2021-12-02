@@ -30,6 +30,10 @@ Rails.application.routes.draw do
 
   resources :custom_manifests, only: [:create, :update, :destroy, :show]
 
+  scope "user" do
+    resources :counters, controller: "user_counters", only: [:index, :update]
+  end
+
   get "monitors/lb"
   get "monitors/commit"
 

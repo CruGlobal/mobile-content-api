@@ -96,8 +96,6 @@ resource "Resources" do
     requires_authorization
 
     it "create a resource" do
-      header "Authorization", :authorization
-
       do_request data: {type: :resource,
                         attributes: {name: "new resource", abbreviation: "r", system_id: 1, resource_type_id: 1}}
 
