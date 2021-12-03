@@ -109,7 +109,9 @@ Translation.find_or_create_by!(resource: kgp, language: chinese, version: 1, is_
 TranslatedPage.find_or_create_by!(value: is_there_god_structure, resource: every_student, language: german)
 TranslatedPage.find_or_create_by!(value: beyond_blind_faith_structure, resource: every_student, language: german)
 
-AccessCode.find_or_create_by!(code: 123_456)
+code = AccessCode.find_or_initialize_by(code: 123_456)
+code.expiration = 1.day.from_now
+code.save!
 
 Attribute.find_or_create_by!(resource: kgp, key: "banner_image", value: "this is a location")
 attribute = Attribute.find_or_create_by!(resource: kgp, key: "translate_me", value: "base language", is_translatable: true)
