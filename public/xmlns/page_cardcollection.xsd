@@ -1,8 +1,11 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<xs:schema xmlns:content="https://mobile-content-api.cru.org/xmlns/content"
-    xmlns:page="https://mobile-content-api.cru.org/xmlns/page" xmlns:xs="http://www.w3.org/2001/XMLSchema"
+<xs:schema xmlns:analytics="https://mobile-content-api.cru.org/xmlns/analytics"
+    xmlns:content="https://mobile-content-api.cru.org/xmlns/content"
+    xmlns:page="https://mobile-content-api.cru.org/xmlns/page"
+    xmlns:xs="http://www.w3.org/2001/XMLSchema"
     elementFormDefault="qualified" targetNamespace="https://mobile-content-api.cru.org/xmlns/page">
 
+    <xs:import namespace="https://mobile-content-api.cru.org/xmlns/analytics" schemaLocation="analytics.xsd" />
     <xs:import namespace="https://mobile-content-api.cru.org/xmlns/content" schemaLocation="content.xsd" />
     <xs:include schemaLocation="page.xsd" />
 
@@ -13,20 +16,42 @@
                     <xs:element name="cards">
                         <xs:complexType>
                             <xs:sequence maxOccurs="unbounded">
-                                <xs:element name="card">
-                                    <xs:complexType>
-                                        <xs:choice minOccurs="0" maxOccurs="unbounded">
-                                            <xs:group ref="content:elements" />
-                                            <xs:element ref="content:spacer" />
-                                        </xs:choice>
-                                        <xs:attribute name="id" />
-                                    </xs:complexType>
-                                </xs:element>
+                                <xs:element name="card" type="page:cardcollection-card" />
                             </xs:sequence>
                         </xs:complexType>
                     </xs:element>
                 </xs:sequence>
             </xs:extension>
         </xs:complexContent>
+    </xs:complexType>
+
+    <xs:complexType name="cardcollection-card">
+        <xs:sequence>
+            <xs:element ref="analytics:events" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>
+                        Analytics events to trigger for this card. The default trigger mode for analytics events on
+                        pages is "visible".
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="content" minOccurs="0">
+                <xs:complexType>
+                    <xs:choice minOccurs="0" maxOccurs="unbounded">
+                        <xs:group ref="content:elements" />
+                        <xs:element ref="content:spacer" />
+                    </xs:choice>
+                </xs:complexType>
+            </xs:element>
+        </xs:sequence>
+
+        <xs:attribute name="id" />
+        <xs:attribute name="background-color" type="content:colorValue">
+            <xs:annotation>
+                <xs:documentation>This determines the background color of this Card. This defaults to the
+                    card-background-color defined on the page.
+                </xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
     </xs:complexType>
 </xs:schema>
