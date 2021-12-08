@@ -57,12 +57,56 @@ resource "UserCounters" do
         expect(UserCounter.last.last_decay).to eq(Date.today)
       end
     end
+
+    context "with values" do
+      it "create user_counter" do
+        expect {
+          do_request data: {type: "user_counter", attributes: {increment: 20, values: ["v1", "v2"]}}
+        }.to change { UserCounter.count }.by(1)
+
+        expect(status).to eq(200)
+        json_response = JSON.parse(response_body)["data"]
+        expect(json_response).not_to be_nil
+        expect(json_response["id"]).to eq("tool_opens.kgp")
+        expect(json_response["attributes"]["count"]).to eq(22)
+        expect(json_response["attributes"]["decayed-count"]).to eq(22)
+        expect(json_response["attributes"]["last-decay"]).to eq(Date.today.to_s)
+        expect(UserCounter.last.counter_name).to eq("tool_opens.kgp")
+        expect(UserCounter.last.count).to eq(22)
+        expect(UserCounter.last.decayed_count).to eq(22)
+        expect(UserCounter.last.last_decay).to eq(Date.today)
+      end
+
+      context "when user_counter exists" do
+        let!(:user_counter) { FactoryBot.create(:user_counter, user: user, counter_name: "tool_opens.kgp", count: 50, decayed_count: 50, last_decay: 90.days.ago) }
+
+        it "updates the count and decay" do
+          expect {
+            do_request data: {type: "user_counter", attributes: {increment: 20, values: ["v1", "v2"]}}
+          }.to_not change { user_counter.count }
+
+          expect(status).to eq(200)
+          json_response = JSON.parse(response_body)["data"]
+          expect(json_response).not_to be_nil
+          expect(json_response["id"]).to eq("tool_opens.kgp")
+          expect(json_response["attributes"]["count"]).to eq(72)
+          expect((json_response["attributes"]["decayed-count"] - 47).abs).to be <= 0.004 # look within 0.004, close enough
+          expect(json_response["attributes"]["last-decay"]).to eq(Date.today.to_s)
+          expect(json_response["attributes"]["values"]).to eq(["v1", "v2"])
+          expect(UserCounter.last.count).to eq(72)
+          # get close to 45 -- original value of 50 should decay to 25 with the 90 day half-life, then +20 from the patch count incremement
+          expect((UserCounter.last.decayed_count - 47).abs).to be <= 0.004
+          expect(UserCounter.last.last_decay).to eq(Date.today)
+          expect(UserCounter.last.values).to eq(["v1", "v2"])
+        end
+      end
+    end
   end
 
   get "user/counters" do
     let(:user) { FactoryBot.create(:user) }
-    let!(:user_counter) { FactoryBot.create(:user_counter, user: user, counter_name: "tool_opens.kgp", count: 50, decayed_count: 50, last_decay: 90.days.ago) }
-    let!(:user_counter2) { FactoryBot.create(:user_counter, user: user, counter_name: "other.kgp", count: 60, decayed_count: 40, last_decay: 90.days.ago) }
+    let!(:user_counter) { FactoryBot.create(:user_counter, user: user, counter_name: "tool_opens.kgp", count: 50, decayed_count: 50, last_decay: 90.days.ago.utc) }
+    let!(:user_counter2) { FactoryBot.create(:user_counter, user: user, counter_name: "other.kgp", count: 60, decayed_count: 40, last_decay: 90.days.ago.utc) }
     requires_okta_login
 
     it "gets counts" do
@@ -72,6 +116,20 @@ resource "UserCounters" do
       today = Date.today.to_s
       expected_result = %({"data":[{"id":"tool_opens.kgp","type":"user-counter","attributes":{"count":50,"decayed-count":25.00367978478838,"last-decay":"#{today}"}},{"id":"other.kgp","type":"user-counter","attributes":{"count":60,"decayed-count":20.002943827830705,"last-decay":"#{today}"}}]})
       expect(response_body).to eq(expected_result)
+    end
+
+    context "with values" do
+      let!(:user_value1) { FactoryBot.create(:user_counter_value, user_counter: user_counter, value: "v1") }
+      let!(:user_value2) { FactoryBot.create(:user_counter_value, user_counter: user_counter, value: "v2") }
+
+      it "includes values" do
+        do_request
+
+        expect(status).to eq(200)
+        today = Date.today.to_s
+        expected_result = %({"data":[{"id":"tool_opens.kgp","type":"user-counter","attributes":{"count":50,"decayed-count":25.00367978478838,"last-decay":"#{today}","values":["v1","v2"]}},{"id":"other.kgp","type":"user-counter","attributes":{"count":60,"decayed-count":20.002943827830705,"last-decay":"#{today}"}}]})
+        expect(response_body).to eq(expected_result)
+      end
     end
   end
 end

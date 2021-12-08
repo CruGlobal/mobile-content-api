@@ -4,15 +4,20 @@ class UserCounter < ApplicationRecord
   DECAY_RATE = -0.0077
 
   belongs_to :user
+  has_many :user_counter_values
 
   def decay
-    date_now = Date.today
-    self.last_decay ||= Date.today
+    date_now = Time.now.utc.to_date
+    self.last_decay ||= date_now
     days_to_decay = date_now - last_decay
 
     if days_to_decay > 0
       self.decayed_count *= (Math::E**(DECAY_RATE * days_to_decay))
       self.last_decay = date_now
     end
+  end
+
+  def values
+    user_counter_values.pluck(:value)
   end
 end
