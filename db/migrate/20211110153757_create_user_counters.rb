@@ -5,7 +5,7 @@ class CreateUserCounters < ActiveRecord::Migration[6.0]
       t.string :counter_name
       t.integer :count, default: 0
       t.float :decayed_count, default: 0
-      t.date :last_decay, default: -> { "NOW()" }
+      t.date :last_decay, default: -> { timezone('utc', NOW()) }
 
       t.timestamps
     end
