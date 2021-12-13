@@ -1,0 +1,31 @@
+<page xmlns="https://mobile-content-api.cru.org/xmlns/page"
+    xmlns:content="https://mobile-content-api.cru.org/xmlns/content"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="content"
+    background-color="rgba(59,164,219,1)" text-color="rgba(255,255,255,1)">
+    <content>
+        <content:spacer height="40" mode="fixed" />
+        <content:paragraph>
+            <content:text>Starting a conversation sounds simple - just talk about the weather or a TV show you’re
+                enjoying.
+            </content:text>
+        </content:paragraph>
+        <content:paragraph>
+            <content:text>Being intentional about having deeper conversations, and talking about spiritual things, feels
+                different.
+            </content:text>
+        </content:paragraph>
+        <content:paragraph>
+            <content:text>Being intentional about having deeper conversations, and talking about spiritual things, feels
+                different.
+            </content:text>
+        </content:paragraph>
+        <content:paragraph>
+            <content:text text-scale="0.8" text-style="bold">Using our conversation starters can help you feel ready to
+                talk with anyone.
+            </content:text>
+        </content:paragraph>
+        <content:button type="event" color="rgba(255,255,255,1)" events="categories">
+            <content:text text-color="rgba(59,164,219,1)">Let's do it</content:text>
+        </content:button>
+    </content>
+</page>
