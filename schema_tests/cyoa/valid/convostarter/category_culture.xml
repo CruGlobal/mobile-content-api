@@ -1,6 +1,8 @@
 <page xmlns="https://mobile-content-api.cru.org/xmlns/page"
     xmlns:content="https://mobile-content-api.cru.org/xmlns/content"
+    xmlns:cyoa="https://mobile-content-api.cru.org/xmlns/cyoa"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="cardcollection"
+    cyoa:parent="categories"
     background-color="rgba(245,245,245,1)" listeners="category_culture" text-scale="1.555">
     <cards>
         <card id="1">

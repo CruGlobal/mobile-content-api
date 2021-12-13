@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <xs:schema xmlns:analytics="https://mobile-content-api.cru.org/xmlns/analytics"
     xmlns:content="https://mobile-content-api.cru.org/xmlns/content"
+    xmlns:cyoa="https://mobile-content-api.cru.org/xmlns/cyoa"
     xmlns:page="https://mobile-content-api.cru.org/xmlns/page" xmlns:xs="http://www.w3.org/2001/XMLSchema"
     elementFormDefault="qualified" targetNamespace="https://mobile-content-api.cru.org/xmlns/page">
 
     <xs:import namespace="https://mobile-content-api.cru.org/xmlns/analytics" schemaLocation="analytics.xsd" />
     <xs:import namespace="https://mobile-content-api.cru.org/xmlns/content" schemaLocation="content.xsd" />
+    <xs:import namespace="https://mobile-content-api.cru.org/xmlns/cyoa" schemaLocation="cyoa.xsd" />
 
     <!-- region Page -->
     <xs:simpleType name="id">
@@ -106,6 +108,7 @@
 
         <!-- Import any external groups of attributes we want to support -->
         <xs:attributeGroup ref="content:page" />
+        <xs:attributeGroup ref="cyoa:page" />
     </xs:complexType>
     <!-- region Page -->
 
