@@ -227,8 +227,8 @@ ActiveRecord::Schema.define(version: 2021_12_01_161437) do
   end
 
   create_table "user_counter_values", force: :cascade do |t|
-    t.string "user_id"
-    t.string "user_counter_id"
+    t.integer "user_id"
+    t.integer "user_counter_id"
     t.string "value"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
