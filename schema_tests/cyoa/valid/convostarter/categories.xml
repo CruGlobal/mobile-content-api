@@ -1,0 +1,30 @@
+<page xmlns="https://mobile-content-api.cru.org/xmlns/page"
+    xmlns:content="https://mobile-content-api.cru.org/xmlns/content"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="content"
+    id="categories" listeners="categories">
+    <content>
+        <content:paragraph>
+            <content:text text-scale="1.333">Choose a category and discover interesting, fun and powerful questions to
+                ask in your next conversation.
+            </content:text>
+        </content:paragraph>
+        <content:flow item-width="50%" row-gravity="start">
+            <content:card events="category_culture">
+                <content:image resource="category_culture.png" />
+                <content:spacer height="12" mode="fixed" />
+                <content:text minimum-lines="2" text-align="center" text-style="bold">Culture and worldview
+                </content:text>
+            </content:card>
+            <content:card>
+                <content:image resource="category_family.png" />
+                <content:spacer height="12" mode="fixed" />
+                <content:text minimum-lines="2" text-align="center" text-style="bold">Family</content:text>
+            </content:card>
+            <content:card>
+                <content:image resource="category_spirituality.png" />
+                <content:spacer height="12" mode="fixed" />
+                <content:text minimum-lines="2" text-align="center" text-style="bold">Spirituality</content:text>
+            </content:card>
+        </content:flow>
+    </content>
+</page>

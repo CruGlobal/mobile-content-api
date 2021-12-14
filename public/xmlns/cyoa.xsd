@@ -1,9 +1,17 @@
 <!-- Choose Your Own Adventure -->
-<xs:schema xmlns:page="https://mobile-content-api.cru.org/xmlns/page" xmlns:xs="http://www.w3.org/2001/XMLSchema"
-    elementFormDefault="qualified" targetNamespace="https://mobile-content-api.cru.org/xmlns/page">
+<xs:schema xmlns:cyoa="https://mobile-content-api.cru.org/xmlns/cyoa" xmlns:page="https://mobile-content-api.cru.org/xmlns/page" xmlns:xs="http://www.w3.org/2001/XMLSchema"
+    elementFormDefault="qualified" targetNamespace="https://mobile-content-api.cru.org/xmlns/cyoa">
 
-    <xs:include schemaLocation="page_content.xsd" />
-    <xs:include schemaLocation="page_cardcollection.xsd" />
+    <xs:import namespace="https://mobile-content-api.cru.org/xmlns/page" schemaLocation="cyoa_pages.xsd" />
 
-    <xs:element name="page" type="page:BasePageType" />
+    <xs:attribute name="parent" type="page:id" />
+
+    <xs:attributeGroup name="page">
+        <xs:attribute ref="cyoa:parent">
+            <xs:annotation>
+                <xs:documentation>This defines the parent of this page in a cyoa tool. This defaults to no parent page.
+                </xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+    </xs:attributeGroup>
 </xs:schema>

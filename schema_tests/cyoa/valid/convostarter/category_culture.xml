@@ -1,0 +1,41 @@
+<page xmlns="https://mobile-content-api.cru.org/xmlns/page"
+    xmlns:content="https://mobile-content-api.cru.org/xmlns/content"
+    xmlns:cyoa="https://mobile-content-api.cru.org/xmlns/cyoa"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="cardcollection"
+    cyoa:parent="categories"
+    background-color="rgba(245,245,245,1)" listeners="category_culture" text-scale="1.555">
+    <cards>
+        <card id="1">
+            <content>
+                <content:text text-scale="0.5">Culture &amp; worldview</content:text>
+                <content:text>What's your favorite thing to do where you live?</content:text>
+            </content>
+        </card>
+        <card id="2">
+            <content>
+                <content:text text-scale="0.5">Culture &amp; worldview</content:text>
+                <content:text>What did you believe as a child that seems ridiculous to you now?</content:text>
+            </content>
+        </card>
+        <card id="3">
+            <content>
+                <content:text text-scale="0.5">Culture &amp; worldview</content:text>
+                <content:text>In what area or way do you feel most misunderstood?</content:text>
+            </content>
+        </card>
+        <card id="4">
+            <content>
+                <content:text text-scale="0.5">Culture &amp; worldview</content:text>
+                <content:text>Would you change the way you were raised in any way, and if so, how?</content:text>
+            </content>
+        </card>
+        <card id="5">
+            <content>
+                <content:text text-scale="0.5">Culture &amp; worldview</content:text>
+                <content:text>People say that money by itself cannot buy happiness; what do you think leads to a happy
+                    life?
+                </content:text>
+            </content>
+        </card>
+    </cards>
+</page>
