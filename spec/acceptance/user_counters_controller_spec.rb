@@ -92,7 +92,6 @@ resource "UserCounters" do
           expect(json_response["attributes"]["count"]).to eq(72)
           expect((json_response["attributes"]["decayed-count"] - 47).abs).to be <= 0.004 # look within 0.004, close enough
           expect(json_response["attributes"]["last-decay"]).to eq(Date.today.to_s)
-          expect(json_response["attributes"]["values"]).to eq(["v1", "v2"])
           expect(UserCounter.last.count).to eq(72)
           # get close to 45 -- original value of 50 should decay to 25 with the 90 day half-life, then +20 from the patch count incremement
           expect((UserCounter.last.decayed_count - 47).abs).to be <= 0.004
@@ -127,7 +126,7 @@ resource "UserCounters" do
 
         expect(status).to eq(200)
         today = Date.today.to_s
-        expected_result = %({"data":[{"id":"tool_opens.kgp","type":"user-counter","attributes":{"count":50,"decayed-count":25.00367978478838,"last-decay":"#{today}","values":["v1","v2"]}},{"id":"other.kgp","type":"user-counter","attributes":{"count":60,"decayed-count":20.002943827830705,"last-decay":"#{today}"}}]})
+        expected_result = %({"data":[{"id":"tool_opens.kgp","type":"user-counter","attributes":{"count":50,"decayed-count":25.00367978478838,"last-decay":"#{today}"}},{"id":"other.kgp","type":"user-counter","attributes":{"count":60,"decayed-count":20.002943827830705,"last-decay":"#{today}"}}]})
         expect(response_body).to eq(expected_result)
       end
     end
