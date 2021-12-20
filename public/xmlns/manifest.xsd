@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <xs:schema xmlns:article="https://mobile-content-api.cru.org/xmlns/article"
     xmlns:content="https://mobile-content-api.cru.org/xmlns/content"
-    xmlns:lesson="https://mobile-content-api.cru.org/xmlns/lesson"
     xmlns:manifest="https://mobile-content-api.cru.org/xmlns/manifest"
     xmlns:page="https://mobile-content-api.cru.org/xmlns/page"
-    xmlns:tract="https://mobile-content-api.cru.org/xmlns/tract" xmlns:xs="http://www.w3.org/2001/XMLSchema"
+    xmlns:xs="http://www.w3.org/2001/XMLSchema"
     elementFormDefault="qualified" targetNamespace="https://mobile-content-api.cru.org/xmlns/manifest">
 
     <xs:import namespace="https://mobile-content-api.cru.org/xmlns/article" schemaLocation="article.xsd" />
@@ -152,7 +151,6 @@
 
         <!-- Import any external groups of attributes we want to support -->
         <xs:attributeGroup ref="content:manifest" />
-        <xs:attributeGroup ref="lesson:manifest" />
         <xs:attributeGroup ref="page:manifest" />
     </xs:complexType>
 
