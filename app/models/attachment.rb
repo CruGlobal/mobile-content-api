@@ -35,7 +35,7 @@ class Attachment < ActiveRecord::Base
   rescue NoMethodError, OpenURI::HTTPError, Errno::ECONNREFUSED
     file = attachment_changes["file"].attachable
     file ||= url
-    XmlUtil.filename_sha(File.open(file).read)
+    XmlUtil.filename_sha(File.read(file))
   end
 
   private
