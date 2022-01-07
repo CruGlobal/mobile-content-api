@@ -4,16 +4,16 @@ require "simplecov"
 require_relative "./support/test_helpers"
 require_relative "./support/adobe_campaign_stub_helpers"
 
+if ENV["CI"] == "true"
+  require "simplecov-cobertura"
+  SimpleCov.formatter = SimpleCov::Formatter::CoberturaFormatter
+end
+
 SimpleCov.start "rails" do
   add_filter "/lib/log/"
   add_group "Serializers", "app/serializers"
   add_group "Validators", "app/validators"
   add_group "Service Classes", "app/services"
-end
-
-if ENV["CI"] == "true"
-  require "codecov"
-  SimpleCov.formatter = SimpleCov::Formatter::Codecov
 end
 
 # This file is copied to spec/ when you run 'rails generate rspec:install'
