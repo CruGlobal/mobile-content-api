@@ -82,7 +82,6 @@ group :development, :test do
   gem "action-cable-testing"
   gem "brakeman"
   gem "bundler-audit"
-  gem "codecov", require: false
   gem "dotenv-rails"
   gem "equivalent-xml", "~> 0.6.0"
   gem "factory_bot_rails"
@@ -93,7 +92,7 @@ group :development, :test do
   gem "rspec-rails", "~> 5.0"
   gem "rspec_api_documentation"
   gem "rubocop-rspec", require: false
-  gem "simplecov", require: false
+  gem "simplecov-cobertura", require: false
   gem "standard"
   gem "webmock", require: false
 end
