@@ -19,6 +19,13 @@
                                 <xs:element name="card" type="page:cardcollection-card" />
                             </xs:sequence>
                         </xs:complexType>
+                        <xs:unique name="uniqueCardIdKey">
+                            <xs:annotation>
+                                <xs:documentation>Card ids are unique within the context of a page</xs:documentation>
+                            </xs:annotation>
+                            <xs:selector xpath="page:card" />
+                            <xs:field xpath="@id" />
+                        </xs:unique>
                     </xs:element>
                 </xs:sequence>
             </xs:extension>
