@@ -244,26 +244,8 @@
             </xs:annotation>
         </xs:attribute>
 
-        <!-- region Element visibility -->
-        <xs:attribute name="gone-if" type="content:expression">
-            <xs:annotation>
-                <xs:documentation>When this evaluates to true, the element is hidden. Hidden elements are completely
-                    removed from the UI and treated as if they don't exist when rendering the UI. When both gone-if
-                    and invisible-if evaluate to true, gone-if takes priority.
-                </xs:documentation>
-            </xs:annotation>
-        </xs:attribute>
-        <xs:attribute name="invisible-if" type="content:expression">
-            <xs:annotation>
-                <xs:documentation>When this evaluates to true, the element is made invisible. Invisible elements still
-                    take up their original space, but are not visible to the end user. When both gone-if and
-                    invisible-if evaluate to true, gone-if takes priority.
-                </xs:documentation>
-            </xs:annotation>
-        </xs:attribute>
-        <!-- endregion Element visibility -->
-
         <xs:attributeGroup ref="content:contentRestrictions" />
+        <xs:attributeGroup ref="content:visibilityAttributes" />
     </xs:attributeGroup>
 
     <xs:attributeGroup name="contentRestrictions">
@@ -278,6 +260,25 @@
             <xs:annotation>
                 <xs:documentation>This attributes specifies a list of required features in order for this element to be
                     rendered. By default no features are required to render an element.
+                </xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+    </xs:attributeGroup>
+
+    <xs:attributeGroup name="visibilityAttributes">
+        <xs:attribute name="gone-if" type="content:expression">
+            <xs:annotation>
+                <xs:documentation>When this evaluates to true, the element is hidden. Hidden elements are completely
+                    removed from the UI and treated as if they don't exist when rendering the UI. When both gone-if
+                    and invisible-if evaluate to true, gone-if takes priority.
+                </xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="invisible-if" type="content:expression">
+            <xs:annotation>
+                <xs:documentation>When this evaluates to true, the element is made invisible. Invisible elements still
+                    take up their original space, but are not visible to the end user. When both gone-if and
+                    invisible-if evaluate to true, gone-if takes priority.
                 </xs:documentation>
             </xs:annotation>
         </xs:attribute>
@@ -387,6 +388,8 @@
                                 </xs:documentation>
                             </xs:annotation>
                         </xs:attribute>
+
+                        <xs:attributeGroup ref="content:visibilityAttributes" />
                     </xs:complexType>
                 </xs:element>
 
