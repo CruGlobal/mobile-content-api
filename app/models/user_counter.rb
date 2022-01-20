@@ -4,7 +4,7 @@ class UserCounter < ApplicationRecord
   DECAY_RATE = -0.0077
 
   belongs_to :user
-  validates :counter_name, format: {with: /\A[a-zA-Z0-9_\-.]+\z/, message: "has invalid characters"}
+  validates :counter_name, format: {with: /\A[-_.a-zA-Z0-9]+\z/, message: "has invalid characters"}
 
   def decay
     date_now = Date.today
