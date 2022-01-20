@@ -34,7 +34,7 @@ class Okta
         raise Okta::FailedAuthentication, "Expired access_token."
       end
       unless payload["cid"].in?(ENV["OKTA_SERVER_AUDIENCE"].split(","))
-        raise Okta::FailedAuthentication, "Invalid access_token cid."
+        raise Okta::FailedAuthentication, "Invalid access_token cid #{payload["cid"]}"
       end
       unless payload["iss"] == ENV["OKTA_SERVER_PATH"]
         raise Okta::FailedAuthentication,
