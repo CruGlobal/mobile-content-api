@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <xs:schema xmlns:content="https://mobile-content-api.cru.org/xmlns/content"
-    xmlns:lesson="https://mobile-content-api.cru.org/xmlns/lesson"
     xmlns:page="https://mobile-content-api.cru.org/xmlns/page" xmlns:xs="http://www.w3.org/2001/XMLSchema"
     elementFormDefault="qualified" targetNamespace="https://mobile-content-api.cru.org/xmlns/lesson">
 
@@ -26,24 +25,4 @@
             </xs:complexContent>
         </xs:complexType>
     </xs:element>
-
-    <!-- region external attributes -->
-    <xs:attributeGroup name="manifest">
-        <xs:annotation>
-            <xs:documentation>This attribute group is the set of attributes that can appear on the manifest node in the
-                manifest xml.
-            </xs:documentation>
-        </xs:annotation>
-        <xs:attribute ref="lesson:control-color" default="rgba(225, 225, 225, 1)">
-            <xs:annotation>
-                <xs:documentation>This defines the default control color for lessons.
-
-                    Deprecated in favor of using page:control-color instead. Remove attribute from schema after Dec 2022
-                </xs:documentation>
-            </xs:annotation>
-        </xs:attribute>
-    </xs:attributeGroup>
-
-    <xs:attribute name="control-color" type="content:colorValue" />
-    <!-- endregion external attributes -->
 </xs:schema>

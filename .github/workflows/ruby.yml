@@ -4,7 +4,7 @@ on:
   pull_request:
     branches: [master]
   push:
-    branches: [staging]
+    branches: [master,staging]
 
 jobs:
   test:
@@ -45,6 +45,11 @@ jobs:
 
       - name: RSpec tests
         run: bundle exec rspec --color
+
+      - name: Codecov upload
+        uses: codecov/codecov-action@v2
+        with:
+          fail_ci_if_error: true
 
   lint:
     runs-on: ubuntu-latest

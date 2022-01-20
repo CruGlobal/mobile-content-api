@@ -1,13 +1,24 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <xs:schema xmlns:analytics="https://mobile-content-api.cru.org/xmlns/analytics"
     xmlns:content="https://mobile-content-api.cru.org/xmlns/content"
+    xmlns:cyoa="https://mobile-content-api.cru.org/xmlns/cyoa"
     xmlns:page="https://mobile-content-api.cru.org/xmlns/page" xmlns:xs="http://www.w3.org/2001/XMLSchema"
     elementFormDefault="qualified" targetNamespace="https://mobile-content-api.cru.org/xmlns/page">
 
     <xs:import namespace="https://mobile-content-api.cru.org/xmlns/analytics" schemaLocation="analytics.xsd" />
     <xs:import namespace="https://mobile-content-api.cru.org/xmlns/content" schemaLocation="content.xsd" />
+    <xs:import namespace="https://mobile-content-api.cru.org/xmlns/cyoa" schemaLocation="cyoa.xsd" />
 
     <!-- region Page -->
+    <xs:simpleType name="id">
+        <xs:annotation>
+            <xs:documentation>Page id type</xs:documentation>
+        </xs:annotation>
+        <xs:restriction base="xs:token">
+            <xs:pattern value="[a-zA-Z0-9_.-]+" />
+        </xs:restriction>
+    </xs:simpleType>
+
     <xs:complexType name="BasePageType">
         <xs:sequence>
             <xs:element ref="analytics:events" minOccurs="0">
@@ -20,7 +31,7 @@
             </xs:element>
         </xs:sequence>
 
-        <xs:attribute name="id" />
+        <xs:attribute name="id" type="page:id" />
 
         <xs:attribute name="hidden" type="xs:boolean" default="false">
             <xs:annotation>
@@ -97,6 +108,7 @@
 
         <!-- Import any external groups of attributes we want to support -->
         <xs:attributeGroup ref="content:page" />
+        <xs:attributeGroup ref="cyoa:page" />
     </xs:complexType>
     <!-- region Page -->
 

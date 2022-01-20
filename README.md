@@ -1,8 +1,8 @@
-# Mobile Content API [![codecov](https://codecov.io/gh/CruGlobal/mobile-content-api/branch/master/graph/badge.svg)](https://codecov.io/gh/CruGlobal/mobile-content-api)
+# Mobile Content API [![codecov](https://codecov.io/gh/CruGlobal/mobile-content-api/branch/master/graph/badge.svg)](https://app.codecov.io/gh/CruGlobal/mobile-content-api)
 
 Staging push status: [![staging push status](https://github.com/CruGlobal/mobile-content-api/actions/workflows/ruby.yml/badge.svg?event=push&branch=staging)](https://github.com/CruGlobal/mobile-content-api/actions/workflows/ruby.yml)
 
-Master push status: [![master push status](https://github.com/CruGlobal/mobile-content-api/actions/workflows/ruby-cache.yml/badge.svg?event=push&branch=master)](https://github.com/CruGlobal/mobile-content-api/actions/workflows/ruby-cache.yml)
+Master push status: [![master push status](https://github.com/CruGlobal/mobile-content-api/actions/workflows/ruby.yml/badge.svg?event=push&branch=master)](https://github.com/CruGlobal/mobile-content-api/actions/workflows/ruby.yml)
 
 * Ruby version: 2.6.6
 * Bundler version: 1.17.3

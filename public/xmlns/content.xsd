@@ -244,26 +244,8 @@
             </xs:annotation>
         </xs:attribute>
 
-        <!-- region Element visibility -->
-        <xs:attribute name="gone-if" type="content:expression">
-            <xs:annotation>
-                <xs:documentation>When this evaluates to true, the element is hidden. Hidden elements are completely
-                    removed from the UI and treated as if they don't exist when rendering the UI. When both gone-if
-                    and invisible-if evaluate to true, gone-if takes priority.
-                </xs:documentation>
-            </xs:annotation>
-        </xs:attribute>
-        <xs:attribute name="invisible-if" type="content:expression">
-            <xs:annotation>
-                <xs:documentation>When this evaluates to true, the element is made invisible. Invisible elements still
-                    take up their original space, but are not visible to the end user. When both gone-if and
-                    invisible-if evaluate to true, gone-if takes priority.
-                </xs:documentation>
-            </xs:annotation>
-        </xs:attribute>
-        <!-- endregion Element visibility -->
-
         <xs:attributeGroup ref="content:contentRestrictions" />
+        <xs:attributeGroup ref="content:visibilityAttributes" />
     </xs:attributeGroup>
 
     <xs:attributeGroup name="contentRestrictions">
@@ -278,6 +260,25 @@
             <xs:annotation>
                 <xs:documentation>This attributes specifies a list of required features in order for this element to be
                     rendered. By default no features are required to render an element.
+                </xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+    </xs:attributeGroup>
+
+    <xs:attributeGroup name="visibilityAttributes">
+        <xs:attribute name="gone-if" type="content:expression">
+            <xs:annotation>
+                <xs:documentation>When this evaluates to true, the element is hidden. Hidden elements are completely
+                    removed from the UI and treated as if they don't exist when rendering the UI. When both gone-if
+                    and invisible-if evaluate to true, gone-if takes priority.
+                </xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="invisible-if" type="content:expression">
+            <xs:annotation>
+                <xs:documentation>When this evaluates to true, the element is made invisible. Invisible elements still
+                    take up their original space, but are not visible to the end user. When both gone-if and
+                    invisible-if evaluate to true, gone-if takes priority.
                 </xs:documentation>
             </xs:annotation>
         </xs:attribute>
@@ -387,6 +388,8 @@
                                 </xs:documentation>
                             </xs:annotation>
                         </xs:attribute>
+
+                        <xs:attributeGroup ref="content:visibilityAttributes" />
                     </xs:complexType>
                 </xs:element>
 
@@ -565,6 +568,15 @@
         </xs:annotation>
         <xs:complexType>
             <xs:attribute name="resource" type="xs:string" use="required" />
+            <xs:attribute name="width" default="100%">
+                <xs:simpleType>
+                    <xs:restriction base="content:dimension">
+                        <xs:pattern value="[1-9][0-9]*" />
+                        <xs:pattern value="100%" />
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:attribute>
+            <xs:attribute name="gravity" type="content:horizontalGravity" default="center" />
 
             <xs:attributeGroup ref="content:baseAttributes" />
             <xs:attributeGroup ref="content:clickableElement" />
@@ -698,6 +710,15 @@
                     </xs:documentation>
                 </xs:annotation>
             </xs:attribute>
+            <xs:attribute name="width" default="100%">
+                <xs:simpleType>
+                    <xs:restriction base="content:dimension">
+                        <xs:pattern value="[1-9][0-9]*" />
+                        <xs:pattern value="100%" />
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:attribute>
+            <xs:attribute name="gravity" type="content:horizontalGravity" default="center" />
 
             <!-- region Icon Attributes -->
             <xs:attribute name="icon" type="xs:string">

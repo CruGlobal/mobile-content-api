@@ -7,10 +7,18 @@
     </analytics:events>
     <cards>
         <card>
-            <content:spacer />
-            <content:paragraph>
-                <content:text>Text</content:text>
-            </content:paragraph>
+            <content>
+                <content:spacer />
+                <content:paragraph>
+                    <content:text>Text</content:text>
+                </content:paragraph>
+            </content>
+        </card>
+        <card>
+            <analytics:events>
+                <analytics:event action="test" system="facebook" />
+            </analytics:events>
+            <content />
         </card>
     </cards>
 </page>

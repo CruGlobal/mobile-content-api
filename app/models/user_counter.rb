@@ -5,6 +5,7 @@ class UserCounter < ApplicationRecord
 
   belongs_to :user
   has_many :user_counter_values
+  validates :counter_name, format: {with: /\A[-_.a-zA-Z0-9]+\z/, message: "has invalid characters"}
 
   def decay
     date_now = Time.now.utc.to_date

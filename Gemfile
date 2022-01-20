@@ -58,7 +58,7 @@ gem "tzinfo-data", platforms: [:mingw, :mswin, :x64_mingw, :jruby]
 
 gem "pg"
 
-gem "active_model_serializers", "0.10.12"
+gem "active_model_serializers", "0.10.13"
 gem "active_storage_validations"
 gem "adobe-campaign", "~> 0.4.1"
 gem "aws-sdk-s3"
@@ -69,7 +69,7 @@ gem "google-api-client", "~> 0.53", require: "google/apis/analyticsreporting_v4"
 gem "httparty"
 gem "jwt"
 gem "lograge"
-gem "oj", "~> 3.13.0"
+gem "oj", "~> 3.13.10"
 gem "ougai", "~> 2.0"
 gem "raddocs"
 gem "redis"
@@ -82,7 +82,6 @@ group :development, :test do
   gem "action-cable-testing"
   gem "brakeman"
   gem "bundler-audit"
-  gem "codecov", require: false
   gem "dotenv-rails"
   gem "equivalent-xml", "~> 0.6.0"
   gem "factory_bot_rails"
@@ -93,7 +92,7 @@ group :development, :test do
   gem "rspec-rails", "~> 5.0"
   gem "rspec_api_documentation"
   gem "rubocop-rspec", require: false
-  gem "simplecov", require: false
+  gem "simplecov-cobertura", require: false
   gem "standard"
   gem "webmock", require: false
 end

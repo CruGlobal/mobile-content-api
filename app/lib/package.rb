@@ -130,7 +130,7 @@ class Package
     begin
       string_io_bytes = URI.parse(attachment.url).open.read
     rescue NoMethodError
-      string_io_bytes = File.open(attachment.url).read
+      string_io_bytes = File.read(attachment.url)
     end
     sha_filename = attachment.sha256
 
