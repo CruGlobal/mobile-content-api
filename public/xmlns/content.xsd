@@ -772,6 +772,13 @@
                             </xs:element>
                             <xs:group ref="content:elements" minOccurs="0" maxOccurs="unbounded" />
                         </xs:sequence>
+                        <xs:attribute name="style" type="content:multiselect-option-style">
+                            <xs:annotation>
+                                <xs:documentation>Defines the style of this option. Defaults to option-style defined on
+                                    the Multiselect.
+                                </xs:documentation>
+                            </xs:annotation>
+                        </xs:attribute>
                         <xs:attribute name="background-color" type="content:colorValue">
                             <xs:annotation>
                                 <xs:documentation>This determines the background color of this Option. This defaults to
@@ -810,6 +817,7 @@
                     </xs:restriction>
                 </xs:simpleType>
             </xs:attribute>
+            <xs:attribute name="option-style" type="content:multiselect-option-style" default="card" />
             <xs:attribute name="option-background-color" type="content:colorValue">
                 <xs:annotation>
                     <xs:documentation>This determines the default background color of options in this multiselect
@@ -832,6 +840,13 @@
             <xs:field xpath="@value" />
         </xs:unique>
     </xs:element>
+
+    <xs:simpleType name="multiselect-option-style">
+        <xs:restriction base="xs:token">
+            <xs:enumeration value="card" />
+            <xs:enumeration value="flat" />
+        </xs:restriction>
+    </xs:simpleType>
 
     <xs:attribute name="multiselect-option-background-color" type="content:colorValue" />
     <xs:attribute name="multiselect-option-selected-color" type="content:colorValue" />
