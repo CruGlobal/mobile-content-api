@@ -210,6 +210,17 @@
                             </xs:documentation>
                         </xs:annotation>
                     </xs:enumeration>
+                    <xs:enumeration value="flow">
+                        <xs:annotation>
+                            <xs:documentation>The flow content element feature.
+
+                                Platform support:
+                                - Android since v5.7.0 (Feb 2022)
+                                - iOS Not Supported
+                                - Web Not Supported
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:enumeration>
                     <xs:enumeration value="multiselect">
                         <xs:annotation>
                             <xs:documentation>The multiselect content element feature.
