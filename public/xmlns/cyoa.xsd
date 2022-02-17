@@ -1,10 +1,13 @@
 <!-- Choose Your Own Adventure -->
-<xs:schema xmlns:cyoa="https://mobile-content-api.cru.org/xmlns/cyoa" xmlns:page="https://mobile-content-api.cru.org/xmlns/page" xmlns:xs="http://www.w3.org/2001/XMLSchema"
+<xs:schema xmlns:content="https://mobile-content-api.cru.org/xmlns/content"
+    xmlns:cyoa="https://mobile-content-api.cru.org/xmlns/cyoa"
+    xmlns:xs="http://www.w3.org/2001/XMLSchema"
     elementFormDefault="qualified" targetNamespace="https://mobile-content-api.cru.org/xmlns/cyoa">
 
+    <xs:import namespace="https://mobile-content-api.cru.org/xmlns/content" schemaLocation="content.xsd" />
     <xs:import namespace="https://mobile-content-api.cru.org/xmlns/page" schemaLocation="cyoa_pages.xsd" />
 
-    <xs:attribute name="parent" type="page:id" />
+    <xs:attribute name="parent" type="content:id" />
 
     <xs:attributeGroup name="page">
         <xs:attribute ref="cyoa:parent">

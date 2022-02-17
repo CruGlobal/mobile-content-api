@@ -52,7 +52,7 @@
             </xs:element>
         </xs:sequence>
 
-        <xs:attribute name="id" type="page:id" />
+        <xs:attribute name="id" type="content:id" />
         <xs:attribute name="background-color" type="content:colorValue">
             <xs:annotation>
                 <xs:documentation>This determines the background color of this Card. This defaults to the
