@@ -67,6 +67,15 @@
         </xs:restriction>
     </xs:simpleType>
 
+    <xs:simpleType name="id">
+        <xs:annotation>
+            <xs:documentation>id type</xs:documentation>
+        </xs:annotation>
+        <xs:restriction base="xs:token">
+            <xs:pattern value="[a-zA-Z0-9_.-]+" />
+        </xs:restriction>
+    </xs:simpleType>
+
     <xs:simpleType name="imageScaleType">
         <xs:restriction base="xs:string">
             <xs:enumeration value="fit">
