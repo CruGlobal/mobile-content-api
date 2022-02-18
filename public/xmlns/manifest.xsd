@@ -3,6 +3,7 @@
     xmlns:content="https://mobile-content-api.cru.org/xmlns/content"
     xmlns:manifest="https://mobile-content-api.cru.org/xmlns/manifest"
     xmlns:page="https://mobile-content-api.cru.org/xmlns/page"
+    xmlns:shareable="https://mobile-content-api.cru.org/xmlns/shareable"
     xmlns:xs="http://www.w3.org/2001/XMLSchema"
     elementFormDefault="qualified" targetNamespace="https://mobile-content-api.cru.org/xmlns/manifest">
 
@@ -10,6 +11,7 @@
     <xs:import namespace="https://mobile-content-api.cru.org/xmlns/content" schemaLocation="content.xsd" />
     <xs:import namespace="https://mobile-content-api.cru.org/xmlns/lesson" schemaLocation="lesson.xsd" />
     <xs:import namespace="https://mobile-content-api.cru.org/xmlns/page" schemaLocation="page.xsd" />
+    <xs:import namespace="https://mobile-content-api.cru.org/xmlns/shareable" schemaLocation="shareable.xsd" />
     <xs:import namespace="https://mobile-content-api.cru.org/xmlns/tract" schemaLocation="tract.xsd" />
 
     <xs:simpleType name="toolType">
@@ -70,6 +72,8 @@
                     <xs:field xpath="@id" />
                 </xs:unique>
             </xs:element>
+
+            <xs:element ref="shareable:items" minOccurs="0" />
         </xs:all>
 
         <xs:attributeGroup ref="manifest:toolMetaData" />
