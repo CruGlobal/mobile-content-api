@@ -8,12 +8,12 @@
     <xs:element name="items">
         <xs:complexType>
             <xs:choice maxOccurs="unbounded">
-                <xs:element name="image" type="shareable:image" />
+                <xs:element ref="shareable:image" />
             </xs:choice>
         </xs:complexType>
         <xs:unique name="shareableId">
             <xs:annotation>
-                <xs:documentation>Shareable ids are unique within the context of a manifest</xs:documentation>
+                <xs:documentation>Shareable ids should be unique</xs:documentation>
             </xs:annotation>
             <xs:selector xpath="*" />
             <xs:field xpath="@id" />
@@ -27,11 +27,13 @@
         <xs:attribute name="id" type="content:id" />
     </xs:complexType>
 
-    <xs:complexType name="image">
-        <xs:complexContent>
-            <xs:extension base="shareable:item">
-                <xs:attribute name="resource" type="xs:string" use="required" />
-            </xs:extension>
-        </xs:complexContent>
-    </xs:complexType>
+    <xs:element name="image">
+        <xs:complexType>
+            <xs:complexContent>
+                <xs:extension base="shareable:item">
+                    <xs:attribute name="resource" type="xs:string" use="required" />
+                </xs:extension>
+            </xs:complexContent>
+        </xs:complexType>
+    </xs:element>
 </xs:schema>
