@@ -22,6 +22,7 @@
 
     <xs:complexType name="item">
         <xs:attribute name="id" type="content:id" />
+        <xs:attribute name="order" type="xs:int" default="2147483647" />
     </xs:complexType>
 
     <xs:element name="image">
