@@ -21,9 +21,6 @@
     </xs:element>
 
     <xs:complexType name="item">
-        <xs:sequence>
-            <xs:element name="description" type="content:textChild" minOccurs="0" />
-        </xs:sequence>
         <xs:attribute name="id" type="content:id" />
     </xs:complexType>
 
@@ -31,6 +28,9 @@
         <xs:complexType>
             <xs:complexContent>
                 <xs:extension base="shareable:item">
+                    <xs:all>
+                        <xs:element name="description" type="content:textChild" minOccurs="0" />
+                    </xs:all>
                     <xs:attribute name="resource" type="xs:string" use="required" />
                 </xs:extension>
             </xs:complexContent>
