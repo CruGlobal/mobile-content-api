@@ -1,0 +1,37 @@
+name: Build & Deploy ECS
+
+on:
+  push:
+    branches:
+      # Automatically build and deploy master and staging. Additional branches may be added.
+      - master
+      - staging
+  workflow_dispatch:
+    # Allows manual build and deploy of any branch/ref
+    inputs:
+      auto-deploy:
+        type: boolean
+        description: Deploy image after building?
+        required: true
+        default: 'false'
+
+jobs:
+  # Build and push container image to ECR. Builds occur in the project repository.
+  build:
+    name: Build
+    uses: CruGlobal/.github/.github/workflows/build-ecs.yml@v1
+
+  # Triggers an ECS deployment in https://github.com/CruGlobal/cru-deploy/actions.
+  # All deployments happen in the cru-deploy repo.
+  deploy:
+    name: Deploy
+    runs-on: ubuntu-latest
+    needs: build
+    if: github.event_name != 'workflow_dispatch' || github.event.inputs.auto-deploy == 'true'
+    steps:
+      - uses: CruGlobal/.github/actions/trigger-deploy@v1
+        with:
+          github-token: ${{ secrets.CRU_DEPLOY_GITHUB_TOKEN }}
+          project-name: ${{ needs.build.outputs.project-name }}
+          environment: ${{ needs.build.outputs.environment }}
+          build-number: ${{ needs.build.outputs.build-number }}

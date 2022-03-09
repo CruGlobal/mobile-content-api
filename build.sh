@@ -1,16 +1,22 @@
 #!/bin/bash
 
-docker network create $PROJECT_NAME
-docker run --rm --network=$PROJECT_NAME --name=$PROJECT_NAME-postgres -e POSTGRES_PASSWORD=password -d postgres
-sleep 2
+docker run --rm --network=$DOCKER_NETWORK --name=$PROJECT_NAME-postgres -e POSTGRES_PASSWORD=password -d postgres
+sleep 5
 
-docker build \
-    --network $PROJECT_NAME \
+$PG_IP=$(docker inspect --format='{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' $PROJECT_NAME-postgres)
+
+docker buildx build $DOCKER_ARGS \
     --build-arg TEST_DB_PASSWORD=password \
     --build-arg TEST_DB_USER=postgres \
-    --build-arg TEST_DB_HOST=$PROJECT_NAME-postgres \
+    --build-arg TEST_DB_HOST=$PG_IP \
     --build-arg DD_API_KEY=$DD_API_KEY \
-    -t 056154071827.dkr.ecr.us-east-1.amazonaws.com/$PROJECT_NAME:$ENVIRONMENT-$BUILD_NUMBER .
+    .
+rc=$?
 
 docker stop $PROJECT_NAME-postgres
-docker network rm $PROJECT_NAME
+
+if [ $rc -ne 0 ]; then
+  echo -e "Docker build failed"
+  exit $rc
+fi
+
