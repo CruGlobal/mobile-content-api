@@ -237,7 +237,7 @@ describe Translation do
 
   def includes_translated_attributes
     # check that the url attribute is not duplicated
-    expect(result).to_not include %|<content:button url="https://url.com" type="url" url="https://www.bible.com/">|
-    expect(result).to include %|<content:button url="#{phrase_three}" type="url" url-i18n-id="9deda19f-c3ee-42ed-a1eb-92423e543353">|
+    expect(result).to_not include %(<content:button url="https://url.com" type="url" url="https://www.bible.com/">)
+    expect(result).to include %(<content:button url="#{phrase_three}" type="url" url-i18n-id="9deda19f-c3ee-42ed-a1eb-92423e543353">)
   end
 end
