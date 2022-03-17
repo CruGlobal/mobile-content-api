@@ -15,7 +15,9 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - name: Install xmllint
-        run: sudo apt-get install libxml2-utils
+        run: |
+          sudo apt-get update
+          sudo apt-get install libxml2-utils
       - name: Check valid XML
         run: xmllint --schema ${{ inputs.schema }} --noout ${{ inputs.test_dir }}/valid/*/*.xml
       - name: Check invalid XML
