@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<manifest xmlns="https://mobile-content-api.cru.org/xmlns/manifest" xmlns:content="https://mobile-content-api.cru.org/xmlns/content" tool="kgp" locale="en" type="tract">
+  <title>
+    <content:text i18n-id="89a09d72-114f-4d89-a72c-ca204c796fd9">Knowing God Personally!</content:text>
+  </title>
+  <pages>
+    <page filename="04_ThirdPoint.xml" src="ec9bac08c42c571a4df305171d04e196a5601af87e664600f1afba820b2a1a59.xml"/>
+    <page filename="13_FinalPage.xml" src="e9a07c177bb189cb1665307fffd770ad7c52316e0284a38fb8fa42f436b29397.xml"/>
+  </pages>
+  <tips>
+    <tip id="tip1" src="c26f707f414bbfda0656d890867d7da90058d8d0303dce8daef80951760cd56d.xml"/>
+    <tip id="tip2" src="503fa579c48f89d3e7428e3a3f24fae80b43bf97b53318309696a093298ae032.xml"/>
+  </tips>
+  <resources>
+    <resource filename="wall.jpg" src="073d78ef4dc421f10d2db375414660d3983f506fabdaaff0887f6ee955aa3bdd"/>
+    <resource filename="mobile_only.png" src="2cf2ab68c49b217c6b2402699c742a236f96efe36bc48821eb6ba1a1427b8945"/>
+    <resource filename="web_mobile.png" src="4245551d69a8c582b6fc5185fb5312efc4f6863bda991a12a76102736f92fa2d"/>
+    <resource filename="both.png" src="ad03ee4cc7b015919b375539db150dee5f47245c6a293663c21c774b2dba294f"/>
+  </resources>
+</manifest>

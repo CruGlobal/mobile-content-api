@@ -110,12 +110,26 @@ RSpec.configure do |config|
       stub_const("ENV", "AWS_REGION" => region, "MOBILE_CONTENT_API_BUCKET" => bucket_name)
 
       bucket = instance_double(Aws::S3::Bucket)
+
+      # record all s3 uploads to a hash so we can verify all files in the zip were sent to s3
+      @s3_uploads = {}
+      allow(bucket).to receive(:object) do |key|
+        new_object = Aws::S3::Object.new(key: key, bucket_name: bucket_name)
+        @s3_uploads[key] = {}
+        @last_object = new_object
+        allow(new_object).to receive(:put) do |params|
+          @s3_uploads[new_object.key] = params
+        end
+        new_object
+      end
       allow(bucket).to receive(:object).with(translation.object_name.to_s).and_return(object)
 
       s3 = instance_double(Aws::S3::Resource)
       allow(s3).to receive(:bucket).with(bucket_name).and_return(bucket)
 
       allow(Aws::S3::Resource).to receive(:new).with(region: region).and_return(s3)
+
+      bucket # pass bucket back in case tests want to add specific s3 stubs
     end
     # rubocop:enable Metrics/AbcSize
   })

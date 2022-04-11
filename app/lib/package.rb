@@ -15,10 +15,18 @@ class Package
     //tract:header/@training:tip
     //tract:call-to-action/@training:tip].freeze
 
-  def self.s3_object(translation)
+  def self.s3_bucket
     s3 = Aws::S3::Resource.new(region: ENV["AWS_REGION"])
     bucket = s3.bucket(ENV["MOBILE_CONTENT_API_BUCKET"])
-    bucket.object(translation.object_name.to_s)
+  end
+
+  def self.s3_object(translation)
+    s3_bucket.object(translation.object_name.to_s)
+  end
+
+  # for upload the zip files to s3, keep the bucket instance so we don't have to keep creating it
+  def s3_bucket
+    @s3_bucket ||= self.class.s3_bucket
   end
 
   def initialize(translation)
@@ -53,7 +61,7 @@ class Package
       add_attachments(zip_file, manifest)
 
       manifest_filename = write_manifest_to_file(manifest)
-      zip_file.add(manifest_filename, "#{@directory}/#{manifest_filename}")
+      add_file_to_zip_and_s3(zip_file, manifest_filename, "#{@directory}/#{manifest_filename}")
     end
   end
 
@@ -76,7 +84,7 @@ class Package
       Rails.logger.info("Adding page with id: #{page.id} to package for translation with id: #{@translation.id}")
 
       sha_filename = write_page_to_file(page)
-      zip_file.add(sha_filename, "#{@directory}/#{sha_filename}")
+      add_file_to_zip_and_s3(zip_file, sha_filename, "#{@directory}/#{sha_filename}")
       manifest.add_page(page.filename, sha_filename)
     end
   end
@@ -86,7 +94,7 @@ class Package
       Rails.logger.info("Adding tip with id: #{tip.id} to package for translation with id: #{@translation.id}")
 
       sha_filename = write_tip_to_file(tip)
-      zip_file.add(sha_filename, "#{@directory}/#{sha_filename}")
+      add_file_to_zip_and_s3(zip_file, sha_filename, "#{@directory}/#{sha_filename}")
       manifest.add_tip(tip.name, sha_filename)
     end
   end
@@ -122,7 +130,7 @@ class Package
                         "for translation with id: #{@translation.id}")
 
       sha_filename = save_attachment_to_file(attachment)
-      zip_file.add(sha_filename, "#{@directory}/#{sha_filename}")
+      add_file_to_zip_and_s3(zip_file, sha_filename, "#{@directory}/#{sha_filename}")
       manifest.add_resource(attachment.filename, sha_filename)
     end
   end
@@ -136,7 +144,7 @@ class Package
     sha_filename = attachment.sha256
 
     File.binwrite("#{@directory}/#{sha_filename}", string_io_bytes)
-    sha_filename
+    sha_filename# + File.extname(attachment) # TODO
   end
 
   def write_manifest_to_file(manifest)
@@ -160,5 +168,11 @@ class Package
   def include_tips?
     language_attributes = @translation.language.language_attributes.where(resource: @translation.resource)
     language_attributes.find_by(key: "include_tips")&.value == "true"
+  end
+
+  def add_file_to_zip_and_s3(zip, zip_filename, local_filename)
+    zip.add(zip_filename, local_filename)
+    s3_object = s3_bucket.object(zip_filename)
+    s3_object.put(acl: "public-read", body: File.read(local_filename), checksum_sha256: zip_filename.sub(/\.[^.]+\z/, ""))
   end
 end
