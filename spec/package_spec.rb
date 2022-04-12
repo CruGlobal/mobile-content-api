@@ -6,7 +6,6 @@ require "package"
 require "xml_util"
 
 describe Package do
-  let(:translated_page_one_sha) { "ec9bac08c42c571a4df305171d04e196a5601af87e664600f1afba820b2a1a59" }
   let(:translated_page_one) do
     '<?xml version="1.0" encoding="UTF-8"?>
 <page xmlns="https://mobile-content-api.cru.org/xmlns/tract"
@@ -44,7 +43,6 @@ describe Package do
 </page>
 '
   end
-  let(:translated_page_two_sha) { "e9a07c177bb189cb1665307fffd770ad7c52316e0284a38fb8fa42f436b29397" }
   let(:translated_page_two) do
     '<?xml version="1.0" encoding="UTF-8"?>
 <page xmlns="https://mobile-content-api.cru.org/xmlns/tract"
@@ -130,11 +128,11 @@ describe Package do
       </tip>)
   end
   let!(:tip2) { FactoryBot.create(:tip, name: "tip2", resource: resource, structure: tip_structure2) }
-  let!(:s3_object) { instance_double(Aws::S3::Object, upload_file: true) }
-  let!(:s3_bucket) { mock_s3(s3_object, translation) }
 
   before do
     mock_onesky
+
+    mock_s3(instance_double(Aws::S3::Object, upload_file: true), translation)
 
     allow_any_instance_of(Attachment).to receive(:url) do |attachment|
       "#{fixture_path}/#{attachment.filename}"
@@ -144,12 +142,12 @@ describe Package do
   end
 
   after do
-   if Dir.exist?(directory)
+    if Dir.exist?(directory)
       allow(PageClient).to receive(:delete_temp_dir).and_call_original
       PageClient.delete_temp_dir(directory)
     end
-    if File.exists?("#{directory}/version_1.zip")
-      verify_s3_uploads_match_zip 
+    if File.exist?("#{directory}/version_1.zip")
+      verify_s3_uploads_match_zip
     end
   end
 
@@ -195,41 +193,25 @@ describe Package do
   end
 
   context "manifest" do
-    let(:manifest_sha) { "3ad7af4f4b41d41b4042a1bebe8cd72068ed6de16c51cd0903eb6fbfeb6304d9" }
-
-    let(:page1_sha) { "ec9bac08c42c571a4df305171d04e196a5601af87e664600f1afba820b2a1a59" }
-    let(:page2_sha) { "e9a07c177bb189cb1665307fffd770ad7c52316e0284a38fb8fa42f436b29397" }
     let(:pages) do
-      Nokogiri::XML(%|<pages xmlns="https://mobile-content-api.cru.org/xmlns/manifest">
-        <page filename="04_ThirdPoint.xml" src="#{page1_sha}.xml"/>
-        <page filename="13_FinalPage.xml" src="#{page2_sha}.xml"/>
-      </pages>|).root
+      Nokogiri::XML('<pages xmlns="https://mobile-content-api.cru.org/xmlns/manifest">
+        <page filename="04_ThirdPoint.xml" src="ec9bac08c42c571a4df305171d04e196a5601af87e664600f1afba820b2a1a59.xml"/>
+        <page filename="13_FinalPage.xml" src="e9a07c177bb189cb1665307fffd770ad7c52316e0284a38fb8fa42f436b29397.xml"/>
+      </pages>').root
     end
-
-    let(:resource1_sha) { "2cf2ab68c49b217c6b2402699c742a236f96efe36bc48821eb6ba1a1427b8945" }
-    let(:resource1_filename) { "mobile_only.png" }
-    let(:resource2_sha) { "4245551d69a8c582b6fc5185fb5312efc4f6863bda991a12a76102736f92fa2d" }
-    let(:resource2_filename) { "web_mobile.png" }
-    let(:resource3_sha) { "ad03ee4cc7b015919b375539db150dee5f47245c6a293663c21c774b2dba294f" }
-    let(:resource3_filename) { "both.png" }
-    let(:resource4_sha) { "073d78ef4dc421f10d2db375414660d3983f506fabdaaff0887f6ee955aa3bdd" }
-    let(:resource4_filename) { "wall.jpg" }
     let(:resources) do
-      Nokogiri::XML(%|<resources xmlns="https://mobile-content-api.cru.org/xmlns/manifest">
-        <resource filename="#{resource1_filename}" src="#{resource1_sha}"/>
-        <resource filename="#{resource2_filename}" src="#{resource2_sha}"/>
-        <resource filename="#{resource3_filename}" src="#{resource3_sha}"/>
-        <resource filename="#{resource4_filename}" src="#{resource4_sha}"/>
-      </resources>|).root
+      Nokogiri::XML('<resources xmlns="https://mobile-content-api.cru.org/xmlns/manifest">
+        <resource filename="mobile_only.png" src="2cf2ab68c49b217c6b2402699c742a236f96efe36bc48821eb6ba1a1427b8945"/>
+        <resource filename="web_mobile.png" src="4245551d69a8c582b6fc5185fb5312efc4f6863bda991a12a76102736f92fa2d"/>
+        <resource filename="both.png" src="ad03ee4cc7b015919b375539db150dee5f47245c6a293663c21c774b2dba294f"/>
+        <resource filename="wall.jpg" src="073d78ef4dc421f10d2db375414660d3983f506fabdaaff0887f6ee955aa3bdd"/>
+      </resources>').root
     end
-
-    let(:tip1_sha) { "c26f707f414bbfda0656d890867d7da90058d8d0303dce8daef80951760cd56d" }
-    let(:tip2_sha) { "503fa579c48f89d3e7428e3a3f24fae80b43bf97b53318309696a093298ae032" }
     let(:tips) do
-      Nokogiri::XML(%|<tips xmlns="https://mobile-content-api.cru.org/xmlns/manifest">
-        <tip id="tip1" src="#{tip1_sha}.xml"/>
-        <tip id="tip2" src="#{tip2_sha}.xml"/>
-      </tips>|).root
+      Nokogiri::XML('<tips xmlns="https://mobile-content-api.cru.org/xmlns/manifest">
+        <tip id="tip1" src="c26f707f414bbfda0656d890867d7da90058d8d0303dce8daef80951760cd56d.xml"/>
+        <tip id="tip2" src="503fa579c48f89d3e7428e3a3f24fae80b43bf97b53318309696a093298ae032.xml"/>
+      </tips>').root
     end
     let(:title) { "this is the kgp" }
 
@@ -237,15 +219,8 @@ describe Package do
       FactoryBot.create(:language_attribute, resource: resource, language: translation.language, key: "include_tips", value: "true")
     end
 
-		let(:generated_manifest_sha) { "3ad7af4f4b41d41b4042a1bebe8cd72068ed6de16c51cd0903eb6fbfeb6304d9" }
-
     before do
       mock_dir_deletion
-    end
-
-    def expect_s3_to_have(path, body, sha)
-      expect(s3_bucket).to receive(:object).with(path).and_return(s3_object)
-      expect(s3_object).to receive(:put).with(acl: "public-read", body: body, checksum_sha256: sha).and_return(true)
     end
 
     it "contains all pages in order" do
@@ -265,13 +240,6 @@ describe Package do
     context "include_tips false" do
       it "does not reference tips" do
         LanguageAttribute.delete_all
-        expect_s3_to_have("#{translated_page_one_sha}.xml", translated_page_one, translated_page_one_sha)
-        expect_s3_to_have("#{translated_page_two_sha}.xml", translated_page_two, translated_page_two_sha)
-        expect_s3_to_have(resource1_sha, File.read("spec/fixtures/#{resource1_filename}"), resource1_sha)
-        expect_s3_to_have(resource2_sha, File.read("spec/fixtures/#{resource2_filename}"), resource2_sha)
-        expect_s3_to_have(resource3_sha, File.read("spec/fixtures/#{resource3_filename}"), resource3_sha)
-        expect_s3_to_have(resource4_sha, File.read("spec/fixtures/#{resource4_filename}"), resource4_sha)
-        expect_s3_to_have("#{generated_manifest_sha}.xml", File.read("spec/fixtures/#{generated_manifest_sha}.xml"), generated_manifest_sha)
         push
 
         result = XmlUtil.xpath_namespace(load_xml(translation.manifest_name), "//manifest:tips").first
@@ -427,10 +395,10 @@ describe Package do
 
     from_s3 = @s3_uploads.collect do |path, upload|
       [path, {body: upload[:body], checksum: upload[:checksum_sha256]}]
-    end.to_h 
+    end.to_h
 
-    from_zip_checksums_only = from_zip.collect{ |k, v| [k, v[:checksum]] }.to_h
-    from_s3_checksums_only = from_s3.collect{ |k, v| [k, v[:checksum]] }.to_h
+    from_zip_checksums_only = from_zip.collect { |k, v| [k, v[:checksum]] }.to_h
+    from_s3_checksums_only = from_s3.collect { |k, v| [k, v[:checksum]] }.to_h
 
     # to make differences easier to mentally parse (and not print out big file contents), ensure the paths are the same first, then checksums
     expect(from_zip.keys).to eq(from_s3.keys)
