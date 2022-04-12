@@ -132,6 +132,7 @@
 
     <xs:simpleType name="uri">
         <xs:restriction base="xs:anyURI">
+            <xs:pattern value="godtools://.*" />
             <xs:pattern value="https?://.*" />
         </xs:restriction>
     </xs:simpleType>
