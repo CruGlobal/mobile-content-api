@@ -173,6 +173,14 @@ class Package
   def add_file_to_zip_and_s3(zip, zip_filename, local_filename)
     zip.add(zip_filename, local_filename)
     s3_object = s3_bucket.object(zip_filename)
+
+    # we may need to use md5 as an upload integrity check, as I can't find any examples with sha256 and everything
+    # I try is failing. The base64 code here is from https://stackoverflow.com/questions/23417194/the-aws-ruby-sdk-gives-me-a-the-content-md5-you-specified-was-invalid-error-w
+    # Currently, this md5 check below gives an access denied error for me, regardless of the md5 value
+    #
+    #content = File.read(local_filename),
+    #s3_object.put(acl: "public-read", body: content, content_md5: Base64.encode64([Digest::MD5.hexdigest(content)].pack("H*")).strip)
+
     s3_object.put(acl: "public-read", body: File.read(local_filename), checksum_sha256: zip_filename.sub(/\.[^.]+\z/, ""))
   end
 end
