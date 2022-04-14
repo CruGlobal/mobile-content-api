@@ -42,6 +42,8 @@ Rails.application.routes.draw do
 
   put "resources/:id/onesky", to: "resources#push_to_onesky"
 
+  get "/translations/files/:path", to: redirect("https://#{ENV.fetch("MOBILE_CONTENT_API_BUCKET")}.s3.#{ENV.fetch("AWS_REGION")}.amazonaws.com/%{path}", status: 302)
+
   mount ActionCable.server => "/cable"
   mount Raddocs::App => "/docs"
 end

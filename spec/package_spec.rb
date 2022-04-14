@@ -189,7 +189,7 @@ describe Package do
 
     push
 
-    expect_exists("073d78ef4dc421f10d2db375414660d3983f506fabdaaff0887f6ee955aa3bdd")
+    expect_exists("073d78ef4dc421f10d2db375414660d3983f506fabdaaff0887f6ee955aa3bdd.jpg")
   end
 
   context "manifest" do
@@ -201,10 +201,10 @@ describe Package do
     end
     let(:resources) do
       Nokogiri::XML('<resources xmlns="https://mobile-content-api.cru.org/xmlns/manifest">
-        <resource filename="mobile_only.png" src="2cf2ab68c49b217c6b2402699c742a236f96efe36bc48821eb6ba1a1427b8945"/>
-        <resource filename="web_mobile.png" src="4245551d69a8c582b6fc5185fb5312efc4f6863bda991a12a76102736f92fa2d"/>
-        <resource filename="both.png" src="ad03ee4cc7b015919b375539db150dee5f47245c6a293663c21c774b2dba294f"/>
-        <resource filename="wall.jpg" src="073d78ef4dc421f10d2db375414660d3983f506fabdaaff0887f6ee955aa3bdd"/>
+        <resource filename="mobile_only.png" src="2cf2ab68c49b217c6b2402699c742a236f96efe36bc48821eb6ba1a1427b8945.png"/>
+        <resource filename="web_mobile.png" src="4245551d69a8c582b6fc5185fb5312efc4f6863bda991a12a76102736f92fa2d.png"/>
+        <resource filename="both.png" src="ad03ee4cc7b015919b375539db150dee5f47245c6a293663c21c774b2dba294f.png"/>
+        <resource filename="wall.jpg" src="073d78ef4dc421f10d2db375414660d3983f506fabdaaff0887f6ee955aa3bdd.jpg"/>
       </resources>').root
     end
     let(:tips) do

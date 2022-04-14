@@ -17,7 +17,7 @@ class Package
 
   def self.s3_bucket
     s3 = Aws::S3::Resource.new(region: ENV["AWS_REGION"])
-    bucket = s3.bucket(ENV["MOBILE_CONTENT_API_BUCKET"])
+    s3.bucket(ENV["MOBILE_CONTENT_API_BUCKET"])
   end
 
   def self.s3_object(translation)
@@ -141,10 +141,10 @@ class Package
     rescue NoMethodError
       string_io_bytes = File.read(attachment.url)
     end
-    sha_filename = attachment.sha256
+    sha_with_ext_filename = attachment.sha256 + File.extname(attachment.url)
 
-    File.binwrite("#{@directory}/#{sha_filename}", string_io_bytes)
-    sha_filename# + File.extname(attachment) # TODO
+    File.binwrite("#{@directory}/#{sha_with_ext_filename}", string_io_bytes)
+    sha_with_ext_filename
   end
 
   def write_manifest_to_file(manifest)
@@ -175,6 +175,6 @@ class Package
     s3_object = s3_bucket.object(zip_filename)
     content = File.read(local_filename)
     sha256 = zip_filename.sub(/\.[^.]+\z/, "")
-    s3_object.put(acl: "public-read", body: File.read(local_filename), checksum_sha256: Base64.encode64([sha256].pack("H*")).strip)
+    s3_object.put(acl: "public-read", body: content, checksum_sha256: Base64.encode64([sha256].pack("H*")).strip)
   end
 end
