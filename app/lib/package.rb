@@ -14,6 +14,7 @@ class Package
   XPATH_TIPS = %w[//training:tip/@id
     //tract:header/@training:tip
     //tract:call-to-action/@training:tip].freeze
+  TRANSLATION_FILES_PATH = "/translations/files/"
 
   def self.s3_bucket
     s3 = Aws::S3::Resource.new(region: ENV["AWS_REGION"])
@@ -172,7 +173,7 @@ class Package
 
   def add_file_to_zip_and_s3(zip, zip_filename, local_filename)
     zip.add(zip_filename, local_filename)
-    s3_object = s3_bucket.object(zip_filename)
+    s3_object = s3_bucket.object(TRANSLATION_FILES_PATH + zip_filename)
     content = File.read(local_filename)
     sha256 = zip_filename.sub(/\.[^.]+\z/, "")
     s3_object.put(acl: "public-read", body: content, checksum_sha256: Base64.encode64([sha256].pack("H*")).strip)

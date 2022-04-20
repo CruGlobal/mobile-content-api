@@ -146,9 +146,6 @@ describe Package do
       allow(PageClient).to receive(:delete_temp_dir).and_call_original
       PageClient.delete_temp_dir(directory)
     end
-    if File.exist?("#{directory}/version_1.zip")
-      verify_s3_uploads_match_zip
-    end
   end
 
   it "deletes temp directory after successful request" do
@@ -174,6 +171,7 @@ describe Package do
 
     expect_exists("ec9bac08c42c571a4df305171d04e196a5601af87e664600f1afba820b2a1a59.xml")
     expect_exists("e9a07c177bb189cb1665307fffd770ad7c52316e0284a38fb8fa42f436b29397.xml")
+    verify_s3_uploads_match_zip
   end
 
   it "zip file contains manifest" do
@@ -182,6 +180,7 @@ describe Package do
     push
 
     expect_exists(translation.manifest_name)
+    verify_s3_uploads_match_zip
   end
 
   it "zip file contains all attachments" do
@@ -190,6 +189,7 @@ describe Package do
     push
 
     expect_exists("073d78ef4dc421f10d2db375414660d3983f506fabdaaff0887f6ee955aa3bdd.jpg")
+    verify_s3_uploads_match_zip
   end
 
   context "manifest" do
@@ -228,6 +228,7 @@ describe Package do
 
       result = XmlUtil.xpath_namespace(load_xml(translation.manifest_name), "//manifest:pages").first
       expect(result).to be_equivalent_to(pages)
+      verify_s3_uploads_match_zip
     end
 
     it "contains all referenced resources" do
@@ -235,6 +236,7 @@ describe Package do
 
       result = XmlUtil.xpath_namespace(load_xml(translation.manifest_name), "//manifest:resources").first
       expect(result).to be_equivalent_to(resources)
+      verify_s3_uploads_match_zip
     end
 
     context "include_tips false" do
@@ -244,6 +246,7 @@ describe Package do
 
         result = XmlUtil.xpath_namespace(load_xml(translation.manifest_name), "//manifest:tips").first
         expect(result).to_not be_equivalent_to(tips)
+        verify_s3_uploads_match_zip
       end
     end
 
@@ -253,6 +256,7 @@ describe Package do
 
         result = XmlUtil.xpath_namespace(load_xml(translation.manifest_name), "//manifest:tips").first
         expect(result).to be_equivalent_to(tips)
+        verify_s3_uploads_match_zip
       end
     end
 
@@ -263,6 +267,7 @@ describe Package do
       manifest = load_xml(translation.manifest_name)
       result = manifest.xpath("//content:text[@i18n-id='89a09d72-114f-4d89-a72c-ca204c796fd9']").first
       expect(result.content).to eq(title)
+      verify_s3_uploads_match_zip
     end
 
     context "resource does not have a manifest file" do
@@ -390,7 +395,11 @@ describe Package do
 
     from_zip = Zip::File.open("#{directory}/version_1.zip").entries.collect do |entry|
       data = entry.get_input_stream.read
-      [entry.name, {body: data.force_encoding("UTF-8"), checksum: Digest::SHA256.hexdigest(data)}] # zip seems to get data in ASCII but s3 uploads in UTF-8, they fail comparison check otherwise
+
+      # zip seems to get data in ASCII but s3 uploads in UTF-8, they fail comparison check otherwise
+      data = data.force_encoding("UTF-8")
+      checksum = Base64.encode64([Digest::SHA256.hexdigest(data)].pack("H*")).strip
+      [Package::TRANSLATION_FILES_PATH + entry.name, {body: data, checksum: checksum}]
     end.to_h
 
     from_s3 = @s3_uploads.collect do |path, upload|
