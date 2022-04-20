@@ -107,7 +107,7 @@ RSpec.configure do |config|
     def mock_s3(object, translation)
       region = "east"
       bucket_name = "testing bucket"
-      stub_const("ENV", "AWS_REGION" => region, "MOBILE_CONTENT_API_BUCKET" => bucket_name)
+      stub_const("ENV", "AWS_REGION" => region, "MOBILE_CONTENT_API_BUCKET" => bucket_name, "AWS_ACCESS_KEY_ID" => "aws_key", "AWS_SECRET_ACCESS_KEY" => "aws_secret")
 
       bucket = instance_double(Aws::S3::Bucket)
 
