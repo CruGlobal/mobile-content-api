@@ -42,7 +42,11 @@ Rails.application.routes.draw do
 
   put "resources/:id/onesky", to: "resources#push_to_onesky"
 
-  get "/translations/files/:path", to: redirect("https://#{ENV.fetch("MOBILE_CONTENT_API_BUCKET")}.s3.#{ENV.fetch("AWS_REGION")}.amazonaws.com/%{path}", status: 302)
+  get "/translations/files/:path",
+    to: redirect("https://#{ENV.fetch("MOBILE_CONTENT_API_BUCKET")}.s3.#{ENV.fetch("AWS_REGION")}.amazonaws.com#{Package::TRANSLATION_FILES_PATH}%{path}", status: 302),
+    format: false, # these next lines are required to have the extension be part of path
+    default: {format: "html"},
+    constraints: {path: /.*/}
 
   mount ActionCable.server => "/cable"
   mount Raddocs::App => "/docs"
