@@ -14,7 +14,7 @@ class Package
   XPATH_TIPS = %w[//training:tip/@id
     //tract:header/@training:tip
     //tract:call-to-action/@training:tip].freeze
-  TRANSLATION_FILES_PATH = "/translations/files/"
+  TRANSLATION_FILES_PATH = "translations/files/"
 
   def self.s3_bucket
     s3 = Aws::S3::Resource.new(region: ENV["AWS_REGION"])
