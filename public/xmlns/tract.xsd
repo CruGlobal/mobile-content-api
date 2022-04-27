@@ -189,13 +189,6 @@
     <xs:complexType name="callToAction">
         <xs:complexContent>
             <xs:extension base="content:textChild">
-                <xs:attribute name="events" type="content:events" use="optional">
-                    <xs:annotation>
-                        <xs:documentation>Event ids to trigger when the call to action arrow is pressed. Default
-                            behavior is to advance to the next page.
-                        </xs:documentation>
-                    </xs:annotation>
-                </xs:attribute>
                 <xs:attribute name="control-color" type="content:colorValue" use="optional">
                     <xs:annotation>
                         <xs:documentation>This attribute defines the rgba color of the call to action control (button).
