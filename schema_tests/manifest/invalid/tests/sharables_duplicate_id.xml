@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<manifest xmlns="https://mobile-content-api.cru.org/xmlns/manifest"
+    xmlns:shareable="https://mobile-content-api.cru.org/xmlns/shareable">
+    <shareable:items>
+        <shareable:image id="1" resource="shareable1.png" />
+        <shareable:image id="1" resource="shareable1.png" />
+    </shareable:items>
+</manifest>
