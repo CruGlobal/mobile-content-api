@@ -233,23 +233,12 @@ ActiveRecord::Schema.define(version: 2022_05_04_204229) do
     t.index ["resource_id"], name: "index_translations_on_resource_id"
   end
 
-  create_table "translations_bkup", id: false, force: :cascade do |t|
-    t.integer "id"
-    t.boolean "is_published"
-    t.integer "version"
-    t.integer "resource_id"
-    t.integer "language_id"
-    t.string "translated_name"
-    t.string "translated_description"
-    t.string "manifest_name"
-  end
-
   create_table "user_counters", force: :cascade do |t|
     t.integer "user_id"
     t.string "counter_name"
     t.integer "count", default: 0
     t.float "decayed_count", default: 0.0
-    t.date "last_decay"
+    t.date "last_decay", default: -> { "timezone('utc', NOW())" }
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.string "values", default: [], array: true
