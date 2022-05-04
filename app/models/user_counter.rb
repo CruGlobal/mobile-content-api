@@ -21,4 +21,14 @@ class UserCounter < ApplicationRecord
   def values
     user_counter_values.pluck(:value)
   end
+
+  def apply_values(values)
+    values_before = self.values
+    new_values = values - values_before
+    new_values.each do |value|
+      user_counter_values.create!(value: value)
+    end
+    self.count += new_values.count
+    self.decayed_count += new_values.count
+  end
 end

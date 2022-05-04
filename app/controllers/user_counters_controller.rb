@@ -8,7 +8,7 @@ class UserCountersController < WithUserController
     counter.count += increment
     counter.decayed_count += increment
     counter.save! if counter.new_record? # need to save before applying values if new user counter
-    apply_values(counter, permitted_params[:values]) if permitted_params[:values]
+    counter.apply_values(permitted_params[:values]) if permitted_params[:values]
     counter.save!
     render json: counter, status: :ok
   end
@@ -30,16 +30,5 @@ class UserCountersController < WithUserController
     counter_name = params[:id]
     counter_name += ".#{params[:format]}" if params[:format].present?
     counter_name
-  end
-
-  # todo: move to model
-  def apply_values(counter, values)
-    values_before = counter.values
-    new_values = values - values_before
-    new_values.each do |value|
-      counter.user_counter_values.create!(value: value)
-    end
-    counter.count += new_values.count
-    counter.decayed_count += new_values.count
   end
 end
