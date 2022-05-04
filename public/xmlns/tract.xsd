@@ -105,8 +105,9 @@
                     text-scale: DEFAULT( 1.0 )
             -->
             <xs:choice maxOccurs="unbounded" minOccurs="0">
-                <xs:element ref="content:paragraph" />
-                <xs:element ref="content:form" />
+                <xs:group ref="content:elements" />
+                <!-- TODO: switch this to the full spacer element once Android can render them in heroes -->
+                <xs:group ref="content:fixedSpacerOnly" />
             </xs:choice>
         </xs:sequence>
     </xs:complexType>
@@ -134,8 +135,8 @@
                     text-scale: DEFAULT( 1.0 )
             -->
             <xs:choice minOccurs="0" maxOccurs="unbounded">
-                <xs:element ref="content:paragraph" />
-                <xs:element ref="content:form" />
+                <xs:group ref="content:elements" />
+                <xs:element ref="content:spacer" />
             </xs:choice>
         </xs:sequence>
 

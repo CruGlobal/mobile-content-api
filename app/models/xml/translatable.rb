@@ -38,8 +38,7 @@ module Xml
         translated_phrase = phrases[phrase_id]
 
         if translated_phrase.present?
-          attribute.name = new_name
-          attribute.value = translated_phrase
+          attribute.parent.set_attribute(new_name, translated_phrase)
         elsif strict
           raise Error::TextNotFoundError, "Translated phrase not found: ID: #{phrase_id}, base text: #{attribute.value}"
         end

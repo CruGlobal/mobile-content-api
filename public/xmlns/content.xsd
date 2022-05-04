@@ -67,6 +67,15 @@
         </xs:restriction>
     </xs:simpleType>
 
+    <xs:simpleType name="id">
+        <xs:annotation>
+            <xs:documentation>id type</xs:documentation>
+        </xs:annotation>
+        <xs:restriction base="xs:token">
+            <xs:pattern value="[a-zA-Z0-9_.-]+" />
+        </xs:restriction>
+    </xs:simpleType>
+
     <xs:simpleType name="imageScaleType">
         <xs:restriction base="xs:string">
             <xs:enumeration value="fit">
@@ -123,6 +132,7 @@
 
     <xs:simpleType name="uri">
         <xs:restriction base="xs:anyURI">
+            <xs:pattern value="godtools://.*" />
             <xs:pattern value="https?://.*" />
         </xs:restriction>
     </xs:simpleType>
@@ -207,6 +217,17 @@
                                 - Android since v5.4.1 (Dec 2020)
                                 - iOS not yet
                                 - Web Supported
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:enumeration>
+                    <xs:enumeration value="flow">
+                        <xs:annotation>
+                            <xs:documentation>The flow content element feature.
+
+                                Platform support:
+                                - Android since v5.7.0 (Feb 2022)
+                                - iOS Not Supported
+                                - Web Not Supported
                             </xs:documentation>
                         </xs:annotation>
                     </xs:enumeration>
@@ -602,6 +623,23 @@
                 </xs:simpleType>
             </xs:attribute>
             <xs:attribute name="video-id" type="xs:string" use="required" />
+            <xs:attribute name="aspect-ratio" default="16:9">
+                <xs:simpleType>
+                    <xs:restriction base="xs:token">
+                        <xs:pattern value="[1-9][0-9]*:[1-9][0-9]*" />
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:attribute>
+            <xs:attribute name="width" default="100%">
+                <xs:simpleType>
+                    <xs:restriction base="content:dimension">
+                        <xs:pattern value="[1-9][0-9]*" />
+                        <xs:pattern value="100%" />
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:attribute>
+            <xs:attribute name="gravity" type="content:horizontalGravity" default="center" />
+
             <xs:attributeGroup ref="content:baseAttributes" />
         </xs:complexType>
     </xs:element>
@@ -772,6 +810,13 @@
                             </xs:element>
                             <xs:group ref="content:elements" minOccurs="0" maxOccurs="unbounded" />
                         </xs:sequence>
+                        <xs:attribute name="style" type="content:multiselect-option-style">
+                            <xs:annotation>
+                                <xs:documentation>Defines the style of this option. Defaults to option-style defined on
+                                    the Multiselect.
+                                </xs:documentation>
+                            </xs:annotation>
+                        </xs:attribute>
                         <xs:attribute name="background-color" type="content:colorValue">
                             <xs:annotation>
                                 <xs:documentation>This determines the background color of this Option. This defaults to
@@ -810,6 +855,7 @@
                     </xs:restriction>
                 </xs:simpleType>
             </xs:attribute>
+            <xs:attribute name="option-style" type="content:multiselect-option-style" default="card" />
             <xs:attribute name="option-background-color" type="content:colorValue">
                 <xs:annotation>
                     <xs:documentation>This determines the default background color of options in this multiselect
@@ -832,6 +878,13 @@
             <xs:field xpath="@value" />
         </xs:unique>
     </xs:element>
+
+    <xs:simpleType name="multiselect-option-style">
+        <xs:restriction base="xs:token">
+            <xs:enumeration value="card" />
+            <xs:enumeration value="flat" />
+        </xs:restriction>
+    </xs:simpleType>
 
     <xs:attribute name="multiselect-option-background-color" type="content:colorValue" />
     <xs:attribute name="multiselect-option-selected-color" type="content:colorValue" />

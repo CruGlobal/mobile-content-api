@@ -9,7 +9,8 @@ class Package
     //content:button/@icon
     //content:image[not(@restrictTo='web')]/@resource
     //content:text/@start-image
-    //content:text/@end-image].freeze
+    //content:text/@end-image
+    //shareable:image/@resource].freeze
   XPATH_TIPS = %w[//training:tip/@id
     //tract:header/@training:tip
     //tract:call-to-action/@training:tip].freeze

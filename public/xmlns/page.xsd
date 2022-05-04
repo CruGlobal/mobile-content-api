@@ -10,15 +10,6 @@
     <xs:import namespace="https://mobile-content-api.cru.org/xmlns/cyoa" schemaLocation="cyoa.xsd" />
 
     <!-- region Page -->
-    <xs:simpleType name="id">
-        <xs:annotation>
-            <xs:documentation>Page id type</xs:documentation>
-        </xs:annotation>
-        <xs:restriction base="xs:token">
-            <xs:pattern value="[a-zA-Z0-9_.-]+" />
-        </xs:restriction>
-    </xs:simpleType>
-
     <xs:complexType name="BasePageType">
         <xs:sequence>
             <xs:element ref="analytics:events" minOccurs="0">
@@ -31,7 +22,7 @@
             </xs:element>
         </xs:sequence>
 
-        <xs:attribute name="id" type="page:id" />
+        <xs:attribute name="id" type="content:id" />
 
         <xs:attribute name="hidden" type="xs:boolean" default="false">
             <xs:annotation>

@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 # This file should contain all the record creation needed to seed the database with its default values.
-# The data can then be loaded with the rails db:seed command (or created alongside the database with db:setup).
+# The data can then be loaded with the bin/rails db:seed command (or created alongside the database with db:setup).
 #
 # Examples:
 #
@@ -24,7 +24,7 @@ page_13_structure = '<?xml version="1.0" encoding="UTF-8" ?>
       <content:text>These four points explain how to enter into a personal relationship with God and
         experience the life for which you were created.
       </content:text>
-      <content:button type="url" url-i18n-id="9deda19f-c3ee-42ed-a1eb-92423e543353">
+      <content:button url="https://url.com" type="url" url-i18n-id="9deda19f-c3ee-42ed-a1eb-92423e543353">
         <content:text>Label</content:text>
       </content:button>
     </content:form>
