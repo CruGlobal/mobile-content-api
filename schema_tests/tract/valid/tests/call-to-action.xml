@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <page xmlns="https://mobile-content-api.cru.org/xmlns/tract"
     xmlns:content="https://mobile-content-api.cru.org/xmlns/content">
-    <call-to-action events="ljkasdf followup:send">
+    <call-to-action>
         <content:text i18n-id="fae69b3b-e95b-4184-9bcd-211e35faa71c">Why do you think most people don’t know God personally?</content:text>
     </call-to-action>
 </page>
