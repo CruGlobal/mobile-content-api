@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_03_25_184941) do
+ActiveRecord::Schema.define(version: 2022_05_04_204229) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
@@ -233,12 +233,15 @@ ActiveRecord::Schema.define(version: 2022_03_25_184941) do
     t.index ["resource_id"], name: "index_translations_on_resource_id"
   end
 
-  create_table "user_counter_values", force: :cascade do |t|
-    t.integer "user_id"
-    t.integer "user_counter_id"
-    t.string "value"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+  create_table "translations_bkup", id: false, force: :cascade do |t|
+    t.integer "id"
+    t.boolean "is_published"
+    t.integer "version"
+    t.integer "resource_id"
+    t.integer "language_id"
+    t.string "translated_name"
+    t.string "translated_description"
+    t.string "manifest_name"
   end
 
   create_table "user_counters", force: :cascade do |t|
@@ -246,10 +249,11 @@ ActiveRecord::Schema.define(version: 2022_03_25_184941) do
     t.string "counter_name"
     t.integer "count", default: 0
     t.float "decayed_count", default: 0.0
-    t.date "last_decay", default: -> { "timezone('utc', NOW())" }
+    t.date "last_decay"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.index ["user_id", "counter_name"], name: "index_user_counters_on_user_id_and_counter_name", unique: true
+    t.string "values", default: [], array: true
+    t.index ["values"], name: "index_user_counters_on_values", using: :gin
   end
 
   create_table "users", force: :cascade do |t|
@@ -266,22 +270,4 @@ ActiveRecord::Schema.define(version: 2022_03_25_184941) do
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
-  add_foreign_key "attachments", "resources"
-  add_foreign_key "attributes", "resources"
-  add_foreign_key "auth_tokens", "access_codes"
-  add_foreign_key "custom_manifests", "languages"
-  add_foreign_key "custom_manifests", "resources"
-  add_foreign_key "custom_pages", "languages"
-  add_foreign_key "custom_pages", "pages"
-  add_foreign_key "follow_ups", "destinations"
-  add_foreign_key "follow_ups", "languages"
-  add_foreign_key "pages", "resources"
-  add_foreign_key "resources", "resource_types"
-  add_foreign_key "resources", "systems"
-  add_foreign_key "translated_attributes", "attributes"
-  add_foreign_key "translated_attributes", "translations"
-  add_foreign_key "translated_pages", "languages"
-  add_foreign_key "translated_pages", "resources"
-  add_foreign_key "translations", "languages"
-  add_foreign_key "translations", "resources"
 end

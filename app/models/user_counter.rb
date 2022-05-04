@@ -4,7 +4,6 @@ class UserCounter < ApplicationRecord
   DECAY_RATE = -0.0077
 
   belongs_to :user
-  has_many :user_counter_values
   validates :counter_name, format: {with: /\A[-_.a-zA-Z0-9]+\z/, message: "has invalid characters"}
 
   def decay
@@ -18,16 +17,9 @@ class UserCounter < ApplicationRecord
     end
   end
 
-  def values
-    user_counter_values.pluck(:value)
-  end
-
   def apply_values(values)
-    values_before = self.values
-    new_values = values - values_before
-    new_values.each do |value|
-      user_counter_values.create!(value: value)
-    end
+    new_values = values - self.values
+    self.values += new_values
     self.count += new_values.count
     self.decayed_count += new_values.count
   end

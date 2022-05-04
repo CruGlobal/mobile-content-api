@@ -59,7 +59,7 @@ resource "UserCounters" do
     end
 
     context "with values" do
-      it "create user_counter" do
+      it "creates user_counter" do
         expect {
           do_request data: {type: "user_counter", attributes: {increment: 20, values: ["v1", "v2"]}}
         }.to change { UserCounter.count }.by(1)
@@ -118,15 +118,15 @@ resource "UserCounters" do
     end
 
     context "with values" do
-      let!(:user_value1) { FactoryBot.create(:user_counter_value, user_counter: user_counter, value: "v1") }
-      let!(:user_value2) { FactoryBot.create(:user_counter_value, user_counter: user_counter, value: "v2") }
-
       it "includes values" do
+        user_counter.update(values: ["v1", "v2"])
         do_request
 
         expect(status).to eq(200)
         today = Date.today.to_s
         expected_result = %({"data":[{"id":"tool_opens.kgp","type":"user-counter","attributes":{"count":50,"decayed-count":25.00367978478838,"last-decay":"#{today}"}},{"id":"other.kgp","type":"user-counter","attributes":{"count":60,"decayed-count":20.002943827830705,"last-decay":"#{today}"}}]})
+        puts "expected: #{expected_result}"
+        puts "got:      #{response_body}"
         expect(response_body).to eq(expected_result)
       end
     end

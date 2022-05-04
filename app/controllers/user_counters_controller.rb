@@ -14,7 +14,7 @@ class UserCountersController < WithUserController
   end
 
   def index
-    counters = current_user.user_counters
+    counters = current_user.user_counters.order(:id)
     # decay but don't save as it's not needed and it'll be more efficient this way -- the in-memory decay calculation is very fast
     counters.each(&:decay)
     render json: counters, status: :ok
