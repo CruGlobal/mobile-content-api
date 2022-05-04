@@ -116,7 +116,6 @@ RSpec.configure do |config|
       allow(bucket).to receive(:object) do |key|
         new_object = Aws::S3::Object.new(key: key, bucket_name: bucket_name)
         @s3_uploads[key] = {}
-        @last_object = new_object
         allow(new_object).to receive(:put) do |params|
           @s3_uploads[new_object.key] = params
         end

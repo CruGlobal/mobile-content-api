@@ -410,8 +410,8 @@ describe Package do
     from_s3_checksums_only = from_s3.collect { |k, v| [k, v[:checksum]] }.to_h
 
     # to make differences easier to mentally parse (and not print out big file contents), ensure the paths are the same first, then checksums
-    expect(from_zip.keys).to eq(from_s3.keys)
-    expect(from_zip_checksums_only).to eq(from_s3_checksums_only)
-    expect(from_zip).to eq(from_s3)
+    expect(from_zip.keys).to match_array(from_s3.keys)
+    expect(from_zip_checksums_only).to match_array(from_s3_checksums_only)
+    expect(from_zip).to eql(from_s3)
   end
 end
