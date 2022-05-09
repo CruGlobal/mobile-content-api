@@ -215,7 +215,7 @@
 
                                 Platform support:
                                 - Android since v5.4.1 (Dec 2020)
-                                - iOS not yet
+                                - iOS since v5.7.7 (Dec 2021)
                                 - Web Supported
                             </xs:documentation>
                         </xs:annotation>
@@ -226,7 +226,7 @@
 
                                 Platform support:
                                 - Android since v5.7.0 (Feb 2022)
-                                - iOS Not Supported
+                                - iOS since v5.7.9 (Feb 2022)
                                 - Web Not Supported
                             </xs:documentation>
                         </xs:annotation>
