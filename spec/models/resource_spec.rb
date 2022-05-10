@@ -77,4 +77,35 @@ describe Resource do
     expect(result.errors["manifest"])
       .to include("1:0: ERROR: Element 'xml': No matching global declaration available for the validation root.")
   end
+
+  context "with metatools" do
+    let(:metatool_resource_type) { ResourceType.find_by(name: "metatool") }
+    let(:article_resource_type) { ResourceType.find_by(name: "article") }
+    let!(:metatool) { FactoryBot.create(:resource, system_id: 1, resource_type: metatool_resource_type) }
+    let!(:article) { FactoryBot.create(:resource, system_id: 1, resource_type: article_resource_type) }
+
+    it "validates metatool exists" do
+      attributes = {name: "test", abbreviation: "1", system_id: 1, resource_type_id: article_resource_type.id, metatool_id: 100}
+
+      expect do
+        described_class.create(attributes)
+      end.to raise_error(ActiveRecord::InvalidForeignKey)
+    end
+
+    it "validates metatool is a metatool" do
+      attributes = {name: "test", abbreviation: "1", system_id: 1, resource_type_id: article_resource_type.id, metatool_id: article.id}
+
+      result = described_class.create(attributes)
+      expect(result.errors["metatool"]).to include("is not a metatool")
+    end
+
+    it "creates a new resource with valid metatool reference" do
+      attributes = {name: "test", abbreviation: "1", system_id: 1, resource_type_id: article_resource_type.id, metatool_id: metatool.id}
+
+      expect do
+        result = described_class.create!(attributes)
+        expect(result.metatool).to eq(metatool)
+      end.to change(Resource, :count).by(1)
+    end
+  end
 end

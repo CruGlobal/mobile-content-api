@@ -11,6 +11,9 @@ class Resource < ActiveRecord::Base
   has_many :attachments
   has_many :translated_pages
   has_many :custom_manifests
+  belongs_to :metatool, optional: true, class_name: "Resource"
+  has_many :variants, class_name: "Resource", foreign_key: :metatool_id
+  validate :metatool_reference_is_metatool, if: :metatool
 
   validates :name, presence: true
   validates :abbreviation, presence: true, uniqueness: true
@@ -86,5 +89,11 @@ class Resource < ActiveRecord::Base
     Translation.select(:language_id, :resource_id, "max(version) as max_version")
       .where(resource_id: id, is_published: is_published)
       .group(:language_id, :resource_id)
+  end
+
+  def metatool_reference_is_metatool
+    unless metatool.resource_type&.name == "metatool"
+      errors.add :metatool, "is not a metatool"
+    end
   end
 end
