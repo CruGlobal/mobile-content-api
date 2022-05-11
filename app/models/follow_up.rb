@@ -40,7 +40,7 @@ class FollowUp < ActiveRecord::Base
   end
 
   def headers
-    {'Content-Type': "application/x-www-form-urlencoded"}
+    {"Content-Type": "application/x-www-form-urlencoded"}
   end
 
   def perform_request
