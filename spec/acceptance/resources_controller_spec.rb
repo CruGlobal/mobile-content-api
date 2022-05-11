@@ -30,21 +30,21 @@ resource "Resources" do
     end
 
     it "get all resources with system name" do
-      do_request 'filter[system]': "GodTools"
+      do_request "filter[system]": "GodTools"
 
       expect(status).to be(200)
       expect(JSON.parse(response_body)["data"].count).to be(3)
     end
 
     it "get all resources, include translations" do
-      do_request 'filter[system]': "GodTools", include: :translations
+      do_request "filter[system]": "GodTools", include: :translations
 
       expect(status).to be(200)
       expect(JSON.parse(response_body)["included"].count).to be(9)
     end
 
     it "only get name and system of resources" do
-      do_request 'fields[resource]': "name,system"
+      do_request "fields[resource]": "name,system"
 
       expect(status).to be(200)
       data = JSON.parse(response_body)["data"][1]
@@ -181,7 +181,7 @@ resource "Resources" do
       it "update resource in OneSky" do
         mock_page_client(id)
 
-        do_request 'keep-existing-phrases': false
+        do_request "keep-existing-phrases": false
 
         expect(status).to be(204)
         expect(response_body).to be_empty
