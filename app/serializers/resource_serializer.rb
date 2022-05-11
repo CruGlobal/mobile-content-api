@@ -6,6 +6,7 @@ class ResourceSerializer < ActiveModel::Serializer
   attribute :resource_type_name, key: "resource-type"
 
   belongs_to :system
+  belongs_to :metatool, if: -> { object&.resource_type&.name != "metatool" }
 
   has_many :translations
   has_many :latest_translations, key: "latest-translations"
