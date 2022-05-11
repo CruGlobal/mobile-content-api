@@ -42,7 +42,7 @@ resource "Resources" do
       expect(status).to be(200)
       json = JSON.parse(response_body)
       metatool = json["data"].detect { |entry| entry["attributes"]["resource-type"] == "metatool" }
-      expect(metatool["relationships"]["variants"]["data"]).to eq([{"id" => "1", "type" => "resource"}, {"id" => "5", "type" => "resource"}])
+      expect(metatool["relationships"]["variants"]["data"]).to match_array([{"id" => "1", "type" => "resource"}, {"id" => "5", "type" => "resource"}])
     end
 
     it "get all resources, include translations" do
