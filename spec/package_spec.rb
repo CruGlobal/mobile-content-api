@@ -171,6 +171,7 @@ describe Package do
 
     expect_exists("ec9bac08c42c571a4df305171d04e196a5601af87e664600f1afba820b2a1a59.xml")
     expect_exists("e9a07c177bb189cb1665307fffd770ad7c52316e0284a38fb8fa42f436b29397.xml")
+    verify_s3_uploads_match_zip
   end
 
   it "zip file contains manifest" do
@@ -179,6 +180,7 @@ describe Package do
     push
 
     expect_exists(translation.manifest_name)
+    verify_s3_uploads_match_zip
   end
 
   it "zip file contains all attachments" do
@@ -186,7 +188,8 @@ describe Package do
 
     push
 
-    expect_exists("073d78ef4dc421f10d2db375414660d3983f506fabdaaff0887f6ee955aa3bdd")
+    expect_exists("073d78ef4dc421f10d2db375414660d3983f506fabdaaff0887f6ee955aa3bdd.jpg")
+    verify_s3_uploads_match_zip
   end
 
   context "manifest" do
@@ -198,10 +201,10 @@ describe Package do
     end
     let(:resources) do
       Nokogiri::XML('<resources xmlns="https://mobile-content-api.cru.org/xmlns/manifest">
-        <resource filename="mobile_only.png" src="2cf2ab68c49b217c6b2402699c742a236f96efe36bc48821eb6ba1a1427b8945"/>
-        <resource filename="web_mobile.png" src="4245551d69a8c582b6fc5185fb5312efc4f6863bda991a12a76102736f92fa2d"/>
-        <resource filename="both.png" src="ad03ee4cc7b015919b375539db150dee5f47245c6a293663c21c774b2dba294f"/>
-        <resource filename="wall.jpg" src="073d78ef4dc421f10d2db375414660d3983f506fabdaaff0887f6ee955aa3bdd"/>
+        <resource filename="mobile_only.png" src="2cf2ab68c49b217c6b2402699c742a236f96efe36bc48821eb6ba1a1427b8945.png"/>
+        <resource filename="web_mobile.png" src="4245551d69a8c582b6fc5185fb5312efc4f6863bda991a12a76102736f92fa2d.png"/>
+        <resource filename="both.png" src="ad03ee4cc7b015919b375539db150dee5f47245c6a293663c21c774b2dba294f.png"/>
+        <resource filename="wall.jpg" src="073d78ef4dc421f10d2db375414660d3983f506fabdaaff0887f6ee955aa3bdd.jpg"/>
       </resources>').root
     end
     let(:tips) do
@@ -225,6 +228,7 @@ describe Package do
 
       result = XmlUtil.xpath_namespace(load_xml(translation.manifest_name), "//manifest:pages").first
       expect(result).to be_equivalent_to(pages)
+      verify_s3_uploads_match_zip
     end
 
     it "contains all referenced resources" do
@@ -232,6 +236,7 @@ describe Package do
 
       result = XmlUtil.xpath_namespace(load_xml(translation.manifest_name), "//manifest:resources").first
       expect(result).to be_equivalent_to(resources)
+      verify_s3_uploads_match_zip
     end
 
     context "include_tips false" do
@@ -241,6 +246,7 @@ describe Package do
 
         result = XmlUtil.xpath_namespace(load_xml(translation.manifest_name), "//manifest:tips").first
         expect(result).to_not be_equivalent_to(tips)
+        verify_s3_uploads_match_zip
       end
     end
 
@@ -250,17 +256,18 @@ describe Package do
 
         result = XmlUtil.xpath_namespace(load_xml(translation.manifest_name), "//manifest:tips").first
         expect(result).to be_equivalent_to(tips)
+        verify_s3_uploads_match_zip
       end
     end
 
     it "contains translated title" do
       allow(translation).to receive(:translated_name).and_return(title)
-
       push
 
       manifest = load_xml(translation.manifest_name)
       result = manifest.xpath("//content:text[@i18n-id='89a09d72-114f-4d89-a72c-ca204c796fd9']").first
       expect(result.content).to eq(title)
+      verify_s3_uploads_match_zip
     end
 
     context "resource does not have a manifest file" do
@@ -381,5 +388,30 @@ describe Package do
     mock_onesky
     package = Package.new(translation)
     package.push_to_s3
+  end
+
+  def verify_s3_uploads_match_zip
+    # build two hashes of path => { body: ..., checksum: ... } from s3 uploads and from the zip, and compare those
+
+    from_zip = Zip::File.open("#{directory}/version_1.zip").entries.collect do |entry|
+      data = entry.get_input_stream.read
+
+      # zip seems to get data in ASCII but s3 uploads in UTF-8, they fail comparison check otherwise
+      data = data.force_encoding("UTF-8")
+      checksum = Base64.encode64([Digest::SHA256.hexdigest(data)].pack("H*")).strip
+      [Package::TRANSLATION_FILES_PATH + entry.name, {body: data, checksum: checksum}]
+    end.to_h
+
+    from_s3 = @s3_uploads.collect do |path, upload|
+      [path, {body: upload[:body], checksum: upload[:checksum_sha256]}]
+    end.to_h
+
+    from_zip_checksums_only = from_zip.collect { |k, v| [k, v[:checksum]] }.to_h
+    from_s3_checksums_only = from_s3.collect { |k, v| [k, v[:checksum]] }.to_h
+
+    # to make differences easier to mentally parse (and not print out big file contents), ensure the paths are the same first, then checksums
+    expect(from_zip.keys).to match_array(from_s3.keys)
+    expect(from_zip_checksums_only).to match_array(from_s3_checksums_only)
+    expect(from_zip).to eql(from_s3)
   end
 end
