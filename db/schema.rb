@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_03_25_184941) do
+ActiveRecord::Schema.define(version: 2022_05_04_204229) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
@@ -238,10 +238,11 @@ ActiveRecord::Schema.define(version: 2022_03_25_184941) do
     t.string "counter_name"
     t.integer "count", default: 0
     t.float "decayed_count", default: 0.0
-    t.date "last_decay", default: -> { "now()" }
+    t.date "last_decay", default: -> { "timezone('utc', NOW())" }
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.index ["user_id", "counter_name"], name: "index_user_counters_on_user_id_and_counter_name", unique: true
+    t.string "values", default: [], array: true
+    t.index ["values"], name: "index_user_counters_on_values", using: :gin
   end
 
   create_table "users", force: :cascade do |t|
