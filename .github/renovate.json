@@ -2,6 +2,9 @@
     "extends": ["config:base"],
     "labels": [ "dependencies" ],
     "dependencyDashboard": true,
+    "vulnerabilityAlerts": {
+        "enabled": true
+    },
     "packageRules": [
         {
             "matchManagers": ["bundler"],
