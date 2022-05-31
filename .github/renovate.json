@@ -2,8 +2,9 @@
     "extends": ["config:base"],
     "labels": [ "dependencies" ],
     "dependencyDashboard": true,
-    "vulnerabilityAlerts": {
-        "enabled": true
+    "lockFileMaintenance": {
+        "enabled": true,
+        "schedule": ["at any time"]
     },
     "packageRules": [
         {
