@@ -14,7 +14,7 @@ resource "Resources" do
       do_request
 
       expect(status).to be(200)
-      expect(JSON.parse(response_body)["data"].count).to be(3)
+      expect(JSON.parse(response_body)["data"].count).to be(5)
     end
 
     it "includes no objects by default", document: false do
@@ -26,14 +26,23 @@ resource "Resources" do
     it "sorts by name ascending", document: false do
       do_request
 
-      expect(JSON.parse(response_body)["data"][1]["id"]).to eq("3")
+      expect(JSON.parse(response_body)["data"][1]["id"]).to eq("5")
     end
 
     it "get all resources with system name" do
       do_request "filter[system]": "GodTools"
 
       expect(status).to be(200)
-      expect(JSON.parse(response_body)["data"].count).to be(3)
+      expect(JSON.parse(response_body)["data"].count).to be(5)
+    end
+
+    it "get all resources, include variations" do
+      do_request "filter[system]" => "GodTools", :include => :variants
+
+      expect(status).to be(200)
+      json = JSON.parse(response_body)
+      metatool = json["data"].detect { |entry| entry["attributes"]["resource-type"] == "metatool" }
+      expect(metatool["relationships"]["variants"]["data"]).to match_array([{"id" => "1", "type" => "resource"}, {"id" => "5", "type" => "resource"}])
     end
 
     it "get all resources, include translations" do
@@ -107,9 +116,9 @@ resource "Resources" do
   context "PUT do" do
     let(:id) { 1 }
     let(:manifest) do
-      '<manifest xmlns="https://mobile-content-api.cru.org/xmlns/manifest"
-                        xmlns:content="https://mobile-content-api.cru.org/xmlns/content">
-       </manifest>'
+      "<manifest xmlns=\"https://mobile-content-api.cru.org/xmlns/manifest\"
+                        xmlns:content=\"https://mobile-content-api.cru.org/xmlns/content\">
+       </manifest>"
     end
 
     put "resources/:id" do
