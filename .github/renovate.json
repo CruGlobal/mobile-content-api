@@ -2,10 +2,6 @@
     "extends": ["config:base"],
     "labels": [ "dependencies" ],
     "dependencyDashboard": true,
-    "lockFileMaintenance": {
-        "enabled": true,
-        "schedule": ["at any time"]
-    },
     "packageRules": [
         {
             "matchManagers": ["bundler"],
