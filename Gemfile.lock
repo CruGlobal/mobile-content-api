@@ -131,7 +131,7 @@ GEM
     declarative-option (0.1.0)
     diff-lcs (1.5.0)
     docile (1.4.0)
-    dogstatsd-ruby (5.4.0)
+    dogstatsd-ruby (5.5.0)
     domain_name (0.5.20190701)
       unf (>= 0.0.5, < 1.0.0)
     dotenv (2.7.6)
