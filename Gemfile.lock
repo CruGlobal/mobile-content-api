@@ -222,7 +222,7 @@ GEM
     jmespath (1.6.1)
     json (2.5.1)
     jsonapi-renderer (0.2.2)
-    jwt (2.3.0)
+    jwt (2.4.0)
     listen (3.7.1)
       rb-fsevent (~> 0.10, >= 0.10.3)
       rb-inotify (~> 0.9, >= 0.9.10)
