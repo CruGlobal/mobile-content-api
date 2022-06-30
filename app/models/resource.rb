@@ -12,8 +12,10 @@ class Resource < ActiveRecord::Base
   has_many :translated_pages
   has_many :custom_manifests
   belongs_to :metatool, optional: true, class_name: "Resource"
+  belongs_to :default_variant, optional: true, class_name: "Resource"
   has_many :variants, class_name: "Resource", foreign_key: :metatool_id
   validate :metatool_reference_is_metatool, if: :metatool
+  validate :default_variant_reference_is_valid, if: :default_variant
 
   validates :name, presence: true
   validates :abbreviation, presence: true, uniqueness: true
@@ -94,6 +96,16 @@ class Resource < ActiveRecord::Base
   def metatool_reference_is_metatool
     unless metatool.resource_type&.name == "metatool"
       errors.add :metatool, "is not a metatool"
+    end
+  end
+
+  def default_variant_reference_is_valid
+    unless self.resource_type&.name == "metatool"
+      errors.add :default_variant, "should not be present unless the resource is a metatool"
+    end
+
+    unless variants.include?(default_variant)
+      errors.add :default_variant, "is not a valid variant"
     end
   end
 end

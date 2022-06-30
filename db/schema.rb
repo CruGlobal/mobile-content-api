@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_05_10_163049) do
+ActiveRecord::Schema.define(version: 2022_06_30_204104) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
@@ -184,7 +184,9 @@ ActiveRecord::Schema.define(version: 2022_05_10_163049) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.bigint "metatool_id"
+    t.bigint "default_variant_id"
     t.index ["abbreviation"], name: "index_resources_on_abbreviation", unique: true
+    t.index ["default_variant_id"], name: "index_resources_on_default_variant_id"
     t.index ["metatool_id"], name: "index_resources_on_metatool_id"
     t.index ["resource_type_id"], name: "index_resources_on_resource_type_id"
     t.index ["system_id"], name: "index_resources_on_system_id"
@@ -271,6 +273,7 @@ ActiveRecord::Schema.define(version: 2022_05_10_163049) do
   add_foreign_key "follow_ups", "languages"
   add_foreign_key "pages", "resources"
   add_foreign_key "resources", "resource_types"
+  add_foreign_key "resources", "resources", column: "default_variant_id"
   add_foreign_key "resources", "resources", column: "metatool_id"
   add_foreign_key "resources", "systems"
   add_foreign_key "translated_attributes", "attributes"

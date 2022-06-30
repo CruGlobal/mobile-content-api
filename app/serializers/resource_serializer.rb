@@ -16,6 +16,7 @@ class ResourceSerializer < ActiveModel::Serializer
   has_many :attachments
   has_many :custom_manifests, key: "custom-manifests"
   has_many :variants, if: -> { object&.resource_type&.name == "metatool" }
+  belongs_to :default_variant, if: -> { object&.resource_type&.name == "metatool" }
 
   def attributes(*args)
     hash = super
