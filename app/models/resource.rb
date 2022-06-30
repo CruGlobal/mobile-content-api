@@ -100,7 +100,7 @@ class Resource < ActiveRecord::Base
   end
 
   def default_variant_reference_is_valid
-    unless self.resource_type&.name == "metatool"
+    unless resource_type&.name == "metatool"
       errors.add :default_variant, "should not be present unless the resource is a metatool"
     end
 
