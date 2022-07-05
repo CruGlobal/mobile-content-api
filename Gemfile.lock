@@ -327,7 +327,7 @@ GEM
     rb-inotify (0.10.1)
       ffi (~> 1.0)
     redis (4.7.1)
-    regexp_parser (2.4.0)
+    regexp_parser (2.5.0)
     representable (3.0.4)
       declarative (< 0.1.0)
       declarative-option (< 0.2.0)
@@ -435,7 +435,7 @@ GEM
     unf (0.1.4)
       unf_ext
     unf_ext (0.0.8)
-    unicode-display_width (2.1.0)
+    unicode-display_width (2.2.0)
     validates_email_format_of (1.6.3)
       i18n
     web-console (4.2.0)
