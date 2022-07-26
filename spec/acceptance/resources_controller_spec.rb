@@ -45,11 +45,11 @@ resource "Resources" do
       expect(metatool["relationships"]["variants"]["data"]).to match_array([{"id" => "1", "type" => "resource"}, {"id" => "5", "type" => "resource"}])
     end
 
-    it "get all resources, include translations" do
-      do_request "filter[system]": "GodTools", include: :translations
+    it "get all resources, include latest-translations" do
+      do_request "filter[system]": "GodTools", include: "latest-translations"
 
       expect(status).to be(200)
-      expect(JSON.parse(response_body)["included"].count).to be(9)
+      expect(JSON.parse(response_body)["included"].count).to be(5)
     end
 
     it "only get name and system of resources" do
@@ -78,11 +78,11 @@ resource "Resources" do
       expect(JSON.parse(response_body)["included"]).to be_nil
     end
 
-    it "get resource, include translations" do
-      do_request include: :translations
+    it "get resource, include latest-translations" do
+      do_request include: "latest-translations"
 
       expect(status).to be(200)
-      expect(JSON.parse(response_body)["included"].count).to be(4)
+      expect(JSON.parse(response_body)["included"].count).to be(3)
     end
 
     it "has custom attributes", document: false do
