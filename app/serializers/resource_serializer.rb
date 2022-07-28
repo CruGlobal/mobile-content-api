@@ -8,9 +8,8 @@ class ResourceSerializer < ActiveModel::Serializer
   belongs_to :system
   belongs_to :metatool, if: -> { object&.resource_type&.name != "metatool" }
 
-  has_many :translations
   has_many :latest_translations, key: "latest-translations"
-  has_many :latest_drafts_translations, key: "latest_drafts_translations"
+  has_many :latest_drafts_translations, key: "latest-drafts-translations"
   has_many :pages
   has_many :tips
   has_many :attachments
