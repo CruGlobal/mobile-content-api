@@ -437,7 +437,7 @@ GEM
       unf_ext
     unf_ext (0.0.8)
     unicode-display_width (2.2.0)
-    validates_email_format_of (1.6.3)
+    validates_email_format_of (1.7.0)
       i18n
     web-console (4.2.0)
       actionview (>= 6.0.0)
