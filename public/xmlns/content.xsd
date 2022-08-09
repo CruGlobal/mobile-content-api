@@ -468,6 +468,13 @@
                     <xs:complexType>
                         <xs:sequence>
                             <xs:element name="header" type="content:textChild" />
+                            <xs:element ref="analytics:events" minOccurs="0">
+                                <xs:annotation>
+                                    <xs:documentation>Analytics Events to trigger for an accordion section. The default
+                                        trigger mode for accordion section analytics events is "visible".
+                                    </xs:documentation>
+                                </xs:annotation>
+                            </xs:element>
                             <xs:choice minOccurs="0" maxOccurs="unbounded">
                                 <xs:group ref="content:elements" />
                                 <xs:group ref="content:fixedSpacerOnly" />
