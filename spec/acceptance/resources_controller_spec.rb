@@ -60,6 +60,13 @@ resource "Resources" do
       expect(data["attributes"].keys).to eq ["name"]
       expect(data["relationships"].keys).to eq ["system"]
     end
+
+    it "gets all resources with abbreviation" do
+      do_request "filter[abbreviation]": "es"
+
+      expect(status).to be(200)
+      expect(JSON.parse(response_body)["data"].count).to be(1)
+    end
   end
 
   get "resources/:id" do
