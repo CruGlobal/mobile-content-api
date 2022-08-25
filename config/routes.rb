@@ -31,7 +31,11 @@ Rails.application.routes.draw do
   resources :custom_manifests, only: [:create, :update, :destroy, :show]
 
   scope "user" do
-    resources :counters, controller: "user_counters", only: [:index, :update]
+    resources :counters, controller: "user_counters", only: [:update] # Legacy route for GodTools Android v5.7.0-v6.0.0
+
+    scope "me" do
+      resources :counters, controller: "user_counters", only: [:index, :update]
+    end
   end
 
   get "monitors/lb"
