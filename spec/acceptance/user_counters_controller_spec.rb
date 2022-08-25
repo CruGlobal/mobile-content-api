@@ -13,7 +13,7 @@ resource "UserCounters" do
 
   let(:structure) { FactoryBot.attributes_for(:user_counter)[:structure] }
 
-  patch "user/counters/:id" do
+  patch "user/me/counters/:id" do
     let(:id) { "tool_opens.kgp" }
     let(:user) { FactoryBot.create(:user) }
     requires_okta_login
@@ -59,7 +59,7 @@ resource "UserCounters" do
     end
   end
 
-  get "user/counters" do
+  get "user/me/counters" do
     let(:user) { FactoryBot.create(:user) }
     let!(:user_counter) { FactoryBot.create(:user_counter, user: user, counter_name: "tool_opens.kgp", count: 50, decayed_count: 50, last_decay: 90.days.ago) }
     let!(:user_counter2) { FactoryBot.create(:user_counter, user: user, counter_name: "other.kgp", count: 60, decayed_count: 40, last_decay: 90.days.ago) }
