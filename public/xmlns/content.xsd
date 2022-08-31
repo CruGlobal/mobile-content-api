@@ -242,9 +242,26 @@
                             </xs:documentation>
                         </xs:annotation>
                     </xs:enumeration>
+                    <xs:enumeration value="required-versions">
+                        <xs:annotation>
+                            <xs:documentation>The required-android-version and required-ios-version properties.
+
+                                Platform support:
+                                - Android Not Supported
+                                - iOS Not Supported
+                                - Web Not Applicable
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:enumeration>
                 </xs:restriction>
             </xs:simpleType>
         </xs:list>
+    </xs:simpleType>
+
+    <xs:simpleType name="version">
+        <xs:restriction base="xs:token">
+            <xs:pattern value="[0-9]+(\.[0-9]+)*" />
+        </xs:restriction>
     </xs:simpleType>
     <!-- endregion Value Definitions -->
 
@@ -281,6 +298,20 @@
             <xs:annotation>
                 <xs:documentation>This attributes specifies a list of required features in order for this element to be
                     rendered. By default no features are required to render an element.
+                </xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="required-android-version" type="content:version">
+            <xs:annotation>
+                <xs:documentation>This attribute specifies a minimum version of the android app in order for this
+                    element to be rendered. By default elements are rendered on all versions of Android.
+                </xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="required-ios-version" type="content:version">
+            <xs:annotation>
+                <xs:documentation>This attribute specifies a minimum version of the android app in order for this
+                    element to be rendered. By default elements are rendered on all versions of Android.
                 </xs:documentation>
             </xs:annotation>
         </xs:attribute>
