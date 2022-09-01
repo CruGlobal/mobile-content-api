@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<page xmlns="https://mobile-content-api.cru.org/xmlns/tract"
+    xmlns:content="https://mobile-content-api.cru.org/xmlns/content">
+    <hero>
+        <content:paragraph>
+            <content:button type="url" url="https://www.example.com" required-device-type="web">
+                <content:text>Button</content:text>
+            </content:button>
+            <content:image resource="a.jpg" required-device-type="web" />
+            <content:text i18n-id="087b7293-70aa-41c7-b6cc-5d397a4eb41b" required-device-type="web mobile">God loves you and created you to know him personally.</content:text>
+            <content:paragraph required-device-type="mobile">
+                <content:text required-device-type="ios" />
+                <content:image resource="a.jpg" required-device-type="android" />
+            </content:paragraph>
+            <content:image resource="a.jpg" required-device-type="android web" />
+        </content:paragraph>
+    </hero>
+</page>
