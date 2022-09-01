@@ -326,8 +326,8 @@
         </xs:attribute>
         <xs:attribute name="required-ios-version" type="content:version">
             <xs:annotation>
-                <xs:documentation>This attribute specifies a minimum version of the android app in order for this
-                    element to be rendered. By default elements are rendered on all versions of Android.
+                <xs:documentation>This attribute specifies a minimum version of the iOS app in order for this
+                    element to be rendered. By default elements are rendered on all versions of iOS.
                 </xs:documentation>
             </xs:annotation>
         </xs:attribute>
