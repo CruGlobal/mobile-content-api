@@ -291,6 +291,15 @@
             <xs:annotation>
                 <xs:documentation>This attribute specifies that the element it is on is only rendered on the specified
                     device types. By default elements are rendered on all devices.
+
+                    This attribute was renamed to "required-device-type", this is currently being kept for backwards
+                    compatibility until it is safe to remove this attribute. This attribute can be removed after
+                    September 2023 depending on implementation status.
+
+                    Support status of "required-device-type":
+                    Android: Not Supported as of 6.0.1
+                    iOS: Not Supported as of 6.0.2
+                    Web: Not Supported
                 </xs:documentation>
             </xs:annotation>
         </xs:attribute>
@@ -298,6 +307,13 @@
             <xs:annotation>
                 <xs:documentation>This attributes specifies a list of required features in order for this element to be
                     rendered. By default no features are required to render an element.
+                </xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="required-device-type" type="content:deviceTypes">
+            <xs:annotation>
+                <xs:documentation>This attribute specifies that the element it is on is only rendered on the specified
+                    device types. By default elements are rendered on all devices.
                 </xs:documentation>
             </xs:annotation>
         </xs:attribute>
