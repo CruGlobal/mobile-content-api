@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class UsersController < WithUserController
-  prepend_before_action do set_user(:id); end
+  prepend_before_action { set_user(:id) }
 
   def show
     render json: @user
