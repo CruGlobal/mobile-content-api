@@ -36,14 +36,6 @@ Rails.application.routes.draw do
   patch "users/:user_id/counters/:id", to: "user_counters#update"
   get "users/:id", to: "users#show"
 
-  scope "user" do
-    resources :counters, controller: "user_counters", only: [:update] # Legacy route for GodTools Android v5.7.0-v6.0.0
-
-    scope "me" do
-      resources :counters, controller: "user_counters", only: [:index, :update]
-    end
-  end
-
   get "monitors/lb"
   get "monitors/commit"
 

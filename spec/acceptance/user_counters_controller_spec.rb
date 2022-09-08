@@ -59,22 +59,6 @@ resource "UserCounters" do
     end
   end
 
-  get "user/me/counters" do
-    let(:user) { FactoryBot.create(:user) }
-    let!(:user_counter) { FactoryBot.create(:user_counter, user: user, counter_name: "tool_opens.kgp", count: 50, decayed_count: 50, last_decay: 90.days.ago) }
-    let!(:user_counter2) { FactoryBot.create(:user_counter, user: user, counter_name: "other.kgp", count: 60, decayed_count: 40, last_decay: 90.days.ago) }
-    requires_okta_login
-
-    it "gets counts" do
-      do_request
-
-      expect(status).to eq(200)
-      today = Date.today.to_s
-      expected_result = %({"data":[{"id":"tool_opens.kgp","type":"user-counter","attributes":{"count":50,"decayed-count":25.00367978478838,"last-decay":"#{today}"}},{"id":"other.kgp","type":"user-counter","attributes":{"count":60,"decayed-count":20.002943827830705,"last-decay":"#{today}"}}]})
-      expect(response_body).to eq(expected_result)
-    end
-  end
-
   patch "user/counters/:id" do
     let(:id) { "tool_opens.kgp" }
     let(:user) { FactoryBot.create(:user) }
