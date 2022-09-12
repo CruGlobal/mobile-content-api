@@ -52,11 +52,17 @@ class ResourcesController < ApplicationController
   end
 
   def all_resources
-    if params["filter"]
-      Resource.system_name(params["filter"]["system"])
+    resources = if params.dig(:filter, :system)
+      Resource.system_name(params[:filter][:system])
     else
       Resource.all
     end
+
+    if params.dig(:filter, :abbreviation)
+      resources = resources.where(abbreviation: params[:filter][:abbreviation])
+    end
+
+    resources
   end
 
   def load_resource
