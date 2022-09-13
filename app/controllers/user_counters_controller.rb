@@ -1,8 +1,10 @@
 # frozen_string_literal: true
 
 class UserCountersController < WithUserController
+  prepend_before_action :set_user
+
   def update
-    counter = current_user.user_counters.where(counter_name: counter_name).first_or_initialize
+    counter = @user.user_counters.where(counter_name: counter_name).first_or_initialize
     increment = permitted_params[:increment].to_f
     counter.count += increment
     counter.decay
@@ -12,7 +14,7 @@ class UserCountersController < WithUserController
   end
 
   def index
-    counters = current_user.user_counters
+    counters = @user.user_counters
     # decay but don't save as it's not needed and it'll be more efficient this way -- the in-memory decay calculation is very fast
     counters.each(&:decay)
     render json: counters, status: :ok
