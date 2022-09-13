@@ -1,0 +1,2 @@
+class FavoriteTool < ApplicationRecord
+end

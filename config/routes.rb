@@ -36,6 +36,10 @@ Rails.application.routes.draw do
   patch "users/:user_id/counters/:id", to: "user_counters#update"
   get "users/:id", to: "users#show"
 
+  scope "user/me/relationships" do
+    resources :favorite_tools, :path => 'favorite-tools', only: [:create, :destroy]
+  end
+
   get "monitors/lb"
   get "monitors/commit"
 
