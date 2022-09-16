@@ -37,7 +37,7 @@ Rails.application.routes.draw do
   get "users/:id", to: "users#show"
 
   scope "user/me/relationships" do
-    resources :favorite_tools, :path => 'favorite-tools', only: [:create, :destroy]
+    resources :favorite_tools, :path => 'favorite-tools', only: [:index, :create, :destroy]
   end
 
   get "monitors/lb"

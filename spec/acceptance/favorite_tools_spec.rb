@@ -11,6 +11,25 @@ resource "FavoriteTools" do
   let(:resource) { Resource.first }
   let(:resource2) { Resource.second }
 
+  get "user/me/relationships/favorite-tools" do
+    let(:user) { FactoryBot.create(:user) }
+    let(:user2) { FactoryBot.create(:user) }
+    let!(:favorite1) { FactoryBot.create(:favorite_tool, user_id: user.id, tool_id: resource.id) }
+    let!(:favorite2) { FactoryBot.create(:favorite_tool, user_id: user.id, tool_id: resource2.id) }
+    let!(:favorite3) { FactoryBot.create(:favorite_tool, user_id: user2.id, tool_id: resource3.id) }
+    let(:id) { resource.id.to_s }
+    let(:resource3) { Resource.third }
+    requires_okta_login
+
+    it "returns an index of all favorited tools" do
+      expect {
+        do_request
+        json_response = JSON.parse(response_body)["data"]
+        expect(json_response).to eq([{"type" => "resource", "id" => resource.id.to_s}, {"type" => "resource", "id" => resource2.id.to_s}])
+      }
+    end
+  end
+
   post "user/me/relationships/favorite-tools" do
     let(:user) { FactoryBot.create(:user) }
     requires_okta_login
@@ -23,7 +42,7 @@ resource "FavoriteTools" do
       json_response = JSON.parse(response_body)["data"]
       expect(json_response).to eq([{"type" => "resource", "id" => resource.id.to_s}, {"type" => "resource", "id" => resource2.id.to_s}])
     end
-    it "checks if a favorite already exists" do
+    it "succeeds if a favorite is already favorited" do
       FactoryBot.create(:favorite_tool, user_id: user.id, tool_id: resource.id)
       expect {
         do_request data: [{ "type" => "resource", "id" => resource.id.to_s }, { "type" => "resource", "id" => resource2.id.to_s }]
@@ -35,7 +54,40 @@ resource "FavoriteTools" do
       expect {
         do_request data: [{ "type" => "resource", "id" => "-1" }]
       }.to change { FavoriteTool.count }.by(0)
-      # TODO add error check here
+      json_error = JSON.parse(response_body)["errors"]
+      expect(json_error).to eq([["-1", "invalid tool id"]])
+    end
+  end
+
+  delete "user/me/relationships/favorite-tools/:id" do
+    let(:user) { FactoryBot.create(:user) }
+    let!(:favorite1) { FactoryBot.create(:favorite_tool, user_id: user.id, tool_id: resource.id) }
+    let!(:favorite2) { FactoryBot.create(:favorite_tool, user_id: user.id, tool_id: resource2.id) }
+    let(:id) { resource.id.to_s }
+    let(:resource3) { Resource.third }
+    requires_okta_login
+
+    it "deletes a favorite" do
+      expect {
+        do_request data: [{ "type" => "resource", "id" => resource.id.to_s }]
+      }.to change { FavoriteTool.count }.by(-1)
+      expect(FavoriteTool.pluck(:user_id, :tool_id)).to match_array([[user.id, resource2.id]])
+      json_response = JSON.parse(response_body)["data"]
+      expect(json_response).to eq([{"type" => "resource", "id" => resource2.id.to_s}])
+    end
+    it "succeeds if a favorite was not favorited" do
+      expect {
+        do_request data: [{ "type" => "resource", "id" => resource.id.to_s }, { "type" => "resource", "id" => resource3.id.to_s }]
+      }.to change { FavoriteTool.count }.by(-1)
+      json_response = JSON.parse(response_body)["data"]
+      expect(json_response).to eq([{"type" => "resource", "id" => resource2.id.to_s}])
+    end
+    it "returns an error if the tools id is not found" do
+      expect {
+        do_request data: [{ "type" => "resource", "id" => "-1" }]
+      }.to change { FavoriteTool.count }.by(0)
+      json_error = JSON.parse(response_body)["errors"]
+      expect(json_error).to eq([["-1", "invalid tool id"]])
     end
   end
 end
