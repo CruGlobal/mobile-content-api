@@ -25,7 +25,7 @@ resource "FavoriteTools" do
       expect {
         do_request
         json_response = JSON.parse(response_body)["data"]
-        expect(json_response).to eq([{"type" => "resource", "id" => resource.id.to_s}, {"type" => "resource", "id" => resource2.id.to_s}])
+        expect(json_response).to match_array([{"type" => "resource", "id" => resource.id.to_s}, {"type" => "resource", "id" => resource2.id.to_s}])
       }
     end
   end
@@ -40,7 +40,7 @@ resource "FavoriteTools" do
       }.to change { FavoriteTool.count }.by(2)
       expect(FavoriteTool.pluck(:user_id, :tool_id)).to match_array([[user.id, resource.id], [user.id, resource2.id]])
       json_response = JSON.parse(response_body)["data"]
-      expect(json_response).to eq([{"type" => "resource", "id" => resource.id.to_s}, {"type" => "resource", "id" => resource2.id.to_s}])
+      expect(json_response).to match_array([{"type" => "resource", "id" => resource.id.to_s}, {"type" => "resource", "id" => resource2.id.to_s}])
     end
     it "succeeds if a favorite is already favorited" do
       FactoryBot.create(:favorite_tool, user_id: user.id, tool_id: resource.id)
@@ -48,7 +48,7 @@ resource "FavoriteTools" do
         do_request data: [{"type" => "resource", "id" => resource.id.to_s}, {"type" => "resource", "id" => resource2.id.to_s}]
       }.to change { FavoriteTool.count }.by(1)
       json_response = JSON.parse(response_body)["data"]
-      expect(json_response).to eq([{"type" => "resource", "id" => resource.id.to_s}, {"type" => "resource", "id" => resource2.id.to_s}])
+      expect(json_response).to match_array([{"type" => "resource", "id" => resource.id.to_s}, {"type" => "resource", "id" => resource2.id.to_s}])
     end
     it "returns an error if the tools id is not found" do
       expect {
@@ -72,21 +72,21 @@ resource "FavoriteTools" do
       }.to change { FavoriteTool.count }.by(-1)
       expect(FavoriteTool.pluck(:user_id, :tool_id)).to match_array([[user.id, resource2.id]])
       json_response = JSON.parse(response_body)["data"]
-      expect(json_response).to eq([{"type" => "resource", "id" => resource2.id.to_s}])
+      expect(json_response).to match_array([{"type" => "resource", "id" => resource2.id.to_s}])
     end
     it "succeeds if a favorite was not favorited" do
       expect {
         do_request data: [{"type" => "resource", "id" => resource.id.to_s}, {"type" => "resource", "id" => resource3.id.to_s}]
       }.to change { FavoriteTool.count }.by(-1)
       json_response = JSON.parse(response_body)["data"]
-      expect(json_response).to eq([{"type" => "resource", "id" => resource2.id.to_s}])
+      expect(json_response).to match_array([{"type" => "resource", "id" => resource2.id.to_s}])
     end
     it "returns an error if the tools id is not found" do
       expect {
         do_request data: [{"type" => "resource", "id" => "-1"}]
       }.to change { FavoriteTool.count }.by(0)
       json_error = JSON.parse(response_body)["errors"]
-      expect(json_error).to eq([["-1", "invalid tool id"]])
+      expect(json_error).to match_array([["-1", "invalid tool id"]])
     end
   end
 end
