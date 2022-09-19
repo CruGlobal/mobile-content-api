@@ -11,7 +11,7 @@ resource "FavoriteTools" do
   let(:resource) { Resource.first }
   let(:resource2) { Resource.second }
 
-  get "user/me/relationships/favorite-tools" do
+  get "users/me/relationships/favorite-tools" do
     let(:user) { FactoryBot.create(:user) }
     let(:user2) { FactoryBot.create(:user) }
     let!(:favorite1) { FactoryBot.create(:favorite_tool, user_id: user.id, tool_id: resource.id) }
@@ -30,7 +30,7 @@ resource "FavoriteTools" do
     end
   end
 
-  post "user/me/relationships/favorite-tools" do
+  post "users/me/relationships/favorite-tools" do
     let(:user) { FactoryBot.create(:user) }
     requires_okta_login
 
@@ -59,11 +59,10 @@ resource "FavoriteTools" do
     end
   end
 
-  delete "user/me/relationships/favorite-tools/:id" do
+  delete "users/me/relationships/favorite-tools" do
     let(:user) { FactoryBot.create(:user) }
     let!(:favorite1) { FactoryBot.create(:favorite_tool, user_id: user.id, tool_id: resource.id) }
     let!(:favorite2) { FactoryBot.create(:favorite_tool, user_id: user.id, tool_id: resource2.id) }
-    let(:id) { resource.id.to_s }
     let(:resource3) { Resource.third }
     requires_okta_login
 
