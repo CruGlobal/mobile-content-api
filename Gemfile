@@ -74,7 +74,9 @@ gem "nokogiri"
 gem "oj", "~> 3.13.13"
 gem "ougai", "~> 2.0"
 gem "raddocs"
-gem "redis"
+# action cable currently requires redis < 5. This should be fixed in rails >= 7.0.4
+# relevant issue: https://github.com/redis/redis-rb/issues/1142
+gem "redis", "< 5"
 gem "rest-client", "~> 2.1.0"
 gem "rollbar"
 gem "rubyzip", ">= 1.2.2"
