@@ -22,11 +22,9 @@ resource "FavoriteTools" do
     requires_okta_login
 
     it "returns an index of all favorited tools" do
-      expect {
-        do_request
-        json_response = JSON.parse(response_body)["data"]
-        expect(json_response).to match_array([{"type" => "resource", "id" => resource.id.to_s}, {"type" => "resource", "id" => resource2.id.to_s}])
-      }
+      do_request
+      json_response = JSON.parse(response_body)["data"]
+      expect(json_response).to match_array([{"type" => "resource", "id" => resource.id.to_s}, {"type" => "resource", "id" => resource2.id.to_s}])
     end
   end
 
