@@ -1,6 +1,7 @@
 class User < ApplicationRecord
   has_many :user_counters
   has_many :favorite_tools
+  has_many :tools, through: :favorite_tools
 
   validates :sso_guid, uniqueness: true, presence: true
 
