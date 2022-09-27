@@ -31,7 +31,7 @@ class FavoriteToolsController < WithUserController
 
   def validate_ids
     missing = tool_ids - Resource.pluck(:id).collect(&:to_s)
-    error_response = missing.collect { |tool_id| [tool_id, "invalid tool id"] }
+    error_response = missing.collect { |tool_id| { "code" => "invalid_tool", "meta" => { "tool_id" => tool_id } } }
     render(json: {errors: error_response}) if error_response.any?
   end
 

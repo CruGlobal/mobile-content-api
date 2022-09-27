@@ -53,7 +53,7 @@ resource "FavoriteTools" do
         do_request data: [{"type" => "resource", "id" => "-1"}]
       }.to change { FavoriteTool.count }.by(0)
       json_error = JSON.parse(response_body)["errors"]
-      expect(json_error).to eq([["-1", "invalid tool id"]])
+      expect(json_error).to eq([{"code" => "invalid_tool", "meta" => { "tool_id" => "-1" }}])
     end
   end
 
@@ -84,7 +84,7 @@ resource "FavoriteTools" do
         do_request data: [{"type" => "resource", "id" => "-1"}]
       }.to change { FavoriteTool.count }.by(0)
       json_error = JSON.parse(response_body)["errors"]
-      expect(json_error).to match_array([["-1", "invalid tool id"]])
+      expect(json_error).to eq([{"code" => "invalid_tool", "meta" => { "tool_id" => "-1" }}])
     end
   end
 end
