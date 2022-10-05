@@ -66,10 +66,6 @@ class AuthToken < ActiveModelSerializers::Model
   end
 
   def user_id
-    if @user
-      @user.id
-    else
-      nil
-    end
+    @user&.id
   end
 end
