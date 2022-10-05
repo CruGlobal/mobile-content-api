@@ -40,6 +40,8 @@ resource "Auth" do
       do_request data: {type: type, attributes: {okta_access_token: valid_access_token}}
 
       expect(status).to be(201)
+      data = JSON.parse(response_body)["data"]
+      expect(data["attributes"]["user-id"]).to eq(user.id)
     end
 
     it "returns error with a expired Okta access_token" do

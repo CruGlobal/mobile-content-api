@@ -64,4 +64,8 @@ class AuthToken < ActiveModelSerializers::Model
   def expiration
     24.hours.from_now
   end
+
+  def user_id
+    @user&.id
+  end
 end
