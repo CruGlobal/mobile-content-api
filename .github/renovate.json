@@ -12,5 +12,6 @@
             "matchPackageNames": ["ruby"],
             "allowedVersions": "< 2.8"
         }
-    ]
+    ],
+    "lockFileMaintenance": { "enabled": true }
 }
