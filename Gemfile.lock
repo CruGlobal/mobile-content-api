@@ -475,7 +475,7 @@ DEPENDENCIES
   bundler-audit
   byebug
   capybara (>= 3.26)
-  ddtrace
+  ddtrace (~> 0.54.2)
   dogstatsd-ruby
   dotenv-rails
   equivalent-xml (~> 0.6.0)
