@@ -248,7 +248,7 @@
 
                                 Platform support:
                                 - Android Not Supported
-                                - iOS Not Supported
+                                - iOS since v6.0.3 (Oct 2022)
                                 - Web Not Applicable
                             </xs:documentation>
                         </xs:annotation>
@@ -298,7 +298,7 @@
 
                     Support status of "required-device-type":
                     Android: Not Supported as of 6.0.1
-                    iOS: Not Supported as of 6.0.2
+                    iOS: v6.0.3 (Oct 2022)
                     Web: Not Supported
                 </xs:documentation>
             </xs:annotation>
