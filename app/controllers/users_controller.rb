@@ -1,9 +1,19 @@
 # frozen_string_literal: true
 
 class UsersController < WithUserController
-  prepend_before_action { set_user(:id) }
-
   def show
     render json: @user
+  end
+
+  def destroy
+    @user.user_counters.destroy_all
+    @user.favorite_tools.destroy_all
+    render json: "", status: 204
+  end
+
+  protected
+
+  def user_id_attribute
+    :id
   end
 end

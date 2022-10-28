@@ -68,7 +68,13 @@ class ApplicationController < ActionController::Base
   def render_unauthorized
     authorization = AccessCode.new
     authorization.errors.add(:id, "Unauthorized")
-    render_error(authorization, :unauthorized)
+    render_error(authorization, :unauthorized) # 401
+  end
+
+  def render_forbidden
+    authorization = AccessCode.new
+    authorization.errors.add(:id, "Frobidden")
+    render_error(authorization, :forbidden) # 403
   end
 
   def render_api_error(exception, status)

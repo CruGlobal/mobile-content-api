@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
 class UserCountersController < WithUserController
-  prepend_before_action :set_user
-
   def update
     counter = @user.user_counters.where(counter_name: counter_name).first_or_initialize
     increment = permitted_params[:increment].to_f
