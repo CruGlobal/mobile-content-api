@@ -115,11 +115,12 @@ resource "UsersController" do
       end
     end
     context "someone else" do
-      let!(:id) { puts("Using id #{user2.id}"); user2.id }
+      let!(:id) {
+        user2.id
+      }
       requires_okta_login
 
       it "returns 403" do
-        puts("Using id #{id}")
         do_request
         expect(status).to eq(403)
       end
@@ -129,7 +130,6 @@ resource "UsersController" do
       requires_okta_login
 
       it "returns 404" do
-        puts("Using id #{id}")
         do_request
         expect(status).to eq(404)
       end
