@@ -112,6 +112,7 @@ resource "UsersController" do
         expect(status).to eq(204)
         expect(FavoriteTool.all).to eq([favorite_tool3])
         expect(UserCounter.all).to eq([user_counter3])
+        expect(User.find_by(id: id)).to be_nil
       end
     end
     context "someone else" do
