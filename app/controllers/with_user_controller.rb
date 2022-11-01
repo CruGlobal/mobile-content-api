@@ -12,7 +12,7 @@ class WithUserController < ApplicationController
     @user = params[user_id_attribute].blank? || params[user_id_attribute] == "me" ? current_user : User.find_by(id: params[user_id_attribute])
 
     # requested is authorized if using okta to provide a valid user id, and no specific user is set
-    return if authorization && current_user && params[user_id_attribute].empty?
+    return if authorization && current_user && params[user_id_attribute].blank?
 
     # can always operate on your own user
     return if @user && @user == current_user
