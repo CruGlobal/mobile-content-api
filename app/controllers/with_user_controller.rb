@@ -5,7 +5,7 @@ class WithUserController < ApplicationController
 
   def authorize!
     # make sure we have a valid auth to begin with
-    render_unauthorized and return unless current_user_id && current_user && authorization
+    render_unauthorized and return unless authorization && current_user_id && current_user
 
     # all with user controllers also operate on a subject, sometimes "me".
     # we want this here, after the token is checked, but before the subject authorization is checked
