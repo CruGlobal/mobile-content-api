@@ -73,7 +73,7 @@ class ApplicationController < ActionController::Base
 
   def render_forbidden
     authorization = AccessCode.new
-    authorization.errors.add(:id, "Frobidden")
+    authorization.errors.add(:id, "Forbidden")
     render_error(authorization, :forbidden) # 403
   end
 
