@@ -130,9 +130,18 @@ resource "UsersController" do
       let!(:id) { User.maximum(:id) + 1 }
       requires_okta_login
 
-      it "returns 404" do
+      it "returns 403" do
         do_request
-        expect(status).to eq(404)
+        expect(status).to eq(403)
+      end
+    end
+    context "self deleted" do
+      requires_okta_login
+
+      it "returns 401" do
+        user.destroy
+        do_request
+        expect(status).to eq(401)
       end
     end
   end
