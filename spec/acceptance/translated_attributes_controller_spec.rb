@@ -11,7 +11,7 @@ resource "TranslatedAttributes" do
 
   post "translated_attributes" do
     let(:attrs) do
-      {attribute_id: 2, translation_id: 2, value: "translated attr"}
+      {resource_id: Resource.first.id, key: "key", value: "translated attr", onesky_phrase_id: "phrase", required: true}
     end
     let(:id) { 100 }
 
@@ -21,7 +21,7 @@ resource "TranslatedAttributes" do
 
     requires_authorization
 
-    it "create a Translated Attribute" do
+    it "create a TranslatedAttribute" do
       do_request data: {type: type, attributes: attrs}
 
       expect(status).to be(204)
@@ -38,7 +38,7 @@ resource "TranslatedAttributes" do
   put "translated_attributes/:id" do
     let(:id) { 1 }
     let(:attrs) do
-      {attribute_id: 2, translation_id: 3, value: "updated translation"}
+      {key: "key", translation_id: 3, value: "updated translation"}
     end
 
     requires_authorization

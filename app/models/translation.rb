@@ -5,6 +5,7 @@ class Translation < ActiveRecord::Base
 
   belongs_to :resource, touch: true
   belongs_to :language
+  has_many :translation_attributes
 
   validates :version, presence: true, uniqueness: {scope: [:resource, :language]}
   validates :resource, presence: true

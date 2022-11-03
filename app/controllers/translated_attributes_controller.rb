@@ -35,6 +35,6 @@ class TranslatedAttributesController < SecureController
   end
 
   def permitted_params
-    permit_params(:value, :attribute_id, :translation_id)
+    permit_params(:value, :key, :resource_id, :onesky_phrase_id, :required)
   end
 end

@@ -119,7 +119,7 @@ attribute = Attribute.find_or_create_by!(resource: kgp, key: "translate_me", val
 
 Attribute.find_or_create_by!(resource: satisfied, key: "another_attribute", value: "blah blah blah")
 
-TranslatedAttribute.find_or_create_by!(parent_attribute: attribute, translation: german_kgp, value: "german attribute")
+TranslationAttribute.find_or_create_by!(key: "another_attribute", translation: german_kgp, value: "german attribute")
 
 if Rails.env == "test"
   Attachment.class_eval do
