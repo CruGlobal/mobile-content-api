@@ -123,10 +123,12 @@ GEM
     crack (0.4.5)
       rexml
     crass (1.0.6)
-    ddtrace (0.54.2)
-      debase-ruby_core_source (<= 0.10.14)
+    ddtrace (1.5.2)
+      debase-ruby_core_source (>= 0.10.16, <= 0.10.17)
+      libdatadog (~> 0.7.0.1.1)
+      libddwaf (~> 1.5.1.0.0)
       msgpack
-    debase-ruby_core_source (0.10.14)
+    debase-ruby_core_source (0.10.17)
     declarative (0.0.20)
     declarative-option (0.1.0)
     diff-lcs (1.5.0)
@@ -223,6 +225,9 @@ GEM
     json (2.6.2)
     jsonapi-renderer (0.2.2)
     jwt (2.5.0)
+    libdatadog (0.7.0.1.1)
+    libddwaf (1.5.1.0.0)
+      ffi (~> 1.0)
     listen (3.7.1)
       rb-fsevent (~> 0.10, >= 0.10.3)
       rb-inotify (~> 0.9, >= 0.9.10)
@@ -475,8 +480,8 @@ DEPENDENCIES
   bundler-audit
   byebug
   capybara (>= 3.26)
-  ddtrace (~> 0.54.2)
-  dogstatsd-ruby
+  ddtrace (~> 1.4)
+  dogstatsd-ruby (~> 5.3)
   dotenv-rails
   equivalent-xml (~> 0.6.0)
   factory_bot_rails
@@ -522,4 +527,4 @@ RUBY VERSION
    ruby 2.7.6p219
 
 BUNDLED WITH
-   2.3.12
+   2.3.11
