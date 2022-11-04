@@ -132,6 +132,13 @@ Rails.application.configure do
   # Action cable
   config.secret_key_base = ENV["SECRET_KEY_BASE"]
   config.action_cable.disable_request_forgery_protection = true
+
+  config.middleware.insert_before 0, Rack::Cors do
+    allow do
+      origins "*"
+      resource "*", headers: :any, methods: [:get, :post, :put, :patch, :options, :delete]
+    end
+  end
 end
 
 Rails.application.routes.default_url_options = {
