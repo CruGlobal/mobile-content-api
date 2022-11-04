@@ -136,8 +136,7 @@ Rails.application.configure do
   config.middleware.insert_before 0, Rack::Cors do
     allow do
       origins(/\Ahttps:\/\/mobilecontentadmin(-stage)?\.cru\.org\z/)
-      credentials true
-      resource "*", headers: :any, methods: [:get, :post, :put, :patch, :options, :delete]
+      resource "*", headers: :any, methods: [:get, :post, :put, :patch, :options, :delete], credentials: true
     end
 
     allow do
