@@ -136,6 +136,7 @@ resource "UsersController" do
       end
     end
     context "self deleted" do
+      let!(:id) { user.id }
       requires_okta_login
 
       it "returns 401" do
