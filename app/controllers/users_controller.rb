@@ -8,7 +8,7 @@ class UsersController < WithUserController
   def destroy
     @user.user_counters.destroy_all
     @user.favorite_tools.destroy_all
-    @user.destroy
+    @user.destroy!
     render json: "", status: 204
   end
 
