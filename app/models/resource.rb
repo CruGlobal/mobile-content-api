@@ -10,6 +10,7 @@ class Resource < ActiveRecord::Base
   has_many :language_attributes
   has_many :attachments
   has_many :translated_pages
+  has_many :translated_attributes
   has_many :custom_manifests
   belongs_to :metatool, optional: true, class_name: "Resource"
   belongs_to :default_variant, optional: true, class_name: "Resource"

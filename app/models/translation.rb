@@ -95,18 +95,36 @@ class Translation < ActiveRecord::Base
   def push_published_to_s3
     return unless is_published
 
-    name_desc_onesky if resource.uses_onesky?
+    phrases = manifest_translated_phrases
+    name_desc_onesky(phrases) if resource.uses_onesky?
+    create_translated_attributes(phrases) if resource.uses_onesky?
 
     Package.new(self).push_to_s3
   end
 
-  def name_desc_onesky
+  def name_desc_onesky(phrases)
     logger.info "Updating translated name and description for translation with id: #{id}"
 
-    p = manifest_translated_phrases
-    self.translated_name = p["name"]
-    self.translated_description = p["description"]
-    self.translated_tagline = p["tagline"]
+    self.translated_name = phrases["name"]
+    self.translated_description = phrases["description"]
+    self.translated_tagline = phrases["tagline"]
+  end
+
+  def create_translated_attributes(phrases)
+    translation_attribute_ids = []
+    resource.translated_attributes.each do |translated_attribute|
+      translation = phrases[translated_attribute.onesky_phrase_id]
+
+      if translation.present?
+        translation_attribute = translation_attributes.where(key: translated_attributes.key).first_or_create
+        translation_attribute.update(value: translation)
+        translation_attribute_ids << translation_attribute.id
+      elsif translated_attribute.required
+        raise Error::TextNotFoundError, "Translated phrase not found: ID: #{translated_attribute.onesky_phrase_id}"
+      end
+    end
+
+    translation_attributes.where.not(id: translation_attribute_ids).delete_all
   end
 
   def download_translated_phrases(filename)
