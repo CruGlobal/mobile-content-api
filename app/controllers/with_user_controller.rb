@@ -9,7 +9,7 @@ class WithUserController < ApplicationController
 
     # all with user controllers also operate on a subject, sometimes "me".
     # we want this here, after the token is checked, but before the subject authorization is checked
-    @user = params[user_id_attribute].blank? || params[user_id_attribute] == "me" ? current_user : User.find_by(id: params[user_id_attribute])
+    @user = (params[user_id_attribute].blank? || params[user_id_attribute] == "me") ? current_user : User.find_by(id: params[user_id_attribute])
 
     # currently, if trying to operate on a specific @user, you can only operate on your own user data, but this may change later
     render_forbidden and return if @user != current_user
