@@ -2,7 +2,7 @@ FactoryBot.define do
   factory :custom_tip do
     structure do
       <<~XML
-        <tip xmlns=\"https://mobile-content-api.cru.org/xmlns/training\" xmlns:content=\"https://mobile-content-api.cru.org/xmlns/content\" type=\"prepare\">
+        <tip xmlns="https://mobile-content-api.cru.org/xmlns/training" xmlns:content="https://mobile-content-api.cru.org/xmlns/content" type="prepare">
           <pages>
             <page>
               <content:paragraph>
