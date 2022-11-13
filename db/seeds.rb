@@ -119,8 +119,6 @@ attribute = Attribute.find_or_create_by!(resource: kgp, key: "translate_me", val
 
 Attribute.find_or_create_by!(resource: satisfied, key: "another_attribute", value: "blah blah blah")
 
-TranslationAttribute.find_or_create_by!(key: "another_attribute", translation: german_kgp, value: "german attribute")
-
 if Rails.env == "test"
   Attachment.class_eval do
     def url

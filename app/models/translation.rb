@@ -95,9 +95,13 @@ class Translation < ActiveRecord::Base
   def push_published_to_s3
     return unless is_published
 
-    phrases = manifest_translated_phrases
-    name_desc_onesky(phrases) if resource.uses_onesky?
-    create_translated_attributes(phrases) if resource.uses_onesky?
+    ActiveRecord::Base.transaction do
+      if resource.uses_onesky?
+        phrases = manifest_translated_phrases
+        name_desc_onesky(phrases)
+        create_translated_attributes(phrases)
+      end
+    end
 
     Package.new(self).push_to_s3
   end
@@ -116,7 +120,7 @@ class Translation < ActiveRecord::Base
       translation = phrases[translated_attribute.onesky_phrase_id]
 
       if translation.present?
-        translation_attribute = translation_attributes.where(key: translated_attributes.key).first_or_create
+        translation_attribute = translation_attributes.where(key: translated_attribute.key).first_or_initialize
         translation_attribute.update(value: translation)
         translation_attribute_ids << translation_attribute.id
       elsif translated_attribute.required
