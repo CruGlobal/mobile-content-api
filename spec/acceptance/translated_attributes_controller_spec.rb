@@ -19,7 +19,7 @@ resource "TranslatedAttributes" do
     it "create a TranslatedAttribute" do
       expect do
         do_request data: {type: type, attributes: attrs}
-      end.to change { TranslatedAttribute.count}.by(1)
+      end.to change { TranslatedAttribute.count }.by(1)
 
       expect(status).to be(204)
       expect(response_body).to be_empty
@@ -52,7 +52,7 @@ resource "TranslatedAttributes" do
       it "delete a Translated Attribute" do
         expect do
           do_request
-        end.to change { TranslatedAttribute.count}.by(-1)
+        end.to change { TranslatedAttribute.count }.by(-1)
 
         expect(status).to be(204)
         expect(response_body).to be_empty
