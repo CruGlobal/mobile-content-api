@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class TranslatedAttributesController < SecureController
+  before_action :load_resource
+
   def create
     create_translated_attr
   end
@@ -16,8 +18,8 @@ class TranslatedAttributesController < SecureController
   private
 
   def create_translated_attr
-    a = TranslatedAttribute.create!(permitted_params)
-    head :no_content, location: "translated_attributes/#{a.id}"
+    a = @resource.translated_attributes.create!(permitted_params)
+    head :no_content, location: "/resources/#{@resource.id}/translated_attributes/#{a.id}"
   end
 
   def update_translated_attr
@@ -31,10 +33,14 @@ class TranslatedAttributesController < SecureController
   end
 
   def load_translated_attr
-    TranslatedAttribute.find(params[:id])
+    @resource.translated_attributes.find(params[:id])
   end
 
   def permitted_params
-    permit_params(:value, :key, :resource_id, :onesky_phrase_id, :required)
+    permit_params(:key, :onesky_phrase_id, :required)
+  end
+
+  def load_resource
+    @resource = Resource.find(params[:resource_id])
   end
 end
