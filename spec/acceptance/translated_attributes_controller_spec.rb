@@ -11,7 +11,7 @@ resource "TranslatedAttributes" do
   let(:resource_id) { Resource.first.id }
   let(:attrs) { {key: "key", onesky_phrase_id: "phrase", required: true} }
 
-  post "/resources/:resource_id/translated_attributes" do
+  post "/resources/:resource_id/translated-attributes" do
     let(:id) { 100 }
 
     requires_authorization
@@ -24,7 +24,7 @@ resource "TranslatedAttributes" do
       expect(status).to be(204)
       expect(response_body).to be_empty
       expect(TranslatedAttribute.last.attributes.symbolize_keys.slice(:key, :onesky_phrase_id, :required, :resource_id)).to eq(attrs.merge(resource_id: resource_id))
-      expect(response_headers["Location"]).to eq("/resources/#{resource_id}/translated_attributes/#{TranslatedAttribute.last.id}")
+      expect(response_headers["Location"]).to eq("/resources/#{resource_id}/translated-attributes/#{TranslatedAttribute.last.id}")
     end
   end
 
@@ -32,7 +32,7 @@ resource "TranslatedAttributes" do
     let(:translated_attribute) { FactoryBot.create(:translated_attribute, attrs.merge(resource_id: resource_id)) }
     let!(:id) { translated_attribute.id }
 
-    put "/resources/:resource_id/translated_attributes/:id" do
+    put "/resources/:resource_id/translated-attributes/:id" do
       let(:new_attrs) { {key: "updated key", onesky_phrase_id: "phrase", required: true} }
 
       requires_authorization
@@ -46,7 +46,7 @@ resource "TranslatedAttributes" do
       end
     end
 
-    delete "/resources/:resource_id/translated_attributes/:id" do
+    delete "/resources/:resource_id/translated-attributes/:id" do
       requires_authorization
 
       it "delete a Translated Attribute" do

@@ -19,7 +19,7 @@ class TranslatedAttributesController < SecureController
 
   def create_translated_attr
     a = @resource.translated_attributes.create!(permitted_params)
-    head :no_content, location: "/resources/#{@resource.id}/translated_attributes/#{a.id}"
+    head :no_content, location: "/resources/#{@resource.id}/translated-attributes/#{a.id}"
   end
 
   def update_translated_attr
