@@ -21,11 +21,11 @@ class TranslatedAttributesController < SecureController
     a = @resource.translated_attributes.create(permitted_params)
 
     if a.errors[:key] == ["has already been taken"]
-      render(json: {errors: { "code" => "key_already_exists"}}, status: 400)
+      render(json: {errors: {"code" => "key_already_exists"}}, status: 400)
     elsif a.errors[:key] == ["can't be blank"]
-      render(json: {errors: { "code" => "invalid_key"}}, status: 400)
+      render(json: {errors: {"code" => "invalid_key"}}, status: 400)
     elsif a.errors[:onesky_phrase_id] == ["can't be blank"]
-      render(json: {errors: { "code" => "invalid_onesky_phrase_id"}}, status: 400)
+      render(json: {errors: {"code" => "invalid_onesky_phrase_id"}}, status: 400)
     elsif a.errors.any?
       raise("error creating translated attr")
     end
