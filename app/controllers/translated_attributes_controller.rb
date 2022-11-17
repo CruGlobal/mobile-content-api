@@ -20,6 +20,21 @@ class TranslatedAttributesController < SecureController
   def create_translated_attr
     a = @resource.translated_attributes.create(permitted_params)
 
+    render_translation_attribute_error(a) and return if a.errors.any?
+
+    head :no_content, location: "/resources/#{@resource.id}/translated-attributes/#{a.id}"
+  end
+
+  def update_translated_attr
+    a = load_translated_attr
+    a.update(permitted_params)
+
+    render_translation_attribute_error(a) and return if a.errors.any?
+
+    head :no_content
+  end
+
+  def render_translation_attribute_error(a)
     if a.errors[:key] == ["has already been taken"]
       render(json: {errors: {"code" => "key_already_exists"}}, status: 400)
     elsif a.errors[:key] == ["can't be blank"]
@@ -29,14 +44,6 @@ class TranslatedAttributesController < SecureController
     elsif a.errors.any?
       raise("error creating translated attr")
     end
-    return if a.errors.any?
-
-    head :no_content, location: "/resources/#{@resource.id}/translated-attributes/#{a.id}"
-  end
-
-  def update_translated_attr
-    load_translated_attr.update!(permitted_params)
-    head :no_content
   end
 
   def destroy_translated_attr
