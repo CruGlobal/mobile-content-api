@@ -151,6 +151,8 @@ ActiveRecord::Schema.define(version: 2022_11_03_214606) do
     t.string "key", null: false
     t.string "value", null: false
     t.boolean "is_translatable", default: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.index ["key", "resource_id", "language_id"], name: "index_language_attributes_unique", unique: true
     t.index ["resource_id"], name: "index_language_attributes_on_resource_id"
   end
@@ -257,9 +259,7 @@ ActiveRecord::Schema.define(version: 2022_11_03_214606) do
     t.date "last_decay", default: -> { "now()" }
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.string "values", default: [], array: true
     t.index ["user_id", "counter_name"], name: "index_user_counters_on_user_id_and_counter_name", unique: true
-    t.index ["values"], name: "index_user_counters_on_values", using: :gin
   end
 
   create_table "users", force: :cascade do |t|

@@ -26,6 +26,19 @@ resource "TranslatedAttributes" do
       expect(TranslatedAttribute.last.attributes.symbolize_keys.slice(:key, :onesky_phrase_id, :required, :resource_id)).to eq(attrs.merge(resource_id: resource_id))
       expect(response_headers["Location"]).to eq("/resources/#{resource_id}/translated-attributes/#{TranslatedAttribute.last.id}")
     end
+
+    context "translated_attribute already created" do
+      let!(:translated_attribute) { FactoryBot.create(:translated_attribute, attrs.merge(resource_id: resource_id)) }
+
+      it "create a TranslatedAttribute" do
+        expect do
+          do_request data: {type: type, attributes: attrs}
+        end.to_not change { TranslatedAttribute.count }
+
+        expect(status).to be(400)
+        expect(JSON.parse(response_body)["errors"]).to eq({"code" => "key_already_exists"})
+      end
+    end
   end
 
   context "existing translated_attribute" do

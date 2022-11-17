@@ -18,7 +18,13 @@ class TranslatedAttributesController < SecureController
   private
 
   def create_translated_attr
-    a = @resource.translated_attributes.create!(permitted_params)
+    a = @resource.translated_attributes.create(permitted_params)
+
+    if a.errors[:key] == ["has already been taken"]
+      render(json: {errors: { "code" => "key_already_exists"}}, status: 400)
+      return
+    end
+
     head :no_content, location: "/resources/#{@resource.id}/translated-attributes/#{a.id}"
   end
 
