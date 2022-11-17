@@ -27,6 +27,17 @@ resource "TranslatedAttributes" do
       expect(response_headers["Location"]).to eq("/resources/#{resource_id}/translated-attributes/#{TranslatedAttribute.last.id}")
     end
 
+    it "defaults required to false" do
+      expect do
+        do_request data: {type: type, attributes: {key: "key", onesky_phrase_id: "phrase"}}
+      end.to change { TranslatedAttribute.count }.by(1)
+
+      expect(status).to be(204)
+      expect(response_body).to be_empty
+      expect(TranslatedAttribute.last.required).to be false
+      expect(response_headers["Location"]).to eq("/resources/#{resource_id}/translated-attributes/#{TranslatedAttribute.last.id}")
+    end
+
     it "requires key present" do
       expect do
         do_request data: {type: type, attributes: {onesky_phrase_id: "phrase"}}

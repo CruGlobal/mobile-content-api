@@ -217,7 +217,7 @@ ActiveRecord::Schema.define(version: 2022_11_03_214606) do
     t.integer "resource_id"
     t.string "key"
     t.string "onesky_phrase_id"
-    t.boolean "required"
+    t.boolean "required", default: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
   end
