@@ -56,6 +56,7 @@ class TranslatedAttributesController < SecureController
   end
 
   def permitted_params
+    data_attrs[:onesky_phrase_id] = data_attrs.delete(:"onesky-phrase-id") if data_attrs[:"onesky-phrase-id"]
     permit_params(:key, :onesky_phrase_id, :required)
   end
 

@@ -9,7 +9,8 @@ resource "TranslatedAttributes" do
   let(:raw_post) { params.to_json }
   let(:authorization) { AuthToken.generic_token }
   let(:resource_id) { Resource.first.id }
-  let(:attrs) { {key: "key", onesky_phrase_id: "phrase", required: true} }
+  let(:attrs) { {key: "key", "onesky-phrase-id": "phrase", required: true} }
+  let(:attrs_underscored) { {key: "key", "onesky_phrase_id": "phrase", required: true} }
 
   post "/resources/:resource_id/translated-attributes" do
     let(:id) { 100 }
@@ -23,13 +24,13 @@ resource "TranslatedAttributes" do
 
       expect(status).to be(204)
       expect(response_body).to be_empty
-      expect(TranslatedAttribute.last.attributes.symbolize_keys.slice(:key, :onesky_phrase_id, :required, :resource_id)).to eq(attrs.merge(resource_id: resource_id))
+      expect(TranslatedAttribute.last.attributes.symbolize_keys.slice(:key, :onesky_phrase_id, :required, :resource_id)).to eq(attrs_underscored.merge(resource_id: resource_id))
       expect(response_headers["Location"]).to eq("/resources/#{resource_id}/translated-attributes/#{TranslatedAttribute.last.id}")
     end
 
     it "defaults required to false" do
       expect do
-        do_request data: {type: type, attributes: {key: "key", onesky_phrase_id: "phrase"}}
+        do_request data: {type: type, attributes: {key: "key", "onesky-phrase-id": "info.outline"}}
       end.to change { TranslatedAttribute.count }.by(1)
 
       expect(status).to be(204)
@@ -40,7 +41,7 @@ resource "TranslatedAttributes" do
 
     it "requires key present" do
       expect do
-        do_request data: {type: type, attributes: {onesky_phrase_id: "phrase"}}
+        do_request data: {type: type, attributes: {"onesky-phrase-id": "phrase"}}
       end.to_not change { TranslatedAttribute.count }
 
       expect(status).to be(400)
@@ -57,7 +58,7 @@ resource "TranslatedAttributes" do
     end
 
     context "translated_attribute already created" do
-      let!(:translated_attribute) { FactoryBot.create(:translated_attribute, attrs.merge(resource_id: resource_id)) }
+      let!(:translated_attribute) { FactoryBot.create(:translated_attribute, attrs_underscored.merge(resource_id: resource_id)) }
 
       it "checks for key already existing" do
         expect do
@@ -71,11 +72,12 @@ resource "TranslatedAttributes" do
   end
 
   context "existing translated_attribute" do
-    let(:translated_attribute) { FactoryBot.create(:translated_attribute, attrs.merge(resource_id: resource_id)) }
+    let(:translated_attribute) { FactoryBot.create(:translated_attribute, attrs_underscored.merge(resource_id: resource_id)) }
     let!(:id) { translated_attribute.id }
 
     put "/resources/:resource_id/translated-attributes/:id" do
-      let(:new_attrs) { {key: "updated key", onesky_phrase_id: "phrase", required: true} }
+      let(:new_attrs) { {key: "updated key", "onesky-phrase-id": "phrase", required: true} }
+      let(:new_attrs_underscored) { {key: "updated key", "onesky_phrase_id": "phrase", required: true} }
 
       requires_authorization
 
@@ -84,7 +86,7 @@ resource "TranslatedAttributes" do
 
         expect(status).to be(204)
         expect(response_body).to be_empty
-        expect(translated_attribute.reload.attributes.symbolize_keys.slice(:key, :onesky_phrase_id, :required, :resource_id)).to eq(new_attrs.merge(resource_id: resource_id))
+        expect(translated_attribute.reload.attributes.symbolize_keys.slice(:key, :onesky_phrase_id, :required, :resource_id)).to eq(new_attrs_underscored.merge(resource_id: resource_id))
       end
 
       it "requires key present" do
@@ -106,7 +108,7 @@ resource "TranslatedAttributes" do
       end
 
       context "translated_attribute already created" do
-        let!(:translated_attribute_2) { FactoryBot.create(:translated_attribute, attrs.merge(key: "updated key", resource_id: resource_id)) }
+        let!(:translated_attribute_2) { FactoryBot.create(:translated_attribute, attrs_underscored.merge(key: "updated key", resource_id: resource_id)) }
 
         it "checks for key already existing" do
           expect do
