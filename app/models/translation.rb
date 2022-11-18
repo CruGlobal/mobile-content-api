@@ -95,8 +95,8 @@ class Translation < ActiveRecord::Base
   def push_published_to_s3
     return unless is_published
 
-    ActiveRecord::Base.transaction do
-      if resource.uses_onesky?
+    if resource.uses_onesky?
+      ActiveRecord::Base.transaction do
         phrases = manifest_translated_phrases
         name_desc_onesky(phrases)
         create_translated_attributes(phrases)
