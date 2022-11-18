@@ -22,7 +22,7 @@ class TranslatedAttributesController < SecureController
 
     render_translation_attribute_error(a) and return if a.errors.any?
 
-    head :no_content, location: "/resources/#{@resource.id}/translated-attributes/#{a.id}"
+    render json: a, status: :created, location: "/resources/#{@resource.id}/translated-attributes/#{a.id}"
   end
 
   def update_translated_attr
@@ -31,7 +31,7 @@ class TranslatedAttributesController < SecureController
 
     render_translation_attribute_error(a) and return if a.errors.any?
 
-    head :no_content
+    render json: a, status: :ok
   end
 
   def render_translation_attribute_error(a)

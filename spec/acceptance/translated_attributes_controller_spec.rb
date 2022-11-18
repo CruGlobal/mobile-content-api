@@ -22,8 +22,8 @@ resource "TranslatedAttributes" do
         do_request data: {type: type, attributes: attrs}
       end.to change { TranslatedAttribute.count }.by(1)
 
-      expect(status).to be(204)
-      expect(response_body).to be_empty
+      expect(status).to be(201)
+      expect(response_body).to eq(ActiveModelSerializers::SerializableResource.new(TranslatedAttribute.last).to_json)
       expect(TranslatedAttribute.last.attributes.symbolize_keys.slice(:key, :onesky_phrase_id, :required, :resource_id)).to eq(attrs_underscored.merge(resource_id: resource_id))
       expect(response_headers["Location"]).to eq("/resources/#{resource_id}/translated-attributes/#{TranslatedAttribute.last.id}")
     end
@@ -33,8 +33,8 @@ resource "TranslatedAttributes" do
         do_request data: {type: type, attributes: {key: "key", "onesky-phrase-id": "info.outline"}}
       end.to change { TranslatedAttribute.count }.by(1)
 
-      expect(status).to be(204)
-      expect(response_body).to be_empty
+      expect(status).to be(201)
+      expect(response_body).to eq(ActiveModelSerializers::SerializableResource.new(TranslatedAttribute.last).to_json)
       expect(TranslatedAttribute.last.required).to be false
       expect(response_headers["Location"]).to eq("/resources/#{resource_id}/translated-attributes/#{TranslatedAttribute.last.id}")
     end
@@ -84,9 +84,9 @@ resource "TranslatedAttributes" do
       it "update a Translated Attribute" do
         do_request data: {type: type, attributes: new_attrs}
 
-        expect(status).to be(204)
-        expect(response_body).to be_empty
-        expect(translated_attribute.reload.attributes.symbolize_keys.slice(:key, :onesky_phrase_id, :required, :resource_id)).to eq(new_attrs_underscored.merge(resource_id: resource_id))
+        expect(status).to be(200)
+        expect(response_body).to eq(ActiveModelSerializers::SerializableResource.new(translated_attribute.reload).to_json)
+        expect(translated_attribute.attributes.symbolize_keys.slice(:key, :onesky_phrase_id, :required, :resource_id)).to eq(new_attrs_underscored.merge(resource_id: resource_id))
       end
 
       it "requires key present" do
