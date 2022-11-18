@@ -71,7 +71,7 @@ gem "httparty"
 gem "jwt"
 gem "lograge"
 gem "nokogiri"
-gem "oj", "~> 3.13.13"
+gem "oj", "~> 3.13.23"
 gem "ougai", "~> 2.0"
 gem "raddocs"
 # action cable currently requires redis < 5. This should be fixed in rails >= 7.0.4
