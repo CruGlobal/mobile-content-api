@@ -10,7 +10,7 @@ resource "TranslatedAttributes" do
   let(:authorization) { AuthToken.generic_token }
   let(:resource_id) { Resource.first.id }
   let(:attrs) { {key: "key", "onesky-phrase-id": "phrase", required: true} }
-  let(:attrs_underscored) { {key: "key", "onesky_phrase_id": "phrase", required: true} }
+  let(:attrs_underscored) { {key: "key", onesky_phrase_id: "phrase", required: true} }
 
   post "/resources/:resource_id/translated-attributes" do
     let(:id) { 100 }
@@ -77,7 +77,7 @@ resource "TranslatedAttributes" do
 
     put "/resources/:resource_id/translated-attributes/:id" do
       let(:new_attrs) { {key: "updated key", "onesky-phrase-id": "phrase", required: true} }
-      let(:new_attrs_underscored) { {key: "updated key", "onesky_phrase_id": "phrase", required: true} }
+      let(:new_attrs_underscored) { {key: "updated key", onesky_phrase_id: "phrase", required: true} }
 
       requires_authorization
 
