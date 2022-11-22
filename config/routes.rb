@@ -9,6 +9,7 @@ Rails.application.routes.draw do
 
   resources :resources do
     resources :languages, controller: :resource_languages, only: [:update, :show]
+    resources :translated_attributes, path: "translated-attributes", only: [:create, :update, :destroy]
   end
   resources :drafts
   resources :translations, only: [:index, :show]
@@ -18,7 +19,6 @@ Rails.application.routes.draw do
   resources :custom_tips, only: [:create, :destroy]
 
   resources :attributes, only: [:create, :update, :destroy, :show]
-  resources :translated_attributes, only: [:create, :update, :destroy, :show]
   resources :translated_pages, only: [:create, :update, :destroy, :show]
 
   resources :views, only: [:create]
