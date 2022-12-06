@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_09_13_172451) do
+ActiveRecord::Schema.define(version: 2022_11_03_214606) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
@@ -213,13 +213,13 @@ ActiveRecord::Schema.define(version: 2022_09_13_172451) do
     t.index ["resource_id", "name"], name: "index_tips_on_resource_id_and_name", unique: true
   end
 
-  create_table "translated_attributes", id: :serial, force: :cascade do |t|
-    t.string "value", null: false
-    t.integer "attribute_id", null: false
-    t.integer "translation_id", null: false
-    t.index ["attribute_id", "translation_id"], name: "index_translated_attributes_on_attribute_id_and_translation_id", unique: true
-    t.index ["attribute_id"], name: "index_translated_attributes_on_attribute_id"
-    t.index ["translation_id"], name: "index_translated_attributes_on_translation_id"
+  create_table "translated_attributes", force: :cascade do |t|
+    t.integer "resource_id"
+    t.string "key"
+    t.string "onesky_phrase_id"
+    t.boolean "required", default: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
   end
 
   create_table "translated_pages", id: :serial, force: :cascade do |t|
@@ -228,6 +228,13 @@ ActiveRecord::Schema.define(version: 2022_09_13_172451) do
     t.integer "resource_id", null: false
     t.index ["language_id"], name: "index_translated_pages_on_language_id"
     t.index ["resource_id"], name: "index_translated_pages_on_resource_id"
+  end
+
+  create_table "translation_attributes", id: :serial, force: :cascade do |t|
+    t.string "value", null: false
+    t.integer "translation_id", null: false
+    t.string "key"
+    t.index ["translation_id"], name: "index_translation_attributes_on_translation_id"
   end
 
   create_table "translations", id: :serial, force: :cascade do |t|
@@ -283,10 +290,9 @@ ActiveRecord::Schema.define(version: 2022_09_13_172451) do
   add_foreign_key "resources", "resources", column: "default_variant_id"
   add_foreign_key "resources", "resources", column: "metatool_id"
   add_foreign_key "resources", "systems"
-  add_foreign_key "translated_attributes", "attributes"
-  add_foreign_key "translated_attributes", "translations"
   add_foreign_key "translated_pages", "languages"
   add_foreign_key "translated_pages", "resources"
+  add_foreign_key "translation_attributes", "translations"
   add_foreign_key "translations", "languages"
   add_foreign_key "translations", "resources"
 end

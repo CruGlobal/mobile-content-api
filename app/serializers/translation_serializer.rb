@@ -7,4 +7,10 @@ class TranslationSerializer < ActiveModel::Serializer
 
   belongs_to :resource
   belongs_to :language
+
+  def attributes(*args)
+    hash = super
+    object.translation_attributes.each { |attribute| hash["attr_#{attribute.key}"] = attribute.value }
+    hash
+  end
 end

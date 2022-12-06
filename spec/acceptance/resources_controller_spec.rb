@@ -45,11 +45,20 @@ resource "Resources" do
       expect(metatool["relationships"]["variants"]["data"]).to match_array([{"id" => "1", "type" => "resource"}, {"id" => "5", "type" => "resource"}])
     end
 
-    it "get all resources, include latest-translations" do
-      do_request "filter[system]": "GodTools", include: "latest-translations"
+    context "with translation attributes" do
+      let!(:translation) { Resource.first.latest_translations.first }
+      let!(:translation_attribute_1) { FactoryBot.create(:translation_attribute, key: "key1", value: "translation content 1", translation: translation) }
+      let!(:translation_attribute_2) { FactoryBot.create(:translation_attribute, key: "key2", value: "translation content 2", translation: translation) }
 
-      expect(status).to be(200)
-      expect(JSON.parse(response_body)["included"].count).to be(5)
+      it "get all resources, include latest-translations" do
+        do_request "filter[system]": "GodTools", include: "latest-translations"
+
+        expect(status).to be(200)
+        json_body = JSON.parse(response_body)
+        expect(json_body["included"].count).to be(5)
+        expect(json_body.dig("included").first&.dig("attributes", "attr-key1")).to eq("translation content 1")
+        expect(json_body.dig("included").first&.dig("attributes", "attr-key2")).to eq("translation content 2")
+      end
     end
 
     it "only get name and system of resources" do

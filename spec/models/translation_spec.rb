@@ -155,7 +155,7 @@ describe Translation do
 
     before do
       mock_onesky("name_description.xml",
-        '{ "name":"kgp german", "description":"german description", "tagline": "german tagline" }')
+        '{ "name":"kgp german", "description":"german description", "tagline": "german tagline", "onesky_required": "onesky_required_value", "onesky_not_required": "onesky_not_required_value" }')
     end
 
     it "uploads the translation to S3" do
@@ -211,6 +211,36 @@ describe Translation do
 
         expect(translation).to have_received(:translated_tagline=).ordered
         expect(package).to have_received(:push_to_s3).ordered
+      end
+    end
+
+    context "translated attributes" do
+      let(:package) { double.as_null_object }
+      let(:resource) { translation.resource }
+      let!(:required_translated_attribute) { FactoryBot.create(:translated_attribute, resource_id: resource.id, key: "required", onesky_phrase_id: "onesky_required", required: true) }
+      let!(:not_required_translated_attribute) { FactoryBot.create(:translated_attribute, resource_id: resource.id, key: "not_required", onesky_phrase_id: "onesky_not_required", required: false) }
+
+      before do
+        allow(Package).to receive(:new).and_return(package)
+      end
+
+      it "builds the translation attributes" do
+        expect do
+          translation.update!(is_published: true)
+        end.to change(TranslationAttribute, :count).by(2)
+        translation.reload
+        expect(translation.translation_attributes.pluck(:key, :value).sort).to eq([["not_required", "onesky_not_required_value"], ["required", "onesky_required_value"]])
+      end
+
+      context "required translation attribute is not present" do
+        let!(:required_translated_attribute_2) { FactoryBot.create(:translated_attribute, resource_id: resource.id, key: "required_2", onesky_phrase_id: "onesky_required_2", required: true) }
+        it "raises an error and doesn't create any translation attributes" do
+          expect do
+            expect do
+              translation.update!(is_published: true)
+            end.to raise_error(Error::TextNotFoundError)
+          end.to_not change(TranslationAttribute, :count)
+        end
       end
     end
   end
