@@ -57,8 +57,8 @@ module OneSky
 
   private
 
-  def download_translated_phrases(*args)
-    OneSky.download_translated_phrases(*args)
+  def download_translated_phrases(filename, **args)
+    OneSky.download_translated_phrases(filename, **args)
   end
 
   class << self
