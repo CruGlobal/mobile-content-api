@@ -23,12 +23,8 @@ module MobileContentApi
     # config.time_zone = "Central Time (US & Canada)"
     # config.eager_load_paths << Rails.root.join("extras")
 
-    # Enable ougai
-    if Rails.env.development? || Rails.const_defined?(:Console)
-      config.logger = Log::Logger.new($stdout)
-    elsif !Rails.env.test? # use default logger in test env
-      config.logger = Log::Logger.new(Rails.root.join("log", "datadog.log"))
-    end
+    # Send all logs to stdout, which docker reads and sends to datadog.
+    config.logger = Log::Logger.new($stdout)
 
     config.redis_conf = YAML.safe_load(ERB.new(File.read(Rails.root.join("config", "redis.yml"))).result, [Symbol], [], true)
     redis_cache_conf = config.redis_conf["cache"]

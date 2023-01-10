@@ -63,8 +63,8 @@ gem "active_model_serializers", "0.10.13"
 gem "active_storage_validations"
 gem "adobe-campaign", "~> 0.4.1"
 gem "aws-sdk-s3"
-gem "ddtrace", "~> 0.54.2"
-gem "dogstatsd-ruby"
+gem "ddtrace", "~> 1.4"
+gem "dogstatsd-ruby", "~> 5.3"
 gem "file_validators"
 gem "google-api-client", "~> 0.53", require: "google/apis/analyticsreporting_v4"
 gem "httparty"
@@ -73,6 +73,7 @@ gem "lograge"
 gem "nokogiri"
 gem "oj", "~> 3.13.13"
 gem "ougai", "~> 2.0"
+gem "rack-cors", require: "rack/cors"
 gem "raddocs"
 # action cable currently requires redis < 5. This should be fixed in rails >= 7.0.4
 # relevant issue: https://github.com/redis/redis-rb/issues/1142
@@ -105,5 +106,4 @@ end
 group :development do
   # Access an IRB console on exception pages or by using <%= console %> anywhere in the code.
   gem "amazing_print"
-  gem "rack-cors", require: "rack/cors"
 end
