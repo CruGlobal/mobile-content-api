@@ -1,4 +1,6 @@
-FROM public.ecr.aws/docker/library/ruby:3.0.5-alpine
+# RUBY_VERSION set by build.sh based on .ruby-version file
+ARG RUBY_VERSION
+FROM public.ecr.aws/docker/library/ruby:${RUBY_VERSION}-alpine
 
 # DataDog logs source
 LABEL com.datadoghq.ad.logs='[{"source": "ruby"}]'

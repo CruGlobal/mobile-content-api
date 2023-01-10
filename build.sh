@@ -9,7 +9,7 @@ docker buildx build $DOCKER_ARGS \
     --build-arg TEST_DB_PASSWORD=password \
     --build-arg TEST_DB_USER=postgres \
     --build-arg TEST_DB_HOST=$PG_IP \
-    --build-arg DD_API_KEY=$DD_API_KEY \
+    --build-arg RUBY_VERSION=$(cat .ruby-version) \
     .
 rc=$?
 
