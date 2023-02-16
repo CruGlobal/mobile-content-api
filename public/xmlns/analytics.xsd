@@ -25,11 +25,6 @@
                             <xs:documentation>Firebase</xs:documentation>
                         </xs:annotation>
                     </xs:enumeration>
-                    <xs:enumeration value="snowplow">
-                        <xs:annotation>
-                            <xs:documentation>Snowplow Analytics</xs:documentation>
-                        </xs:annotation>
-                    </xs:enumeration>
                     <xs:enumeration value="user">
                         <xs:annotation>
                             <xs:documentation>User Specific Analytics</xs:documentation>
