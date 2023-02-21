@@ -70,11 +70,23 @@ resource "Resources" do
       expect(data["relationships"].keys).to eq ["system"]
     end
 
-    it "gets all resources with abbreviation" do
+    it "get resource with a specific abbreviation" do
       do_request "filter[abbreviation]": "es"
 
       expect(status).to be(200)
-      expect(JSON.parse(response_body)["data"].count).to be(1)
+      json = JSON.parse(response_body)
+      expect(json["data"].count).to be(1)
+      expect(json["data"][0]["attributes"]["abbreviation"]).to eq("es")
+    end
+
+    it "get resource with a specific abbreviation, include default-variant" do
+      do_request "filter[abbreviation]": "meta", include: "default-variant"
+
+      expect(status).to be(200)
+      json = JSON.parse(response_body)
+      expect(json["data"].count).to be(1)
+      expect(json["included"].count).to be(1)
+      expect(json["included"][0]["attributes"]["abbreviation"]).to eq("kgp")
     end
   end
 
