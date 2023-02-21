@@ -141,6 +141,7 @@ Destination.find_or_create_by!(service_type: :adobe_campaigns, url: "https://mc.
 # add metatool at the end because some tests depend upon resource ids
 metatool_resource = Resource.find_or_create_by!(name: "metatool", resource_type: metatool, abbreviation: "meta", system: godtools)
 kgp.update(metatool_id: metatool_resource.id)
+metatool_resource.update(default_variant_id: kgp.id)
 Resource.find_or_create_by!(name: "Knowing God Personally Variant", resource_type: tract,
   abbreviation: "kgp2", onesky_project_id: 148_314,
   system: godtools, total_views: 1268,
