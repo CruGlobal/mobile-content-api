@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <xs:schema xmlns:analytics="https://mobile-content-api.cru.org/xmlns/analytics"
+    xmlns:content="https://mobile-content-api.cru.org/xmlns/content"
     xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified"
     targetNamespace="https://mobile-content-api.cru.org/xmlns/analytics">
+
+    <xs:import namespace="https://mobile-content-api.cru.org/xmlns/content" schemaLocation="content.xsd" />
 
     <xs:simpleType name="systemType">
         <xs:annotation>
@@ -56,6 +59,7 @@
                     </xs:complexType>
                 </xs:element>
             </xs:choice>
+            <xs:attribute name="id" type="content:id" />
             <xs:attribute name="system" use="required">
                 <xs:annotation>
                     <xs:documentation>
@@ -118,6 +122,13 @@
                         </xs:enumeration>
                     </xs:restriction>
                 </xs:simpleType>
+            </xs:attribute>
+            <xs:attribute name="limit" type="xs:int">
+                <xs:annotation>
+                    <xs:documentation>
+                        This attribute limits the number of times this event can be fired within a single tool session.
+                    </xs:documentation>
+                </xs:annotation>
             </xs:attribute>
         </xs:complexType>
         <xs:unique name="uniqueAttributeKey">
