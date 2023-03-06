@@ -18,7 +18,7 @@
         <content:multiselect state="quiz2" columns="4">
             <content:option value="a">
                 <analytics:events>
-                    <analytics:event system="firebase">
+                    <analytics:event action="event" system="firebase">
                         <analytics:attribute key="key" value="value" />
                     </analytics:event>
                 </analytics:events>
