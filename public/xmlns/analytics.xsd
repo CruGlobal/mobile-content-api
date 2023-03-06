@@ -59,7 +59,13 @@
                     </xs:complexType>
                 </xs:element>
             </xs:choice>
-            <xs:attribute name="id" type="content:id" />
+            <xs:attribute name="id" type="content:id">
+                <xs:annotation>
+                    <xs:documentation>
+                        Defines the unique id for this event, this attribute defaults to the action for this event.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
             <xs:attribute name="system" use="required">
                 <xs:annotation>
                     <xs:documentation>
@@ -72,7 +78,7 @@
                     </xs:restriction>
                 </xs:simpleType>
             </xs:attribute>
-            <xs:attribute name="action" type="xs:string">
+            <xs:attribute name="action" type="xs:string" use="required">
                 <xs:annotation>
                     <xs:documentation>Analytics action being triggered.</xs:documentation>
                 </xs:annotation>

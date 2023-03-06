@@ -1,6 +1,6 @@
 <page xmlns="https://mobile-content-api.cru.org/xmlns/lesson" xmlns:analytics="https://mobile-content-api.cru.org/xmlns/analytics">
     <analytics:events>
-        <analytics:event system="appsflyer" trigger="visible" />
+        <analytics:event action="event" system="appsflyer" trigger="visible" />
     </analytics:events>
     <content />
 </page>

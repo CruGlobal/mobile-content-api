@@ -6,7 +6,7 @@
             <content:text>Section 1</content:text>
         </content:header>
         <analytics:events>
-            <analytics:event system="firebase" trigger="visible" />
+            <analytics:event action="event" system="firebase" trigger="visible" />
         </analytics:events>
         <content:text>text</content:text>
     </content:section>
