@@ -123,10 +123,10 @@ GEM
       rexml
     crass (1.0.6)
     date (3.3.3)
-    ddtrace (1.9.0)
+    ddtrace (1.10.0)
       debase-ruby_core_source (>= 0.10.16, <= 3.2.0)
-      libdatadog (~> 1.0.1.1.0)
-      libddwaf (~> 1.5.1.0.0)
+      libdatadog (~> 2.0.0.1.0)
+      libddwaf (~> 1.6.2.0.0)
       msgpack
     debase-ruby_core_source (3.2.0)
     declarative (0.0.20)
@@ -226,8 +226,8 @@ GEM
     jsonapi-renderer (0.2.2)
     jwt (2.7.0)
     language_server-protocol (3.17.0.3)
-    libdatadog (1.0.1.1.0)
-    libddwaf (1.5.1.0.1)
+    libdatadog (2.0.0.1.0)
+    libddwaf (1.6.2.0.0)
       ffi (~> 1.0)
     listen (3.8.0)
       rb-fsevent (~> 0.10, >= 0.10.3)
@@ -257,7 +257,7 @@ GEM
     mini_mime (1.1.2)
     mini_portile2 (2.8.1)
     minitest (5.17.0)
-    msgpack (1.6.0)
+    msgpack (1.6.1)
     multi_json (1.15.0)
     multi_xml (0.6.0)
     multipart-post (2.1.1)
@@ -497,7 +497,7 @@ DEPENDENCIES
   bundler-audit
   byebug
   capybara (>= 3.26)
-  ddtrace (~> 1.9)
+  ddtrace (~> 1.10)
   dogstatsd-ruby (~> 5.3)
   dotenv-rails
   equivalent-xml (~> 0.6.0)
