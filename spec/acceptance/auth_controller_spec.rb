@@ -51,5 +51,74 @@ resource "Auth" do
 
       expect(status).to be(400)
     end
+
+    context "facebook" do
+      let(:type) { "auth-token-request" }
+
+      before do
+        stub_request(:get, "https://graph.facebook.com/debug_token?access_token=facebook_app_id%7Cfacebook_app_secret&input_token=auth%20token").
+          to_return(status: 200, body: '{"data":{"app_id":"448969905944197","type":"USER","application":"GodTools - Dev","data_access_expires_at":1685893862,"expires_at":1683301862,"is_valid":true,"issued_at":1678117862,"metadata":{"auth_type":"rerequest","sso":"chrome_custom_tab"},"scopes":["email","openid","public_profile"],"user_id":"10158730817232041"}}')
+        stub_request(:get, "https://graph.facebook.com/10158730817232041?access_token=auth%20token&fields=email,id,first_name,last_name,short_name").
+          to_return(status: 200, body: '{"email":"daniel.frett@gmail.com","id":"10158730817232041","first_name":"Daniel","last_name":"Frett","short_name":"Daniel"}')
+      end
+
+      it "creates a facebook user" do
+        expect do
+          do_request data: {type: type, attributes: {facebook_access_token: "auth token"}}
+        end.to change(User, :count).by(1)
+
+        user = User.last
+        expect(user.email).to eq("daniel.frett@gmail.com")
+        expect(user.first_name).to eq("Daniel")
+        expect(user.last_name).to eq("Frett")
+        expect(user.short_name).to eq("Daniel")
+
+        expect(status).to be(201)
+        data = JSON.parse(response_body)["data"]
+        expect(data["attributes"]["user-id"]).to eq(user.id)
+      end
+
+      context "user already exists" do
+        let!(:user) { FactoryBot.create(:user, email: "daniel.frett@gmail.com", first_name: "First", last_name: "Last", sso_guid: "12345") }
+
+        it "matches an existing user" do
+          expect do
+            do_request data: {type: type, attributes: {facebook_access_token: "auth token"}}
+          end.to_not change(User, :count)
+
+          user.reload
+          expect(user.email).to eq("daniel.frett@gmail.com")
+          expect(user.first_name).to eq("Daniel")
+          expect(user.last_name).to eq("Frett")
+          expect(user.short_name).to eq("Daniel")
+
+          expect(status).to be(201)
+          data = JSON.parse(response_body)["data"]
+          expect(data["attributes"]["user-id"]).to eq(user.id)
+        end
+      end
+
+      it "handles debug_token call fails" do
+        stub_request(:get, "https://graph.facebook.com/debug_token?access_token=facebook_app_id%7Cfacebook_app_secret&input_token=auth%20token").
+          to_return(status: 400, body: {"data"=>{"error"=>{"code"=>190, "message"=>"Invalid OAuth access token - Cannot parse access token"}, "is_valid"=>false, "scopes"=>[]}}.to_json)
+
+        expect do
+          do_request data: {type: type, attributes: {facebook_access_token: "auth token"}}
+        end.to_not change(User, :count)
+
+        expect(response_body).to include("Invalid OAuth access token - Cannot parse access token")
+      end
+
+      it "handles fields call fails" do
+        stub_request(:get, "https://graph.facebook.com/10158730817232041?access_token=auth%20token&fields=email,id,first_name,last_name,short_name").
+          to_return(status: 400, body: {"data"=>{"error"=>{"code"=>190, "message"=>"Invalid OAuth access token - Cannot parse access token"}, "is_valid"=>false, "scopes"=>[]}}.to_json)
+
+        expect do
+          do_request data: {type: type, attributes: {facebook_access_token: "auth token"}}
+        end.to_not change(User, :count)
+
+        expect(response_body).to include("Invalid OAuth access token - Cannot parse access token")
+      end
+    end
   end
 end
