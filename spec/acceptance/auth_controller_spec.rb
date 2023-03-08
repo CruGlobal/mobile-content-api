@@ -56,10 +56,10 @@ resource "Auth" do
       let(:type) { "auth-token-request" }
 
       before do
-        stub_request(:get, "https://graph.facebook.com/debug_token?access_token=facebook_app_id%7Cfacebook_app_secret&input_token=auth%20token").
-          to_return(status: 200, body: '{"data":{"app_id":"448969905944197","type":"USER","application":"GodTools - Dev","data_access_expires_at":1685893862,"expires_at":1683301862,"is_valid":true,"issued_at":1678117862,"metadata":{"auth_type":"rerequest","sso":"chrome_custom_tab"},"scopes":["email","openid","public_profile"],"user_id":"10158730817232041"}}')
-        stub_request(:get, "https://graph.facebook.com/10158730817232041?access_token=auth%20token&fields=email,id,first_name,last_name,short_name").
-          to_return(status: 200, body: '{"email":"daniel.frett@gmail.com","id":"10158730817232041","first_name":"Daniel","last_name":"Frett","short_name":"Daniel"}')
+        stub_request(:get, "https://graph.facebook.com/debug_token?access_token=facebook_app_id%7Cfacebook_app_secret&input_token=auth%20token")
+          .to_return(status: 200, body: '{"data":{"app_id":"448969905944197","type":"USER","application":"GodTools - Dev","data_access_expires_at":1685893862,"expires_at":1683301862,"is_valid":true,"issued_at":1678117862,"metadata":{"auth_type":"rerequest","sso":"chrome_custom_tab"},"scopes":["email","openid","public_profile"],"user_id":"10158730817232041"}}')
+        stub_request(:get, "https://graph.facebook.com/10158730817232041?access_token=auth%20token&fields=email,id,first_name,last_name,short_name")
+          .to_return(status: 200, body: '{"email":"daniel.frett@gmail.com","id":"10158730817232041","first_name":"Daniel","last_name":"Frett","short_name":"Daniel"}')
       end
 
       it "creates a facebook user" do
@@ -99,8 +99,8 @@ resource "Auth" do
       end
 
       it "handles debug_token call fails" do
-        stub_request(:get, "https://graph.facebook.com/debug_token?access_token=facebook_app_id%7Cfacebook_app_secret&input_token=auth%20token").
-          to_return(status: 400, body: {"data"=>{"error"=>{"code"=>190, "message"=>"Invalid OAuth access token - Cannot parse access token"}, "is_valid"=>false, "scopes"=>[]}}.to_json)
+        stub_request(:get, "https://graph.facebook.com/debug_token?access_token=facebook_app_id%7Cfacebook_app_secret&input_token=auth%20token")
+          .to_return(status: 400, body: {"data" => {"error" => {"code" => 190, "message" => "Invalid OAuth access token - Cannot parse access token"}, "is_valid" => false, "scopes" => []}}.to_json)
 
         expect do
           do_request data: {type: type, attributes: {facebook_access_token: "auth token"}}
@@ -110,8 +110,8 @@ resource "Auth" do
       end
 
       it "handles fields call fails" do
-        stub_request(:get, "https://graph.facebook.com/10158730817232041?access_token=auth%20token&fields=email,id,first_name,last_name,short_name").
-          to_return(status: 400, body: {"data"=>{"error"=>{"code"=>190, "message"=>"Invalid OAuth access token - Cannot parse access token"}, "is_valid"=>false, "scopes"=>[]}}.to_json)
+        stub_request(:get, "https://graph.facebook.com/10158730817232041?access_token=auth%20token&fields=email,id,first_name,last_name,short_name")
+          .to_return(status: 400, body: {"data" => {"error" => {"code" => 190, "message" => "Invalid OAuth access token - Cannot parse access token"}, "is_valid" => false, "scopes" => []}}.to_json)
 
         expect do
           do_request data: {type: type, attributes: {facebook_access_token: "auth token"}}
