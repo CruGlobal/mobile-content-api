@@ -38,20 +38,10 @@ class AuthController < ApplicationController
   end
 
   def auth_with_facebook
-    return unless /^[0-9a-zA-Z]/.match?(data_attrs[:facebook_access_token])
-    url = "https://graph.facebook.com/debug_token?input_token=#{data_attrs[:facebook_access_token]}&access_token=#{ENV.fetch("FACEBOOK_APP_ID")}|#{ENV.fetch("FACEBOOK_APP_SECRET")}"
-
-    data = JSON.parse(Net::HTTP.get(URI(url)))
-    (render_bad_request(data["data"]["error"]) and return) if data["data"] && data["data"]["error"]
-    (render_bad_request("facebook token is not valid") and return) unless data["data"] && data["data"]["is_valid"] && data["data"]["user_id"]
-
-    user_id = data["data"]["user_id"]
-    url = "https://graph.facebook.com/#{user_id}?fields=email,id,first_name,last_name,short_name&access_token=#{data_attrs[:facebook_access_token]}"
-    data = JSON.parse(Net::HTTP.get(URI(url)))
-    (render_bad_request(data["data"]["error"]) and return) if data["data"] && data["data"]["error"]
-
-    user = User.where(facebook_user_id: data["id"]).first_or_create
-    user.update!(email: data["email"], first_name: data["first_name"], last_name: data["last_name"], short_name: data["short_name"])
+    user = Facebook.find_user_by_access_token(data_attrs[:facebook_access_token])
     AuthToken.new(user: user)
+  rescue Facebook::FailedAuthentication => e
+    render_bad_request e.message
+    nil
   end
 end

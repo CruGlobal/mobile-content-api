@@ -56,15 +56,22 @@ resource "Auth" do
       let(:type) { "auth-token-request" }
 
       before do
-        stub_request(:get, "https://graph.facebook.com/debug_token?access_token=facebook_app_id%7Cfacebook_app_secret&input_token=auth%20token")
+        stub_request(:get, "https://graph.facebook.com/debug_token?access_token=facebook_app_id%7Cfacebook_app_secret&input_token=authtoken")
           .to_return(status: 200, body: '{"data":{"app_id":"448969905944197","type":"USER","application":"GodTools - Dev","data_access_expires_at":1685893862,"expires_at":1683301862,"is_valid":true,"issued_at":1678117862,"metadata":{"auth_type":"rerequest","sso":"chrome_custom_tab"},"scopes":["email","openid","public_profile"],"user_id":"10158730817232041"}}')
-        stub_request(:get, "https://graph.facebook.com/10158730817232041?access_token=auth%20token&fields=email,id,first_name,last_name,short_name")
+        stub_request(:get, "https://graph.facebook.com/10158730817232041?access_token=authtoken&fields=email,id,first_name,last_name,short_name")
           .to_return(status: 200, body: '{"email":"daniel.frett@gmail.com","id":"10158730817232041","first_name":"Daniel","last_name":"Frett","short_name":"Daniel"}')
+      end
+
+      it "validates token format is alpha-numeric" do
+        expect do
+          do_request data: {type: type, attributes: {facebook_access_token: "auth token"}}
+        end.to_not change(User, :count)
+        expect(response_body).to include("should be alpha-numerical")
       end
 
       it "creates a facebook user" do
         expect do
-          do_request data: {type: type, attributes: {facebook_access_token: "auth token"}}
+          do_request data: {type: type, attributes: {facebook_access_token: "authtoken"}}
         end.to change(User, :count).by(1)
 
         user = User.last
@@ -83,7 +90,7 @@ resource "Auth" do
 
         it "matches an existing user" do
           expect do
-            do_request data: {type: type, attributes: {facebook_access_token: "auth token"}}
+            do_request data: {type: type, attributes: {facebook_access_token: "authtoken"}}
           end.to_not change(User, :count)
 
           user.reload
@@ -99,25 +106,36 @@ resource "Auth" do
       end
 
       it "handles debug_token call fails" do
-        stub_request(:get, "https://graph.facebook.com/debug_token?access_token=facebook_app_id%7Cfacebook_app_secret&input_token=auth%20token")
+        stub_request(:get, "https://graph.facebook.com/debug_token?access_token=facebook_app_id%7Cfacebook_app_secret&input_token=authtoken")
           .to_return(status: 400, body: {"data" => {"error" => {"code" => 190, "message" => "Invalid OAuth access token - Cannot parse access token"}, "is_valid" => false, "scopes" => []}}.to_json)
 
         expect do
-          do_request data: {type: type, attributes: {facebook_access_token: "auth token"}}
+          do_request data: {type: type, attributes: {facebook_access_token: "authtoken"}}
         end.to_not change(User, :count)
 
         expect(response_body).to include("Invalid OAuth access token - Cannot parse access token")
       end
 
       it "handles fields call fails" do
-        stub_request(:get, "https://graph.facebook.com/10158730817232041?access_token=auth%20token&fields=email,id,first_name,last_name,short_name")
+        stub_request(:get, "https://graph.facebook.com/10158730817232041?access_token=authtoken&fields=email,id,first_name,last_name,short_name")
           .to_return(status: 400, body: {"data" => {"error" => {"code" => 190, "message" => "Invalid OAuth access token - Cannot parse access token"}, "is_valid" => false, "scopes" => []}}.to_json)
 
         expect do
-          do_request data: {type: type, attributes: {facebook_access_token: "auth token"}}
+          do_request data: {type: type, attributes: {facebook_access_token: "authtoken"}}
         end.to_not change(User, :count)
 
         expect(response_body).to include("Invalid OAuth access token - Cannot parse access token")
+      end
+
+      it "handles fields call not returning all fields" do
+        stub_request(:get, "https://graph.facebook.com/10158730817232041?access_token=authtoken&fields=email,id,first_name,last_name,short_name")
+          .to_return(status: 200, body: '{"email":"daniel.frett@gmail.com","id":"10158730817232041","first_name":"Daniel","last_name":"Frett"}')
+
+        expect do
+          do_request data: {type: type, attributes: {facebook_access_token: "authtoken"}}
+        end.to_not change(User, :count)
+
+        expect(response_body).to include("Missing some or all user fields")
       end
     end
   end
