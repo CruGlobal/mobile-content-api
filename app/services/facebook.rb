@@ -44,7 +44,7 @@ class Facebook
         email: fields["email"],
         first_name: fields["first_name"],
         last_name: fields["last_name"],
-        short_name: fields["short_name"],
+        short_name: fields["short_name"]
       }.with_indifferent_access
     end
 
@@ -52,7 +52,7 @@ class Facebook
       url = "https://graph.facebook.com/#{user_id}?fields=email,id,first_name,last_name,short_name&access_token=#{access_token}"
       data = JSON.parse(get(url))
       raise Facebook::FailedAuthentication, "Error validating access_token with Facebook: #{data["data"]["error"]}" if data["data"] && data["data"]["error"]
-      raise Facebook::FailedAuthentication, "Error validating access_token with Facebook: Missing some or all user fields" unless data.keys.to_set.superset?(%w(id first_name last_name email short_name).to_set)
+      raise Facebook::FailedAuthentication, "Error validating access_token with Facebook: Missing some or all user fields" unless data.keys.to_set.superset?(%w[id first_name last_name email short_name].to_set)
 
       transform_fields(data)
     end
