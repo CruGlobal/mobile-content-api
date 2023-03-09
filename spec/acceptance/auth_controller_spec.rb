@@ -137,6 +137,17 @@ resource "Auth" do
 
         expect(response_body).to include("Missing some or all user fields")
       end
+
+      it "handles json error" do
+        stub_request(:get, "https://graph.facebook.com/10158730817232041?access_token=authtoken&fields=email,id,first_name,last_name,short_name")
+          .to_return(status: 200, body: "{{{{")
+
+        expect do
+          do_request data: {type: type, attributes: {facebook_access_token: "authtoken"}}
+        end.to_not change(User, :count)
+
+        expect(response_body).to include("unexpected token")
+      end
     end
   end
 end
