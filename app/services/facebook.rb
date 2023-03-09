@@ -8,7 +8,7 @@ class Facebook
       user_id = validate_and_extract_user_id(access_token)
       info = fetch_account_profile(access_token, user_id)
       user = find_and_update_user(info) || create_user(info)
-    rescue JWT::DecodeError => e
+    rescue JSON::ParserError => e
       raise Facebook::FailedAuthentication, e.message
     end
 
