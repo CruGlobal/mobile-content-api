@@ -60,8 +60,8 @@ class AuthController < ApplicationController
 
     (render_bad_request(data["data"]["error"]) and return) if data["data"] && data["data"]["error"]
 
-    user = User.where(email: data["email"]).first_or_create
-    user.update!(facebook_user_id: data["id"], first_name: data["first_name"], last_name: data["last_name"], short_name: data["short_name"])
+    user = User.where(facebook_user_id: data["id"]).first_or_create
+    user.update!(email: data["email"], first_name: data["first_name"], last_name: data["last_name"], short_name: data["short_name"])
     AuthToken.new(user: user)
   end
 end

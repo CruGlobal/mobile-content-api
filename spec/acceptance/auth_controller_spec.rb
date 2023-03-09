@@ -79,7 +79,7 @@ resource "Auth" do
       end
 
       context "user already exists" do
-        let!(:user) { FactoryBot.create(:user, email: "daniel.frett@gmail.com", first_name: "First", last_name: "Last", sso_guid: "12345") }
+        let!(:user) { FactoryBot.create(:user, facebook_user_id: "10158730817232041", email: "daniel.frett@gmail.com", first_name: "First", last_name: "Last", sso_guid: "12345") }
 
         it "matches an existing user" do
           expect do
