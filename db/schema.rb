@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2023_03_08_170730) do
+ActiveRecord::Schema.define(version: 2023_03_10_151243) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
@@ -109,6 +109,15 @@ ActiveRecord::Schema.define(version: 2023_03_08_170730) do
     t.index ["language_id"], name: "index_custom_tips_on_language_id"
     t.index ["tip_id", "language_id"], name: "index_custom_tips_on_tip_id_and_language_id", unique: true
     t.index ["tip_id"], name: "index_custom_tips_on_tip_id"
+  end
+
+  create_table "deletion_requests", force: :cascade do |t|
+    t.string "provider"
+    t.string "uid"
+    t.string "pid"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["pid"], name: "index_deletion_requests_on_pid"
   end
 
   create_table "destinations", id: :serial, force: :cascade do |t|
