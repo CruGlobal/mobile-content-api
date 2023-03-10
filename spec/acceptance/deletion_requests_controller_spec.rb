@@ -9,7 +9,7 @@ resource "DeletionRequests" do
   let(:raw_post) { params.to_json }
   let!(:user) { FactoryBot.create(:user, facebook_user_id: "12345") }
 
-  post "deletion_requests/facebook" do
+  post "account/deletion_requests/facebook" do
     let!(:other_user) { FactoryBot.create(:user, facebook_user_id: "12346") }
 
     it "create deletion request" do
@@ -50,7 +50,7 @@ resource "DeletionRequests" do
     end
   end
 
-  get "deletion_requests/:id" do
+  get "account/deletion_requests/:id" do
     let!(:deletion_request) { FactoryBot.create(:deletion_request, provider: "facebook", uid: "1", pid: "public_id") }
     let(:id) { "public_id" }
 

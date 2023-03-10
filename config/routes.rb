@@ -56,9 +56,11 @@ Rails.application.routes.draw do
     default: {format: "html"},
     constraints: {path: /.*/}
 
-  resources :deletion_requests, only: [:show] do
-    collection do
-      post :facebook
+  scope "account" do
+    resources :deletion_requests, only: [:show] do
+      collection do
+        post :facebook
+      end
     end
   end
 
