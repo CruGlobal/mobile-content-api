@@ -13,7 +13,7 @@ resource "DeletionRequests" do
     let!(:other_user) { FactoryBot.create(:user, facebook_user_id: "12346") }
 
     it "create deletion request" do
-      data = { "user_id" => 12345 }
+      data = {"user_id" => 12345}
       payload = Base64.urlsafe_encode64(data.to_json)
       encoded = OpenSSL::HMAC.digest("SHA256", ENV["FACEBOOK_APP_SECRET"], payload)
 
@@ -32,7 +32,7 @@ resource "DeletionRequests" do
     end
 
     it "fails if encoding does not match" do
-      data = { "user_id" => 12345 }
+      data = {"user_id" => 12345}
       payload = Base64.urlsafe_encode64(data.to_json)
       encoded = "INVALID"
 
@@ -46,7 +46,7 @@ resource "DeletionRequests" do
       }.to_not change { DeletionRequest.count }
 
       puts response_body.inspect
-      expect(JSON.parse(response_body)).to eq("error" =>"FB deletion callback called with invalid data")
+      expect(JSON.parse(response_body)).to eq("error" => "FB deletion callback called with invalid data")
     end
   end
 

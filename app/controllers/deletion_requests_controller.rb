@@ -6,7 +6,7 @@ class DeletionRequestsController < ApplicationController
     begin
       dr = DeletionRequest.from_signed_fb(params["signed_request"])
     rescue DeletionRequest::FailedAuthentication => e
-      render json: { "error" => e.to_s }
+      render json: {"error" => e.to_s}
       return
     end
 
@@ -20,6 +20,6 @@ class DeletionRequestsController < ApplicationController
 
   def show
     dr = DeletionRequest.find_by_pid!(params[:id])
-    render json: { "data" => dr.deleted? ?  "Your data has been completely deleted" : "Your deletion request is still in progress" }
+    render json: {"data" => dr.deleted? ? "Your data has been completely deleted" : "Your deletion request is still in progress"}
   end
 end
