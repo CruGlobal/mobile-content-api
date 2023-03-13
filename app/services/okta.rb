@@ -47,7 +47,8 @@ class Okta
         email: payload["email"],
         first_name: payload["given_name"],
         last_name: payload["family_name"],
-        sso_guid: payload["ssoguid"]
+        sso_guid: payload["ssoguid"],
+        gr_master_person_id: payload["grMasterPersonId"]
       }.with_indifferent_access
     end
 
