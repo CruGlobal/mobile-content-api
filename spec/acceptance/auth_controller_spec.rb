@@ -62,13 +62,6 @@ resource "Auth" do
           .to_return(status: 200, body: '{"email":"daniel.frett@gmail.com","id":"10158730817232041","first_name":"Daniel","last_name":"Frett","short_name":"Daniel"}')
       end
 
-      it "validates token format is alpha-numeric" do
-        expect do
-          do_request data: {type: type, attributes: {facebook_access_token: "auth token"}}
-        end.to_not change(User, :count)
-        expect(response_body).to include("should be alpha-numerical")
-      end
-
       it "creates a facebook user" do
         expect do
           do_request data: {type: type, attributes: {facebook_access_token: "authtoken"}}

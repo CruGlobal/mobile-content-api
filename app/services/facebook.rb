@@ -26,12 +26,8 @@ class Facebook
     end
 
     def validate_and_extract_user_id(access_token)
-      unless /^[0-9a-zA-Z]+$/.match?(access_token)
-        raise Facebook::FailedAuthentication, "Invalid token format, it should be alpha-numerical"
-      end
-
-      url = "https://graph.facebook.com/debug_token?input_token=#{access_token}&access_token=#{ENV.fetch("FACEBOOK_APP_ID")}|#{ENV.fetch("FACEBOOK_APP_SECRET")}"
-      data = JSON.parse(get(url))
+      url = "https://graph.facebook.com/debug_token"
+      data = JSON.parse(get(url, query: {input_token: access_token, access_token: "#{ENV.fetch("FACEBOOK_APP_ID")}|#{ENV.fetch("FACEBOOK_APP_SECRET")}"}))
       raise Facebook::FailedAuthentication, "Error validating access_token with Facebook: #{data["data"]["error"]}" if data["data"] && data["data"]["error"]
       raise Facebook::FailedAuthentication, "Error validating access_token with Facebook: no facebook user id returned" unless data["data"] && data["data"]["is_valid"] && data["data"]["user_id"]
 
@@ -49,8 +45,8 @@ class Facebook
     end
 
     def fetch_account_profile(access_token, user_id)
-      url = "https://graph.facebook.com/#{user_id}?fields=email,id,first_name,last_name,short_name&access_token=#{access_token}"
-      data = JSON.parse(get(url))
+      url = "https://graph.facebook.com/#{user_id}"
+      data = JSON.parse(get(url, query: {fields: "email,id,first_name,last_name,short_name", access_token: access_token}))
       raise Facebook::FailedAuthentication, "Error validating access_token with Facebook: #{data["data"]["error"]}" if data["data"] && data["data"]["error"]
       raise Facebook::FailedAuthentication, "Error validating access_token with Facebook: Missing some or all user fields" unless data.keys.to_set.superset?(%w[id first_name last_name email short_name].to_set)
 
