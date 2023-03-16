@@ -15,12 +15,6 @@ class DeletionRequest < ApplicationRecord
   end
 
   def self.from_signed_fb(req)
-    data = DeletionRequest.parse_fb_request(req)
-    return unless data
-    DeletionRequest.create(provider: "facebook", uid: data["user_id"])
-  end
-
-  def self.parse_fb_request(req)
     encoded, payload = req.split(".", 2)
     decoded = Base64.urlsafe_decode64(encoded)
     data = JSON.parse(Base64.urlsafe_decode64(payload))
@@ -29,7 +23,8 @@ class DeletionRequest < ApplicationRecord
     exp = OpenSSL::HMAC.digest("SHA256", ENV["FACEBOOK_APP_SECRET"], payload)
     raise FailedAuthentication, "FB deletion callback called with invalid data" if decoded != exp
 
-    data
+    return unless data
+    DeletionRequest.create(provider: "facebook", uid: data["user_id"])
   end
 
   private
@@ -44,12 +39,8 @@ class DeletionRequest < ApplicationRecord
 
   def set_pid
     if pid.blank?
-      self.pid = random_pid
+      self.pid = SecureRandom.hex(4)
     end
-  end
-
-  def random_pid
-    SecureRandom.hex(4)
   end
 
   class FailedAuthentication < StandardError

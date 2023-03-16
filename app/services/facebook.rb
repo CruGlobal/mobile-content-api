@@ -1,7 +1,9 @@
 # frozen_string_literal: true
 
 class Facebook
+  BASE_URI = "https://graph.facebook.com"
   include HTTParty
+  base_uri BASE_URI
 
   class << self
     def find_user_by_access_token(access_token)
@@ -26,31 +28,27 @@ class Facebook
     end
 
     def validate_and_extract_user_id(access_token)
-      url = "https://graph.facebook.com/debug_token"
-      data = JSON.parse(get(url, query: {input_token: access_token, access_token: "#{ENV.fetch("FACEBOOK_APP_ID")}|#{ENV.fetch("FACEBOOK_APP_SECRET")}"}))
-      raise Facebook::FailedAuthentication, "Error validating access_token with Facebook: #{data["data"]["error"]}" if data.dig("data", "error")
+      data = JSON.parse(get("/debug_token", query: {input_token: access_token, access_token: "#{ENV.fetch("FACEBOOK_APP_ID")}|#{ENV.fetch("FACEBOOK_APP_SECRET")}"}))
+      raise Facebook::FailedAuthentication, "Error validating access_token with Facebook: #{data.dig("data", "error")}" if data.dig("data", "error")
       raise Facebook::FailedAuthentication, "Error validating access_token with Facebook: no facebook user id returned" unless data["data"] && data["data"]["is_valid"] && data["data"]["user_id"]
 
       data["data"]["user_id"]
     end
 
-    def transform_fields(fields)
-      {
-        facebook_user_id: fields["id"],
-        email: fields["email"],
-        first_name: fields["first_name"],
-        last_name: fields["last_name"],
-        short_name: fields["short_name"]
-      }.with_indifferent_access
-    end
-
     def fetch_account_profile(access_token, user_id)
-      url = "https://graph.facebook.com/#{user_id}"
-      data = JSON.parse(get(url, query: {fields: "email,id,first_name,last_name,short_name", access_token: access_token}))
-      raise Facebook::FailedAuthentication, "Error validating access_token with Facebook: #{data["data"]["error"]}" if data["data"] && data["data"]["error"]
-      raise Facebook::FailedAuthentication, "Error validating access_token with Facebook: Missing some or all user fields" unless data.keys.to_set.superset?(%w[id first_name last_name email short_name].to_set)
+      data = JSON.parse(get("/#{user_id}", query: {fields: "email,id,first_name,last_name,short_name", access_token: access_token}))
+      raise Facebook::FailedAuthentication, "Error validating access_token with Facebook: #{data.dig("data", "error")}" if
+        data.dig("data", "error")
+      raise Facebook::FailedAuthentication, "Error validating access_token with Facebook: Missing some or all user fields" unless
+        data.keys.to_set.superset?(%w[id first_name last_name email short_name].to_set)
 
-      transform_fields(data)
+      {
+        facebook_user_id: data["id"],
+        email: data["email"],
+        first_name: data["first_name"],
+        last_name: data["last_name"],
+        short_name: data["short_name"]
+      }.with_indifferent_access
     end
   end
 
