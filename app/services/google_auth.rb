@@ -37,7 +37,7 @@ class GoogleAuth
         google_user_id: fields["sub"],
         email: fields["email"],
         first_name: fields["given_name"],
-        last_name: fields["family_name"],
+        last_name: fields["family_name"]
       }.with_indifferent_access
     end
 
