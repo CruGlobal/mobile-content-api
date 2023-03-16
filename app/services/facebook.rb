@@ -28,7 +28,7 @@ class Facebook
     def validate_and_extract_user_id(access_token)
       url = "https://graph.facebook.com/debug_token"
       data = JSON.parse(get(url, query: {input_token: access_token, access_token: "#{ENV.fetch("FACEBOOK_APP_ID")}|#{ENV.fetch("FACEBOOK_APP_SECRET")}"}))
-      raise Facebook::FailedAuthentication, "Error validating access_token with Facebook: #{data["data"]["error"]}" if data["data"] && data["data"]["error"]
+      raise Facebook::FailedAuthentication, "Error validating access_token with Facebook: #{data["data"]["error"]}" if data.dig("data", "error")
       raise Facebook::FailedAuthentication, "Error validating access_token with Facebook: no facebook user id returned" unless data["data"] && data["data"]["is_valid"] && data["data"]["user_id"]
 
       data["data"]["user_id"]
