@@ -6,6 +6,8 @@ class AuthController < ApplicationController
       auth_with_okta
     elsif data_attrs[:facebook_access_token]
       auth_with_facebook
+    elsif data_attrs[:google_access_token]
+      auth_with_google
     else
       auth_with_code
     end
@@ -41,6 +43,14 @@ class AuthController < ApplicationController
     user = Facebook.find_user_by_access_token(data_attrs[:facebook_access_token])
     AuthToken.new(user: user)
   rescue Facebook::FailedAuthentication => e
+    render_bad_request e.message
+    nil
+  end
+
+  def auth_with_google
+    user = GoogleAuth.find_user_by_access_token(data_attrs[:google_access_token])
+    AuthToken.new(user: user)
+  rescue GoogleAuth::FailedAuthentication => e
     render_bad_request e.message
     nil
   end

@@ -142,5 +142,71 @@ resource "Auth" do
         expect(response_body).to include("unexpected token")
       end
     end
+    context "google" do
+      let(:type) { "auth-token-request" }
+      let(:google_id_token) { "google_id_token" }
+      let(:verify_oidc_response) { JSON.parse(File.read("spec/fixtures/google_token_verify_oidc_response.json")) }
+      let(:google_user_id) { verify_oidc_response["sub"] }
+
+      before do
+        allow(Google::Auth::IDTokens).to receive(:verify_oidc).and_return(JSON.parse(File.read("spec/fixtures/google_token_verify_oidc_response.json")))
+      end
+
+      it "creates a google user" do
+        expect do
+          do_request data: {type: type, attributes: {google_access_token: google_id_token}}
+        end.to change(User, :count).by(1)
+
+        user = User.last
+        expect(user.email).to eq("andrewroth@gmail.com")
+        expect(user.first_name).to eq("Andrew")
+        expect(user.last_name).to eq("Roth")
+
+        expect(status).to be(201)
+        data = JSON.parse(response_body)["data"]
+        expect(data["attributes"]["user-id"]).to eq(user.id)
+      end
+
+      context "user already exists" do
+        let!(:user) { FactoryBot.create(:user, google_user_id: google_user_id) }
+
+        it "matches an existing user" do
+          expect do
+            do_request data: {type: type, attributes: {google_access_token: google_id_token}}
+          end.to_not change(User, :count)
+
+          user.reload
+          expect(user.email).to eq("andrewroth@gmail.com")
+          expect(user.first_name).to eq("Andrew")
+          expect(user.last_name).to eq("Roth")
+
+          expect(status).to be(201)
+          data = JSON.parse(response_body)["data"]
+          expect(data["attributes"]["user-id"]).to eq(user.id)
+        end
+      end
+
+      it "handles token expired" do
+        allow(Google::Auth::IDTokens).to receive(:verify_oidc).and_raise(Google::Auth::IDTokens::ExpiredTokenError)
+
+        expect do
+          do_request data: {type: type, attributes: {google_access_token: google_id_token}}
+        end.to_not change(User, :count)
+
+        expect(response_body).to include("error")
+      end
+
+      it "handles token response not having all the fields needed" do
+        response = JSON.parse(File.read("spec/fixtures/google_token_verify_oidc_response.json"))
+        response.delete("sub")
+        allow(Google::Auth::IDTokens).to receive(:verify_oidc).and_return(response)
+
+        expect do
+          do_request data: {type: type, attributes: {google_access_token: google_id_token}}
+        end.to_not change(User, :count)
+
+        expect(response_body).to include("error")
+      end
+    end
   end
 end

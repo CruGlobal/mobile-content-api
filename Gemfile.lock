@@ -504,6 +504,7 @@ DEPENDENCIES
   factory_bot_rails
   file_validators
   google-api-client (~> 0.53)
+  googleauth
   guard-rspec
   guard-rubocop
   httparty

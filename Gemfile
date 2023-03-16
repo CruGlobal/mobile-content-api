@@ -82,6 +82,7 @@ gem "rest-client", "~> 2.1.0"
 gem "rollbar"
 gem "rubyzip", ">= 1.2.2"
 gem "validates_email_format_of"
+gem "googleauth"
 
 group :development, :test do
   gem "action-cable-testing"
