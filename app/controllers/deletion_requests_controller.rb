@@ -19,7 +19,7 @@ class DeletionRequestsController < ApplicationController
   end
 
   def show
-    dr = DeletionRequest.find_by_pid!(params[:id])
+    dr = DeletionRequest.find_by!(pid: params[:id])
     render json: {"data" => dr.deleted? ? "Your data has been completely deleted" : "Your deletion request is still in progress"}
   end
 end
