@@ -8,6 +8,8 @@ class AuthController < ApplicationController
       auth_with_facebook
     elsif data_attrs[:google_access_token]
       auth_with_google
+    elsif data_attrs[:apple_access_token]
+      auth_with_apple
     else
       auth_with_code
     end
@@ -51,6 +53,14 @@ class AuthController < ApplicationController
     user = GoogleAuth.find_user_by_access_token(data_attrs[:google_access_token])
     AuthToken.new(user: user)
   rescue GoogleAuth::FailedAuthentication => e
+    render_bad_request e.message
+    nil
+  end
+
+  def auth_with_apple
+    user = Apple.find_user_by_access_token(data_attrs[:apple_access_token], data_attrs[:apple_given_name], data_attrs[:apple_family_name])
+    AuthToken.new(user: user)
+  rescue Apple::FailedAuthentication => e
     render_bad_request e.message
     nil
   end

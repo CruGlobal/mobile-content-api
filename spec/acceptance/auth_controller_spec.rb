@@ -149,7 +149,7 @@ resource "Auth" do
       let(:google_user_id) { verify_oidc_response["sub"] }
 
       before do
-        allow(Google::Auth::IDTokens).to receive(:verify_oidc).and_return(JSON.parse(File.read("spec/fixtures/google_token_verify_oidc_response.json")))
+        allow(Google::Auth::IDTokens).to receive(:verify_oidc).and_return(verify_oidc_response)
       end
 
       it "creates a google user" do
@@ -197,12 +197,78 @@ resource "Auth" do
       end
 
       it "handles token response not having all the fields needed" do
-        response = JSON.parse(File.read("spec/fixtures/google_token_verify_oidc_response.json"))
-        response.delete("sub")
+        response = verify_oidc_response.delete("sub")
         allow(Google::Auth::IDTokens).to receive(:verify_oidc).and_return(response)
 
         expect do
           do_request data: {type: type, attributes: {google_access_token: google_id_token}}
+        end.to_not change(User, :count)
+
+        expect(response_body).to include("error")
+      end
+    end
+    context "auth" do
+      let(:type) { "auth-token-request" }
+      let(:apple_id_token) { "auth_id_token" }
+      let(:token_decode_response) { JSON.parse(File.read("spec/fixtures/apple_token_decode_response.json")) }
+      let(:apple_user_id) { token_decode_response["sub"] }
+      let(:jwt_decoder) { AppleAuth::JWTDecoder.new(apple_id_token) }
+
+      before do
+        allow(AppleAuth::JWTDecoder).to receive(:new).and_return(jwt_decoder)
+        allow(jwt_decoder).to receive(:call).and_return(token_decode_response)
+      end
+
+      it "creates a apple user" do
+        expect do
+          do_request data: {type: type, attributes: {apple_access_token: apple_id_token, apple_given_name: "Levi", apple_family_name: "Eggert"}}
+        end.to change(User, :count).by(1)
+
+        user = User.last
+        expect(user.email).to eq("levi.eggert@gmail.com")
+        expect(user.first_name).to eq("Levi")
+        expect(user.last_name).to eq("Eggert")
+
+        expect(status).to be(201)
+        data = JSON.parse(response_body)["data"]
+        expect(data["attributes"]["user-id"]).to eq(user.id)
+      end
+
+      context "user already exists" do
+        let!(:user) { FactoryBot.create(:user, apple_user_id: apple_user_id, first_name: "Levi", last_name: "Eggert") }
+
+        it "matches an existing user" do
+          expect do
+            do_request data: {type: type, attributes: {apple_access_token: apple_id_token}}
+          end.to_not change(User, :count)
+
+          user.reload
+          expect(user.email).to eq("levi.eggert@gmail.com")
+          expect(user.first_name).to eq("Levi")
+          expect(user.last_name).to eq("Eggert")
+
+          expect(status).to be(201)
+          data = JSON.parse(response_body)["data"]
+          expect(data["attributes"]["user-id"]).to eq(user.id)
+        end
+      end
+
+      it "handles token expired" do
+        allow(jwt_decoder).to receive(:call).and_raise(JWT::ExpiredSignature)
+
+        expect do
+          do_request data: {type: type, attributes: {apple_access_token: apple_id_token}}
+        end.to_not change(User, :count)
+
+        expect(response_body).to include("error")
+      end
+
+      it "handles token response not having all the fields needed" do
+        response = token_decode_response.delete("sub")
+        allow(jwt_decoder).to receive(:call).and_return(response)
+
+        expect do
+          do_request data: {type: type, attributes: {apple_access_token: apple_id_token}}
         end.to_not change(User, :count)
 
         expect(response_body).to include("error")
