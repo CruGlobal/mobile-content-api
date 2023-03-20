@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
 class Apple
-  include HTTParty
-
   class << self
     def find_user_by_access_token(access_token, apple_given_name = nil, apple_family_name = nil)
       info = validate_and_extract_token(access_token)
@@ -22,12 +20,19 @@ class Apple
       raise Apple::FailedAuthentication, e.message
     rescue JWT::ExpiredSignature => e
       raise Apple::FailedAuthentication, e.message
+    rescue AppleAuth::Conditions::JWTValidationError => e
+      raise Apple::FailedAuthentication, e.message
     end
 
     private
 
     def validate_and_extract_token(access_token)
-      AppleAuth::JWTDecoder.new(access_token).call
+      payload = AppleAuth::JWTDecoder.new(access_token).call
+      unless payload["sub"]
+        raise Apple::FailedAuthentication, "Sub is missing from payload"
+      end
+      AppleAuth::UserIdentity.new(payload["sub"], access_token).validate!
+      payload
     end
 
     def transform_fields(fields)

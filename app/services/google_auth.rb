@@ -5,7 +5,7 @@ class GoogleAuth
 
   class << self
     def find_user_by_access_token(access_token)
-      info = validate_and_extract_token(access_token)
+      info = Google::Auth::IDTokens.verify_oidc access_token, aud: ENV.fetch("GOOGLE_APP_ID")
       unless info.present? && info.is_a?(Hash) && info.keys.to_set.superset?(%w[sub email given_name family_name].to_set)
         raise GoogleAuth::FailedAuthentication, "Error validating google access_token"
       end
