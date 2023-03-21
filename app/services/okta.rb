@@ -1,65 +1,58 @@
 # frozen_string_literal: true
 
-class Okta
-  include HTTParty
+class Okta < AuthServiceBase
   LEEWAY = 0
   base_uri ENV.fetch("OKTA_SERVER_URL")
 
   class << self
-    def find_user_by_access_token(access_token)
-      validate_access_token_decode!(access_token)
-      info = fetch_account_profile(access_token)
-      unless info[:sso_guid]
-        raise Okta::FailedAuthentication,
-          "Access Token does not include sso guid, make sure login scope includes profile"
-      end
-      find_user(info) || create_user(info)
-    rescue JWT::DecodeError => e
-      raise Okta::FailedAuthentication, e.message
-    end
 
     private
 
-    def find_user(user_info)
-      User.find_by(sso_guid: user_info[:sso_guid])
+    def decode_token
+      JWT.decode(access_token, nil, false).first
     end
 
-    def create_user(user_info)
-      User.create!(user_info)
+    def primary_key
+      :sso_guid
     end
 
-    def validate_access_token_decode!(access_token)
-      payload = JWT.decode(access_token, nil, false).first
-      if payload["exp"] < LEEWAY.seconds.ago.to_i
-        raise Okta::FailedAuthentication, "Expired access_token."
+    def expected_fields
+      %w[exp cid iss sso_guid email first_name last_name] 
+    end
+
+    def validate_token!(_access_token, decoded_token)
+      if decoded_token["exp"] < LEEWAY.seconds.ago.to_i
+        raise FailedAuthentication, "Expired access_token."
       end
-      unless payload["cid"].in?(ENV["OKTA_SERVER_AUDIENCE"].split(","))
-        raise Okta::FailedAuthentication, "Invalid access_token cid."
+      unless decoded_token["cid"].in?(ENV["OKTA_SERVER_AUDIENCE"].split(","))
+        raise FailedAuthentication, "Invalid access_token cid."
       end
-      unless payload["iss"] == ENV["OKTA_SERVER_PATH"]
-        raise Okta::FailedAuthentication,
-          "Invalid issuer. Expected #{ENV["OKTA_SERVER_PATH"]}, received #{payload["iss"]}"
+      unless decoded_token["iss"] == ENV["OKTA_SERVER_PATH"]
+        raise FailedAuthentication, "Invalid issuer. Expected #{ENV["OKTA_SERVER_PATH"]}, received #{decoded_token["iss"]}"
+      end
+
+      unless decoded_token[:sso_guid]
+        raise FailedAuthentication, "Access Token does not include sso guid, make sure login scope includes profile"
       end
     end
 
-    def transform_jwt_payload(payload)
-      {
-        email: payload["email"],
-        first_name: payload["given_name"],
-        last_name: payload["family_name"],
-        sso_guid: payload["ssoguid"],
-        gr_master_person_id: payload["grMasterPersonId"]
-      }.with_indifferent_access
+    def remote_user_id(decoded_token)
+      decoded_token[:sso_guid]
     end
 
-    def fetch_account_profile(access_token)
+    def extract_user_atts(access_token, _decoded_token)
       path = "/oauth2/v1/userinfo"
       response = get(path, headers: {Authorization: "Bearer #{access_token}"})
-      raise Okta::FailedAuthentication, "Error validating access_token with Okta" if response.code != 200
-      transform_jwt_payload(JSON.parse(response.body))
-    end
-  end
+      raise FailedAuthentication, "Error validating access_token with Okta" if response.code != 200
+      userinfo_payload = JSON.parse(response.body)
 
-  class FailedAuthentication < StandardError
+      {
+        email: userinfo_payload["email"],
+        first_name: userinfo_payload["given_name"],
+        last_name: userinfo_payload["family_name"],
+        sso_guid: userinfo_payload["ssoguid"],
+        gr_master_person_id: userinfo_payload["grMasterPersonId"]
+      }.with_indifferent_access
+    end
   end
 end

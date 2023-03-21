@@ -1,51 +1,49 @@
 # frozen_string_literal: true
 
-class GoogleAuth
+class GoogleAuth < AuthServiceBase
   include HTTParty
 
   class << self
-    def find_user_by_access_token(access_token)
-      info = Google::Auth::IDTokens.verify_oidc access_token, aud: ENV.fetch("GOOGLE_APP_ID")
-      unless info.present? && info.is_a?(Hash) && info.keys.to_set.superset?(%w[sub email given_name family_name].to_set)
-        raise GoogleAuth::FailedAuthentication, "Error validating google access_token"
-      end
-      attributes = transform_fields(info)
-      find_and_update_user(attributes) || create_user(attributes)
-    rescue Google::Auth::IDTokens::VerificationError => e
-      raise GoogleAuth::FailedAuthentication, e.message
-    end
 
+    def find_user_by_access_token(access_token)
+      super
+    rescue Google::Auth::IDTokens::ExpiredTokenError => e
+      raise self::FailedAuthentication, e.message
+    end
     private
 
-    def find_and_update_user(user_info)
-      user = User.find_by(google_user_id: user_info[:google_user_id])
-      return nil unless user
-      user.update(user_info)
-      user
+    def service_name
+      "google"
     end
 
-    def create_user(user_info)
-      User.create!(user_info)
+    def expected_fields
+      %w[sub email given_name family_name]
     end
 
-    def validate_and_extract_token(access_token)
+    # no easy way to get decoded token without validation with the google library, so this will return it with validation,
+    # that's ok in the execution flow, if it raises an exception it will be caught and returned in AuthServiceBase
+    def decode_token(access_token)
       Google::Auth::IDTokens.verify_oidc access_token, aud: ENV.fetch("GOOGLE_APP_ID")
     end
 
-    def transform_fields(fields)
-      {
-        google_user_id: fields["sub"],
-        email: fields["email"],
-        first_name: fields["given_name"],
-        last_name: fields["family_name"]
-      }.with_indifferent_access
+    def validate_token!(access_token, _decode_token)
+      decode_token(access_token)
     end
 
-    def fetch_account_profile(info, user_id)
-      transform_fields(data)
+    def remote_user_id(decoded_token)
+      decoded_token["sub"]
+    end
+
+    def extract_user_atts(access_token, decoded_token)
+      {
+        google_user_id: remote_user_id(decoded_token),
+        email: decoded_token["email"],
+        first_name: decoded_token["given_name"],
+        last_name: decoded_token["family_name"]
+      }.with_indifferent_access
     end
   end
 
-  class FailedAuthentication < StandardError
+  class FailedAuthentication < AuthServiceBase::FailedAuthentication
   end
 end

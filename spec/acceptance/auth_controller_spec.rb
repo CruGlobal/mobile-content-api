@@ -65,6 +65,7 @@ resource "Auth" do
       it "creates a facebook user" do
         expect do
           do_request data: {type: type, attributes: {facebook_access_token: "authtoken"}}
+          puts response_body.inspect
         end.to change(User, :count).by(1)
 
         user = User.last
@@ -122,7 +123,7 @@ resource "Auth" do
 
       it "handles fields call not returning all fields" do
         stub_request(:get, "https://graph.facebook.com/10158730817232041?access_token=authtoken&fields=email,id,first_name,last_name,short_name")
-          .to_return(status: 200, body: '{"email":"daniel.frett@gmail.com","id":"10158730817232041","first_name":"Daniel","last_name":"Frett"}')
+          .to_return(status: 200, body: '{"id":"10158730817232041","first_name":"Daniel","last_name":"Frett"}')
 
         expect do
           do_request data: {type: type, attributes: {facebook_access_token: "authtoken"}}
@@ -197,7 +198,8 @@ resource "Auth" do
       end
 
       it "handles token response not having all the fields needed" do
-        response = verify_oidc_response.delete("sub")
+        response = verify_oidc_response
+        response.delete("sub")
         allow(Google::Auth::IDTokens).to receive(:verify_oidc).and_return(response)
 
         expect do
@@ -207,7 +209,8 @@ resource "Auth" do
         expect(response_body).to include("error")
       end
     end
-    context "auth" do
+
+    context "apple" do
       let(:type) { "auth-token-request" }
       let(:apple_id_token) { "auth_id_token" }
       let(:token_decode_response) { JSON.parse(File.read("spec/fixtures/apple_token_decode_response.json")) }
@@ -222,6 +225,7 @@ resource "Auth" do
       it "creates a apple user" do
         expect do
           do_request data: {type: type, attributes: {apple_access_token: apple_id_token, apple_given_name: "Levi", apple_family_name: "Eggert"}}
+          puts response_body.inspect
         end.to change(User, :count).by(1)
 
         user = User.last
@@ -272,6 +276,28 @@ resource "Auth" do
         end.to_not change(User, :count)
 
         expect(response_body).to include("error")
+      end
+      it "checks iss in token" do
+        response = token_decode_response
+        response["iss"] = "https://some.other.issuer"
+        allow(jwt_decoder).to receive(:call).and_return(response)
+
+        expect do
+          do_request data: {type: type, attributes: {apple_access_token: apple_id_token}}
+        end.to_not change(User, :count)
+
+        expect(response_body).to include("jwt_iss is different to apple_iss")
+      end
+      it "checks aud in token" do
+        response = token_decode_response
+        response["aud"] = "some.other.org"
+        allow(jwt_decoder).to receive(:call).and_return(response)
+
+        expect do
+          do_request data: {type: type, attributes: {apple_access_token: apple_id_token}}
+        end.to_not change(User, :count)
+
+        expect(response_body).to include("jwt_aud is different to apple_client_id")
       end
     end
   end

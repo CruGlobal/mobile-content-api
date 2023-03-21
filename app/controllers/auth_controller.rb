@@ -1,19 +1,35 @@
 # frozen_string_literal: true
 
 class AuthController < ApplicationController
+  THIRD_PARTY_AUTH_METHODS = {
+    okta: Okta,
+    facebook: Facebook,
+    google: GoogleAuth, # the google gem uses Google namespace
+    apple: Apple
+  }
+
   def create
-    token = if data_attrs[:okta_access_token]
-      auth_with_okta
-    elsif data_attrs[:facebook_access_token]
-      auth_with_facebook
-    elsif data_attrs[:google_access_token]
-      auth_with_google
-    elsif data_attrs[:apple_access_token]
-      auth_with_apple
+    method = THIRD_PARTY_AUTH_METHODS.keys.detect { |method| data_attrs[:"#{method}_access_token"] }
+    token = case method
+    when :apple
+      # special case for apple, which has given and family name passed in
+      user = Apple.find_user_by_access_token(data_attrs[:apple_access_token], data_attrs[:apple_given_name], data_attrs[:apple_family_name])
+      AuthToken.new(user: user)
+    when :okta, :facebook, :google
+      user = THIRD_PARTY_AUTH_METHODS[method].find_user_by_access_token(data_attrs[:"#{method}_access_token"])
+      AuthToken.new(user: user)
     else
-      auth_with_code
+      AccessCode.validate(data_attrs[:code])
+      AuthToken.new
     end
+
     render json: token, status: :created if token
+  rescue AuthServiceBase::FailedAuthentication => e
+    render_bad_request e.message
+    nil
+  rescue AccessCode::FailedAuthentication => e
+    render_bad_request e.message
+    nil
   end
 
   private
@@ -23,45 +39,5 @@ class AuthController < ApplicationController
     code.errors.add(:code, message)
 
     render_error(code, :bad_request)
-  end
-
-  def auth_with_code
-    AccessCode.validate(data_attrs[:code])
-    AuthToken.new
-  rescue AccessCode::FailedAuthentication => e
-    render_bad_request e.message
-    nil
-  end
-
-  def auth_with_okta
-    user = Okta.find_user_by_access_token(data_attrs[:okta_access_token])
-    AuthToken.new(user: user)
-  rescue Okta::FailedAuthentication => e
-    render_bad_request e.message
-    nil
-  end
-
-  def auth_with_facebook
-    user = Facebook.find_user_by_access_token(data_attrs[:facebook_access_token])
-    AuthToken.new(user: user)
-  rescue Facebook::FailedAuthentication => e
-    render_bad_request e.message
-    nil
-  end
-
-  def auth_with_google
-    user = GoogleAuth.find_user_by_access_token(data_attrs[:google_access_token])
-    AuthToken.new(user: user)
-  rescue GoogleAuth::FailedAuthentication => e
-    render_bad_request e.message
-    nil
-  end
-
-  def auth_with_apple
-    user = Apple.find_user_by_access_token(data_attrs[:apple_access_token], data_attrs[:apple_given_name], data_attrs[:apple_family_name])
-    AuthToken.new(user: user)
-  rescue Apple::FailedAuthentication => e
-    render_bad_request e.message
-    nil
   end
 end
