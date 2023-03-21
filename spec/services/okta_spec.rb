@@ -6,7 +6,8 @@ RSpec.describe Okta do
       ssoguid: "qwer",
       email: "okta@okta.com",
       first_name: "Okta",
-      last_name: "Test"
+      last_name: "Test",
+      name: "Okta Test"
     }
   end
 

@@ -34,7 +34,7 @@ class Facebook < AuthServiceBase
     end
 
     def extract_user_atts(access_token, decoded_token)
-      fields_data = JSON.parse(get("/#{remote_user_id(decoded_token)}", query: {fields: "email,id,first_name,last_name,short_name", access_token: access_token}))
+      fields_data = JSON.parse(get("/#{remote_user_id(decoded_token)}", query: {fields: "email,id,first_name,last_name,short_name,name", access_token: access_token}))
       raise FailedAuthentication, "Error validating access_token with Facebook: #{fields_data.dig("data", "error")}" if
         fields_data.dig("data", "error")
 
@@ -48,7 +48,8 @@ class Facebook < AuthServiceBase
         email: fields_data["email"],
         first_name: fields_data["first_name"],
         last_name: fields_data["last_name"],
-        short_name: fields_data["short_name"]
+        short_name: fields_data["short_name"],
+        name: fields_data["name"]
       }.with_indifferent_access
     end
   end

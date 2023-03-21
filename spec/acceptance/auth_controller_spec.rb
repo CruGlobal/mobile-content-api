@@ -58,8 +58,8 @@ resource "Auth" do
       before do
         stub_request(:get, "https://graph.facebook.com/debug_token?access_token=facebook_app_id%7Cfacebook_app_secret&input_token=authtoken")
           .to_return(status: 200, body: '{"data":{"app_id":"448969905944197","type":"USER","application":"GodTools - Dev","data_access_expires_at":1685893862,"expires_at":1683301862,"is_valid":true,"issued_at":1678117862,"metadata":{"auth_type":"rerequest","sso":"chrome_custom_tab"},"scopes":["email","openid","public_profile"],"user_id":"10158730817232041"}}')
-        stub_request(:get, "https://graph.facebook.com/10158730817232041?access_token=authtoken&fields=email,id,first_name,last_name,short_name")
-          .to_return(status: 200, body: '{"email":"daniel.frett@gmail.com","id":"10158730817232041","first_name":"Daniel","last_name":"Frett","short_name":"Daniel"}')
+        stub_request(:get, "https://graph.facebook.com/10158730817232041?access_token=authtoken&fields=email,id,first_name,last_name,short_name,name")
+          .to_return(status: 200, body: '{"email":"daniel.frett@gmail.com","id":"10158730817232041","first_name":"Daniel","last_name":"Frett","short_name":"Daniel","name":"Daniel Frett"}')
       end
 
       it "creates a facebook user" do
@@ -73,6 +73,7 @@ resource "Auth" do
         expect(user.first_name).to eq("Daniel")
         expect(user.last_name).to eq("Frett")
         expect(user.short_name).to eq("Daniel")
+        expect(user.name).to eq("Daniel Frett")
 
         expect(status).to be(201)
         data = JSON.parse(response_body)["data"]
@@ -111,7 +112,7 @@ resource "Auth" do
       end
 
       it "handles fields call fails" do
-        stub_request(:get, "https://graph.facebook.com/10158730817232041?access_token=authtoken&fields=email,id,first_name,last_name,short_name")
+        stub_request(:get, "https://graph.facebook.com/10158730817232041?access_token=authtoken&fields=email,id,first_name,last_name,short_name,name")
           .to_return(status: 400, body: {"data" => {"error" => {"code" => 190, "message" => "Invalid OAuth access token - Cannot parse access token"}, "is_valid" => false, "scopes" => []}}.to_json)
 
         expect do
@@ -122,7 +123,7 @@ resource "Auth" do
       end
 
       it "handles fields call not returning all fields" do
-        stub_request(:get, "https://graph.facebook.com/10158730817232041?access_token=authtoken&fields=email,id,first_name,last_name,short_name")
+        stub_request(:get, "https://graph.facebook.com/10158730817232041?access_token=authtoken&fields=email,id,first_name,last_name,short_name,name")
           .to_return(status: 200, body: '{"id":"10158730817232041","first_name":"Daniel","last_name":"Frett"}')
 
         expect do
@@ -133,7 +134,7 @@ resource "Auth" do
       end
 
       it "handles json error" do
-        stub_request(:get, "https://graph.facebook.com/10158730817232041?access_token=authtoken&fields=email,id,first_name,last_name,short_name")
+        stub_request(:get, "https://graph.facebook.com/10158730817232041?access_token=authtoken&fields=email,id,first_name,last_name,short_name,name")
           .to_return(status: 200, body: "{{{{")
 
         expect do
@@ -180,6 +181,7 @@ resource "Auth" do
           expect(user.email).to eq("andrewroth@gmail.com")
           expect(user.first_name).to eq("Andrew")
           expect(user.last_name).to eq("Roth")
+          expect(user.name).to eq("Andrew Roth")
 
           expect(status).to be(201)
           data = JSON.parse(response_body)["data"]

@@ -39,7 +39,8 @@ class GoogleAuth < AuthServiceBase
         google_user_id: remote_user_id(decoded_token),
         email: decoded_token["email"],
         first_name: decoded_token["given_name"],
-        last_name: decoded_token["family_name"]
+        last_name: decoded_token["family_name"],
+        name: decoded_token["name"]
       }.with_indifferent_access
     end
   end

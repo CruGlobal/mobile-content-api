@@ -7,7 +7,7 @@ class Okta < AuthServiceBase
   class << self
     private
 
-    def decode_token
+    def decode_token(access_token)
       JWT.decode(access_token, nil, false).first
     end
 
@@ -16,39 +16,46 @@ class Okta < AuthServiceBase
     end
 
     def expected_fields
-      %w[exp cid iss sso_guid email first_name last_name]
+      %w[exp cid iss]
     end
 
     def validate_token!(_access_token, decoded_token)
       if decoded_token["exp"] < LEEWAY.seconds.ago.to_i
-        raise FailedAuthentication, "Expired access_token."
+        raise self::FailedAuthentication, "Expired access_token."
       end
       unless decoded_token["cid"].in?(ENV["OKTA_SERVER_AUDIENCE"].split(","))
-        raise FailedAuthentication, "Invalid access_token cid."
+        raise self::FailedAuthentication, "Invalid access_token cid."
       end
       unless decoded_token["iss"] == ENV["OKTA_SERVER_PATH"]
-        raise FailedAuthentication, "Invalid issuer. Expected #{ENV["OKTA_SERVER_PATH"]}, received #{decoded_token["iss"]}"
-      end
-
-      unless decoded_token[:sso_guid]
-        raise FailedAuthentication, "Access Token does not include sso guid, make sure login scope includes profile"
+        raise self::FailedAuthentication, "Invalid issuer. Expected #{ENV["OKTA_SERVER_PATH"]}, received #{decoded_token["iss"]}"
       end
     end
 
     def remote_user_id(decoded_token)
-      decoded_token[:sso_guid]
+      # noop since remote_user_id for okta is ssoguid given in the userinfo call
+    end
+
+    # manually implement setup_user to pull ssoguid from usre_atts instead of using remote_user_id
+    def setup_user(remote_user_id, user_atts)
+      user = User.where(:sso_guid => user_atts[primary_key]).first_or_initialize
+      user.update!(user_atts)
+      user
     end
 
     def extract_user_atts(access_token, _decoded_token)
       path = "/oauth2/v1/userinfo"
       response = get(path, headers: {Authorization: "Bearer #{access_token}"})
-      raise FailedAuthentication, "Error validating access_token with Okta" if response.code != 200
+      raise self::FailedAuthentication, "Error validating access_token with Okta" if response.code != 200
       userinfo_payload = JSON.parse(response.body)
+      unless userinfo_payload["ssoguid"]
+        raise self::FailedAuthentication, "Access Token does not include sso guid, make sure login scope includes profile"
+      end
 
       {
         email: userinfo_payload["email"],
         first_name: userinfo_payload["given_name"],
         last_name: userinfo_payload["family_name"],
+        name: userinfo_payload["name"],
         sso_guid: userinfo_payload["ssoguid"],
         gr_master_person_id: userinfo_payload["grMasterPersonId"]
       }.with_indifferent_access
