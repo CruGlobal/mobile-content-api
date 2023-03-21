@@ -37,7 +37,7 @@ class Okta < AuthServiceBase
 
     # manually implement setup_user to pull ssoguid from usre_atts instead of using remote_user_id
     def setup_user(remote_user_id, user_atts)
-      user = User.where(:sso_guid => user_atts[primary_key]).first_or_initialize
+      user = User.where(sso_guid: user_atts[primary_key]).first_or_initialize
       user.update!(user_atts)
       user
     end

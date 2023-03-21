@@ -12,7 +12,7 @@ class UserSerializer < ActiveModel::Serializer
   def given_name
     object.first_name
   end
-  
+
   def family_name
     object.last_name
   end
