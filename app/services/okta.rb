@@ -5,7 +5,6 @@ class Okta < AuthServiceBase
   base_uri ENV.fetch("OKTA_SERVER_URL")
 
   class << self
-
     private
 
     def decode_token
@@ -17,7 +16,7 @@ class Okta < AuthServiceBase
     end
 
     def expected_fields
-      %w[exp cid iss sso_guid email first_name last_name] 
+      %w[exp cid iss sso_guid email first_name last_name]
     end
 
     def validate_token!(_access_token, decoded_token)

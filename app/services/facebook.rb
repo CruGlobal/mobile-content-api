@@ -5,7 +5,6 @@ class Facebook < AuthServiceBase
   base_uri BASE_URI
 
   class << self
-
     private
 
     def expected_fields
@@ -40,10 +39,9 @@ class Facebook < AuthServiceBase
         fields_data.dig("data", "error")
 
       unless fields_data.present? && fields_data.is_a?(Hash) && fields_data.keys.to_set.superset?(expected_fields_from_get_fields.to_set)
-        raise FailedAuthentication, "Error validating #{service_name} access_token: Missing some or all user fields (got #{fields_data.keys.join(", ")}, " +
+        raise FailedAuthentication, "Error validating #{service_name} access_token: Missing some or all user fields (got #{fields_data.keys.join(", ")}, " \
           "expected #{expected_fields_from_get_fields.join(", ")})"
       end
-
 
       {
         facebook_user_id: fields_data["id"],

@@ -34,7 +34,7 @@ class AuthServiceBase
     end
 
     def service_name
-      self.name.downcase
+      name.downcase
     end
 
     def primary_key

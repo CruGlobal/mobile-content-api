@@ -12,7 +12,6 @@ class Apple < AuthServiceBase
       user_atts["first_name"] = apple_given_name if apple_given_name.present?
       user_atts["last_name"] = apple_family_name if apple_family_name.present?
       setup_user(apple_user_id, user_atts)
-
     rescue JSON::ParserError => e
       raise FailedAuthentication, e.message
     rescue JWT::DecodeError => e

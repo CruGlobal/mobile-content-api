@@ -4,12 +4,12 @@ class GoogleAuth < AuthServiceBase
   include HTTParty
 
   class << self
-
     def find_user_by_access_token(access_token)
       super
     rescue Google::Auth::IDTokens::ExpiredTokenError => e
       raise self::FailedAuthentication, e.message
     end
+
     private
 
     def service_name
