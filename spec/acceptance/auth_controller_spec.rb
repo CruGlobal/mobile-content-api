@@ -217,7 +217,7 @@ resource "Auth" do
     context "apple" do
       let(:type) { "auth-token-request" }
       let(:apple_id_token) { "auth_id_token" }
-      let(:token_decode_response) { JSON.parse(File.read("spec/fixtures/apple_token_decode_response.json") % { exp: 2.hours.from_now.to_i, iat: 1.hour.ago.to_i } ) }
+      let(:token_decode_response) { JSON.parse(File.read("spec/fixtures/apple_token_decode_response.json") % {exp: 2.hours.from_now.to_i, iat: 1.hour.ago.to_i}) }
       let(:apple_user_id) { token_decode_response["sub"] }
       let(:jwt_decoder) { AppleAuth::JWTDecoder.new(apple_id_token) }
 
