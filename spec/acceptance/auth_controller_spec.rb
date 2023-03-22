@@ -3,6 +3,8 @@
 require "acceptance_helper"
 
 resource "Auth" do
+  include ActiveSupport::Testing::TimeHelpers
+
   header "Accept", "application/vnd.api+json"
   header "Content-Type", "application/vnd.api+json"
   let(:type) { "auth-token" }
@@ -215,7 +217,7 @@ resource "Auth" do
     context "apple" do
       let(:type) { "auth-token-request" }
       let(:apple_id_token) { "auth_id_token" }
-      let(:token_decode_response) { JSON.parse(File.read("spec/fixtures/apple_token_decode_response.json")) }
+      let(:token_decode_response) { JSON.parse(File.read("spec/fixtures/apple_token_decode_response.json") % { exp: 2.hours.from_now.to_i, iat: 1.hour.ago.to_i } ) }
       let(:apple_user_id) { token_decode_response["sub"] }
       let(:jwt_decoder) { AppleAuth::JWTDecoder.new(apple_id_token) }
 
@@ -227,7 +229,6 @@ resource "Auth" do
       it "creates a apple user" do
         expect do
           do_request data: {type: type, attributes: {apple_access_token: apple_id_token, apple_given_name: "Levi", apple_family_name: "Eggert"}}
-          puts response_body.inspect
         end.to change(User, :count).by(1)
 
         user = User.last
