@@ -15,8 +15,6 @@ class AuthServiceBase
       raise self::FailedAuthentication, e.message
     rescue JWT::DecodeError => e
       raise self::FailedAuthentication, e.message
-    rescue JWT::ExpiredSignature => e
-      raise self::FailedAuthentication, e.message
     end
 
     private
