@@ -11,7 +11,7 @@ class AuthController < ApplicationController
       user = AppleAuthService.find_user_by_token(data_attrs[:apple_id_token], data_attrs[:apple_given_name], data_attrs[:apple_family_name])
       AuthToken.new(user: user)
     when :google
-      user = GoogleAuthServive.find_user_by_token(data_attrs[:google_id_token])
+      user = GoogleAuthService.find_user_by_token(data_attrs[:google_id_token])
       AuthToken.new(user: user)
     when :okta, :facebook
       user = "::#{method.to_s.capitalize}AuthService".constantize.find_user_by_token(data_attrs[:"#{method}_access_token"])

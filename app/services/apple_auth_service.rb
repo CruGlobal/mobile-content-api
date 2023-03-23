@@ -24,10 +24,6 @@ class AppleAuthService < AuthServiceBase
 
     private
 
-    def primary_key
-      :"#{service_name}_id_token"
-    end
-
     def expected_fields
       %w[sub email iss aud]
     end
@@ -47,7 +43,7 @@ class AppleAuthService < AuthServiceBase
 
     def extract_user_atts(_apple_id_token, decoded_token, remote_user_id)
       {
-        apple_id_token: remote_user_id,
+        apple_user_id: remote_user_id,
         email: decoded_token["email"]
       }.with_indifferent_access
     end

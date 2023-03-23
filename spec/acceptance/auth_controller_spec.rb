@@ -37,7 +37,7 @@ resource "Auth" do
     end
 
     it "create a token with a valid Okta access_token" do
-      allow(Okta).to receive(:find_user_by_token).with(valid_access_token).and_return(user)
+      allow(OktaAuthService).to receive(:find_user_by_token).with(valid_access_token).and_return(user)
 
       do_request data: {type: type, attributes: {okta_access_token: valid_access_token}}
 
@@ -47,7 +47,7 @@ resource "Auth" do
     end
 
     it "returns error with a expired Okta access_token" do
-      allow(Okta).to receive(:find_user_by_token).with(valid_access_token).and_raise(Okta::FailedAuthentication, "expired signature")
+      allow(OktaAuthService).to receive(:find_user_by_token).with(valid_access_token).and_raise(OktaAuthService::FailedAuthentication, "expired signature")
 
       do_request data: {type: type, attributes: {okta_access_token: valid_access_token}}
 
@@ -150,7 +150,7 @@ resource "Auth" do
       let(:type) { "auth-token-request" }
       let(:google_id_token) { "google_id_token" }
       let(:verify_oidc_response) { JSON.parse(File.read("spec/fixtures/google_token_verify_oidc_response.json")) }
-      let(:google_id_token) { verify_oidc_response["sub"] }
+      let(:google_user_id) { verify_oidc_response["sub"] }
 
       before do
         allow(Google::Auth::IDTokens).to receive(:verify_oidc).and_return(verify_oidc_response)
@@ -172,7 +172,7 @@ resource "Auth" do
       end
 
       context "user already exists" do
-        let!(:user) { FactoryBot.create(:user, google_id_token: google_id_token) }
+        let!(:user) { FactoryBot.create(:user, google_user_id: google_user_id) }
 
         it "matches an existing user" do
           expect do
@@ -218,7 +218,7 @@ resource "Auth" do
       let(:type) { "auth-token-request" }
       let(:apple_id_token) { "auth_id_token" }
       let(:token_decode_response) { JSON.parse(File.read("spec/fixtures/apple_token_decode_response.json") % {exp: 2.hours.from_now.to_i, iat: 1.hour.ago.to_i}) }
-      let(:apple_id_token) { token_decode_response["sub"] }
+      let(:apple_user_id) { token_decode_response["sub"] }
       let(:jwt_decoder) { AppleAuth::JWTDecoder.new(apple_id_token) }
 
       before do
@@ -242,7 +242,7 @@ resource "Auth" do
       end
 
       context "user already exists" do
-        let!(:user) { FactoryBot.create(:user, apple_id_token: apple_id_token, first_name: "Levi", last_name: "Eggert") }
+        let!(:user) { FactoryBot.create(:user, apple_user_id: apple_user_id, first_name: "Levi", last_name: "Eggert") }
 
         it "matches an existing user" do
           expect do

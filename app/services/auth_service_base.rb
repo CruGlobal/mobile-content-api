@@ -34,7 +34,7 @@ class AuthServiceBase
     end
 
     def service_name
-      name.downcase
+      name.gsub("AuthService", "").downcase
     end
 
     def primary_key
