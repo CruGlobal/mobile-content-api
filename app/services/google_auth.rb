@@ -16,6 +16,10 @@ class GoogleAuth < AuthServiceBase
       "google"
     end
 
+    def primary_key
+      :"#{service_name}_id_token"
+    end
+
     def expected_fields
       %w[sub email given_name family_name]
     end
@@ -36,7 +40,7 @@ class GoogleAuth < AuthServiceBase
 
     def extract_user_atts(access_token, decoded_token)
       {
-        google_user_id: remote_user_id(decoded_token),
+        google_id_token: remote_user_id(decoded_token),
         email: decoded_token["email"],
         first_name: decoded_token["given_name"],
         last_name: decoded_token["family_name"],

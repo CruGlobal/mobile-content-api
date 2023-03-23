@@ -7,11 +7,11 @@ class Apple < AuthServiceBase
       validate_token!(access_token, decoded_token)
       validate_expected_fields!(decoded_token)
 
-      apple_user_id = remote_user_id(decoded_token)
-      user_atts = extract_user_atts(access_token, decoded_token, apple_user_id)
+      apple_id_token = remote_user_id(decoded_token)
+      user_atts = extract_user_atts(access_token, decoded_token, apple_id_token)
       user_atts["first_name"] = apple_given_name if apple_given_name.present?
       user_atts["last_name"] = apple_family_name if apple_family_name.present?
-      setup_user(apple_user_id, user_atts)
+      setup_user(apple_id_token, user_atts)
     rescue JSON::ParserError => e
       raise FailedAuthentication, e.message
     rescue JWT::DecodeError => e
@@ -23,6 +23,10 @@ class Apple < AuthServiceBase
     end
 
     private
+
+    def primary_key
+      :"#{service_name}_id_token"
+    end
 
     def expected_fields
       %w[sub email iss aud]
@@ -43,7 +47,7 @@ class Apple < AuthServiceBase
 
     def extract_user_atts(access_token, payload, remote_user_id)
       {
-        apple_user_id: remote_user_id,
+        apple_id_token: remote_user_id,
         email: payload["email"]
       }.with_indifferent_access
     end
