@@ -87,7 +87,6 @@ resource "Auth" do
       it "creates a facebook user" do
         expect do
           do_request data: {type: type, attributes: {facebook_access_token: "authtoken"}}
-          puts response_body.inspect
         end.to change(User, :count).by(1)
 
         user = User.last
@@ -298,7 +297,6 @@ resource "Auth" do
           do_request data: {type: type, attributes: {apple_id_token: apple_id_token}}
         end.to_not change(User, :count)
 
-        puts response_body.inspect
         expect(response_body).to include("JWT::ExpiredSignature")
       end
 
@@ -309,7 +307,6 @@ resource "Auth" do
           do_request data: {type: type, attributes: {apple_id_token: apple_id_token}}
         end.to_not change(User, :count)
 
-        puts response_body.inspect
         expect(response_body).to include("JSON::ParserError")
       end
 

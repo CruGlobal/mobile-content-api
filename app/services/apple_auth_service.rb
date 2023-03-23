@@ -16,8 +16,6 @@ class AppleAuthService < AuthServiceBase
       raise FailedAuthentication, e.message
     rescue JWT::DecodeError => e
       raise FailedAuthentication, e.message
-    rescue JWT::ExpiredSignature => e
-      raise FailedAuthentication, e.message
     rescue AppleAuth::Conditions::JWTValidationError => e
       raise FailedAuthentication, e.message
     end
