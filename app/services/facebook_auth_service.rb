@@ -29,7 +29,7 @@ class FacebookAuthService < AuthServiceBase
     end
 
     def validate_token!(_input_token, decoded_token)
-      raise FailedAuthentication, "Error validating access_token with Facebook: no facebook user id returned" unless
+      raise FailedAuthentication, "Error validating access_token with Facebook: token is not valid" unless
         decoded_token["is_valid"] && decoded_token["user_id"]
     end
 

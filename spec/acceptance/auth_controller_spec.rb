@@ -36,40 +36,42 @@ resource "Auth" do
       expect(status).to be(400)
     end
 
-    it "create a token with a valid Okta access_token" do
-      allow(OktaAuthService).to receive(:find_user_by_token).with(valid_access_token).and_return(user)
+    context "okta" do
+      it "create a token with a valid Okta access_token" do
+        allow(OktaAuthService).to receive(:find_user_by_token).with(valid_access_token).and_return(user)
 
-      do_request data: {type: type, attributes: {okta_access_token: valid_access_token}}
+        do_request data: {type: type, attributes: {okta_access_token: valid_access_token}}
 
-      expect(status).to be(201)
-      data = JSON.parse(response_body)["data"]
-      expect(data["attributes"]["user-id"]).to eq(user.id)
-    end
+        expect(status).to be(201)
+        data = JSON.parse(response_body)["data"]
+        expect(data["attributes"]["user-id"]).to eq(user.id)
+      end
 
-    it "returns error with a expired Okta access_token" do
-      allow(OktaAuthService).to receive(:find_user_by_token).with(valid_access_token).and_raise(OktaAuthService::FailedAuthentication, "expired signature")
+      it "returns error with a expired Okta access_token" do
+        allow(OktaAuthService).to receive(:find_user_by_token).with(valid_access_token).and_raise(OktaAuthService::FailedAuthentication, "expired signature")
 
-      do_request data: {type: type, attributes: {okta_access_token: valid_access_token}}
+        do_request data: {type: type, attributes: {okta_access_token: valid_access_token}}
 
-      expect(status).to be(400)
-    end
+        expect(status).to be(400)
+      end
 
-    it "handles JWT::DecodeError" do
-      allow(OktaAuthService).to receive(:decode_token).with(valid_access_token).and_raise(JWT::DecodeError)
+      it "handles JWT::DecodeError" do
+        allow(OktaAuthService).to receive(:decode_token).with(valid_access_token).and_raise(JWT::DecodeError)
 
-      do_request data: {type: type, attributes: {okta_access_token: valid_access_token}}
-      expect(response_body.inspect).to include("JWT::DecodeError")
+        do_request data: {type: type, attributes: {okta_access_token: valid_access_token}}
+        expect(response_body.inspect).to include("JWT::DecodeError")
 
-      expect(status).to be(400)
-    end
+        expect(status).to be(400)
+      end
 
-    it "handles JWT::DecodeError" do
-      allow(OktaAuthService).to receive(:decode_token).with(valid_access_token).and_raise(JWT::ExpiredSignature)
+      it "handles JWT::ExpiredSignature" do
+        allow(OktaAuthService).to receive(:decode_token).with(valid_access_token).and_raise(JWT::ExpiredSignature)
 
-      do_request data: {type: type, attributes: {okta_access_token: valid_access_token}}
-      expect(response_body.inspect).to include("JWT::ExpiredSignature")
+        do_request data: {type: type, attributes: {okta_access_token: valid_access_token}}
+        expect(response_body.inspect).to include("JWT::ExpiredSignature")
 
-      expect(status).to be(400)
+        expect(status).to be(400)
+      end
     end
 
     context "facebook" do
@@ -151,6 +153,17 @@ resource "Auth" do
         end.to_not change(User, :count)
 
         expect(response_body).to include("Missing some or all user fields")
+      end
+
+      it "handles invalid token" do
+        stub_request(:get, "https://graph.facebook.com/debug_token?access_token=facebook_app_id%7Cfacebook_app_secret&input_token=authtoken")
+          .to_return(status: 200, body: '{"data":{"app_id":"448969905944197","type":"USER","application":"GodTools - Dev","data_access_expires_at":1685893862,"expires_at":1683301862,"is_valid":false,"issued_at":1678117862,"metadata":{"auth_type":"rerequest","sso":"chrome_custom_tab"},"scopes":["email","openid","public_profile"],"user_id":"10158730817232041"}}')
+
+        expect do
+          do_request data: {type: type, attributes: {facebook_access_token: "authtoken"}}
+        end.to_not change(User, :count)
+
+        expect(response_body).to include("token is not valid")
       end
 
       it "handles json error" do
@@ -285,7 +298,19 @@ resource "Auth" do
           do_request data: {type: type, attributes: {apple_id_token: apple_id_token}}
         end.to_not change(User, :count)
 
-        expect(response_body).to include("error")
+        puts response_body.inspect
+        expect(response_body).to include("JWT::ExpiredSignature")
+      end
+
+      it "handles parse error" do
+        allow(jwt_decoder).to receive(:call).and_raise(JSON::ParserError)
+
+        expect do
+          do_request data: {type: type, attributes: {apple_id_token: apple_id_token}}
+        end.to_not change(User, :count)
+
+        puts response_body.inspect
+        expect(response_body).to include("JSON::ParserError")
       end
 
       it "handles token response not having all the fields needed" do

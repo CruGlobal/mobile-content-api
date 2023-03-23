@@ -79,5 +79,50 @@ RSpec.describe OktaAuthService do
         end
       end
     end
+
+    context "cid" do
+      let(:jwt_default_payload) { {iss: ENV["OKTA_SERVER_PATH"], aud: ENV["OKTA_SERVER_PATH"], cid: "other"} }
+
+      it "raises an authentication method when validation fails" do
+          expect { described_class.find_user_by_token(access_token) }.to(
+            raise_error(
+              OktaAuthService::FailedAuthentication,
+              "Invalid access_token cid."
+            )
+          )
+      end
+    end
+    context "iss" do
+      let(:jwt_default_payload) { {iss: "other", aud: ENV["OKTA_SERVER_PATH"], cid: okta_client_id} }
+
+      it "raises an authentication method when validation fails" do
+          expect { described_class.find_user_by_token(access_token) }.to(
+            raise_error(
+              OktaAuthService::FailedAuthentication,
+              "Invalid issuer. Expected https://dev1-signon.okta.com, received other"
+            )
+          )
+      end
+    end
+    context "extract_user_atts" do
+      let(:okta_user_info) do
+        {
+          email: "okta@okta.com",
+          first_name: "Okta",
+          last_name: "Test",
+          name: "Okta Test"
+        }
+      end
+
+      it "checks ssoguid is present" do
+        stub_successful_profile
+        expect { described_class.find_user_by_token(access_token) }.to(
+          raise_error(
+            OktaAuthService::FailedAuthentication,
+           "Access Token does not include sso guid, make sure login scope includes profile" 
+          )
+        )
+      end
+    end
   end
 end
