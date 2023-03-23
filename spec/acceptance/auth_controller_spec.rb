@@ -54,6 +54,24 @@ resource "Auth" do
       expect(status).to be(400)
     end
 
+    it "handles JWT::DecodeError" do
+      allow(OktaAuthService).to receive(:decode_token).with(valid_access_token).and_raise(JWT::DecodeError)
+
+      do_request data: {type: type, attributes: {okta_access_token: valid_access_token}}
+      expect(response_body.inspect).to include("JWT::DecodeError")
+
+      expect(status).to be(400)
+    end
+
+    it "handles JWT::DecodeError" do
+      allow(OktaAuthService).to receive(:decode_token).with(valid_access_token).and_raise(JWT::ExpiredSignature)
+
+      do_request data: {type: type, attributes: {okta_access_token: valid_access_token}}
+      expect(response_body.inspect).to include("JWT::ExpiredSignature")
+
+      expect(status).to be(400)
+    end
+
     context "facebook" do
       let(:type) { "auth-token-request" }
 
