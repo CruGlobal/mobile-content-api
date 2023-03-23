@@ -4,7 +4,7 @@ class AuthController < ApplicationController
   THIRD_PARTY_AUTH_METHODS = [:okta, :facebook, :google, :apple]
 
   def create
-    method = THIRD_PARTY_AUTH_METHODS.detect { |method| data_attrs[:"#{method}_access_token"] || data_attrs[:"#{method}_id_token"]}
+    method = THIRD_PARTY_AUTH_METHODS.detect { |method| data_attrs[:"#{method}_access_token"] || data_attrs[:"#{method}_id_token"] }
     token = case method
     when :apple
       # special case for apple, which has given and family name passed in
