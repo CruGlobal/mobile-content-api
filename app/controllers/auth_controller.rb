@@ -9,13 +9,16 @@ class AuthController < ApplicationController
   }
 
   def create
-    method = THIRD_PARTY_AUTH_METHODS.keys.detect { |method| data_attrs[:"#{method}_access_token"] }
+    method = THIRD_PARTY_AUTH_METHODS.keys.detect { |method| data_attrs[:"#{method}_access_token"] || data_attrs[:"#{method}_id_token"]}
     token = case method
     when :apple
       # special case for apple, which has given and family name passed in
-      user = Apple.find_user_by_token(data_attrs[:apple_access_token], data_attrs[:apple_given_name], data_attrs[:apple_family_name])
+      user = Apple.find_user_by_token(data_attrs[:apple_id_token], data_attrs[:apple_given_name], data_attrs[:apple_family_name])
       AuthToken.new(user: user)
-    when :okta, :facebook, :google
+    when :google
+      user = THIRD_PARTY_AUTH_METHODS[method].find_user_by_token(data_attrs[:google_id_token])
+      AuthToken.new(user: user)
+    when :okta, :facebook
       user = THIRD_PARTY_AUTH_METHODS[method].find_user_by_token(data_attrs[:"#{method}_access_token"])
       AuthToken.new(user: user)
     else

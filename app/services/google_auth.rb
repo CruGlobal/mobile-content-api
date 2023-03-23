@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
 class GoogleAuth < AuthServiceBase
-  include HTTParty
-
   class << self
     def find_user_by_token(google_id_token)
       super

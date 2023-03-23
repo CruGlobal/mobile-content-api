@@ -30,7 +30,6 @@ class DeletionRequest < ApplicationRecord
   private
 
   def associated_user
-    # more providers will be added
     case provider
     when "facebook"
       User.find_by(facebook_user_id: uid)

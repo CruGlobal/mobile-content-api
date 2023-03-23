@@ -158,7 +158,7 @@ resource "Auth" do
 
       it "creates a google user" do
         expect do
-          do_request data: {type: type, attributes: {google_access_token: google_id_token}}
+          do_request data: {type: type, attributes: {google_id_token: google_id_token}}
         end.to change(User, :count).by(1)
 
         user = User.last
@@ -176,7 +176,7 @@ resource "Auth" do
 
         it "matches an existing user" do
           expect do
-            do_request data: {type: type, attributes: {google_access_token: google_id_token}}
+            do_request data: {type: type, attributes: {google_id_token: google_id_token}}
           end.to_not change(User, :count)
 
           user.reload
@@ -195,7 +195,7 @@ resource "Auth" do
         allow(Google::Auth::IDTokens).to receive(:verify_oidc).and_raise(Google::Auth::IDTokens::ExpiredTokenError)
 
         expect do
-          do_request data: {type: type, attributes: {google_access_token: google_id_token}}
+          do_request data: {type: type, attributes: {google_id_token: google_id_token}}
         end.to_not change(User, :count)
 
         expect(response_body).to include("error")
@@ -207,7 +207,7 @@ resource "Auth" do
         allow(Google::Auth::IDTokens).to receive(:verify_oidc).and_return(response)
 
         expect do
-          do_request data: {type: type, attributes: {google_access_token: google_id_token}}
+          do_request data: {type: type, attributes: {google_id_token: google_id_token}}
         end.to_not change(User, :count)
 
         expect(response_body).to include("error")
@@ -228,7 +228,7 @@ resource "Auth" do
 
       it "creates a apple user" do
         expect do
-          do_request data: {type: type, attributes: {apple_access_token: apple_id_token, apple_given_name: "Levi", apple_family_name: "Eggert"}}
+          do_request data: {type: type, attributes: {apple_id_token: apple_id_token, apple_given_name: "Levi", apple_family_name: "Eggert"}}
         end.to change(User, :count).by(1)
 
         user = User.last
@@ -246,7 +246,7 @@ resource "Auth" do
 
         it "matches an existing user" do
           expect do
-            do_request data: {type: type, attributes: {apple_access_token: apple_id_token}}
+            do_request data: {type: type, attributes: {apple_id_token: apple_id_token}}
           end.to_not change(User, :count)
 
           user.reload
@@ -264,7 +264,7 @@ resource "Auth" do
         allow(jwt_decoder).to receive(:call).and_raise(JWT::ExpiredSignature)
 
         expect do
-          do_request data: {type: type, attributes: {apple_access_token: apple_id_token}}
+          do_request data: {type: type, attributes: {apple_id_token: apple_id_token}}
         end.to_not change(User, :count)
 
         expect(response_body).to include("error")
@@ -275,7 +275,7 @@ resource "Auth" do
         allow(jwt_decoder).to receive(:call).and_return(response)
 
         expect do
-          do_request data: {type: type, attributes: {apple_access_token: apple_id_token}}
+          do_request data: {type: type, attributes: {apple_id_token: apple_id_token}}
         end.to_not change(User, :count)
 
         expect(response_body).to include("error")
@@ -286,7 +286,7 @@ resource "Auth" do
         allow(jwt_decoder).to receive(:call).and_return(response)
 
         expect do
-          do_request data: {type: type, attributes: {apple_access_token: apple_id_token}}
+          do_request data: {type: type, attributes: {apple_id_token: apple_id_token}}
         end.to_not change(User, :count)
 
         expect(response_body).to include("jwt_iss is different to apple_iss")
@@ -297,7 +297,7 @@ resource "Auth" do
         allow(jwt_decoder).to receive(:call).and_return(response)
 
         expect do
-          do_request data: {type: type, attributes: {apple_access_token: apple_id_token}}
+          do_request data: {type: type, attributes: {apple_id_token: apple_id_token}}
         end.to_not change(User, :count)
 
         expect(response_body).to include("jwt_aud is different to apple_client_id")
