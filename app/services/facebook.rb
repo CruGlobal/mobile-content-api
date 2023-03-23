@@ -15,8 +15,8 @@ class Facebook < AuthServiceBase
       %w[id email]
     end
 
-    def decode_token(access_token)
-      decoded_token = JSON.parse(get("/debug_token", query: {input_token: access_token, access_token: "#{ENV.fetch("FACEBOOK_APP_ID")}|#{ENV.fetch("FACEBOOK_APP_SECRET")}"}))
+    def decode_token(input_token)
+      decoded_token = JSON.parse(get("/debug_token", query: {input_token: input_token, access_token: "#{ENV.fetch("FACEBOOK_APP_ID")}|#{ENV.fetch("FACEBOOK_APP_SECRET")}"}))
       raise FailedAuthentication, "Error validating access_token with Facebook: #{decoded_token.dig("data", "error")}" if
         decoded_token.dig("data", "error")
       raise FailedAuthentication, "Error decoding access_token with Facebook" unless
@@ -28,7 +28,7 @@ class Facebook < AuthServiceBase
       decoded_token["user_id"]
     end
 
-    def validate_token!(access_token, decoded_token)
+    def validate_token!(_input_token, decoded_token)
       raise FailedAuthentication, "Error validating access_token with Facebook: no facebook user id returned" unless
         decoded_token["is_valid"] && decoded_token["user_id"]
     end

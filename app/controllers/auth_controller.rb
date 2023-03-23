@@ -13,10 +13,10 @@ class AuthController < ApplicationController
     token = case method
     when :apple
       # special case for apple, which has given and family name passed in
-      user = Apple.find_user_by_access_token(data_attrs[:apple_access_token], data_attrs[:apple_given_name], data_attrs[:apple_family_name])
+      user = Apple.find_user_by_token(data_attrs[:apple_access_token], data_attrs[:apple_given_name], data_attrs[:apple_family_name])
       AuthToken.new(user: user)
     when :okta, :facebook, :google
-      user = THIRD_PARTY_AUTH_METHODS[method].find_user_by_access_token(data_attrs[:"#{method}_access_token"])
+      user = THIRD_PARTY_AUTH_METHODS[method].find_user_by_token(data_attrs[:"#{method}_access_token"])
       AuthToken.new(user: user)
     else
       AccessCode.validate(data_attrs[:code])

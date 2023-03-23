@@ -37,7 +37,7 @@ resource "Auth" do
     end
 
     it "create a token with a valid Okta access_token" do
-      allow(Okta).to receive(:find_user_by_access_token).with(valid_access_token).and_return(user)
+      allow(Okta).to receive(:find_user_by_token).with(valid_access_token).and_return(user)
 
       do_request data: {type: type, attributes: {okta_access_token: valid_access_token}}
 
@@ -47,7 +47,7 @@ resource "Auth" do
     end
 
     it "returns error with a expired Okta access_token" do
-      allow(Okta).to receive(:find_user_by_access_token).with(valid_access_token).and_raise(Okta::FailedAuthentication, "expired signature")
+      allow(Okta).to receive(:find_user_by_token).with(valid_access_token).and_raise(Okta::FailedAuthentication, "expired signature")
 
       do_request data: {type: type, attributes: {okta_access_token: valid_access_token}}
 

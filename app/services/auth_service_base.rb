@@ -4,7 +4,7 @@ class AuthServiceBase
   include HTTParty
 
   class << self
-    def find_user_by_access_token(access_token)
+    def find_user_by_token(access_token)
       decoded_token = decode_token(access_token)
       validate_token!(access_token, decoded_token)
       validate_expected_fields!(decoded_token)

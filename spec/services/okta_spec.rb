@@ -26,12 +26,12 @@ RSpec.describe Okta do
     stub_request(:get, "https://dev1-signon.okta.com/oauth2/v1/userinfo").to_return(status: 401)
   end
 
-  describe ".find_user_by_access_token" do
+  describe ".find_user_by_token" do
     it "return a newly User" do
       stub_successful_profile
 
       expect {
-        expect(described_class.find_user_by_access_token(access_token)).to be_a User
+        expect(described_class.find_user_by_token(access_token)).to be_a User
       }.to change(User, :count).by(1)
     end
 
@@ -42,7 +42,7 @@ RSpec.describe Okta do
 
       it "returns existing user" do
         expect {
-          expect(described_class.find_user_by_access_token(access_token)).to eq user
+          expect(described_class.find_user_by_token(access_token)).to eq user
         }.to change(User, :count).by(0)
       end
     end
@@ -51,13 +51,13 @@ RSpec.describe Okta do
       let(:jwt_payload) { {exp: 1.minute.ago.to_i} }
 
       it "raises error" do
-        expect { described_class.find_user_by_access_token(access_token) }.to raise_error Okta::FailedAuthentication
+        expect { described_class.find_user_by_token(access_token) }.to raise_error Okta::FailedAuthentication
       end
 
       it "does not create a user" do
         expect {
           begin
-            described_class.find_user_by_access_token(access_token)
+            described_class.find_user_by_token(access_token)
           rescue Okta::FailedAuthentication
             nil
           end
@@ -70,7 +70,7 @@ RSpec.describe Okta do
 
       describe "#validate" do
         it "raises an authentication error with a message" do
-          expect { described_class.find_user_by_access_token(access_token) }.to(
+          expect { described_class.find_user_by_token(access_token) }.to(
             raise_error(
               Okta::FailedAuthentication,
               "Error validating access_token with Okta"

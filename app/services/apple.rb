@@ -2,13 +2,13 @@
 
 class Apple < AuthServiceBase
   class << self
-    def find_user_by_access_token(access_token, apple_given_name = nil, apple_family_name = nil)
-      decoded_token = decode_token(access_token)
-      validate_token!(access_token, decoded_token)
+    def find_user_by_token(apple_id_token, apple_given_name = nil, apple_family_name = nil)
+      decoded_token = decode_token(apple_id_token)
+      validate_token!(apple_id_token, decoded_token)
       validate_expected_fields!(decoded_token)
 
       apple_id_token = remote_user_id(decoded_token)
-      user_atts = extract_user_atts(access_token, decoded_token, apple_id_token)
+      user_atts = extract_user_atts(apple_id_token, decoded_token, apple_id_token)
       user_atts["first_name"] = apple_given_name if apple_given_name.present?
       user_atts["last_name"] = apple_family_name if apple_family_name.present?
       setup_user(apple_id_token, user_atts)
@@ -32,23 +32,23 @@ class Apple < AuthServiceBase
       %w[sub email iss aud]
     end
 
-    def decode_token(access_token)
-      AppleAuth::JWTDecoder.new(access_token).call
+    def decode_token(apple_id_token)
+      AppleAuth::JWTDecoder.new(apple_id_token).call
     end
 
-    def validate_token!(access_token, decoded_token)
+    def validate_token!(apple_id_token, decoded_token)
       raise FailedAuthentication, "Sub is missing from payload" unless decoded_token["sub"]
-      AppleAuth::UserIdentity.new(decoded_token["sub"], access_token).validate!
+      AppleAuth::UserIdentity.new(decoded_token["sub"], apple_id_token).validate!
     end
 
     def remote_user_id(decoded_token)
       decoded_token["sub"]
     end
 
-    def extract_user_atts(access_token, payload, remote_user_id)
+    def extract_user_atts(_apple_id_token, decoded_token, remote_user_id)
       {
         apple_id_token: remote_user_id,
-        email: payload["email"]
+        email: decoded_token["email"]
       }.with_indifferent_access
     end
   end

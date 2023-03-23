@@ -4,7 +4,7 @@ class GoogleAuth < AuthServiceBase
   include HTTParty
 
   class << self
-    def find_user_by_access_token(access_token)
+    def find_user_by_token(google_id_token)
       super
     rescue Google::Auth::IDTokens::ExpiredTokenError => e
       raise self::FailedAuthentication, e.message
@@ -26,19 +26,19 @@ class GoogleAuth < AuthServiceBase
 
     # no easy way to get decoded token without validation with the google library, so this will return it with validation,
     # that's ok in the execution flow, if it raises an exception it will be caught and returned in AuthServiceBase
-    def decode_token(access_token)
-      Google::Auth::IDTokens.verify_oidc access_token, aud: ENV.fetch("GOOGLE_APP_ID")
+    def decode_token(google_id_token)
+      Google::Auth::IDTokens.verify_oidc google_id_token, aud: ENV.fetch("GOOGLE_APP_ID")
     end
 
-    def validate_token!(access_token, _decode_token)
-      decode_token(access_token)
+    def validate_token!(google_id_token, _decoded_token)
+      decode_token(google_id_token)
     end
 
     def remote_user_id(decoded_token)
       decoded_token["sub"]
     end
 
-    def extract_user_atts(access_token, decoded_token)
+    def extract_user_atts(_google_id_token, decoded_token)
       {
         google_id_token: remote_user_id(decoded_token),
         email: decoded_token["email"],
