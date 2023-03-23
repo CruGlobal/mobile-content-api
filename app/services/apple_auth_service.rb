@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Apple < AuthServiceBase
+class AppleAuthService < AuthServiceBase
   class << self
     def find_user_by_token(apple_id_token, apple_given_name = nil, apple_family_name = nil)
       decoded_token = decode_token(apple_id_token)

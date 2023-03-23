@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Okta < AuthServiceBase
+class OktaAuthService < AuthServiceBase
   LEEWAY = 0
   base_uri ENV.fetch("OKTA_SERVER_URL")
 

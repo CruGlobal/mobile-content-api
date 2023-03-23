@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.describe Okta do
+RSpec.describe OktaAuthService do
   let(:okta_user_info) do
     {
       ssoguid: "qwer",
@@ -51,14 +51,14 @@ RSpec.describe Okta do
       let(:jwt_payload) { {exp: 1.minute.ago.to_i} }
 
       it "raises error" do
-        expect { described_class.find_user_by_token(access_token) }.to raise_error Okta::FailedAuthentication
+        expect { described_class.find_user_by_token(access_token) }.to raise_error OktaAuthService::FailedAuthentication
       end
 
       it "does not create a user" do
         expect {
           begin
             described_class.find_user_by_token(access_token)
-          rescue Okta::FailedAuthentication
+          rescue OktaAuthService::FailedAuthentication
             nil
           end
         }.to change(User, :count).by(0)
@@ -72,7 +72,7 @@ RSpec.describe Okta do
         it "raises an authentication error with a message" do
           expect { described_class.find_user_by_token(access_token) }.to(
             raise_error(
-              Okta::FailedAuthentication,
+              OktaAuthService::FailedAuthentication,
               "Error validating access_token with Okta"
             )
           )

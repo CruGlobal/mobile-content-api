@@ -284,8 +284,8 @@ ActiveRecord::Schema.define(version: 2023_03_23_155408) do
     t.string "short_name"
     t.string "facebook_user_id"
     t.string "gr_master_person_id"
-    t.string "google_id_token"
-    t.string "apple_id_token"
+    t.string "google_user_id"
+    t.string "apple_user_id"
     t.string "name"
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["sso_guid"], name: "index_users_on_sso_guid", unique: true

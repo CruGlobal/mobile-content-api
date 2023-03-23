@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Facebook < AuthServiceBase
+class FacebookAuthService < AuthServiceBase
   BASE_URI = "https://graph.facebook.com"
   base_uri BASE_URI
 
