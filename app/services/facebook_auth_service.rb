@@ -16,7 +16,7 @@ class FacebookAuthService < AuthServiceBase
     end
 
     def decode_token(input_token)
-      decoded_token = JSON.parse(get("/debug_token", query: {input_token: input_token, access_token: "#{ENV.fetch("FACEBOOK_APP_ID")}|#{ENV.fetch("FACEBOOK_APP_SECRET")}"}))
+      decoded_token = JSON.parse(get("/debug_token", query: {input_token: input_token, access_token: "#{ENV.fetch("FACEBOOK_APP_ID")}|#{ENV.fetch("FACEBOOK_APP_SECRET")}"}).body)
       raise FailedAuthentication, "Error validating access_token with Facebook: #{decoded_token.dig("data", "error")}" if
         decoded_token.dig("data", "error")
       raise FailedAuthentication, "Error decoding access_token with Facebook" unless
@@ -34,7 +34,7 @@ class FacebookAuthService < AuthServiceBase
     end
 
     def extract_user_atts(access_token, decoded_token)
-      fields_data = JSON.parse(get("/#{remote_user_id(decoded_token)}", query: {fields: "email,id,first_name,last_name,short_name,name", access_token: access_token}))
+      fields_data = JSON.parse(get("/#{remote_user_id(decoded_token)}", query: {fields: "email,id,first_name,last_name,short_name,name", access_token: access_token}).body)
       raise FailedAuthentication, "Error validating access_token with Facebook: #{fields_data.dig("data", "error")}" if
         fields_data.dig("data", "error")
 
