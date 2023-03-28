@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2023_03_21_041243) do
+ActiveRecord::Schema.define(version: 2023_03_28_180034) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
@@ -268,15 +268,13 @@ ActiveRecord::Schema.define(version: 2023_03_21_041243) do
     t.date "last_decay", default: -> { "now()" }
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.string "values", default: [], array: true
     t.index ["user_id", "counter_name"], name: "index_user_counters_on_user_id_and_counter_name", unique: true
-    t.index ["values"], name: "index_user_counters_on_values", using: :gin
   end
 
   create_table "users", force: :cascade do |t|
     t.string "first_name"
     t.string "last_name"
-    t.citext "email"
+    t.citext "email", null: false
     t.string "sso_guid"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -287,7 +285,7 @@ ActiveRecord::Schema.define(version: 2023_03_21_041243) do
     t.string "google_user_id"
     t.string "apple_user_id"
     t.string "name"
-    t.index ["email"], name: "index_users_on_email", unique: true
+    t.index ["email"], name: "index_users_on_email"
     t.index ["sso_guid"], name: "index_users_on_sso_guid", unique: true
   end
 
