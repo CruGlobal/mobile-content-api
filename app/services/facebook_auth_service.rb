@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class FacebookAuthService < AuthServiceBase
+class FacebookAuthService < BaseAuthService
   BASE_URI = "https://graph.facebook.com"
   base_uri BASE_URI
 
@@ -54,6 +54,6 @@ class FacebookAuthService < AuthServiceBase
     end
   end
 
-  class FailedAuthentication < AuthServiceBase::FailedAuthentication
+  class FailedAuthentication < BaseAuthService::FailedAuthentication
   end
 end

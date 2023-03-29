@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class AuthServiceBase
+class BaseAuthService
   include HTTParty
 
   class << self

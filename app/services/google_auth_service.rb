@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class GoogleAuthService < AuthServiceBase
+class GoogleAuthService < BaseAuthService
   class << self
     def find_user_by_token(google_id_token)
       super
@@ -15,7 +15,7 @@ class GoogleAuthService < AuthServiceBase
     end
 
     # no easy way to get decoded token without validation with the google library, so this will return it with validation,
-    # that's ok in the execution flow, if it raises an exception it will be caught and returned in AuthServiceBase
+    # that's ok in the execution flow, if it raises an exception it will be caught and returned in BaseAuthService
     def decode_token(google_id_token)
       Google::Auth::IDTokens.verify_oidc google_id_token, aud: ENV.fetch("GOOGLE_APP_ID")
     end
@@ -39,6 +39,6 @@ class GoogleAuthService < AuthServiceBase
     end
   end
 
-  class FailedAuthentication < AuthServiceBase::FailedAuthentication
+  class FailedAuthentication < BaseAuthService::FailedAuthentication
   end
 end

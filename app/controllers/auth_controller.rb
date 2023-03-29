@@ -22,7 +22,7 @@ class AuthController < ApplicationController
     end
 
     render json: token, status: :created if token
-  rescue AuthServiceBase::FailedAuthentication => e
+  rescue BaseAuthService::FailedAuthentication => e
     render_bad_request e.message
     nil
   rescue AccessCode::FailedAuthentication => e
