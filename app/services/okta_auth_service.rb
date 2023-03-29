@@ -37,7 +37,7 @@ class OktaAuthService < AuthServiceBase
 
     # reimplement setup_user to search on sso_guid (from user_atts) instead of using remote_user_id
     def setup_user(remote_user_id, user_atts)
-      user = User.where(sso_guid: user_atts[primary_key]).first_or_initialize
+      user = User.where(primary_key => user_atts[primary_key]).first_or_initialize
       user.update!(user_atts)
       user
     end
