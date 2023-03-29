@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require "httparty"
+
 class BaseAuthService
   include HTTParty
 
@@ -37,6 +39,27 @@ class BaseAuthService
 
     def primary_key
       :"#{service_name}_user_id"
+    end
+
+    def decode_token(access_token)
+      raise("extending class should implement decode_token(access_token)")
+    end
+
+    def expected_fields
+      raise("extending class should implement expected_fields (returning array of strings)")
+    end
+
+    def remote_user_id(decoded_token)
+      raise("extending class should implement remote_user_id(decoded_token)")
+    end
+
+    # some auth methods use libraries that operate on access_token, other ones we operate on the decoded_token
+    def validate_token!(access_token, decoded_token)
+      raise("extending class should implement validate_token!(access_token, decoded_token)")
+    end
+
+    def extract_user_atts(access_token, decoded_token)
+      raise("extending class should implement extract_user_atts(access_token, decoded_token)")
     end
   end
 
