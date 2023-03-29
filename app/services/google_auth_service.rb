@@ -10,10 +10,6 @@ class GoogleAuthService < AuthServiceBase
 
     private
 
-    def service_name
-      "google"
-    end
-
     def expected_fields
       %w[sub email given_name family_name]
     end
