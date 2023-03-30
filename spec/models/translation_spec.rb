@@ -155,7 +155,8 @@ describe Translation do
 
     before do
       mock_onesky("name_description.xml",
-        '{ "name":"kgp german", "description":"german description", "tagline": "german tagline", "onesky_required": "onesky_required_value", "onesky_not_required": "onesky_not_required_value" }')
+        '{ "name":"kgp german", "description":"german description", "tagline": "german tagline",' \
+        '"onesky_required": "onesky_required_value", "onesky_not_required": "onesky_not_required_value" }')
     end
 
     it "uploads the translation to S3" do
@@ -217,8 +218,14 @@ describe Translation do
     context "translated attributes" do
       let(:package) { double.as_null_object }
       let(:resource) { translation.resource }
-      let!(:required_translated_attribute) { FactoryBot.create(:translated_attribute, resource_id: resource.id, key: "required", onesky_phrase_id: "onesky_required", required: true) }
-      let!(:not_required_translated_attribute) { FactoryBot.create(:translated_attribute, resource_id: resource.id, key: "not_required", onesky_phrase_id: "onesky_not_required", required: false) }
+      let!(:required_translated_attribute) {
+        FactoryBot.create(:translated_attribute, resource_id: resource.id, key: "required",
+          onesky_phrase_id: "onesky_required", required: true)
+      }
+      let!(:not_required_translated_attribute) {
+        FactoryBot.create(:translated_attribute, resource_id: resource.id, key: "not_required",
+          onesky_phrase_id: "onesky_not_required", required: false)
+      }
 
       before do
         allow(Package).to receive(:new).and_return(package)
@@ -229,11 +236,15 @@ describe Translation do
           translation.update!(is_published: true)
         end.to change(TranslationAttribute, :count).by(2)
         translation.reload
-        expect(translation.translation_attributes.pluck(:key, :value).sort).to eq([["not_required", "onesky_not_required_value"], ["required", "onesky_required_value"]])
+        expect(translation.translation_attributes.pluck(:key, :value).sort)
+          .to eq([["not_required", "onesky_not_required_value"], ["required", "onesky_required_value"]])
       end
 
       context "required translation attribute is not present" do
-        let!(:required_translated_attribute_2) { FactoryBot.create(:translated_attribute, resource_id: resource.id, key: "required_2", onesky_phrase_id: "onesky_required_2", required: true) }
+        let!(:required_translated_attribute_2) {
+          FactoryBot.create(:translated_attribute, resource_id: resource.id, key: "required_2",
+            onesky_phrase_id: "onesky_required_2", required: true)
+        }
         it "raises an error and doesn't create any translation attributes" do
           expect do
             expect do
@@ -268,6 +279,8 @@ describe Translation do
   def includes_translated_attributes
     # check that the url attribute is not duplicated
     expect(result).to_not include %(<content:button url="https://url.com" type="url" url="https://www.bible.com/">)
-    expect(result).to include %(<content:button url="#{phrase_three}" type="url" url-i18n-id="9deda19f-c3ee-42ed-a1eb-92423e543353">)
+    expect(result).to include(
+      %(<content:button url="#{phrase_three}" type="url" url-i18n-id="9deda19f-c3ee-42ed-a1eb-92423e543353">)
+    )
   end
 end
