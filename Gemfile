@@ -82,6 +82,11 @@ gem "rest-client", "~> 2.1.0"
 gem "rollbar"
 gem "rubyzip", ">= 1.2.2"
 gem "validates_email_format_of"
+gem "googleauth"
+
+# apple_auth has JWT verification code only in github, not in the latest gem. We should switch to the next gem release when it happens
+# relevant PR: https://github.com/rootstrap/apple_auth/pull/29
+gem "apple_auth", github: "rootstrap/apple_auth", ref: "d71d10d370f2ec2107e361a8ef725e037ad2e152"
 
 group :development, :test do
   gem "action-cable-testing"

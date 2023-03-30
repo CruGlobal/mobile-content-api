@@ -56,6 +56,14 @@ Rails.application.routes.draw do
     default: {format: "html"},
     constraints: {path: /.*/}
 
+  scope "account" do
+    resources :deletion_requests, only: [:show] do
+      collection do
+        post :facebook
+      end
+    end
+  end
+
   mount ActionCable.server => "/cable"
   mount Raddocs::App => "/docs"
 end
