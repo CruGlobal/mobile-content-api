@@ -7,7 +7,7 @@ class Package
     //manifest:category/@banner
     //content:animation/@resource
     //content:button/@icon
-    //content:image[not(@restrictTo='web')]/@resource
+    //content:image/@resource
     //content:text/@start-image
     //content:text/@end-image
     //shareable:image/@resource].freeze
