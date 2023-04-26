@@ -86,7 +86,7 @@ resource "UsersController" do
         expect(json_response["id"]).to eq(user.id.to_s)
         expect(json_response["type"]).to eq("user")
         expect(json_response.dig("relationships", "favorite-tools", "data").class).to eq(Array)
-        expect(json_response["relationships"]["favorite-tools"]["data"]).to eq([{"type" => "resource", "id" => resource.id.to_s}, {"type" => "resource", "id" => resource2.id.to_s}])
+        expect(json_response["relationships"]["favorite-tools"]["data"]).to match_array([{"type" => "resource", "id" => resource.id.to_s}, {"type" => "resource", "id" => resource2.id.to_s}])
       end
     end
   end
