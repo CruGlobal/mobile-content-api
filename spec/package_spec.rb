@@ -201,6 +201,8 @@ describe Package do
     end
     let(:resources) do
       Nokogiri::XML('<resources xmlns="https://mobile-content-api.cru.org/xmlns/manifest">
+        <resource filename="web_bundled.png" src="d028ba4dc56eb5ac641f19eeca5baa25d748ab303b32a5580f601e112a19b9f5.png"/>
+        <resource filename="web_attach.png" src="97c82df868bcd36afcb4b0af912a06c93782d47e9edc35604d9a4dc31afb0e47.png"/>
         <resource filename="mobile_only.png" src="2cf2ab68c49b217c6b2402699c742a236f96efe36bc48821eb6ba1a1427b8945.png"/>
         <resource filename="web_mobile.png" src="4245551d69a8c582b6fc5185fb5312efc4f6863bda991a12a76102736f92fa2d.png"/>
         <resource filename="both.png" src="ad03ee4cc7b015919b375539db150dee5f47245c6a293663c21c774b2dba294f.png"/>
