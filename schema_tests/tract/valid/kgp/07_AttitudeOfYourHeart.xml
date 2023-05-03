@@ -28,7 +28,7 @@
                 <analytics:event action="kgp_gospel_presented" delay="8" system="firebase" trigger="visible">
                     <analytics:attribute key="cru.presentingthegospel" value="1"/>
                 </analytics:event>
-                <analytics:event action="gospel-presented" delay="8" system="appsflyer" trigger="visible" />
+                <analytics:event action="gospel-presented" delay="8" system="firebase" trigger="visible" />
             </analytics:events>
             <content:paragraph>
                 <content:text i18n-id="88a13a09-c5f6-4dd0-9fb3-88119738cf3c">Lord Jesus,</content:text>
