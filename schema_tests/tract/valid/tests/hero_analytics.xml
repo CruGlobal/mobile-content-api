@@ -3,13 +3,13 @@
     xmlns="https://mobile-content-api.cru.org/xmlns/tract">
     <hero>
         <analytics:events>
-            <analytics:event action="event1" system="appsflyer">
+            <analytics:event action="event1" system="user">
                 <analytics:attribute key="a" value="1" />
             </analytics:event>
             <analytics:event action="event2" system="firebase">
                 <analytics:attribute key="a" value="2" />
             </analytics:event>
-            <analytics:event action="event3" system="appsflyer firebase">
+            <analytics:event action="event3" system="user firebase">
                 <analytics:attribute key="a" value="2" />
             </analytics:event>
         </analytics:events>
