@@ -3,7 +3,7 @@
     xmlns:content="https://mobile-content-api.cru.org/xmlns/content" listeners="replay-lesson">
 
     <analytics:events>
-        <analytics:event action="lessongodstory-0" system="appsflyer" />
+        <analytics:event action="lessongodstory-0" system="firebase" />
     </analytics:events>
 
     <content>
