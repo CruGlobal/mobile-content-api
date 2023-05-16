@@ -303,7 +303,7 @@ GEM
     net-smtp (0.3.3)
       net-protocol
     netrc (0.11.0)
-    nio4r (2.5.8)
+    nio4r (2.5.9)
     nokogiri (1.15.0)
       mini_portile2 (~> 2.8.2)
       racc (~> 1.4)
@@ -331,7 +331,7 @@ GEM
       byebug (~> 11.0)
       pry (>= 0.13, < 0.15)
     public_suffix (5.0.1)
-    puma (5.6.5)
+    puma (6.2.2)
       nio4r (~> 2.0)
     racc (1.6.2)
     rack (2.2.7)
@@ -562,7 +562,7 @@ DEPENDENCIES
   ougai (~> 2.0)
   pg
   pry-byebug
-  puma (~> 5.0)
+  puma (~> 6.2)
   rack-cors
   rack-mini-profiler (~> 3.0)
   raddocs
