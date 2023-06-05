@@ -321,7 +321,6 @@ resource "Auth" do
 
           expect(status).to be(201)
           data = JSON.parse(response_body)["data"]
-          puts data.inspect
           expect(data["attributes"]["user-id"]).to eq(user.id)
           expect(data["attributes"]["token"]).to match(jwt_regex)
           expect(data["attributes"]["apple-refresh-token"]).to be_nil
