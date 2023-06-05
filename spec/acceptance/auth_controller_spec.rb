@@ -255,7 +255,7 @@ resource "Auth" do
 
       before do
         stub_request(:get, "https://appleid.apple.com/auth/keys")
-          .to_return(status: 200, body: File.read("spec/fixtures/apple_auth_keys.json"), headers: {})
+          .to_return(status: 200, body: File.read("spec/fixtures/apple_auth_keys.json"))
 
         stub_request(:post, "https://appleid.apple.com/auth/token")
           .with(
@@ -283,6 +283,33 @@ resource "Auth" do
         expect(data["attributes"]["user-id"]).to eq(user.id)
         expect(data["attributes"]["token"]).to match(jwt_regex)
         expect(data["attributes"]["apple-refresh-token"]).to eq(verify_auth_code_response["refresh_token"])
+      end
+
+      it "handles json parse error" do
+        stub_request(:post, "https://appleid.apple.com/auth/token")
+          .with(
+        body: {"client_id" => "org.cru.godtools", "client_secret" => jwt_regex, "code" => apple_auth_code, "grant_type" => "authorization_code", "redirect_uri" => "https://mobile-content-api.cru.org"}
+        ).to_return(status: 200, body: "INVALID JSON HERE")
+
+        expect do
+          do_request data: {type: type, attributes: {apple_auth_code: apple_auth_code, apple_given_name: "Levi", apple_family_name: "Eggert"}}
+        end.to_not change(User, :count)
+
+        expect(response_body.inspect).to include("JSON::ParserError")
+        expect(status).to be(400)
+      end
+
+      it "handles verificationfailure" do
+        stub_request(:get, "https://appleid.apple.com/auth/keys")
+          .to_return(status: 200, body: "invalid keys")
+
+        expect do
+          do_request data: {type: type, attributes: {apple_auth_code: apple_auth_code, apple_given_name: "Levi", apple_family_name: "Eggert"}}
+        end.to_not change(User, :count)
+
+        expect(response_body.inspect).to include("error")
+        puts response_body.inspect
+        expect(status).to be(400)
       end
 
       context "user already exists" do

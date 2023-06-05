@@ -28,9 +28,9 @@ class AppleAuthService < BaseAuthService
       user_atts["last_name"] = apple_family_name if apple_family_name.present?
       setup_user(id_token.sub, user_atts)
     rescue JSON::ParserError => e
-      raise FailedAuthentication, e.message
-    rescue JWT::DecodeError => e
-      raise FailedAuthentication, e.message
+      raise self::FailedAuthentication, "#{e.class.name}: #{e.message}"
+    rescue AppleID::IdToken::VerificationFailed => e
+      raise self::FailedAuthentication, "#{e.class.name}: #{e.message}"
     end
 
     private

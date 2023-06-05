@@ -14,9 +14,9 @@ class BaseAuthService
       user_atts = extract_user_atts(access_token, decoded_token)
       setup_user(remote_user_id(decoded_token), user_atts)
     rescue JSON::ParserError => e
-      raise self::FailedAuthentication, e.message
+      raise self::FailedAuthentication, "#{e.class.name}: #{e.message}"
     rescue JWT::DecodeError => e
-      raise self::FailedAuthentication, e.message
+      raise self::FailedAuthentication, "#{e.class.name}: #{e.message}"
     end
 
     private
