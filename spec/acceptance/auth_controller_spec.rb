@@ -288,8 +288,8 @@ resource "Auth" do
       it "handles json parse error" do
         stub_request(:post, "https://appleid.apple.com/auth/token")
           .with(
-        body: {"client_id" => "org.cru.godtools", "client_secret" => jwt_regex, "code" => apple_auth_code, "grant_type" => "authorization_code", "redirect_uri" => "https://mobile-content-api.cru.org"}
-        ).to_return(status: 200, body: "INVALID JSON HERE")
+            body: {"client_id" => "org.cru.godtools", "client_secret" => jwt_regex, "code" => apple_auth_code, "grant_type" => "authorization_code", "redirect_uri" => "https://mobile-content-api.cru.org"}
+          ).to_return(status: 200, body: "INVALID JSON HERE")
 
         expect do
           do_request data: {type: type, attributes: {apple_auth_code: apple_auth_code, apple_given_name: "Levi", apple_family_name: "Eggert"}}
