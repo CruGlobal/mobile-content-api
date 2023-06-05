@@ -246,19 +246,31 @@ resource "Auth" do
 
     context "apple" do
       let(:type) { "auth-token-request" }
-      let(:apple_id_token) { "auth_id_token" }
-      let(:token_decode_response) { JSON.parse(File.read("spec/fixtures/apple_token_decode_response.json") % {exp: 2.hours.from_now.to_i, iat: 1.hour.ago.to_i}) }
-      let(:apple_user_id) { token_decode_response["sub"] }
-      let(:jwt_decoder) { AppleAuth::JWTDecoder.new(apple_id_token) }
+      let(:apple_auth_code) { "auth_code" }
+      let(:apple_refresh_token) { "refresh_token" }
+      let(:verify_auth_code_response) { JSON.parse(File.read("spec/fixtures/apple_verify_auth_code_response.json")) }
+      let(:verify_refresh_token_response) { JSON.parse(File.read("spec/fixtures/apple_verify_auth_code_response.json")) }
+      let(:apple_user_id) { "001361.a5cafb7f42c845b8809c48d0f2b00889.1804" }
+      let(:jwt_regex) { /^(?:[\w-]*\.){2}[\w-]*$/ } # https://stackoverflow.com/questions/61802832/regex-to-match-jwt
 
       before do
-        allow(AppleAuth::JWTDecoder).to receive(:new).and_return(jwt_decoder)
-        allow(jwt_decoder).to receive(:call).and_return(token_decode_response)
+        stub_request(:get, "https://appleid.apple.com/auth/keys")
+          .to_return(status: 200, body: File.read("spec/fixtures/apple_auth_keys.json"), headers: {})
+
+        stub_request(:post, "https://appleid.apple.com/auth/token")
+          .with(
+            body: {"client_id" => "org.cru.godtools", "client_secret" => jwt_regex, "code" => apple_auth_code, "grant_type" => "authorization_code", "redirect_uri" => "https://mobile-content-api.cru.org"}
+          ).to_return(status: 200, body: verify_auth_code_response.to_json)
+
+        stub_request(:post, "https://appleid.apple.com/auth/token")
+          .with(
+            body: {"client_id" => "org.cru.godtools", "client_secret" => jwt_regex, "refresh_token" => apple_refresh_token, "grant_type" => "refresh_token"}
+          ).to_return(status: 200, body: verify_auth_code_response.to_json)
       end
 
       it "creates a apple user" do
         expect do
-          do_request data: {type: type, attributes: {apple_id_token: apple_id_token, apple_given_name: "Levi", apple_family_name: "Eggert"}}
+          do_request data: {type: type, attributes: {apple_auth_code: apple_auth_code, apple_given_name: "Levi", apple_family_name: "Eggert"}}
         end.to change(User, :count).by(1)
 
         user = User.last
@@ -269,6 +281,8 @@ resource "Auth" do
         expect(status).to be(201)
         data = JSON.parse(response_body)["data"]
         expect(data["attributes"]["user-id"]).to eq(user.id)
+        expect(data["attributes"]["token"]).to match(jwt_regex)
+        expect(data["attributes"]["apple-refresh-token"]).to eq(verify_auth_code_response["refresh_token"])
       end
 
       context "user already exists" do
@@ -276,7 +290,7 @@ resource "Auth" do
 
         it "matches an existing user" do
           expect do
-            do_request data: {type: type, attributes: {apple_id_token: apple_id_token}}
+            do_request data: {type: type, attributes: {apple_auth_code: apple_auth_code}}
           end.to_not change(User, :count)
 
           user.reload
@@ -287,60 +301,31 @@ resource "Auth" do
           expect(status).to be(201)
           data = JSON.parse(response_body)["data"]
           expect(data["attributes"]["user-id"]).to eq(user.id)
+          expect(data["attributes"]["token"]).to match(jwt_regex)
+          expect(data["attributes"]["apple-refresh-token"]).to eq(verify_auth_code_response["refresh_token"])
         end
       end
 
-      it "handles token expired" do
-        allow(jwt_decoder).to receive(:call).and_raise(JWT::ExpiredSignature)
+      context "refresh_token" do
+        let!(:user) { FactoryBot.create(:user, apple_user_id: apple_user_id, first_name: "Levi", last_name: "Eggert") }
 
-        expect do
-          do_request data: {type: type, attributes: {apple_id_token: apple_id_token}}
-        end.to_not change(User, :count)
+        it "matches an existing user" do
+          expect do
+            do_request data: {type: type, attributes: {apple_refresh_token: apple_refresh_token}}
+          end.to_not change(User, :count)
 
-        expect(response_body).to include("JWT::ExpiredSignature")
-      end
+          user.reload
+          expect(user.email).to eq("levi.eggert@gmail.com")
+          expect(user.first_name).to eq("Levi")
+          expect(user.last_name).to eq("Eggert")
 
-      it "handles parse error" do
-        allow(jwt_decoder).to receive(:call).and_raise(JSON::ParserError)
-
-        expect do
-          do_request data: {type: type, attributes: {apple_id_token: apple_id_token}}
-        end.to_not change(User, :count)
-
-        expect(response_body).to include("JSON::ParserError")
-      end
-
-      it "handles token response not having all the fields needed" do
-        response = token_decode_response.delete("sub")
-        allow(jwt_decoder).to receive(:call).and_return(response)
-
-        expect do
-          do_request data: {type: type, attributes: {apple_id_token: apple_id_token}}
-        end.to_not change(User, :count)
-
-        expect(response_body).to include("error")
-      end
-      it "checks iss in token" do
-        response = token_decode_response
-        response["iss"] = "https://some.other.issuer"
-        allow(jwt_decoder).to receive(:call).and_return(response)
-
-        expect do
-          do_request data: {type: type, attributes: {apple_id_token: apple_id_token}}
-        end.to_not change(User, :count)
-
-        expect(response_body).to include("jwt_iss is different to apple_iss")
-      end
-      it "checks aud in token" do
-        response = token_decode_response
-        response["aud"] = "some.other.org"
-        allow(jwt_decoder).to receive(:call).and_return(response)
-
-        expect do
-          do_request data: {type: type, attributes: {apple_id_token: apple_id_token}}
-        end.to_not change(User, :count)
-
-        expect(response_body).to include("jwt_aud is different to apple_client_id")
+          expect(status).to be(201)
+          data = JSON.parse(response_body)["data"]
+          puts data.inspect
+          expect(data["attributes"]["user-id"]).to eq(user.id)
+          expect(data["attributes"]["token"]).to match(jwt_regex)
+          expect(data["attributes"]["apple-refresh-token"]).to be_nil
+        end
       end
     end
   end
