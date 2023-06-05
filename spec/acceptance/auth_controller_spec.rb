@@ -308,7 +308,6 @@ resource "Auth" do
         end.to_not change(User, :count)
 
         expect(response_body.inspect).to include("error")
-        puts response_body.inspect
         expect(status).to be(400)
       end
 
