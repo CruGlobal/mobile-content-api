@@ -31,6 +31,14 @@ class AppleAuthService < BaseAuthService
       raise self::FailedAuthentication, "#{e.class.name}: #{e.message}"
     rescue AppleID::IdToken::VerificationFailed => e
       raise self::FailedAuthentication, "#{e.class.name}: #{e.message}"
+    rescue AppleID::Client::Error => e
+      apple_key_details = if Rails.env.development? || Rails.env.staging?
+        apple_envs = ENV.find_all { |k, v| k["APPLE"] }.collect { |k, v| "#{k}=#{(k == "APPLE_PRIVATE_KEY") ? "..." + ENV["APPLE_PRIVATE_KEY"].split("\n")[4].last(4) : v}" }.join(", ")
+        " (#{apple_envs})"
+      else
+        ""
+      end
+      raise self::FailedAuthentication, "#{e.class.name}: #{e.message}#{apple_key_details}"
     end
 
     private

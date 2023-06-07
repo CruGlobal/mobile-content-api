@@ -368,6 +368,23 @@ resource "Auth" do
         expect(response_body.inspect).to include("error")
         expect(status).to be(400)
       end
+
+      context "client error" do
+        let(:apple_id_client) { double("applie_id_client") }
+
+        before do
+          allow_any_instance_of(AppleID::IdToken).to receive(:verify!).and_raise(AppleID::Client::Error.new(500, {error_description: "something"}))
+        end
+
+        it "handles client error" do
+          expect do
+            do_request data: {type: type, attributes: {apple_auth_code: apple_auth_code, apple_given_name: "Levi", apple_family_name: "Eggert"}}
+          end.to_not change(User, :count)
+
+          expect(response_body.inspect).to include("AppleID::Client::Error")
+          expect(status).to be(400)
+        end
+      end
     end
   end
 end
