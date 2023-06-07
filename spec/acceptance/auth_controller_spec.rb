@@ -16,14 +16,14 @@ resource "Auth" do
   before do
     # This is a valid p8 but revoked so that it can be put into tests here
     # We need a valid one otherwise we get "OpenSSL::PKey::ECError: invalid curve name"
-    pem = <<-PEM
------BEGIN PRIVATE KEY-----
-MIGTAgEAMBMGByqGSM49AgEGCCqGSM49AwEHBHkwdwIBAQQgnomcvz1WqpTWTjOT
-+L7Pg+4opaxREy2pQk5xczt1jdWgCgYIKoZIzj0DAQehRANCAATYN61PCJoIbTq5
-2nEvzfy66BtxDNQxbP0Fvlb7rw3huEWhfCaJLEGCa4YlQbcpqc2Y9AHGIsU1jicO
-TnHJlj7w
------END PRIVATE KEY-----
-PEM
+    pem = <<~PEM
+      -----BEGIN PRIVATE KEY-----
+      MIGTAgEAMBMGByqGSM49AgEGCCqGSM49AwEHBHkwdwIBAQQgnomcvz1WqpTWTjOT
+      +L7Pg+4opaxREy2pQk5xczt1jdWgCgYIKoZIzj0DAQehRANCAATYN61PCJoIbTq5
+      2nEvzfy66BtxDNQxbP0Fvlb7rw3huEWhfCaJLEGCa4YlQbcpqc2Y9AHGIsU1jicO
+      TnHJlj7w
+      -----END PRIVATE KEY-----
+    PEM
     ENV["APPLE_PRIVATE_KEY"] = pem
   end
 
