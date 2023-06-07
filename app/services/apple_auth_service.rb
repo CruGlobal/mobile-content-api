@@ -40,11 +40,13 @@ class AppleAuthService < BaseAuthService
     end
 
     def apple_id_client
+      AppleID.debug! if Rails.env.staging?
+
       @apple_id_client ||= AppleID::Client.new(
         identifier: ENV.fetch("APPLE_CLIENT_ID"),
         team_id: ENV.fetch("APPLE_TEAM_ID"),
         key_id: ENV.fetch("APPLE_KEY_ID"),
-        private_key: ENV.fetch("APPLE_PRIVATE_KEY"),
+        private_key: OpenSSL::PKey::EC.new(ENV.fetch("APPLE_PRIVATE_KEY")),
         redirect_uri: ENV.fetch("APPLE_REDIRECT_URI")
       )
     end
