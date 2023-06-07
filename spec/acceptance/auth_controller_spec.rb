@@ -13,6 +13,20 @@ resource "Auth" do
   let(:valid_access_token) { "okta_access_token_definitely_a_jwt" }
   let(:user) { FactoryBot.create(:user) }
 
+  before do
+    # This is a valid p8 but revoked so that it can be put into tests here
+    # We need a valid one otherwise we get "OpenSSL::PKey::ECError: invalid curve name"
+    pem = <<-PEM
+-----BEGIN PRIVATE KEY-----
+MIGTAgEAMBMGByqGSM49AgEGCCqGSM49AwEHBHkwdwIBAQQgnomcvz1WqpTWTjOT
++L7Pg+4opaxREy2pQk5xczt1jdWgCgYIKoZIzj0DAQehRANCAATYN61PCJoIbTq5
+2nEvzfy66BtxDNQxbP0Fvlb7rw3huEWhfCaJLEGCa4YlQbcpqc2Y9AHGIsU1jicO
+TnHJlj7w
+-----END PRIVATE KEY-----
+PEM
+    ENV["APPLE_PRIVATE_KEY"] = pem
+  end
+
   post "auth/" do
     it "create a token with valid code" do
       do_request data: {type: type, attributes: {code: valid_code}}
@@ -268,21 +282,65 @@ resource "Auth" do
           ).to_return(status: 200, body: verify_auth_code_response.to_json)
       end
 
-      it "creates a apple user" do
-        expect do
-          do_request data: {type: type, attributes: {apple_auth_code: apple_auth_code, apple_given_name: "Levi", apple_family_name: "Eggert"}}
-        end.to change(User, :count).by(1)
+      context "id_token verify valid" do
+        before do
+          allow_any_instance_of(AppleID::IdToken).to receive(:verify!).and_return(true)
+        end
 
-        user = User.last
-        expect(user.email).to eq("levi.eggert@gmail.com")
-        expect(user.first_name).to eq("Levi")
-        expect(user.last_name).to eq("Eggert")
+        it "creates a apple user" do
+          expect do
+            do_request data: {type: type, attributes: {apple_auth_code: apple_auth_code, apple_given_name: "Levi", apple_family_name: "Eggert"}}
+          end.to change(User, :count).by(1)
 
-        expect(status).to be(201)
-        data = JSON.parse(response_body)["data"]
-        expect(data["attributes"]["user-id"]).to eq(user.id)
-        expect(data["attributes"]["token"]).to match(jwt_regex)
-        expect(data["attributes"]["apple-refresh-token"]).to eq(verify_auth_code_response["refresh_token"])
+          user = User.last
+          expect(user.email).to eq("levi.eggert@gmail.com")
+          expect(user.first_name).to eq("Levi")
+          expect(user.last_name).to eq("Eggert")
+
+          expect(status).to be(201)
+          data = JSON.parse(response_body)["data"]
+          expect(data["attributes"]["user-id"]).to eq(user.id)
+          expect(data["attributes"]["token"]).to match(jwt_regex)
+          expect(data["attributes"]["apple-refresh-token"]).to eq(verify_auth_code_response["refresh_token"])
+        end
+
+        context "user already exists" do
+          let!(:user) { FactoryBot.create(:user, apple_user_id: apple_user_id, first_name: "Levi", last_name: "Eggert") }
+
+          it "matches an existing user" do
+            expect do
+              do_request data: {type: type, attributes: {apple_auth_code: apple_auth_code}}
+            end.to_not change(User, :count)
+
+            user.reload
+            expect(user.email).to eq("levi.eggert@gmail.com")
+            expect(user.first_name).to eq("Levi")
+            expect(user.last_name).to eq("Eggert")
+
+            expect(status).to be(201)
+            data = JSON.parse(response_body)["data"]
+            expect(data["attributes"]["user-id"]).to eq(user.id)
+            expect(data["attributes"]["token"]).to match(jwt_regex)
+            expect(data["attributes"]["apple-refresh-token"]).to eq(verify_auth_code_response["refresh_token"])
+          end
+
+          it "matches an existing user" do
+            expect do
+              do_request data: {type: type, attributes: {apple_refresh_token: apple_refresh_token}}
+            end.to_not change(User, :count)
+
+            user.reload
+            expect(user.email).to eq("levi.eggert@gmail.com")
+            expect(user.first_name).to eq("Levi")
+            expect(user.last_name).to eq("Eggert")
+
+            expect(status).to be(201)
+            data = JSON.parse(response_body)["data"]
+            expect(data["attributes"]["user-id"]).to eq(user.id)
+            expect(data["attributes"]["token"]).to match(jwt_regex)
+            expect(data["attributes"]["apple-refresh-token"]).to be_nil
+          end
+        end
       end
 
       it "handles json parse error" do
@@ -299,7 +357,7 @@ resource "Auth" do
         expect(status).to be(400)
       end
 
-      it "handles verificationfailure" do
+      it "handles verification failure" do
         stub_request(:get, "https://appleid.apple.com/auth/keys")
           .to_return(status: 200, body: "invalid keys")
 
@@ -309,48 +367,6 @@ resource "Auth" do
 
         expect(response_body.inspect).to include("error")
         expect(status).to be(400)
-      end
-
-      context "user already exists" do
-        let!(:user) { FactoryBot.create(:user, apple_user_id: apple_user_id, first_name: "Levi", last_name: "Eggert") }
-
-        it "matches an existing user" do
-          expect do
-            do_request data: {type: type, attributes: {apple_auth_code: apple_auth_code}}
-          end.to_not change(User, :count)
-
-          user.reload
-          expect(user.email).to eq("levi.eggert@gmail.com")
-          expect(user.first_name).to eq("Levi")
-          expect(user.last_name).to eq("Eggert")
-
-          expect(status).to be(201)
-          data = JSON.parse(response_body)["data"]
-          expect(data["attributes"]["user-id"]).to eq(user.id)
-          expect(data["attributes"]["token"]).to match(jwt_regex)
-          expect(data["attributes"]["apple-refresh-token"]).to eq(verify_auth_code_response["refresh_token"])
-        end
-      end
-
-      context "refresh_token" do
-        let!(:user) { FactoryBot.create(:user, apple_user_id: apple_user_id, first_name: "Levi", last_name: "Eggert") }
-
-        it "matches an existing user" do
-          expect do
-            do_request data: {type: type, attributes: {apple_refresh_token: apple_refresh_token}}
-          end.to_not change(User, :count)
-
-          user.reload
-          expect(user.email).to eq("levi.eggert@gmail.com")
-          expect(user.first_name).to eq("Levi")
-          expect(user.last_name).to eq("Eggert")
-
-          expect(status).to be(201)
-          data = JSON.parse(response_body)["data"]
-          expect(data["attributes"]["user-id"]).to eq(user.id)
-          expect(data["attributes"]["token"]).to match(jwt_regex)
-          expect(data["attributes"]["apple-refresh-token"]).to be_nil
-        end
       end
     end
   end
