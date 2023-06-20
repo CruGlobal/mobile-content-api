@@ -48,8 +48,6 @@ class AppleAuthService < BaseAuthService
     end
 
     def apple_id_client
-      AppleID.debug! if Rails.env.staging?
-
       @apple_id_client ||= AppleID::Client.new(
         identifier: ENV.fetch("APPLE_CLIENT_ID"),
         team_id: ENV.fetch("APPLE_TEAM_ID"),
