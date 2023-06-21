@@ -27,9 +27,7 @@ class AppleAuthService < BaseAuthService
       user_atts["first_name"] = apple_given_name if apple_given_name.present?
       user_atts["last_name"] = apple_family_name if apple_family_name.present?
       setup_user(id_token.sub, user_atts)
-    rescue JSON::ParserError => e
-      raise self::FailedAuthentication, "#{e.class.name}: #{e.message}"
-    rescue AppleID::IdToken::VerificationFailed => e
+    rescue JSON::ParserError, Faraday::ParsingError, AppleID::IdToken::VerificationFailed => e
       raise self::FailedAuthentication, "#{e.class.name}: #{e.message}"
     rescue AppleID::Client::Error => e
       apple_key_details = if Rails.env.development? || Rails.env.staging?

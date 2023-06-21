@@ -269,17 +269,17 @@ resource "Auth" do
 
       before do
         stub_request(:get, "https://appleid.apple.com/auth/keys")
-          .to_return(status: 200, body: File.read("spec/fixtures/apple_auth_keys.json"))
+          .to_return(status: 200, body: File.read("spec/fixtures/apple_auth_keys.json"), headers: {content_type: "application/json"})
 
         stub_request(:post, "https://appleid.apple.com/auth/token")
           .with(
             body: {"client_id" => "org.cru.godtools", "client_secret" => jwt_regex, "code" => apple_auth_code, "grant_type" => "authorization_code", "redirect_uri" => "https://mobile-content-api.cru.org"}
-          ).to_return(status: 200, body: verify_auth_code_response.to_json)
+          ).to_return(status: 200, body: verify_auth_code_response.to_json, headers: {content_type: "application/json"})
 
         stub_request(:post, "https://appleid.apple.com/auth/token")
           .with(
             body: {"client_id" => "org.cru.godtools", "client_secret" => jwt_regex, "refresh_token" => apple_refresh_token, "grant_type" => "refresh_token"}
-          ).to_return(status: 200, body: verify_auth_code_response.to_json)
+          ).to_return(status: 200, body: verify_auth_code_response.to_json, headers: {content_type: "application/json"})
       end
 
       context "id_token verify valid" do
@@ -343,17 +343,17 @@ resource "Auth" do
         end
       end
 
-      it "handles json parse error" do
+      it "handles invalid json" do
         stub_request(:post, "https://appleid.apple.com/auth/token")
           .with(
             body: {"client_id" => "org.cru.godtools", "client_secret" => jwt_regex, "code" => apple_auth_code, "grant_type" => "authorization_code", "redirect_uri" => "https://mobile-content-api.cru.org"}
-          ).to_return(status: 200, body: "INVALID JSON HERE")
+          ).to_return(status: 200, body: "INVALID JSON", headers: {"Content-Type" => "application/json"})
 
         expect do
           do_request data: {type: type, attributes: {apple_auth_code: apple_auth_code, apple_given_name: "Levi", apple_family_name: "Eggert"}}
         end.to_not change(User, :count)
 
-        expect(response_body.inspect).to include("JSON::ParserError")
+        expect(response_body.inspect).to include("Faraday::ParsingError")
         expect(status).to be(400)
       end
 

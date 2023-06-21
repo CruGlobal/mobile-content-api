@@ -66,7 +66,7 @@ gem "aws-sdk-s3"
 gem "ddtrace", "~> 1.10"
 gem "dogstatsd-ruby", "~> 5.3"
 gem "file_validators"
-gem "google-api-client", "~> 0.53", require: "google/apis/analyticsreporting_v4"
+gem 'google-apis-analyticsreporting_v4'
 gem "httparty"
 gem "jwt"
 gem "lograge"
