@@ -307,7 +307,7 @@ resource "Auth" do
         context "user already exists" do
           let!(:user) { FactoryBot.create(:user, apple_user_id: apple_user_id, first_name: "Levi", last_name: "Eggert") }
 
-          it "matches an existing user" do
+          it "auth code matches an existing user" do
             expect do
               do_request data: {type: type, attributes: {apple_auth_code: apple_auth_code}}
             end.to_not change(User, :count)
@@ -324,7 +324,7 @@ resource "Auth" do
             expect(data["attributes"]["apple-refresh-token"]).to eq(verify_auth_code_response["refresh_token"])
           end
 
-          it "matches an existing user" do
+          it "refresh token matches an existing user" do
             expect do
               do_request data: {type: type, attributes: {apple_refresh_token: apple_refresh_token}}
             end.to_not change(User, :count)
