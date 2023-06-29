@@ -384,6 +384,19 @@ resource "Auth" do
           expect(response_body.inspect).to include("AppleID::Client::Error")
           expect(status).to be(400)
         end
+
+        it "does not include apple env vars when rails env is production" do
+          allow(Rails).to receive(:env) { "production".inquiry }
+          ENV["SECRET_KEY_BASE"] = "secret"
+
+          expect do
+            do_request data: {type: type, attributes: {apple_auth_code: apple_auth_code, apple_given_name: "Levi", apple_family_name: "Eggert"}}
+          end.to_not change(User, :count)
+
+          expect(response_body.inspect).to include("AppleID::Client::Error")
+          expect(response_body.inspect).to_not include("private_key")
+          expect(status).to be(400)
+        end
       end
     end
   end
