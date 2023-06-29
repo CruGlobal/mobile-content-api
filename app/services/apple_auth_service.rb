@@ -30,11 +30,11 @@ class AppleAuthService < BaseAuthService
     rescue JSON::ParserError, Faraday::ParsingError, AppleID::IdToken::VerificationFailed => e
       raise self::FailedAuthentication, "#{e.class.name}: #{e.message}"
     rescue AppleID::Client::Error => e
-      apple_key_details = unless Rails.env.production?
+      apple_key_details = if Rails.env.production?
+        ""
+      else
         apple_envs = ENV.find_all { |k, v| k["APPLE"] }.collect { |k, v| "#{k}=#{(k == "APPLE_PRIVATE_KEY") ? "..." + ENV["APPLE_PRIVATE_KEY"].split("\n")[4].last(4) : v}" }.join(", ")
         " (#{apple_envs})"
-      else
-        ""
       end
       raise self::FailedAuthentication, "#{e.class.name}: #{e.message}#{apple_key_details}"
     end
