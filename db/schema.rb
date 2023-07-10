@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2023_03_28_180034) do
+ActiveRecord::Schema.define(version: 2023_07_10_210235) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
@@ -220,6 +220,13 @@ ActiveRecord::Schema.define(version: 2023_03_28_180034) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["resource_id", "name"], name: "index_tips_on_resource_id_and_name", unique: true
+  end
+
+  create_table "tool_groups", force: :cascade do |t|
+    t.string "name"
+    t.float "suggestions_weight"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
   end
 
   create_table "translated_attributes", force: :cascade do |t|
