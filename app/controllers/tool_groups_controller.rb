@@ -29,7 +29,7 @@ class ToolGroupsController < ApplicationController
 
   def create_tool_group
     created = ToolGroup.create!(permit_params(:name, :suggestions_weight))
-    response.headers['Location'] = "tool_groups/#{created.id}"
+    response.headers["Location"] = "tool_groups/#{created.id}"
     render json: created, status: :created
   end
 

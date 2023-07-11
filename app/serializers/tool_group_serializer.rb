@@ -3,9 +3,9 @@
 class ToolGroupSerializer < ActiveModel::Serializer
   attributes :id, :name, :suggestions_weight
 
-  type 'tool-group'
+  type "tool-group"
 
   def type
-    'tool-group'
+    "tool-group"
   end
 end
