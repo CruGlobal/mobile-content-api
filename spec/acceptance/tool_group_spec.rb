@@ -27,12 +27,24 @@ resource "ToolGroups" do
       }
     end
 
+    let(:attrs_invalid) do
+      {
+        name: "test",
+        suggestions_weight: nil
+      }
+    end
     requires_authorization
 
     it "create tool group" do
       do_request data: {type: "tool-group", attributes: attrs}
       expect(status).to eq(201)
       expect(JSON.parse(response_body)["data"]).not_to be_nil
+    end
+
+    it "returns error message when tool group is not created" do
+      do_request data: {type: "tool-group", attributes: attrs_invalid}
+      expect(status).to eq(422)
+      expect(JSON.parse(response_body)["error"]).not_to be_empty
     end
   end
 

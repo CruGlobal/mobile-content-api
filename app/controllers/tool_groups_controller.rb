@@ -7,8 +7,8 @@ class ToolGroupsController < ApplicationController
 
   def create
     create_tool_group
-  rescue ActiveRecord::RecordInvalid
-    update_tool_group
+  rescue ActiveRecord::RecordInvalid => e
+    render json: { error: e.record.errors }, status: :unprocessable_entity
   end
 
   def show
