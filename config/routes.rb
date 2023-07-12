@@ -30,7 +30,7 @@ Rails.application.routes.draw do
 
   resources :custom_manifests, only: [:create, :update, :destroy, :show]
 
-  resources :tool_groups, only: [:create, :destroy, :index, :show, :update]
+  resources :tool_groups, path: "tool-groups", only: [:create, :destroy, :index, :show, :update]
 
   patch "user/counters/:id", to: "user_counters#update" # Legacy route for GodTools Android v5.7.0-v6.0.0
   patch "user/me/counters/:id", to: "user_counters#update" # Legacy route for GodTools Android v6.0.1+

@@ -19,7 +19,7 @@ resource "ToolGroups" do
     ToolGroup.delete_all
   end
 
-  post "tool_groups" do
+  post "tool-groups" do
     let(:attrs) do
       {
         name: "test",
@@ -48,7 +48,7 @@ resource "ToolGroups" do
     end
   end
 
-  get "tool_groups" do
+  get "tool-groups" do
     requires_authorization
 
     it "list groups" do
@@ -58,7 +58,7 @@ resource "ToolGroups" do
     end
   end
 
-  get "tool_groups/:id" do
+  get "tool-groups/:id" do
     requires_authorization
     let(:id) { ToolGroup.first.id }
 
@@ -69,7 +69,7 @@ resource "ToolGroups" do
     end
   end
 
-  put "tool_groups/:id" do
+  put "tool-groups/:id" do
     requires_authorization
     let(:id) { ToolGroup.first.id }
     let(:attrs) do
@@ -86,7 +86,7 @@ resource "ToolGroups" do
     end
   end
 
-  delete "tool_groups/:id" do
+  delete "tool-groups/:id" do
     let(:id) { ToolGroup.first.id }
 
     requires_authorization
