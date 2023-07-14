@@ -4,8 +4,8 @@ module TestHelpers
       analytics_url = "https://analyticsreporting.googleapis.com/v4/reports:batchGet"
       access_token_url = "https://www.googleapis.com/oauth2/v4/token"
 
-      allow(ENV).to receive(:fetch).with("GOOGLE_ANALYTICS_VIEW_ID").and_return("234841169")
-      allow(ENV).to receive(:fetch).with("GOOGLE_API_USE_RAILS_LOGGER", "true").and_return("false")
+      ENV["GOOGLE_ANALYTICS_VIEW_ID"] = "234841169"
+      ENV["GOOGLE_API_USE_RAILS_LOGGER"] = "false"
 
       body = File.read(Rails.root.join("spec", "fixtures", "google_access_token.json"))
       stub_request(:post, access_token_url).to_return(status: access_token_status, body: body, headers: {"Content-Type" => "application/json; charset=UTF-8"})

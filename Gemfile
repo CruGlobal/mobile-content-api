@@ -6,7 +6,7 @@ git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 ruby "3.0.6"
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem "rails", "~> 6.1.5"
+gem "rails", "~> 6.1.7.4"
 # Use sqlite3 as the database for Active Record
 # gem 'sqlite3', '~> 1.4'
 # Use Puma as the app server
@@ -66,7 +66,7 @@ gem "aws-sdk-s3"
 gem "ddtrace", "~> 1.10"
 gem "dogstatsd-ruby", "~> 5.3"
 gem "file_validators"
-gem "google-api-client", "~> 0.53", require: "google/apis/analyticsreporting_v4"
+gem "google-apis-analyticsreporting_v4"
 gem "httparty"
 gem "jwt"
 gem "lograge"
@@ -83,10 +83,7 @@ gem "rollbar"
 gem "rubyzip", ">= 1.2.2"
 gem "validates_email_format_of"
 gem "googleauth"
-
-# apple_auth has JWT verification code only in github, not in the latest gem. We should switch to the next gem release when it happens
-# relevant PR: https://github.com/rootstrap/apple_auth/pull/29
-gem "apple_auth", github: "rootstrap/apple_auth", ref: "d71d10d370f2ec2107e361a8ef725e037ad2e152"
+gem "apple_id"
 
 group :development, :test do
   gem "action-cable-testing"

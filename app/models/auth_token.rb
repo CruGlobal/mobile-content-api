@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class AuthToken < ActiveModelSerializers::Model
-  attributes :token, :expiration
+  attributes :token, :expiration, :apple_refresh_token
 
   attr_writer :user
 
