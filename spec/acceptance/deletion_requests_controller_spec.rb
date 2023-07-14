@@ -45,7 +45,6 @@ resource "DeletionRequests" do
         }.to_not change { User.count }
       }.to_not change { DeletionRequest.count }
 
-      puts response_body.inspect
       expect(JSON.parse(response_body)).to eq("error" => "FB deletion callback called with invalid data")
     end
   end

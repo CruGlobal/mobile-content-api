@@ -2,22 +2,41 @@
 
 class AppleAuthService < BaseAuthService
   class << self
-    def find_user_by_token(apple_id_token, apple_given_name = nil, apple_family_name = nil)
-      decoded_token = decode_token(apple_id_token)
-      validate_token!(apple_id_token, decoded_token)
-      validate_expected_fields!(decoded_token)
+    def find_user_by_refresh_token(refresh_token)
+      apple_id_client.refresh_token = refresh_token
+      find_user
+    end
 
-      apple_id_token = remote_user_id(decoded_token)
-      user_atts = extract_user_atts(apple_id_token, decoded_token, apple_id_token)
+    def find_user_by_auth_code(apple_auth_code, apple_given_name = nil, apple_family_name = nil)
+      apple_id_client.authorization_code = apple_auth_code
+      [find_user(apple_given_name, apple_family_name), @response.refresh_token]
+    end
+
+    def find_user(apple_given_name = nil, apple_family_name = nil)
+      @response = apple_id_client.access_token!
+      id_token = @response.id_token
+
+      validate_expected_fields!(id_token.raw_attributes)
+
+      id_token.verify!(
+        client: apple_id_client,
+        access_token: @response.access_token
+      )
+
+      user_atts = {apple_user_id: id_token.sub, email: id_token.email}
       user_atts["first_name"] = apple_given_name if apple_given_name.present?
       user_atts["last_name"] = apple_family_name if apple_family_name.present?
-      setup_user(apple_id_token, user_atts)
-    rescue JSON::ParserError => e
-      raise FailedAuthentication, e.message
-    rescue JWT::DecodeError => e
-      raise FailedAuthentication, e.message
-    rescue AppleAuth::Conditions::JWTValidationError => e
-      raise FailedAuthentication, e.message
+      setup_user(id_token.sub, user_atts)
+    rescue JSON::ParserError, Faraday::ParsingError, AppleID::IdToken::VerificationFailed => e
+      raise self::FailedAuthentication, "#{e.class.name}: #{e.message}"
+    rescue AppleID::Client::Error => e
+      apple_key_details = if Rails.env.production?
+        ""
+      else
+        apple_envs = ENV.find_all { |k, v| k["APPLE"] }.collect { |k, v| "#{k}=#{(k == "APPLE_PRIVATE_KEY") ? "..." + ENV["APPLE_PRIVATE_KEY"].split("\n")[4].last(4) : v}" }.join(", ")
+        " (#{apple_envs})"
+      end
+      raise self::FailedAuthentication, "#{e.class.name}: #{e.message}#{apple_key_details}"
     end
 
     private
@@ -26,24 +45,14 @@ class AppleAuthService < BaseAuthService
       %w[sub email iss aud]
     end
 
-    def decode_token(apple_id_token)
-      AppleAuth::JWTDecoder.new(apple_id_token).call
-    end
-
-    def validate_token!(apple_id_token, decoded_token)
-      raise FailedAuthentication, "Sub is missing from payload" unless decoded_token["sub"]
-      AppleAuth::UserIdentity.new(decoded_token["sub"], apple_id_token).validate!
-    end
-
-    def remote_user_id(decoded_token)
-      decoded_token["sub"]
-    end
-
-    def extract_user_atts(_apple_id_token, decoded_token, remote_user_id)
-      {
-        apple_user_id: remote_user_id,
-        email: decoded_token["email"]
-      }.with_indifferent_access
+    def apple_id_client
+      @apple_id_client ||= AppleID::Client.new(
+        identifier: ENV.fetch("APPLE_CLIENT_ID"),
+        team_id: ENV.fetch("APPLE_TEAM_ID"),
+        key_id: ENV.fetch("APPLE_KEY_ID"),
+        private_key: OpenSSL::PKey::EC.new(ENV.fetch("APPLE_PRIVATE_KEY")),
+        redirect_uri: ENV.fetch("APPLE_REDIRECT_URI")
+      )
     end
   end
 

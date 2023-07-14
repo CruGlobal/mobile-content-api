@@ -13,6 +13,20 @@ resource "Auth" do
   let(:valid_access_token) { "okta_access_token_definitely_a_jwt" }
   let(:user) { FactoryBot.create(:user) }
 
+  before do
+    # This is a valid p8 but revoked so that it can be put into tests here
+    # We need a valid one otherwise we get "OpenSSL::PKey::ECError: invalid curve name"
+    pem = <<~PEM
+      -----BEGIN PRIVATE KEY-----
+      MIGTAgEAMBMGByqGSM49AgEGCCqGSM49AwEHBHkwdwIBAQQgnomcvz1WqpTWTjOT
+      +L7Pg+4opaxREy2pQk5xczt1jdWgCgYIKoZIzj0DAQehRANCAATYN61PCJoIbTq5
+      2nEvzfy66BtxDNQxbP0Fvlb7rw3huEWhfCaJLEGCa4YlQbcpqc2Y9AHGIsU1jicO
+      TnHJlj7w
+      -----END PRIVATE KEY-----
+    PEM
+    ENV["APPLE_PRIVATE_KEY"] = pem
+  end
+
   post "auth/" do
     it "create a token with valid code" do
       do_request data: {type: type, attributes: {code: valid_code}}
@@ -246,40 +260,39 @@ resource "Auth" do
 
     context "apple" do
       let(:type) { "auth-token-request" }
-      let(:apple_id_token) { "auth_id_token" }
-      let(:token_decode_response) { JSON.parse(File.read("spec/fixtures/apple_token_decode_response.json") % {exp: 2.hours.from_now.to_i, iat: 1.hour.ago.to_i}) }
-      let(:apple_user_id) { token_decode_response["sub"] }
-      let(:jwt_decoder) { AppleAuth::JWTDecoder.new(apple_id_token) }
+      let(:apple_auth_code) { "auth_code" }
+      let(:apple_refresh_token) { "refresh_token" }
+      let(:verify_auth_code_response) { JSON.parse(File.read("spec/fixtures/apple_verify_auth_code_response.json")) }
+      let(:verify_refresh_token_response) { JSON.parse(File.read("spec/fixtures/apple_verify_auth_code_response.json")) }
+      let(:apple_user_id) { "001361.a5cafb7f42c845b8809c48d0f2b00889.1804" }
+      let(:jwt_regex) { /^(?:[\w-]*\.){2}[\w-]*$/ } # https://stackoverflow.com/questions/61802832/regex-to-match-jwt
 
       before do
-        allow(AppleAuth::JWTDecoder).to receive(:new).and_return(jwt_decoder)
-        allow(jwt_decoder).to receive(:call).and_return(token_decode_response)
+        stub_request(:get, "https://appleid.apple.com/auth/keys")
+          .to_return(status: 200, body: File.read("spec/fixtures/apple_auth_keys.json"), headers: {content_type: "application/json"})
+
+        stub_request(:post, "https://appleid.apple.com/auth/token")
+          .with(
+            body: {"client_id" => "org.cru.godtools", "client_secret" => jwt_regex, "code" => apple_auth_code, "grant_type" => "authorization_code", "redirect_uri" => "https://mobile-content-api.cru.org"}
+          ).to_return(status: 200, body: verify_auth_code_response.to_json, headers: {content_type: "application/json"})
+
+        stub_request(:post, "https://appleid.apple.com/auth/token")
+          .with(
+            body: {"client_id" => "org.cru.godtools", "client_secret" => jwt_regex, "refresh_token" => apple_refresh_token, "grant_type" => "refresh_token"}
+          ).to_return(status: 200, body: verify_auth_code_response.to_json, headers: {content_type: "application/json"})
       end
 
-      it "creates a apple user" do
-        expect do
-          do_request data: {type: type, attributes: {apple_id_token: apple_id_token, apple_given_name: "Levi", apple_family_name: "Eggert"}}
-        end.to change(User, :count).by(1)
+      context "id_token verify valid" do
+        before do
+          allow_any_instance_of(AppleID::IdToken).to receive(:verify!).and_return(true)
+        end
 
-        user = User.last
-        expect(user.email).to eq("levi.eggert@gmail.com")
-        expect(user.first_name).to eq("Levi")
-        expect(user.last_name).to eq("Eggert")
-
-        expect(status).to be(201)
-        data = JSON.parse(response_body)["data"]
-        expect(data["attributes"]["user-id"]).to eq(user.id)
-      end
-
-      context "user already exists" do
-        let!(:user) { FactoryBot.create(:user, apple_user_id: apple_user_id, first_name: "Levi", last_name: "Eggert") }
-
-        it "matches an existing user" do
+        it "creates a apple user" do
           expect do
-            do_request data: {type: type, attributes: {apple_id_token: apple_id_token}}
-          end.to_not change(User, :count)
+            do_request data: {type: type, attributes: {apple_auth_code: apple_auth_code, apple_given_name: "Levi", apple_family_name: "Eggert"}}
+          end.to change(User, :count).by(1)
 
-          user.reload
+          user = User.last
           expect(user.email).to eq("levi.eggert@gmail.com")
           expect(user.first_name).to eq("Levi")
           expect(user.last_name).to eq("Eggert")
@@ -287,60 +300,103 @@ resource "Auth" do
           expect(status).to be(201)
           data = JSON.parse(response_body)["data"]
           expect(data["attributes"]["user-id"]).to eq(user.id)
+          expect(data["attributes"]["token"]).to match(jwt_regex)
+          expect(data["attributes"]["apple-refresh-token"]).to eq(verify_auth_code_response["refresh_token"])
+        end
+
+        context "user already exists" do
+          let!(:user) { FactoryBot.create(:user, apple_user_id: apple_user_id, first_name: "Levi", last_name: "Eggert") }
+
+          it "auth code matches an existing user" do
+            expect do
+              do_request data: {type: type, attributes: {apple_auth_code: apple_auth_code}}
+            end.to_not change(User, :count)
+
+            user.reload
+            expect(user.email).to eq("levi.eggert@gmail.com")
+            expect(user.first_name).to eq("Levi")
+            expect(user.last_name).to eq("Eggert")
+
+            expect(status).to be(201)
+            data = JSON.parse(response_body)["data"]
+            expect(data["attributes"]["user-id"]).to eq(user.id)
+            expect(data["attributes"]["token"]).to match(jwt_regex)
+            expect(data["attributes"]["apple-refresh-token"]).to eq(verify_auth_code_response["refresh_token"])
+          end
+
+          it "refresh token matches an existing user" do
+            expect do
+              do_request data: {type: type, attributes: {apple_refresh_token: apple_refresh_token}}
+            end.to_not change(User, :count)
+
+            user.reload
+            expect(user.email).to eq("levi.eggert@gmail.com")
+            expect(user.first_name).to eq("Levi")
+            expect(user.last_name).to eq("Eggert")
+
+            expect(status).to be(201)
+            data = JSON.parse(response_body)["data"]
+            expect(data["attributes"]["user-id"]).to eq(user.id)
+            expect(data["attributes"]["token"]).to match(jwt_regex)
+            expect(data["attributes"]["apple-refresh-token"]).to be_nil
+          end
         end
       end
 
-      it "handles token expired" do
-        allow(jwt_decoder).to receive(:call).and_raise(JWT::ExpiredSignature)
+      it "handles invalid json" do
+        stub_request(:post, "https://appleid.apple.com/auth/token")
+          .with(
+            body: {"client_id" => "org.cru.godtools", "client_secret" => jwt_regex, "code" => apple_auth_code, "grant_type" => "authorization_code", "redirect_uri" => "https://mobile-content-api.cru.org"}
+          ).to_return(status: 200, body: "INVALID JSON", headers: {"Content-Type" => "application/json"})
 
         expect do
-          do_request data: {type: type, attributes: {apple_id_token: apple_id_token}}
+          do_request data: {type: type, attributes: {apple_auth_code: apple_auth_code, apple_given_name: "Levi", apple_family_name: "Eggert"}}
         end.to_not change(User, :count)
 
-        expect(response_body).to include("JWT::ExpiredSignature")
+        expect(response_body.inspect).to include("Faraday::ParsingError")
+        expect(status).to be(400)
       end
 
-      it "handles parse error" do
-        allow(jwt_decoder).to receive(:call).and_raise(JSON::ParserError)
+      it "handles verification failure" do
+        stub_request(:get, "https://appleid.apple.com/auth/keys")
+          .to_return(status: 200, body: "invalid keys")
 
         expect do
-          do_request data: {type: type, attributes: {apple_id_token: apple_id_token}}
+          do_request data: {type: type, attributes: {apple_auth_code: apple_auth_code, apple_given_name: "Levi", apple_family_name: "Eggert"}}
         end.to_not change(User, :count)
 
-        expect(response_body).to include("JSON::ParserError")
+        expect(response_body.inspect).to include("error")
+        expect(status).to be(400)
       end
 
-      it "handles token response not having all the fields needed" do
-        response = token_decode_response.delete("sub")
-        allow(jwt_decoder).to receive(:call).and_return(response)
+      context "client error" do
+        let(:apple_id_client) { double("applie_id_client") }
 
-        expect do
-          do_request data: {type: type, attributes: {apple_id_token: apple_id_token}}
-        end.to_not change(User, :count)
+        before do
+          allow_any_instance_of(AppleID::IdToken).to receive(:verify!).and_raise(AppleID::Client::Error.new(500, {error_description: "something"}))
+        end
 
-        expect(response_body).to include("error")
-      end
-      it "checks iss in token" do
-        response = token_decode_response
-        response["iss"] = "https://some.other.issuer"
-        allow(jwt_decoder).to receive(:call).and_return(response)
+        it "handles client error" do
+          expect do
+            do_request data: {type: type, attributes: {apple_auth_code: apple_auth_code, apple_given_name: "Levi", apple_family_name: "Eggert"}}
+          end.to_not change(User, :count)
 
-        expect do
-          do_request data: {type: type, attributes: {apple_id_token: apple_id_token}}
-        end.to_not change(User, :count)
+          expect(response_body.inspect).to include("AppleID::Client::Error")
+          expect(status).to be(400)
+        end
 
-        expect(response_body).to include("jwt_iss is different to apple_iss")
-      end
-      it "checks aud in token" do
-        response = token_decode_response
-        response["aud"] = "some.other.org"
-        allow(jwt_decoder).to receive(:call).and_return(response)
+        it "does not include apple env vars when rails env is production" do
+          allow(Rails).to receive(:env) { "production".inquiry }
+          ENV["SECRET_KEY_BASE"] = "secret"
 
-        expect do
-          do_request data: {type: type, attributes: {apple_id_token: apple_id_token}}
-        end.to_not change(User, :count)
+          expect do
+            do_request data: {type: type, attributes: {apple_auth_code: apple_auth_code, apple_given_name: "Levi", apple_family_name: "Eggert"}}
+          end.to_not change(User, :count)
 
-        expect(response_body).to include("jwt_aud is different to apple_client_id")
+          expect(response_body.inspect).to include("AppleID::Client::Error")
+          expect(response_body.inspect).to_not include("private_key")
+          expect(status).to be(400)
+        end
       end
     end
   end

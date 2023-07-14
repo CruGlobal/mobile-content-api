@@ -1,14 +1,20 @@
 # frozen_string_literal: true
 
 class AuthController < ApplicationController
-  THIRD_PARTY_AUTH_METHODS = [:okta, :facebook, :google, :apple]
+  THIRD_PARTY_AUTH_METHODS = [:okta, :facebook, :google, :apple_auth, :apple_refresh]
 
   def create
-    method = THIRD_PARTY_AUTH_METHODS.detect { |method| data_attrs[:"#{method}_access_token"] || data_attrs[:"#{method}_id_token"] }
+    method = THIRD_PARTY_AUTH_METHODS.detect { |method|
+      data_attrs[:"#{method}_access_token"] || data_attrs[:"#{method}_id_token"] ||
+        data_attrs["#{method}_code"] || data_attrs["#{method}_token"]
+    }
     token = case method
-    when :apple
+    when :apple_auth
       # special case for apple, which has given and family name passed in
-      user = AppleAuthService.find_user_by_token(data_attrs[:apple_id_token], data_attrs[:apple_given_name], data_attrs[:apple_family_name])
+      user, apple_refresh_token = AppleAuthService.find_user_by_auth_code(data_attrs[:apple_auth_code], data_attrs[:apple_given_name], data_attrs[:apple_family_name])
+      AuthToken.new(user: user, apple_refresh_token: apple_refresh_token)
+    when :apple_refresh
+      user = AppleAuthService.find_user_by_refresh_token(data_attrs[:apple_refresh_token])
       AuthToken.new(user: user)
     when :google
       user = GoogleAuthService.find_user_by_token(data_attrs[:google_id_token])
