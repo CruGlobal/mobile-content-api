@@ -2,7 +2,7 @@
 
 require "acceptance_helper"
 
-resource "ToolGroupRuleLanguages" do
+resource "RuleLanguages" do
   header "Accept", "application/vnd.api+json"
   header "Content-Type", "application/vnd.api+json"
 
@@ -13,11 +13,11 @@ resource "ToolGroupRuleLanguages" do
     %i[one].each do |name|
       FactoryBot.create(:tool_group, name: name)
     end
-    FactoryBot.create(:tool_group_rule_language, tool_group: ToolGroup.first)
+    FactoryBot.create(:rule_language, tool_group: ToolGroup.first)
   end
 
   after(:each) do
-    ToolGroupRuleLanguage.delete_all
+    RuleLanguage.delete_all
     ToolGroup.delete_all
   end
 
@@ -33,7 +33,7 @@ resource "ToolGroupRuleLanguages" do
     end
 
     it "create tool group" do
-      do_request data: {type: "tool-group-rule-languages", attributes: attrs}
+      do_request data: {type: "rule-languages", attributes: attrs}
       expect(status).to eq(201)
       expect(JSON.parse(response_body)["data"]).not_to be_nil
     end
@@ -43,7 +43,7 @@ resource "ToolGroupRuleLanguages" do
     requires_authorization
 
     let(:tool_group_id) { ToolGroup.first.id }
-    let(:id) { ToolGroupRuleLanguage.first.id }
+    let(:id) { RuleLanguage.first.id }
     let(:languages) { ["fr", "es", "pt"] }
 
     let(:attrs) do
@@ -54,7 +54,7 @@ resource "ToolGroupRuleLanguages" do
     end
 
     it "update tool group" do
-      do_request data: {type: "tool-group-rule-languages", attributes: attrs}
+      do_request data: {type: "rule-languages", attributes: attrs}
       
       expect(status).to be(202)
       expect(JSON.parse(response_body)["data"]["attributes"]["languages"]).to eql languages
@@ -66,7 +66,7 @@ resource "ToolGroupRuleLanguages" do
     requires_authorization
 
     let(:tool_group_id) { ToolGroup.first.id }
-    let(:id) { ToolGroupRuleLanguage.first.id }
+    let(:id) { RuleLanguage.first.id }
 
     it "delete tool_group rule language" do
       do_request
