@@ -499,6 +499,7 @@ GEM
       unf_ext
     unf_ext (0.0.8)
     unicode-display_width (2.4.2)
+    uri (0.10.3)
     validate_email (0.1.6)
       activemodel (>= 3.0)
       mail (>= 2.2.5)
@@ -588,6 +589,7 @@ DEPENDENCIES
   spring-commands-rspec
   standard
   tzinfo-data
+  uri (~> 0.10.3)
   validates_email_format_of
   web-console (>= 4.1.0)
   webdrivers
