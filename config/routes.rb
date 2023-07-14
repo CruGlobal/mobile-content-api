@@ -31,10 +31,16 @@ Rails.application.routes.draw do
   resources :custom_manifests, only: [:create, :update, :destroy, :show]
 
   resources :tool_groups, path: "tool-groups", only: [:create, :destroy, :index, :show, :update]
-  
+
+  # Rule Languages
   post "tool-groups/:id/rule-languages", to: "rule_languages#create"
   patch "tool-groups/:tool_group_id/rule-languages/:id", to: "rule_languages#update"
   delete "tool-groups/:tool_group_id/rule-languages/:id", to: "rule_languages#destroy"
+
+  # Rule Countries
+  post "tool-groups/:id/rule-countries", to: "rule_countries#create"
+  patch "tool-groups/:tool_group_id/rule-countries/:id", to: "rule_countries#update"
+  delete "tool-groups/:tool_group_id/rule-countries/:id", to: "rule_countries#destroy"
 
   patch "user/counters/:id", to: "user_counters#update" # Legacy route for GodTools Android v5.7.0-v6.0.0
   patch "user/me/counters/:id", to: "user_counters#update" # Legacy route for GodTools Android v6.0.1+

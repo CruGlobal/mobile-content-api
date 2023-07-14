@@ -7,4 +7,5 @@ class ToolGroupSerializer < ActiveModel::Serializer
   type "tool-group"
 
   has_many :rule_languages
+  has_many :rule_countries
 end
