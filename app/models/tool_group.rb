@@ -6,4 +6,5 @@ class ToolGroup < ApplicationRecord
   validates :name, uniqueness: true
 
   has_many :rule_languages
+  has_many :rule_countries
 end
