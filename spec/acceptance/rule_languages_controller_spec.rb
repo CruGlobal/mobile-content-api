@@ -33,7 +33,7 @@ resource "RuleLanguages" do
     end
 
     it "create tool group" do
-      do_request data: {type: "rule-languages", attributes: attrs}
+      do_request data: {type: "tool-group-rule-languages", attributes: attrs}
       expect(status).to eq(201)
       expect(JSON.parse(response_body)["data"]).not_to be_nil
     end
@@ -54,7 +54,7 @@ resource "RuleLanguages" do
     end
 
     it "update tool group" do
-      do_request data: {type: "rule-languages", attributes: attrs}
+      do_request data: {type: "tool-group-rule-languages", attributes: attrs}
       
       expect(status).to be(202)
       expect(JSON.parse(response_body)["data"]["attributes"]["languages"]).to eql languages
