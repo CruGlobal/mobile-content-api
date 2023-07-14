@@ -34,6 +34,7 @@ Rails.application.routes.draw do
   
   post "tool-groups/:id/rule-languages", to: "tool_group_rule_languages#create"
   patch "tool-groups/:tool_group_id/rule-languages/:id", to: "tool_group_rule_languages#update"
+  delete "tool-groups/:tool_group_id/rule-languages/:id", to: "tool_group_rule_languages#destroy"
 
   patch "user/counters/:id", to: "user_counters#update" # Legacy route for GodTools Android v5.7.0-v6.0.0
   patch "user/me/counters/:id", to: "user_counters#update" # Legacy route for GodTools Android v6.0.1+

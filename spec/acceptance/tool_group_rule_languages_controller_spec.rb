@@ -22,6 +22,8 @@ resource "ToolGroupRuleLanguages" do
   end
 
   post "tool-groups/:id/rule-languages" do
+    requires_authorization
+
     let(:attrs) do
       {
         languages: ["en", "es"],
@@ -29,8 +31,6 @@ resource "ToolGroupRuleLanguages" do
         negative_rule: "true"
       }
     end
-
-    requires_authorization
 
     it "create tool group" do
       do_request data: {type: "tool-group-rule-languages", attributes: attrs}
@@ -59,6 +59,18 @@ resource "ToolGroupRuleLanguages" do
       expect(status).to be(202)
       expect(JSON.parse(response_body)["data"]["attributes"]["languages"]).to eql languages
       expect(JSON.parse(response_body)["data"]["attributes"]["negative-rule"]).to eql false
+    end
+  end
+
+  delete "tool-groups/:tool_group_id/rule-languages/:id" do
+    requires_authorization
+
+    let(:tool_group_id) { ToolGroup.first.id }
+    let(:id) { ToolGroupRuleLanguage.first.id }
+
+    it "delete tool_group rule language" do
+      do_request
+      expect(status).to be(204)
     end
   end
 end

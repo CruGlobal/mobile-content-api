@@ -11,6 +11,12 @@ class ToolGroupRuleLanguagesController < ApplicationController
     update_tool_group_rule_language
   end
 
+  def destroy
+    tool_group_rule_language = ToolGroupRuleLanguage.find(params[:id])
+    tool_group_rule_language.destroy!
+    head :no_content
+  end
+
   private
 
   def create_tool_group_rule_language
