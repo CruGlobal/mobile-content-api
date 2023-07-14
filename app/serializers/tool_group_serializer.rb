@@ -5,4 +5,6 @@ class ToolGroupSerializer < ActiveModel::Serializer
   attribute :suggestions_weight, key: "suggestions-weight"
 
   type "tool-group"
+
+  has_many :tool_group_rule_languages
 end

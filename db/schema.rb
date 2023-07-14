@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2023_07_10_210235) do
+ActiveRecord::Schema.define(version: 2023_07_13_233746) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
@@ -222,6 +222,15 @@ ActiveRecord::Schema.define(version: 2023_07_10_210235) do
     t.index ["resource_id", "name"], name: "index_tips_on_resource_id_and_name", unique: true
   end
 
+  create_table "tool_group_rule_languages", force: :cascade do |t|
+    t.bigint "tool_group_id", null: false
+    t.string "languages", default: [], array: true
+    t.boolean "negative_rule", default: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["tool_group_id"], name: "index_tool_group_rule_languages_on_tool_group_id"
+  end
+
   create_table "tool_groups", force: :cascade do |t|
     t.string "name"
     t.float "suggestions_weight"
@@ -312,6 +321,7 @@ ActiveRecord::Schema.define(version: 2023_07_10_210235) do
   add_foreign_key "resources", "resources", column: "default_variant_id"
   add_foreign_key "resources", "resources", column: "metatool_id"
   add_foreign_key "resources", "systems"
+  add_foreign_key "tool_group_rule_languages", "tool_groups"
   add_foreign_key "translated_pages", "languages"
   add_foreign_key "translated_pages", "resources"
   add_foreign_key "translation_attributes", "translations"
