@@ -7,4 +7,5 @@ class ToolGroup < ApplicationRecord
 
   has_many :rule_languages
   has_many :rule_countries
+  has_many :rule_praxis
 end
