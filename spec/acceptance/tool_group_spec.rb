@@ -30,9 +30,10 @@ resource "ToolGroups" do
     let(:attrs_invalid) do
       {
         name: "test",
-        suggestions_weight: nil
+        suggestions_weight: ""
       }
     end
+
     requires_authorization
 
     it "create tool group" do
@@ -43,8 +44,10 @@ resource "ToolGroups" do
 
     it "returns error message when tool group is not created" do
       do_request data: {type: "tool-group", attributes: attrs_invalid}
-      expect(status).to eq(422)
-      expect(JSON.parse(response_body)["error"]).not_to be_empty
+
+      expect(status).to eq(400)
+      expect(JSON.parse(response_body)["errors"]).not_to be_empty
+      expect(JSON.parse(response_body)["errors"][0]["detail"]).to eql "Validation failed: Suggestions weight can't be blank"
     end
   end
 

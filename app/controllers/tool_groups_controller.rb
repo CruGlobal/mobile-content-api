@@ -2,13 +2,13 @@ class ToolGroupsController < ApplicationController
   before_action :authorize!
 
   def index
-    render json: ToolGroup.all.order(name: :asc), status: :ok
+    render json: tool_groups_ordered_by_name, status: :ok
   end
 
   def create
     create_tool_group
   rescue ActiveRecord::RecordInvalid => e
-    render json: {error: e.record.errors}, status: :unprocessable_entity
+    render json: {errors: formatted_errors(e)}, status: :unprocessable_entity
   end
 
   def show
@@ -27,6 +27,10 @@ class ToolGroupsController < ApplicationController
 
   private
 
+  def tool_groups_ordered_by_name
+    ToolGroup.order(name: :asc)
+  end
+
   def create_tool_group
     created = ToolGroup.create!(permit_params(:name, :suggestions_weight))
     response.headers["Location"] = "tool_groups/#{created.id}"
@@ -41,5 +45,11 @@ class ToolGroupsController < ApplicationController
 
   def load_tool_group
     ToolGroup.find(params[:id])
+  end
+
+  def formatted_errors(error)
+    error.record.errors.map do |attribute, errors|
+      errors.map { |error_message| {detail: "#{attribute} #{error_message}"} }
+    end.flatten
   end
 end
