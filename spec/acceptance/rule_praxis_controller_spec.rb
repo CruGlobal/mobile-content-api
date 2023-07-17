@@ -23,21 +23,51 @@ resource "RulePraxis" do
 
   post "tool-groups/:id/rule-praxis" do
     requires_authorization
+    let(:tool_group_id) {ToolGroup.first.id}
+    let(:openness) {[1, 2]}
+    let(:confidence) {[4, 5]}
 
-    let(:attrs) do
+    let(:valid_attrs) do
       {
-        tool_group_id: ToolGroup.first.id,
-        openness: [123, 456],
-        confidence: [8, 9],
+        tool_group_id: tool_group_id,
+        openness: openness,
+        confidence: confidence,
         negative_rule: "true"
       }
     end
 
-    it "create rule praxis" do
-      do_request data: {type: "tool-group-rule-praxis", attributes: attrs}
+    let(:repeated_attrs) do
+      {
+        tool_group_id: tool_group_id,
+        openness: openness,
+        confidence: confidence,
+        negative_rule: "true"
+      }
+    end
 
-      expect(status).to eq(201)
-      expect(JSON.parse(response_body)["data"]).not_to be_nil
+    context "with valid openness and confidence values" do
+      it "create rule praxis" do
+        do_request data: {type: "tool-group-rule-praxis", attributes: valid_attrs}
+
+        expect(status).to eq(201)
+        expect(JSON.parse(response_body)["data"]).not_to be_nil
+      end
+    end
+
+    context "with repeated openness and confidence values" do
+      before do
+        FactoryBot.create(:rule_praxi,  tool_group_id: tool_group_id,
+          openness: openness,
+          confidence: confidence)
+      end
+
+      it "returns an error" do
+        do_request data: {type: "tool-group-rule-praxis", attributes: repeated_attrs}
+
+        expect(status).to eq(422)
+        expect(JSON.parse(response_body)["data"]).to be_nil
+        expect(JSON.parse(response_body)["error"]["tool_group_id"][0]).to eql "combination already exists"
+      end
     end
   end
 
