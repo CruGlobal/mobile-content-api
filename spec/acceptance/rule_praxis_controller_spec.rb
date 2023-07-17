@@ -40,4 +40,30 @@ resource "RulePraxis" do
       expect(JSON.parse(response_body)["data"]).not_to be_nil
     end
   end
+
+  patch "tool-groups/:tool_group_id/rule-praxis/:id" do
+    requires_authorization
+
+    let(:tool_group_id) { ToolGroup.first.id }
+    let(:id) { RulePraxi.first.id }
+    let(:openness) { [111, 222] }
+    let(:confidence) { [8, 9] }
+
+    let(:attrs) do
+      {
+        openness: openness,
+        confidence: confidence,
+        negative_rule: false
+      }
+    end
+
+    it "update rule praxis" do
+      do_request data: {type: "tool-group-rule-praxis", attributes: attrs}
+
+      expect(status).to be(202)
+      expect(JSON.parse(response_body)["data"]["attributes"]["openness"]).to eql openness
+      expect(JSON.parse(response_body)["data"]["attributes"]["confidence"]).to eql confidence
+      expect(JSON.parse(response_body)["data"]["attributes"]["negative-rule"]).to eql false
+    end
+  end
 end
