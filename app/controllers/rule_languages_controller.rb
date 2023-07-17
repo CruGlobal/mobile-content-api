@@ -21,7 +21,7 @@ class RuleLanguagesController < ApplicationController
   private
 
   def create_rule_language
-    created = RuleLanguage.create!(permit_params(:tool_group_id, :negative_rule, :languages => []))
+    created = RuleLanguage.create!(permit_params(:tool_group_id, :negative_rule, languages: []))
     response.headers["Location"] = "tool_groups/#{created.id}"
     render json: created, status: :created
   end
@@ -29,7 +29,7 @@ class RuleLanguagesController < ApplicationController
   def update_rule_language
     tool_group = ToolGroup.find(params[:tool_group_id])
     existing = tool_group.rule_languages.find(params[:id])
-    existing.update!(permit_params(:negative_rule, :languages => []))
+    existing.update!(permit_params(:negative_rule, languages: []))
     render json: existing, status: :accepted
   end
 end

@@ -76,7 +76,7 @@ resource "RuleCountries" do
 
     it "update rule country" do
       do_request data: {type: "tool-group-rule-countries", attributes: attrs}
-      
+
       expect(status).to be(202)
       expect(JSON.parse(response_body)["data"]["attributes"]["countries"]).to eql countries
       expect(JSON.parse(response_body)["data"]["attributes"]["negative-rule"]).to eql false

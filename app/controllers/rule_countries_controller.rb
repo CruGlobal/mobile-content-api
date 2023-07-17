@@ -21,7 +21,7 @@ class RuleCountriesController < ApplicationController
   private
 
   def create_rule_country
-    created = RuleCountry.create!(permit_params(:tool_group_id, :negative_rule, :countries => []))
+    created = RuleCountry.create!(permit_params(:tool_group_id, :negative_rule, countries: []))
     response.headers["Location"] = "tool_groups/#{created.id}"
     render json: created, status: :created
   end
@@ -29,7 +29,7 @@ class RuleCountriesController < ApplicationController
   def update_rule_country
     tool_group = ToolGroup.find(params[:tool_group_id])
     existing = tool_group.rule_countries.find(params[:id])
-    existing.update!(permit_params(:negative_rule, :countries => []))
+    existing.update!(permit_params(:negative_rule, countries: []))
     render json: existing, status: :accepted
   end
 end

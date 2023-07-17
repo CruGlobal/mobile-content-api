@@ -55,7 +55,7 @@ resource "RuleLanguages" do
 
     it "update rule language" do
       do_request data: {type: "tool-group-rule-languages", attributes: attrs}
-      
+
       expect(status).to be(202)
       expect(JSON.parse(response_body)["data"]["attributes"]["languages"]).to eql languages
       expect(JSON.parse(response_body)["data"]["attributes"]["negative-rule"]).to eql false

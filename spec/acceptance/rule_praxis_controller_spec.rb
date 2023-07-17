@@ -35,7 +35,7 @@ resource "RulePraxis" do
 
     it "create rule praxis" do
       do_request data: {type: "tool-group-rule-praxis", attributes: attrs}
-      
+
       expect(status).to eq(201)
       expect(JSON.parse(response_body)["data"]).not_to be_nil
     end
