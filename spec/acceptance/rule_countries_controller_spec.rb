@@ -24,7 +24,7 @@ resource "RuleCountries" do
   post "tool-groups/:id/rule-countries" do
     requires_authorization
 
-    let(:attrs) do
+    let(:valid_attrs) do
       {
         countries: ["CA", "FR", "US"],
         tool_group_id: ToolGroup.first.id,
@@ -32,11 +32,29 @@ resource "RuleCountries" do
       }
     end
 
-    it "create rule country" do
-      do_request data: {type: "tool-group-rule-countries", attributes: attrs}
-      
-      expect(status).to eq(201)
-      expect(JSON.parse(response_body)["data"]).not_to be_nil
+    let(:invalid_attrs) do
+      {
+        countries: ["1A"],
+        tool_group_id: ToolGroup.first.id,
+        negative_rule: "true"
+      }
+    end
+
+    context "create rule country" do
+      it "with valid countries values" do
+        do_request data: {type: "tool-group-rule-countries", attributes: valid_attrs}
+
+        expect(status).to eq(201)
+        expect(JSON.parse(response_body)["data"]).not_to be_nil
+      end
+
+      it "with invalid countries values" do
+        do_request data: {type: "tool-group-rule-countries", attributes: invalid_attrs}
+
+        expect(status).to eq(422)
+        expect(JSON.parse(response_body)["data"]).to be_nil
+        expect(JSON.parse(response_body)["error"]["countries"][0]).to eql "must contain only ISO-3166 alpha-2 country codes"
+      end
     end
   end
 
