@@ -12,7 +12,8 @@ class RulePraxisController < ApplicationController
   end
 
   def destroy
-    rule_praxi = RulePraxi.find(params[:id])
+    tool_group = ToolGroup.find(params[:tool_group_id])
+    rule_praxi = tool_group.rule_praxis.find(params[:id])
     rule_praxi.destroy!
     head :no_content
   end
@@ -26,9 +27,9 @@ class RulePraxisController < ApplicationController
   end
 
   def update_rule_praxis
-    existing = RulePraxi.find(params[:id])
+    tool_group = ToolGroup.find(params[:tool_group_id])
+    existing = tool_group.rule_praxis.find(params[:id])
     existing.update!(permit_params(:negative_rule, :openness => [], :confidence => []))
     render json: existing, status: :accepted
   end
-
 end

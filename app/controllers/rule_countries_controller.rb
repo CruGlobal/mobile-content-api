@@ -12,7 +12,8 @@ class RuleCountriesController < ApplicationController
   end
 
   def destroy
-    rule_country = RuleCountry.find(params[:id])
+    tool_group = ToolGroup.find(params[:tool_group_id])
+    rule_country = tool_group.rule_countries.find(params[:id])
     rule_country.destroy!
     head :no_content
   end
@@ -26,7 +27,8 @@ class RuleCountriesController < ApplicationController
   end
 
   def update_rule_country
-    existing = RuleCountry.find(params[:id])
+    tool_group = ToolGroup.find(params[:tool_group_id])
+    existing = tool_group.rule_countries.find(params[:id])
     existing.update!(permit_params(:negative_rule, :countries => []))
     render json: existing, status: :accepted
   end

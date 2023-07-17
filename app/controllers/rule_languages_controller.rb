@@ -12,7 +12,8 @@ class RuleLanguagesController < ApplicationController
   end
 
   def destroy
-    rule_language = RuleLanguage.find(params[:id])
+    tool_group = ToolGroup.find(params[:tool_group_id])
+    rule_language = tool_group.rule_languages.find(params[:id])
     rule_language.destroy!
     head :no_content
   end
@@ -26,7 +27,8 @@ class RuleLanguagesController < ApplicationController
   end
 
   def update_rule_language
-    existing = RuleLanguage.find(params[:id])
+    tool_group = ToolGroup.find(params[:tool_group_id])
+    existing = tool_group.rule_languages.find(params[:id])
     existing.update!(permit_params(:negative_rule, :languages => []))
     render json: existing, status: :accepted
   end
