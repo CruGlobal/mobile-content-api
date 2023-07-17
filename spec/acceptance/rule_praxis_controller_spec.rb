@@ -54,6 +54,24 @@ resource "RulePraxis" do
       }
     end
 
+    let(:non_valid_openness_attr) do
+      {
+        tool_group_id: tool_group_id,
+        openness: [0],
+        confidence: [1, 2],
+        negative_rule: "true"
+      }
+    end
+
+    let(:non_valid_confidence_attr) do
+      {
+        tool_group_id: tool_group_id,
+        openness: [1, 2, 3, 4, 5],
+        confidence: [6],
+        negative_rule: "true"
+      }
+    end
+
     context "with valid openness and confidence values" do
       it "create rule praxis" do
         do_request data: {type: "tool-group-rule-praxis", attributes: valid_attrs}
@@ -86,6 +104,26 @@ resource "RulePraxis" do
         expect(JSON.parse(response_body)["error"]["base"][0]).to eql "Either 'openness' or 'confidence' must be present"
       end
     end
+
+    context "with non valid openness values" do
+      it "returns an error" do
+        do_request data: {type: "tool-group-rule-praxis", attributes: non_valid_openness_attr}
+
+        expect(status).to eq(422)
+        expect(JSON.parse(response_body)["data"]).to be_nil
+        expect(JSON.parse(response_body)["error"]["openness"][0]).to eql "must contain integer values between 1 and 5 or an empty array"
+      end
+    end
+
+    context "with non valid confidence values" do
+      it "returns an error" do
+        do_request data: {type: "tool-group-rule-praxis", attributes: non_valid_confidence_attr}
+
+        expect(status).to eq(422)
+        expect(JSON.parse(response_body)["data"]).to be_nil
+        expect(JSON.parse(response_body)["error"]["confidence"][0]).to eql "must contain integer values between 1 and 5 or an empty array"
+      end
+    end
   end
 
   patch "tool-groups/:tool_group_id/rule-praxis/:id" do
@@ -93,8 +131,8 @@ resource "RulePraxis" do
 
     let(:tool_group_id) { ToolGroup.first.id }
     let(:id) { RulePraxi.first.id }
-    let(:openness) { [111, 222] }
-    let(:confidence) { [8, 9] }
+    let(:openness) { [1, 2] }
+    let(:confidence) { [3, 4] }
 
     let(:attrs) do
       {
