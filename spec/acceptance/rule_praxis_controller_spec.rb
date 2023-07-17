@@ -23,9 +23,9 @@ resource "RulePraxis" do
 
   post "tool-groups/:id/rule-praxis" do
     requires_authorization
-    let(:tool_group_id) {ToolGroup.first.id}
-    let(:openness) {[1, 2]}
-    let(:confidence) {[4, 5]}
+    let(:tool_group_id) { ToolGroup.first.id }
+    let(:openness) { [1, 2] }
+    let(:confidence) { [4, 5] }
 
     let(:valid_attrs) do
       {
@@ -56,9 +56,7 @@ resource "RulePraxis" do
 
     context "with repeated openness and confidence values" do
       before do
-        FactoryBot.create(:rule_praxi,  tool_group_id: tool_group_id,
-          openness: openness,
-          confidence: confidence)
+        FactoryBot.create(:rule_praxi, tool_group_id: tool_group_id, openness: openness, confidence: confidence)
       end
 
       it "returns an error" do
