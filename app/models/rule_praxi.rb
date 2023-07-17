@@ -4,7 +4,7 @@ class RulePraxi < ApplicationRecord
   validates :tool_group_id, uniqueness: {scope: [:openness, :confidence], message: "combination already exists"}
 
   validate :validate_openness_and_confidence_values, if: :tool_group_id_uniqueness_passed?
-  validate :validate_openness_or_confidence #, if: :validate_openness_and_confidence_values?
+  validate :validate_openness_or_confidence, if: :previous_validations_pass?
 
   private
 
@@ -32,5 +32,9 @@ class RulePraxi < ApplicationRecord
         break
       end
     end
+  end
+
+  def previous_validations_pass?
+    errors.empty?
   end
 end
