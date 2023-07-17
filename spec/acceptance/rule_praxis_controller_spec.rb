@@ -66,4 +66,16 @@ resource "RulePraxis" do
       expect(JSON.parse(response_body)["data"]["attributes"]["negative-rule"]).to eql false
     end
   end
+
+  delete "tool-groups/:tool_group_id/rule-praxis/:id" do
+    requires_authorization
+
+    let(:tool_group_id) { ToolGroup.first.id }
+    let(:id) { RulePraxi.first.id }
+
+    it "delete rule praxis" do
+      do_request
+      expect(status).to be(204)
+    end
+  end
 end

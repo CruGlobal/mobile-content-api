@@ -45,6 +45,7 @@ Rails.application.routes.draw do
   # Rule Praxis
   post "tool-groups/:id/rule-praxis", to: "rule_praxis#create"
   patch "tool-groups/:tool_group_id/rule-praxis/:id", to: "rule_praxis#update"
+  delete "tool-groups/:tool_group_id/rule-praxis/:id", to: "rule_praxis#destroy"
 
   patch "user/counters/:id", to: "user_counters#update" # Legacy route for GodTools Android v5.7.0-v6.0.0
   patch "user/me/counters/:id", to: "user_counters#update" # Legacy route for GodTools Android v6.0.1+

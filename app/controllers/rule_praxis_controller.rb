@@ -11,6 +11,12 @@ class RulePraxisController < ApplicationController
     update_rule_praxis
   end
 
+  def destroy
+    rule_praxi = RulePraxi.find(params[:id])
+    rule_praxi.destroy!
+    head :no_content
+  end
+
   private
 
   def create_rule_praxis
