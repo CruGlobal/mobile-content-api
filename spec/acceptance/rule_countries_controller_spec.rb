@@ -21,7 +21,7 @@ resource "RuleCountries" do
     ToolGroup.delete_all
   end
 
-  post "tool-groups/:id/rule-countries" do
+  post "tool-groups/:id/rules-country" do
     requires_authorization
 
     let(:valid_attrs) do
@@ -42,7 +42,7 @@ resource "RuleCountries" do
 
     context "with valid countries values" do
       it "creates a rule country" do
-        do_request data: {type: "tool-group-rule-countries", attributes: valid_attrs}
+        do_request data: {type: "tool-group-rules-country", attributes: valid_attrs}
 
         expect(status).to eq(201)
         expect(JSON.parse(response_body)["data"]).not_to be_nil
@@ -51,7 +51,7 @@ resource "RuleCountries" do
 
     context "with invalid countries values" do
       it "returns an error" do
-        do_request data: {type: "tool-group-rule-countries", attributes: invalid_attrs}
+        do_request data: {type: "tool-group-rules-country", attributes: invalid_attrs}
 
         expect(status).to eq(422)
         expect(JSON.parse(response_body)["data"]).to be_nil
@@ -60,7 +60,7 @@ resource "RuleCountries" do
     end
   end
 
-  patch "tool-groups/:tool_group_id/rule-countries/:id" do
+  patch "tool-groups/:tool_group_id/rules-country/:id" do
     requires_authorization
 
     let(:tool_group_id) { ToolGroup.first.id }
@@ -75,7 +75,7 @@ resource "RuleCountries" do
     end
 
     it "update rule country" do
-      do_request data: {type: "tool-group-rule-countries", attributes: attrs}
+      do_request data: {type: "tool-group-rules-country", attributes: attrs}
 
       expect(status).to be(202)
       expect(JSON.parse(response_body)["data"]["attributes"]["countries"]).to eql countries
@@ -83,7 +83,7 @@ resource "RuleCountries" do
     end
   end
 
-  delete "tool-groups/:tool_group_id/rule-countries/:id" do
+  delete "tool-groups/:tool_group_id/rules-country/:id" do
     requires_authorization
 
     let(:tool_group_id) { ToolGroup.first.id }

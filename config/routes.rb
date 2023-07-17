@@ -33,19 +33,19 @@ Rails.application.routes.draw do
   resources :tool_groups, path: "tool-groups", only: [:create, :destroy, :index, :show, :update]
 
   # Rule Languages
-  post "tool-groups/:id/rule-languages", to: "rule_languages#create"
-  patch "tool-groups/:tool_group_id/rule-languages/:id", to: "rule_languages#update"
-  delete "tool-groups/:tool_group_id/rule-languages/:id", to: "rule_languages#destroy"
+  resources :tool_groups, path: "tool-groups", only: [] do
+    resources :rule_languages, path: "rules-language", only: [:create, :destroy, :update]
+  end
 
   # Rule Countries
-  post "tool-groups/:id/rule-countries", to: "rule_countries#create"
-  patch "tool-groups/:tool_group_id/rule-countries/:id", to: "rule_countries#update"
-  delete "tool-groups/:tool_group_id/rule-countries/:id", to: "rule_countries#destroy"
+  resources :tool_groups, path: "tool-groups", only: [] do
+    resources :rule_countries, path: "rules-country", only: [:create, :destroy, :update]
+  end
 
   # Rule Praxis
-  post "tool-groups/:id/rule-praxis", to: "rule_praxis#create"
-  patch "tool-groups/:tool_group_id/rule-praxis/:id", to: "rule_praxis#update"
-  delete "tool-groups/:tool_group_id/rule-praxis/:id", to: "rule_praxis#destroy"
+  resources :tool_groups, path: "tool-groups", only: [] do
+    resources :rule_praxis, path: "rules-praxis", only: [:create, :destroy, :update]
+  end
 
   patch "user/counters/:id", to: "user_counters#update" # Legacy route for GodTools Android v5.7.0-v6.0.0
   patch "user/me/counters/:id", to: "user_counters#update" # Legacy route for GodTools Android v6.0.1+

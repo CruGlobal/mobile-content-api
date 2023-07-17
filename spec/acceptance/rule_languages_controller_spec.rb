@@ -21,7 +21,7 @@ resource "RuleLanguages" do
     ToolGroup.delete_all
   end
 
-  post "tool-groups/:id/rule-languages" do
+  post "tool-groups/:id/rules-language" do
     requires_authorization
 
     let(:attrs) do
@@ -33,13 +33,13 @@ resource "RuleLanguages" do
     end
 
     it "create rule language" do
-      do_request data: {type: "tool-group-rule-languages", attributes: attrs}
+      do_request data: {type: "tool-group-rules-language", attributes: attrs}
       expect(status).to eq(201)
       expect(JSON.parse(response_body)["data"]).not_to be_nil
     end
   end
 
-  patch "tool-groups/:tool_group_id/rule-languages/:id" do
+  patch "tool-groups/:tool_group_id/rules-language/:id" do
     requires_authorization
 
     let(:tool_group_id) { ToolGroup.first.id }
@@ -54,7 +54,7 @@ resource "RuleLanguages" do
     end
 
     it "update rule language" do
-      do_request data: {type: "tool-group-rule-languages", attributes: attrs}
+      do_request data: {type: "tool-group-rules-language", attributes: attrs}
 
       expect(status).to be(202)
       expect(JSON.parse(response_body)["data"]["attributes"]["languages"]).to eql languages
@@ -62,7 +62,7 @@ resource "RuleLanguages" do
     end
   end
 
-  delete "tool-groups/:tool_group_id/rule-languages/:id" do
+  delete "tool-groups/:tool_group_id/rules-language/:id" do
     requires_authorization
 
     let(:tool_group_id) { ToolGroup.first.id }

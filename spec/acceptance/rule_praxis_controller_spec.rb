@@ -21,7 +21,7 @@ resource "RulePraxis" do
     ToolGroup.delete_all
   end
 
-  post "tool-groups/:id/rule-praxis" do
+  post "tool-groups/:id/rules-praxis" do
     requires_authorization
     let(:tool_group_id) { ToolGroup.first.id }
     let(:openness) { [1, 2] }
@@ -74,7 +74,7 @@ resource "RulePraxis" do
 
     context "with valid openness and confidence values" do
       it "create rule praxis" do
-        do_request data: {type: "tool-group-rule-praxis", attributes: valid_attrs}
+        do_request data: {type: "tool-group-rules-praxis", attributes: valid_attrs}
 
         expect(status).to eq(201)
         expect(JSON.parse(response_body)["data"]).not_to be_nil
@@ -87,7 +87,7 @@ resource "RulePraxis" do
       end
 
       it "returns an error" do
-        do_request data: {type: "tool-group-rule-praxis", attributes: repeated_attrs}
+        do_request data: {type: "tool-group-rules-praxis", attributes: repeated_attrs}
 
         expect(status).to eq(422)
         expect(JSON.parse(response_body)["data"]).to be_nil
@@ -97,7 +97,7 @@ resource "RulePraxis" do
 
     context "with empty or null openness and confidence values" do
       it "returns an error" do
-        do_request data: {type: "tool-group-rule-praxis", attributes: empty_attrs}
+        do_request data: {type: "tool-group-rules-praxis", attributes: empty_attrs}
 
         expect(status).to eq(422)
         expect(JSON.parse(response_body)["data"]).to be_nil
@@ -107,7 +107,7 @@ resource "RulePraxis" do
 
     context "with non valid openness values" do
       it "returns an error" do
-        do_request data: {type: "tool-group-rule-praxis", attributes: non_valid_openness_attr}
+        do_request data: {type: "tool-group-rules-praxis", attributes: non_valid_openness_attr}
 
         expect(status).to eq(422)
         expect(JSON.parse(response_body)["data"]).to be_nil
@@ -117,7 +117,7 @@ resource "RulePraxis" do
 
     context "with non valid confidence values" do
       it "returns an error" do
-        do_request data: {type: "tool-group-rule-praxis", attributes: non_valid_confidence_attr}
+        do_request data: {type: "tool-group-rules-praxis", attributes: non_valid_confidence_attr}
 
         expect(status).to eq(422)
         expect(JSON.parse(response_body)["data"]).to be_nil
@@ -126,7 +126,7 @@ resource "RulePraxis" do
     end
   end
 
-  patch "tool-groups/:tool_group_id/rule-praxis/:id" do
+  patch "tool-groups/:tool_group_id/rules-praxis/:id" do
     requires_authorization
 
     let(:tool_group_id) { ToolGroup.first.id }
@@ -143,7 +143,7 @@ resource "RulePraxis" do
     end
 
     it "update rule praxis" do
-      do_request data: {type: "tool-group-rule-praxis", attributes: attrs}
+      do_request data: {type: "tool-group-rules-praxis", attributes: attrs}
 
       expect(status).to be(202)
       expect(JSON.parse(response_body)["data"]["attributes"]["openness"]).to eql openness
@@ -152,7 +152,7 @@ resource "RulePraxis" do
     end
   end
 
-  delete "tool-groups/:tool_group_id/rule-praxis/:id" do
+  delete "tool-groups/:tool_group_id/rules-praxis/:id" do
     requires_authorization
 
     let(:tool_group_id) { ToolGroup.first.id }
