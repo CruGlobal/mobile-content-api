@@ -40,15 +40,17 @@ resource "RuleCountries" do
       }
     end
 
-    context "create rule country" do
-      it "with valid countries values" do
+    context "with valid countries values" do
+      it "creates a rule country" do
         do_request data: {type: "tool-group-rule-countries", attributes: valid_attrs}
 
         expect(status).to eq(201)
         expect(JSON.parse(response_body)["data"]).not_to be_nil
       end
+    end
 
-      it "with invalid countries values" do
+    context "with invalid countries values" do
+      it "returns an error" do
         do_request data: {type: "tool-group-rule-countries", attributes: invalid_attrs}
 
         expect(status).to eq(422)
