@@ -45,6 +45,15 @@ resource "RulePraxis" do
       }
     end
 
+    let(:empty_attrs) do
+      {
+        tool_group_id: tool_group_id,
+        openness: [],
+        confidence: [],
+        negative_rule: "true"
+      }
+    end
+
     context "with valid openness and confidence values" do
       it "create rule praxis" do
         do_request data: {type: "tool-group-rule-praxis", attributes: valid_attrs}
@@ -65,6 +74,16 @@ resource "RulePraxis" do
         expect(status).to eq(422)
         expect(JSON.parse(response_body)["data"]).to be_nil
         expect(JSON.parse(response_body)["error"]["tool_group_id"][0]).to eql "combination already exists"
+      end
+    end
+
+    context "with empty or null openness and confidence values" do
+      it "returns an error" do
+        do_request data: {type: "tool-group-rule-praxis", attributes: empty_attrs}
+
+        expect(status).to eq(422)
+        expect(JSON.parse(response_body)["data"]).to be_nil
+        expect(JSON.parse(response_body)["error"]["base"][0]).to eql "Either 'openness' or 'confidence' must be present"
       end
     end
   end
