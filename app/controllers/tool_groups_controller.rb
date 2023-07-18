@@ -2,13 +2,10 @@ class ToolGroupsController < ApplicationController
   before_action :authorize!
 
   def index
-    include = {}
     fields = {}
-
-    include = params[:include]&.split(",") if params[:include]
     fields = get_fields(params[:fields]) if params[:fields]
 
-    render json: tool_groups_ordered_by_name, include: include, fields: fields, status: :ok
+    render json: tool_groups_ordered_by_name, include: params[:include], fields: fields, status: :ok
   end
 
   def create
@@ -18,8 +15,7 @@ class ToolGroupsController < ApplicationController
   end
 
   def show
-    include = params[:include]&.split(",")
-    render json: load_tool_group, include: include, fields: field_params, status: :ok
+    render json: load_tool_group, include: params[:include], fields: field_params, status: :ok
   end
 
   def destroy
