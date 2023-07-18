@@ -69,13 +69,9 @@ resource "ToolGroups" do
     let(:include_only_rules_country) { "rules-country" }
     let(:include_only_rules_praxis) { "rules-praxis" }
 
-    let(:all_fields) { "fields[tool-group-rule-language]=languages&fields[tool-group-rule-country]=countries&fields[tool-group-rule-praxis]=openness,confidence" }
-    let(:field_openness_only) { "fields[tool-group-rule-praxis]=openness" }
-    let(:field_confidence_only) { "fields[tool-group-rule-praxis]=confidence" }
-
     context "including all rules related and all fields" do
       it "list groups" do
-        do_request include: include_all_rules, fields: all_fields
+        do_request include: include_all_rules
 
         included = JSON.parse(response_body)["included"]
         expect(status).to eq(200)
@@ -94,7 +90,7 @@ resource "ToolGroups" do
 
     context "including for praxis only field openness" do
       it "list groups" do
-        do_request include: include_only_rules_praxis, fields: field_openness_only
+        do_request include: include_only_rules_praxis, "fields[tool-group-rule-praxis]": "openness"
         expect(status).to eq(200)
 
         included = JSON.parse(response_body)["included"]
@@ -105,7 +101,8 @@ resource "ToolGroups" do
 
     context "including for praxis only field confidence" do
       it "list groups" do
-        do_request include: include_only_rules_praxis, fields: field_confidence_only
+        do_request include: include_only_rules_praxis, "fields[tool-group-rule-praxis]": "confidence"
+
         expect(status).to eq(200)
 
         included = JSON.parse(response_body)["included"]

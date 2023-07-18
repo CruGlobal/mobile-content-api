@@ -61,24 +61,12 @@ class ToolGroupsController < ApplicationController
   end
 
   def get_fields(fields)
-    array = fields&.split('&') || [fields]
+    hash_result = {}
+    filter_fields = {}
 
-    result = {}
-    json_hash = {}
-
-    array.each do |item|
-      match = item.match(/\Afields\[(.+)\]=(.+)\z/)
-      if match
-        key = match[1]
-        value = match[2]
-        result[key] = value
-      end
-    end
-
-    result.each do |key, value|
-      json_hash[key] = value.include?(',') ? value.split(',') : [value]
-    end
-
-    json_hash
+    array = fields.each do |key, value| filter_fields[key] = value&.split(",") ? value&.split(",") : [value] end
+    array.each { |key, value| hash_result[key] = value&.include?(',') ? value.split(',') : [value] }
+  
+    hash_result
   end
 end
