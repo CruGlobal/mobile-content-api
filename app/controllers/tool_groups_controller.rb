@@ -2,7 +2,7 @@ class ToolGroupsController < ApplicationController
   before_action :authorize!
 
   def index
-    render json: tool_groups_ordered_by_name, status: :ok
+    render json: tool_groups_ordered_by_name, include: params[:include], fields: field_params, status: :ok
   end
 
   def create
@@ -12,7 +12,8 @@ class ToolGroupsController < ApplicationController
   end
 
   def show
-    render json: load_tool_group, status: :ok
+    include = params[:include]&.split(",")
+    render json: load_tool_group, include: include, fields: field_params, status: :ok
   end
 
   def destroy

@@ -8,14 +8,24 @@ resource "ToolGroups" do
 
   let(:raw_post) { params.to_json }
   let(:authorization) { AuthToken.generic_token }
+  let(:languages) { ["es", "en"] }
+  let(:countries) { ["AR", "ES"] }
+  let(:openness) { [1, 2, 3] }
+  let(:confidence) { [1, 2] }
 
   before(:each) do
     %i[one two three].each do |name|
       FactoryBot.create(:tool_group, name: name)
     end
+    FactoryBot.create(:rule_language, tool_group: ToolGroup.first, languages: languages)
+    FactoryBot.create(:rule_country, tool_group: ToolGroup.first, countries: countries)
+    FactoryBot.create(:rule_praxi, tool_group: ToolGroup.first, openness: openness, confidence: confidence)
   end
 
   after(:each) do
+    RuleCountry.delete_all
+    RuleLanguage.delete_all
+    RulePraxi.delete_all
     ToolGroup.delete_all
   end
 
@@ -64,11 +74,56 @@ resource "ToolGroups" do
   get "tool-groups/:id" do
     requires_authorization
     let(:id) { ToolGroup.first.id }
+    let(:include_all_rules) { "rules-language,rules-praxis,rules-country" }
+    let(:include_only_rules_language) { "rules-language" }
+    let(:include_only_rules_country) { "rules-country" }
+    let(:include_only_rules_praxis) { "rules-praxis" }
 
-    it "get tool_group by id" do
-      do_request
-      expect(status).to eq(200)
-      expect(JSON.parse(response_body)["data"]["attributes"]["name"]).to eql "one"
+    context "including all rules related" do
+      it "get tool_group by id" do
+        do_request id: id, include: include_all_rules
+        expect(status).to eq(200)
+
+        expect(JSON.parse(response_body)["data"]["attributes"]["name"]).to eql "one"
+        expect(JSON.parse(response_body)["included"][0]["attributes"]["languages"]).to eql languages
+        expect(JSON.parse(response_body)["included"][1]["attributes"]["countries"]).to eql countries
+        expect(JSON.parse(response_body)["included"][2]["attributes"]["openness"]).to eql openness
+        expect(JSON.parse(response_body)["included"][2]["attributes"]["confidence"]).to eql confidence
+      end
+    end
+
+    context "including only rules language" do
+      it "get tool_group by id" do
+        do_request id: id, include: include_only_rules_language
+        expect(status).to eq(200)
+
+        expect(JSON.parse(response_body)["included"][0]["attributes"]["languages"]).to eql languages
+        expect(find_value_by_key(JSON.parse(response_body)["included"], "type", "tool-group-rule-country")).to eql nil
+        expect(find_value_by_key(JSON.parse(response_body)["included"], "type", "tool-group-rule-praxis")).to eql nil
+      end
+    end
+
+    context "including only rules country" do
+      it "get tool_group by id" do
+        do_request id: id, include: include_only_rules_country
+        expect(status).to eq(200)
+
+        expect(JSON.parse(response_body)["included"][0]["attributes"]["countries"]).to eql countries
+        expect(find_value_by_key(JSON.parse(response_body)["included"], "type", "tool-group-rule-language")).to eql nil
+        expect(find_value_by_key(JSON.parse(response_body)["included"], "type", "tool-group-rule-praxis")).to eql nil
+      end
+    end
+
+    context "including only rules praxis" do
+      it "get tool_group by id" do
+        do_request id: id, include: include_only_rules_praxis
+        expect(status).to eq(200)
+
+        expect(JSON.parse(response_body)["included"][0]["attributes"]["openness"]).to eql openness
+        expect(JSON.parse(response_body)["included"][0]["attributes"]["confidence"]).to eql confidence
+        expect(find_value_by_key(JSON.parse(response_body)["included"], "type", "tool-group-rule-language")).to eql nil
+        expect(find_value_by_key(JSON.parse(response_body)["included"], "type", "tool-group-rule-country")).to eql nil
+      end
     end
   end
 
@@ -99,5 +154,11 @@ resource "ToolGroups" do
 
       expect(status).to be(204)
     end
+  end
+
+  private
+
+  def find_value_by_key(json_array, key_to_find, value_to_find)
+    value_to_find if json_array.any? { |json_element| json_element[key_to_find] == value_to_find }
   end
 end
