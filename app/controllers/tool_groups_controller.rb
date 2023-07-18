@@ -64,9 +64,9 @@ class ToolGroupsController < ApplicationController
     hash_result = {}
     filter_fields = {}
 
-    array = fields.each do |key, value| filter_fields[key] = value&.split(",") ? value&.split(",") : [value] end
-    array.each { |key, value| hash_result[key] = value&.include?(',') ? value.split(',') : [value] }
-  
+    array = fields.each { |key, value| filter_fields[key] = value&.split(",") || [value] }
+    array.each { |key, value| hash_result[key] = value&.include?(",") ? value.split(",") : [value] }
+
     hash_result
   end
 end

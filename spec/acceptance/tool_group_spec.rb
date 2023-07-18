@@ -94,8 +94,8 @@ resource "ToolGroups" do
         expect(status).to eq(200)
 
         included = JSON.parse(response_body)["included"]
-        expect(included[0]["attributes"].key?("openness")).to eql  true
-        expect(included[0]["attributes"].key?("confidence")).to eql  false
+        expect(included[0]["attributes"].key?("openness")).to eql true
+        expect(included[0]["attributes"].key?("confidence")).to eql false
       end
     end
 
