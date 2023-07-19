@@ -2,10 +2,7 @@ class ToolGroupsController < ApplicationController
   before_action :authorize!
 
   def index
-    fields = {}
-    fields = get_fields(params[:fields]) if params[:fields]
-
-    render json: tool_groups_ordered_by_name, include: params[:include], fields: fields, status: :ok
+    render json: tool_groups_ordered_by_name, include: params[:include], fields: field_params, status: :ok
   end
 
   def create
@@ -54,15 +51,5 @@ class ToolGroupsController < ApplicationController
     error.record.errors.map do |attribute, errors|
       errors.map { |error_message| {detail: "#{attribute} #{error_message}"} }
     end.flatten
-  end
-
-  def get_fields(fields)
-    hash_result = {}
-    filter_fields = {}
-
-    array = fields.each { |key, value| filter_fields[key] = value&.split(",") || [value] }
-    array.each { |key, value| hash_result[key] = value&.include?(",") ? value.split(",") : [value] }
-
-    hash_result
   end
 end
