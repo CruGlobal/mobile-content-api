@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class RulePraxiSerializer < ActiveModel::Serializer
+class RulePraxisSerializer < ActiveModel::Serializer
   attributes :id, :openness, :confidence
   attribute :negative_rule, key: "negative-rule"
 

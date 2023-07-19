@@ -2,7 +2,7 @@
 
 require "acceptance_helper"
 
-resource "RulePraxis" do
+resource "RulePraxes" do
   header "Accept", "application/vnd.api+json"
   header "Content-Type", "application/vnd.api+json"
 
@@ -13,11 +13,11 @@ resource "RulePraxis" do
     %i[one].each do |name|
       FactoryBot.create(:tool_group, name: name)
     end
-    FactoryBot.create(:rule_praxi, tool_group: ToolGroup.first)
+    FactoryBot.create(:rule_praxis, tool_group: ToolGroup.first)
   end
 
   after(:each) do
-    RulePraxi.delete_all
+    RulePraxis.delete_all
     ToolGroup.delete_all
   end
 
@@ -83,7 +83,7 @@ resource "RulePraxis" do
 
     context "with repeated openness and confidence values" do
       before do
-        FactoryBot.create(:rule_praxi, tool_group_id: tool_group_id, openness: openness, confidence: confidence)
+        FactoryBot.create(:rule_praxis, tool_group_id: tool_group_id, openness: openness, confidence: confidence)
       end
 
       it "returns an error" do
@@ -130,7 +130,7 @@ resource "RulePraxis" do
     requires_authorization
 
     let(:tool_group_id) { ToolGroup.first.id }
-    let(:id) { RulePraxi.first.id }
+    let(:id) { RulePraxis.first.id }
     let(:openness) { [1, 2] }
     let(:confidence) { [3, 4] }
 
@@ -156,7 +156,7 @@ resource "RulePraxis" do
     requires_authorization
 
     let(:tool_group_id) { ToolGroup.first.id }
-    let(:id) { RulePraxi.first.id }
+    let(:id) { RulePraxis.first.id }
 
     it "delete rule praxis" do
       do_request

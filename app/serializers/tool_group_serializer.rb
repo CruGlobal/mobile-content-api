@@ -8,7 +8,7 @@ class ToolGroupSerializer < ActiveModel::Serializer
 
   has_many :rule_languages, key: "rules-language"
   has_many :rule_countries, key: "rules-country"
-  has_many :rule_praxis, key: "rules-praxis"
+  has_many :rule_praxes, key: "rules-praxis"
 
   def custom_rule_languages
     object.rule_languages
@@ -19,6 +19,6 @@ class ToolGroupSerializer < ActiveModel::Serializer
   end
 
   def custom_rule_praxis
-    object.rule_praxis
+    object.rule_praxes
   end
 end

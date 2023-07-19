@@ -44,7 +44,7 @@ Rails.application.routes.draw do
 
   # Rule Praxis
   resources :tool_groups, path: "tool-groups", only: [] do
-    resources :rule_praxis, path: "rules-praxis", only: [:create, :destroy, :update]
+    resources :rule_praxes, path: "rules-praxis", only: [:create, :destroy, :update]
   end
 
   patch "user/counters/:id", to: "user_counters#update" # Legacy route for GodTools Android v5.7.0-v6.0.0

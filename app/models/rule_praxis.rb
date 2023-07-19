@@ -1,4 +1,6 @@
-class RulePraxi < ApplicationRecord
+class RulePraxis < ApplicationRecord
+  self.table_name = "rule_praxes"
+
   belongs_to :tool_group
 
   validates :tool_group_id, uniqueness: {scope: [:openness, :confidence], message: "combination already exists"}

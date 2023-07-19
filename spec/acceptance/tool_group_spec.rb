@@ -19,13 +19,13 @@ resource "ToolGroups" do
     end
     FactoryBot.create(:rule_language, tool_group: ToolGroup.first, languages: languages)
     FactoryBot.create(:rule_country, tool_group: ToolGroup.first, countries: countries)
-    FactoryBot.create(:rule_praxi, tool_group: ToolGroup.first, openness: openness, confidence: confidence)
+    FactoryBot.create(:rule_praxis, tool_group: ToolGroup.first, openness: openness, confidence: confidence)
   end
 
   after(:each) do
     RuleCountry.delete_all
     RuleLanguage.delete_all
-    RulePraxi.delete_all
+    RulePraxis.delete_all
     ToolGroup.delete_all
   end
 

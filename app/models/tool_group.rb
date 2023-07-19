@@ -7,5 +7,5 @@ class ToolGroup < ApplicationRecord
 
   has_many :rule_languages, dependent: :destroy
   has_many :rule_countries, dependent: :destroy
-  has_many :rule_praxis, dependent: :destroy
+  has_many :rule_praxes, class_name: "RulePraxis", dependent: :destroy
 end
