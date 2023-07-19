@@ -119,4 +119,8 @@ class ApplicationController < ActionController::Base
       errors.add(code, message)
     end
   end
+
+  def convert_hyphen_to_dash
+    params.deep_transform_keys! { |key| key.tr("-", "_") }
+  end
 end
