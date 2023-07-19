@@ -1,5 +1,6 @@
 class ToolGroupsController < ApplicationController
   before_action :authorize!
+  before_action :transform_params, only: [:create, :update]
 
   def index
     render json: tool_groups_ordered_by_name, include: params[:include], fields: field_params, status: :ok
@@ -26,6 +27,10 @@ class ToolGroupsController < ApplicationController
   end
 
   private
+
+  def transform_params
+    params.deep_transform_keys!{ |key| key.tr('-', '_') }
+  end
 
   def tool_groups_ordered_by_name
     ToolGroup.order(name: :asc)
