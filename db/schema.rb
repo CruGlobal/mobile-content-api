@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2023_07_19_201411) do
+ActiveRecord::Schema.define(version: 2023_07_19_224248) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
@@ -160,8 +160,6 @@ ActiveRecord::Schema.define(version: 2023_07_19_201411) do
     t.string "key", null: false
     t.string "value", null: false
     t.boolean "is_translatable", default: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
     t.index ["key", "resource_id", "language_id"], name: "index_language_attributes_unique", unique: true
     t.index ["resource_id"], name: "index_language_attributes_on_resource_id"
   end
@@ -180,6 +178,16 @@ ActiveRecord::Schema.define(version: 2023_07_19_201411) do
     t.integer "position", null: false
     t.index ["position", "resource_id"], name: "index_pages_on_position_and_resource_id", unique: true
     t.index ["resource_id"], name: "index_pages_on_resource_id"
+  end
+
+  create_table "resource_tool_groups", force: :cascade do |t|
+    t.bigint "resource_id", null: false
+    t.bigint "tool_group_id", null: false
+    t.float "suggestions_weight"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["resource_id"], name: "index_resource_tool_groups_on_resource_id"
+    t.index ["tool_group_id"], name: "index_resource_tool_groups_on_tool_group_id"
   end
 
   create_table "resource_types", id: :serial, force: :cascade do |t|
@@ -303,7 +311,9 @@ ActiveRecord::Schema.define(version: 2023_07_19_201411) do
     t.date "last_decay", default: -> { "now()" }
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.string "values", default: [], array: true
     t.index ["user_id", "counter_name"], name: "index_user_counters_on_user_id_and_counter_name", unique: true
+    t.index ["values"], name: "index_user_counters_on_values", using: :gin
   end
 
   create_table "users", force: :cascade do |t|
@@ -336,6 +346,8 @@ ActiveRecord::Schema.define(version: 2023_07_19_201411) do
   add_foreign_key "follow_ups", "destinations"
   add_foreign_key "follow_ups", "languages"
   add_foreign_key "pages", "resources"
+  add_foreign_key "resource_tool_groups", "resources"
+  add_foreign_key "resource_tool_groups", "tool_groups"
   add_foreign_key "resources", "resource_types"
   add_foreign_key "resources", "resources", column: "default_variant_id"
   add_foreign_key "resources", "resources", column: "metatool_id"

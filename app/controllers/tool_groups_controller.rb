@@ -12,6 +12,14 @@ class ToolGroupsController < ApplicationController
     render json: {errors: formatted_errors(e)}, status: :unprocessable_entity
   end
 
+  def create_tool
+    rtg = ResourceToolGroup.create!(permit_params(:tool_group_id, :resource_id, :suggestions_weight))
+    byebug
+    tool_group = ToolGroup.find(params[:data][:attributes][:tool_group_id])
+    response.headers["Location"] = "tool_groups/#{tool_group.id}"
+    render json: tool_group, status: :created
+  end
+
   def show
     render json: load_tool_group, include: params[:include], fields: field_params, status: :ok
   end

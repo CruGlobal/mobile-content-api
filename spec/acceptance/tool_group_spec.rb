@@ -12,6 +12,7 @@ resource "ToolGroups" do
   let(:countries) { ["AR", "ES"] }
   let(:openness) { [1, 2, 3] }
   let(:confidence) { [1, 2] }
+  let(:metatool_resource_type) { ResourceType.find_by(name: "metatool") }
 
   before(:each) do
     %i[one two three].each do |name|
@@ -20,12 +21,14 @@ resource "ToolGroups" do
     FactoryBot.create(:rule_language, tool_group: ToolGroup.first, languages: languages)
     FactoryBot.create(:rule_country, tool_group: ToolGroup.first, countries: countries)
     FactoryBot.create(:rule_praxis, tool_group: ToolGroup.first, openness: openness, confidence: confidence)
+    FactoryBot.create(:resource, system_id: 1, resource_type: metatool_resource_type, name: "Resource Test One", abbreviation: "test1")
   end
 
   after(:each) do
     RuleCountry.delete_all
     RuleLanguage.delete_all
     RulePraxis.delete_all
+    ResourceToolGroup.delete_all
     ToolGroup.delete_all
   end
 
@@ -58,6 +61,25 @@ resource "ToolGroups" do
       expect(status).to eq(400)
       expect(JSON.parse(response_body)["errors"]).not_to be_empty
       expect(JSON.parse(response_body)["errors"][0]["detail"]).to eql "Validation failed: Suggestions weight can't be blank"
+    end
+  end
+
+  post "tool-groups/:tool_group_id/tools" do
+    let(:attrs) do
+      {
+        tool_group_id: ToolGroup.first.id,
+        resource_id: Resource.first.id,
+        suggestions_weight: "1.0"
+      }
+    end
+
+    requires_authorization
+
+    it "create tool group tool" do
+      do_request data: {type: "tool-group-tool", attributes: attrs}
+      byebug
+      expect(status).to eq(201)
+      expect(JSON.parse(response_body)["data"]).not_to be_nil
     end
   end
 

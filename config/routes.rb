@@ -30,7 +30,10 @@ Rails.application.routes.draw do
 
   resources :custom_manifests, only: [:create, :update, :destroy, :show]
 
-  resources :tool_groups, path: "tool-groups", only: [:create, :destroy, :index, :show, :update]
+  resources :tool_groups, path: "tool-groups", only: [:create, :destroy, :index, :show, :update] do
+    # resources :resources, path: "tools", only: [:create, :destroy, :update]
+    post "tools", to: "tool_groups#create_tool"
+  end
 
   # Rule Languages
   resources :tool_groups, path: "tool-groups", only: [] do
