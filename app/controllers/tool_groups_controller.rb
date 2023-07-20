@@ -13,10 +13,17 @@ class ToolGroupsController < ApplicationController
   end
 
   def create_tool
-    ResourceToolGroup.create!(permit_params(:tool_group_id, :resource_id, :suggestions_weight))
-    tool_group = ToolGroup.find(params[:data][:attributes][:tool_group_id])
+    ResourceToolGroup.create!(
+      tool_group_id: params[:tool_group_id],
+      resource_id: params[:data][:attributes][:resource_id],
+      suggestions_weight: params[:data][:attributes][:tool_group_id]
+    )
+
+    tool_group = ToolGroup.find(params[:tool_group_id])
     response.headers["Location"] = "tool_groups/#{tool_group.id}"
     render json: tool_group, status: :created
+  rescue ActiveRecord::RecordInvalid => e
+    render json: {errors: formatted_errors(e)}, status: :unprocessable_entity
   end
 
   def update_tool

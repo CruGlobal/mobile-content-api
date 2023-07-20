@@ -70,7 +70,6 @@ resource "ToolGroups" do
   post "tool-groups/:tool_group_id/tools" do
     let(:attrs) do
       {
-        tool_group_id: ToolGroup.first.id,
         resource_id: Resource.first.id,
         suggestions_weight: "1.0"
       }
@@ -79,7 +78,7 @@ resource "ToolGroups" do
     requires_authorization
 
     it "create tool group tool" do
-      do_request data: {type: "tool-group-tool", attributes: attrs}
+      do_request tool_group_id: tool_group_first.id, data: {type: "tool-group-tool", attributes: attrs}
       expect(status).to eq(201)
       expect(JSON.parse(response_body)["data"]).not_to be_nil
     end
