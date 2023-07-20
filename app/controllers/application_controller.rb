@@ -123,4 +123,10 @@ class ApplicationController < ActionController::Base
   def convert_hyphen_to_dash
     params.deep_transform_keys! { |key| key.tr("-", "_") }
   end
+
+  def formatted_errors(error)
+    error.record.errors.map do |attribute, errors|
+      errors.map { |error_message| {detail: "#{attribute} #{error_message}"} }
+    end.flatten
+  end
 end

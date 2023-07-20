@@ -24,16 +24,17 @@ resource "RuleLanguages" do
   post "tool-groups/:id/rules-language" do
     requires_authorization
 
+    let(:tool_group_id) { ToolGroup.first.id }
+
     let(:attrs) do
       {
         languages: ["en", "es"],
-        tool_group_id: ToolGroup.first.id,
         negative_rule: "true"
       }
     end
 
     it "create rule language" do
-      do_request data: {type: "tool-group-rules-language", attributes: attrs}
+      do_request tool_group_id: tool_group_id, data: {type: "tool-group-rules-language", attributes: attrs}
       expect(status).to eq(201)
       expect(JSON.parse(response_body)["data"]).not_to be_nil
     end

@@ -5,7 +5,7 @@ class RuleLanguagesController < ApplicationController
   def create
     create_rule_language
   rescue ActiveRecord::RecordInvalid => e
-    render json: {error: e.record.errors}, status: :unprocessable_entity
+    render json: {errors: formatted_errors(e)}, status: :unprocessable_entity
   end
 
   def update

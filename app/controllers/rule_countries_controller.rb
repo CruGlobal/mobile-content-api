@@ -4,7 +4,7 @@ class RuleCountriesController < ApplicationController
   def create
     create_rule_country
   rescue ActiveRecord::RecordInvalid => e
-    render json: {error: e.record.errors}, status: :unprocessable_entity
+    render json: {errors: formatted_errors(e)}, status: :unprocessable_entity
   end
 
   def update
@@ -21,7 +21,8 @@ class RuleCountriesController < ApplicationController
   private
 
   def create_rule_country
-    created = RuleCountry.create!(permit_params(:tool_group_id, :negative_rule, countries: []))
+    tool_group = ToolGroup.find(params[:tool_group_id])
+    created = tool_group.rule_countries.create!(permit_params(:tool_group_id, :negative_rule, countries: []))
     response.headers["Location"] = "tool_groups/#{created.id}"
     render json: created, status: :created
   end

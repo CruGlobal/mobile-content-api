@@ -6,6 +6,7 @@ resource "RuleCountries" do
   header "Accept", "application/vnd.api+json"
   header "Content-Type", "application/vnd.api+json"
 
+  let(:tool_group_id) { ToolGroup.first.id }
   let(:raw_post) { params.to_json }
   let(:authorization) { AuthToken.generic_token }
 
@@ -27,7 +28,6 @@ resource "RuleCountries" do
     let(:valid_attrs) do
       {
         countries: ["CA", "FR", "US"],
-        tool_group_id: ToolGroup.first.id,
         negative_rule: "true"
       }
     end
@@ -35,14 +35,13 @@ resource "RuleCountries" do
     let(:invalid_attrs) do
       {
         countries: ["1A"],
-        tool_group_id: ToolGroup.first.id,
         negative_rule: "true"
       }
     end
 
     context "with valid countries values" do
       it "creates a rule country" do
-        do_request data: {type: "tool-group-rules-country", attributes: valid_attrs}
+        do_request tool_group_id: tool_group_id, data: {type: "tool-group-rules-country", attributes: valid_attrs}
 
         expect(status).to eq(201)
         expect(JSON.parse(response_body)["data"]).not_to be_nil
@@ -51,11 +50,11 @@ resource "RuleCountries" do
 
     context "with invalid countries values" do
       it "returns an error" do
-        do_request data: {type: "tool-group-rules-country", attributes: invalid_attrs}
+        do_request tool_group_id: tool_group_id, data: {type: "tool-group-rules-country", attributes: invalid_attrs}
 
-        expect(status).to eq(422)
+        expect(status).to eq(400)
         expect(JSON.parse(response_body)["data"]).to be_nil
-        expect(JSON.parse(response_body)["error"]["countries"][0]).to eql "must contain only ISO-3166 alpha-2 country codes"
+        expect(JSON.parse(response_body)["errors"][0]["detail"]).to eql "Validation failed: Countries must contain only ISO-3166 alpha-2 country codes"
       end
     end
   end

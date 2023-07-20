@@ -13,11 +13,16 @@ class ToolGroupsController < ApplicationController
   end
 
   def create_tool
-    rtg = ResourceToolGroup.create!(permit_params(:tool_group_id, :resource_id, :suggestions_weight))
-    byebug
+    ResourceToolGroup.create!(permit_params(:tool_group_id, :resource_id, :suggestions_weight))
     tool_group = ToolGroup.find(params[:data][:attributes][:tool_group_id])
     response.headers["Location"] = "tool_groups/#{tool_group.id}"
     render json: tool_group, status: :created
+  end
+
+  def update_tool
+    existing = ResourceToolGroup.find(params[:id])
+    existing.update!(permit_params(:tool_group_id, :resource_id, :suggestions_weight))
+    render json: existing, status: :accepted
   end
 
   def show
@@ -54,11 +59,5 @@ class ToolGroupsController < ApplicationController
 
   def load_tool_group
     ToolGroup.find(params[:id])
-  end
-
-  def formatted_errors(error)
-    error.record.errors.map do |attribute, errors|
-      errors.map { |error_message| {detail: "#{attribute} #{error_message}"} }
-    end.flatten
   end
 end
