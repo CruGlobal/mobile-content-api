@@ -70,8 +70,8 @@ resource "ToolGroups" do
   post "tool-groups/:tool_group_id/tools" do
     let(:attrs) do
       {
-        resource_id: Resource.first.id,
-        suggestions_weight: "1.0"
+        "resource-id": Resource.first.id,
+        "suggestions-weight": "1.0"
       }
     end
 
@@ -91,8 +91,8 @@ resource "ToolGroups" do
     let(:id) { ResourceToolGroup.create(resource_id: resource.id, tool_group_id: tool_group_first.id, suggestions_weight: "1.0").id }
     let(:attrs) do
       {
-        suggestions_weight: suggestions_weight,
-        resource_id: resource.id
+        "suggestions-weight": suggestions_weight,
+        "resource-id": resource.id
       }
     end
 
