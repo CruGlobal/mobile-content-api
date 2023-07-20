@@ -1,5 +1,6 @@
 class RuleLanguagesController < ApplicationController
   before_action :authorize!
+  before_action :convert_hyphen_to_dash, only: [:create, :update]
 
   def create
     create_rule_language
@@ -21,7 +22,8 @@ class RuleLanguagesController < ApplicationController
   private
 
   def create_rule_language
-    created = RuleLanguage.create!(permit_params(:tool_group_id, :negative_rule, languages: []))
+    tool_group = ToolGroup.find(params[:tool_group_id])
+    created = tool_group.rule_languages.create!(permit_params(:tool_group_id, :negative_rule, languages: []))
     response.headers["Location"] = "tool_groups/#{created.id}"
     render json: created, status: :created
   end
