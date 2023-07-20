@@ -16,7 +16,7 @@ class ToolGroupsController < ApplicationController
     ResourceToolGroup.create!(
       tool_group_id: params[:tool_group_id],
       resource_id: params[:data][:attributes][:resource_id],
-      suggestions_weight: params[:data][:attributes][:tool_group_id]
+      suggestions_weight: params[:data][:attributes]["suggestions-weight"]
     )
 
     tool_group = ToolGroup.find(params[:tool_group_id])
@@ -28,7 +28,11 @@ class ToolGroupsController < ApplicationController
 
   def update_tool
     existing = ResourceToolGroup.find(params[:id])
-    existing.update!(permit_params(:tool_group_id, :resource_id, :suggestions_weight))
+
+    existing.update!(
+      resource_id: params[:data][:attributes][:resource_id],
+      suggestions_weight: params[:data][:attributes][:suggestions_weight]
+    )
     render json: existing, status: :accepted
   end
 

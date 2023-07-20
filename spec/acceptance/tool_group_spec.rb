@@ -92,7 +92,7 @@ resource "ToolGroups" do
     let(:attrs) do
       {
         suggestions_weight: suggestions_weight,
-        tool_group_id: tool_group_last.id
+        resource_id: resource.id
       }
     end
 
@@ -102,7 +102,7 @@ resource "ToolGroups" do
       expect(status).to eq(202)
       expect(JSON.parse(response_body)["data"]).not_to be_nil
       expect(JSON.parse(response_body)["data"]["attributes"]["suggestions-weight"]).to eql suggestions_weight
-      expect(JSON.parse(response_body)["data"]["attributes"]["tool-group"]["id"]).to eql tool_group_last.id
+      expect(JSON.parse(response_body)["data"]["attributes"]["resource-id"]).to eql resource.id
     end
   end
 
@@ -145,8 +145,6 @@ resource "ToolGroups" do
 
         expect(included[2]["attributes"]["openness"]).to eql openness
         expect(included[2]["attributes"]["confidence"]).to eql confidence
-        expect(included[2]["attributes"].key?("openness")).to eql true
-        expect(included[2]["attributes"].key?("confidence")).to eql true
       end
     end
 
