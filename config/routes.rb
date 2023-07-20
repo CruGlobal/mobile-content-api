@@ -34,6 +34,7 @@ Rails.application.routes.draw do
     # resources :resources, path: "tools", only: [:create, :destroy, :update]
     post "tools", to: "tool_groups#create_tool"
     put "tools/:id", to: "tool_groups#update_tool"
+    delete "tools/:id", to: "tool_groups#delete_tool"
   end
 
   # Rule Languages

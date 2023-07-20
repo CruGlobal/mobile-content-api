@@ -25,6 +25,12 @@ class ToolGroupsController < ApplicationController
     render json: existing, status: :accepted
   end
 
+  def delete_tool
+    resource_tool_group = ResourceToolGroup.find(params[:id])
+    resource_tool_group.destroy!
+    head :no_content
+  end
+
   def show
     render json: load_tool_group, include: params[:include], fields: field_params, status: :ok
   end

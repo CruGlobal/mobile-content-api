@@ -14,6 +14,8 @@ resource "ToolGroups" do
   let(:confidence) { [1, 2] }
   let(:metatool_resource_type) { ResourceType.find_by(name: "metatool") }
   let(:resource) { FactoryBot.create(:resource, system_id: 1, resource_type: metatool_resource_type, name: "Resource Test One", abbreviation: "test1") }
+  let(:tool_group_first) { ToolGroup.first }
+  let(:tool_group_last) { ToolGroup.last }
 
   before(:each) do
     %i[one two three].each do |name|
@@ -85,13 +87,9 @@ resource "ToolGroups" do
 
   put "tool-groups/:tool_group_id/tools/:id" do
     requires_authorization
-    let(:tool_group_first) { ToolGroup.first }
-    let(:tool_group_last) { ToolGroup.last }
+
     let(:suggestions_weight) { 0.5 }
-    let(:resource) { Resource.first }
-
     let(:id) { ResourceToolGroup.create(resource_id: resource.id, tool_group_id: tool_group_first.id, suggestions_weight: "1.0").id }
-
     let(:attrs) do
       {
         suggestions_weight: suggestions_weight,
@@ -106,6 +104,23 @@ resource "ToolGroups" do
       expect(JSON.parse(response_body)["data"]).not_to be_nil
       expect(JSON.parse(response_body)["data"]["attributes"]["suggestions-weight"]).to eql suggestions_weight
       expect(JSON.parse(response_body)["data"]["attributes"]["tool-group"]["id"]).to eql tool_group_last.id
+    end
+  end
+
+  delete "tool-groups/:tool_group_id/tools/:id" do
+    let(:attrs) do
+      {
+        tool_group_id: ToolGroup.first.id
+      }
+    end
+
+    let(:id) { ResourceToolGroup.create(resource_id: resource.id, tool_group_id: tool_group_first.id, suggestions_weight: "1.0").id }
+    requires_authorization
+
+    it "delete tool_group" do
+      do_request id: id, data: {type: "tool-group-tool", attributes: attrs}
+
+      expect(status).to be(204)
     end
   end
 
