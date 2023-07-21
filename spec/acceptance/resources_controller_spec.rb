@@ -233,17 +233,30 @@ resource "Resources" do
     end
 
     get "resources/suggestions" do
+      before(:each) do
+        FactoryBot.create(:tool_group, name: "one")
+        FactoryBot.create(:rule_country, tool_group: ToolGroup.first, countries: countries_fr_us)
+      end
+
+      # do_request languages: ["en", "es"], country: "fr", openness: "3"
+
       context "when matching country param contained in country rule" do
-        before(:each) do
-          FactoryBot.create(:tool_group, name: "one")
-          FactoryBot.create(:rule_country, tool_group: ToolGroup.first, countries: countries_fr_us)
-        end
-        it "returns coincidences" do
-          do_request languages: ["en", "es"], country: "fr", openness: "3"
+        it "return coincidences" do
+          do_request country: "fr"
 
           expect(status).to be(200)
           expect(JSON.parse(response_body)["data"]).not_to be_nil
           expect(JSON.parse(response_body)["data"].count).to eql 1
+        end
+      end
+
+      context "when not matching country param contained in country rule" do
+        it "does not return coincidences" do
+          do_request country: "gr"
+
+          expect(status).to be(200)
+          expect(JSON.parse(response_body)["data"]).not_to be_nil
+          expect(JSON.parse(response_body)["data"].count).to eql 0
         end
       end
     end
