@@ -9,6 +9,13 @@ resource "Resources" do
   let(:raw_post) { params.to_json }
   let(:authorization) { AuthToken.generic_token }
 
+  let(:languages) { ["fr", "en"] }
+  let(:countries_fr) { ["FR"] }
+  let(:countries_gb) { ["GB"] }
+  let(:countries_fr_us) { ["FR", "US"] }
+  let(:openness) { [1, 2, 3] }
+  let(:confidence) { [1, 2] }
+
   get "resources/" do
     it "get all resources" do
       do_request
@@ -222,6 +229,22 @@ resource "Resources" do
 
         expect(status).to be(204)
         expect(response_body).to be_empty
+      end
+    end
+
+    get "resources/suggestions" do
+      context "when matching country param contained in country rule" do
+        before(:each) do
+          FactoryBot.create(:tool_group, name: "one")
+          FactoryBot.create(:rule_country, tool_group: ToolGroup.first, countries: countries_fr_us)
+        end
+        it "returns coincidences" do
+          do_request languages: ["en", "es"], country: "fr", openness: "3"
+
+          expect(status).to be(200)
+          expect(JSON.parse(response_body)["data"]).not_to be_nil
+          expect(JSON.parse(response_body)["data"].count).to eql 1
+        end
       end
     end
   end

@@ -34,6 +34,11 @@ class ResourcesController < ApplicationController
     head :no_content
   end
 
+  def suggestions
+    resources = ToolGroup.joins(:rule_countries).where("countries @> ARRAY[?]::varchar[]", params["country"]&.upcase)
+    render json: resources, status: :ok
+  end
+
   private
 
   def cached_index_json

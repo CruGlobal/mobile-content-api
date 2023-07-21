@@ -6,6 +6,7 @@ Rails.application.routes.draw do
   resources :systems, only: [:index, :show]
   resources :languages
   resources :resource_types, only: [:index, :show]
+  get "resources/suggestions", to: "resources#suggestions"
 
   resources :resources do
     resources :languages, controller: :resource_languages, only: [:update, :show]
@@ -31,7 +32,6 @@ Rails.application.routes.draw do
   resources :custom_manifests, only: [:create, :update, :destroy, :show]
 
   resources :tool_groups, path: "tool-groups", only: [:create, :destroy, :index, :show, :update] do
-    # resources :resources, path: "tools", only: [:create, :destroy, :update]
     post "tools", to: "tool_groups#create_tool"
     put "tools/:id", to: "tool_groups#update_tool"
     delete "tools/:id", to: "tool_groups#delete_tool"
