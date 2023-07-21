@@ -35,7 +35,10 @@ class ResourcesController < ApplicationController
   end
 
   def suggestions
-    resources = ToolGroup.joins(:rule_countries).where("countries @> ARRAY[?]::varchar[]", params["country"]&.upcase)
+    resources = ToolGroup
+    .joins(:rule_countries)
+    .where("countries @> ARRAY[?]::varchar[] AND negative_rule = ?", params["country"]&.upcase, false)
+
     render json: resources, status: :ok
   end
 

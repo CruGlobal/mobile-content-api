@@ -240,13 +240,25 @@ resource "Resources" do
 
       # do_request languages: ["en", "es"], country: "fr", openness: "3"
 
-      context "when matching country param contained in country rule" do
+      context "when matching country param contained in country rule with negative rule as false" do
         it "return coincidences" do
+          RuleCountry.first.update!(negative_rule: false)
           do_request country: "fr"
 
           expect(status).to be(200)
           expect(JSON.parse(response_body)["data"]).not_to be_nil
           expect(JSON.parse(response_body)["data"].count).to eql 1
+        end
+      end
+
+      context "when matching country param contained in country rule with negative rule as true" do
+        it "does not return coincidences" do
+          RuleCountry.first.update!(negative_rule: true)
+          do_request country: "fr"
+
+          expect(status).to be(200)
+          expect(JSON.parse(response_body)["data"]).not_to be_nil
+          expect(JSON.parse(response_body)["data"].count).to eql 0
         end
       end
 
