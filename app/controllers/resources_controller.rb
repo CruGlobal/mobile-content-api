@@ -35,11 +35,27 @@ class ResourcesController < ApplicationController
   end
 
   def suggestions
-    resources = ToolGroup
-    .joins(:rule_countries)
-    .where("countries @> ARRAY[?]::varchar[] AND negative_rule = ?", params["country"]&.upcase, false)
+    resources_1 = ToolGroup
+                  .matching_countries__negative_rule_false(params["country"])
+                  .matching_languages__negative_rule_false(params["languages"])
+                  .joins(:rule_countries, :rule_languages)
 
-    render json: resources, status: :ok
+    resources_2 = ToolGroup
+                  .countries_not_matching__negative_rule_true(params["country"])
+                  .matching_languages__negative_rule_false(params["languages"])
+                  .joins(:rule_countries, :rule_languages)
+
+    resources_3 = ToolGroup
+                  .matching_countries__negative_rule_false(params["country"])
+                  .languages_not_matching__negative_rule_true(params["languages"])
+                  .joins(:rule_countries, :rule_languages)
+
+    resources_4 = ToolGroup
+                  .countries_not_matching__negative_rule_true(params["country"])
+                  .matching_languages__negative_rule_false(params["languages"])
+                  .joins(:rule_countries, :rule_languages)
+
+    render json: resources_1 + resources_2 + resources_3 + resources_4, status: :ok
   end
 
   private

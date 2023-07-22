@@ -9,12 +9,165 @@ resource "Resources" do
   let(:raw_post) { params.to_json }
   let(:authorization) { AuthToken.generic_token }
 
-  let(:languages) { ["fr", "en"] }
+  let(:languages_fr_en) { ["fr", "en"] }
+  let(:languages_fr) { ["fr"] }
+  let(:languages_it) { ["it"] }
+  let(:languages_en) { ["en"] }
   let(:countries_fr) { ["FR"] }
   let(:countries_gb) { ["GB"] }
   let(:countries_fr_us) { ["FR", "US"] }
   let(:openness) { [1, 2, 3] }
   let(:confidence) { [1, 2] }
+
+  get "resources/suggestions" do
+    before(:each) do
+      FactoryBot.create(:tool_group, name: "one")
+      FactoryBot.create(:rule_country, tool_group: ToolGroup.first, countries: countries_fr_us)
+      FactoryBot.create(:rule_language, tool_group: ToolGroup.first, languages: languages_fr_en)
+    end
+
+    # do_request languages: ["en", "es"], country: "fr", openness: "3"
+
+    context "when matching country param contained in country rule with negative rule as false" do
+      before do
+        RuleCountry.first.update!(negative_rule: false)
+        RuleLanguage.first.update!(negative_rule: false)
+      end
+
+      it "return coincidences" do
+        do_request country: "fr", languages: languages_fr
+
+        expect(status).to be(200)
+        expect(JSON.parse(response_body)["data"]).not_to be_nil
+        expect(JSON.parse(response_body)["data"].count).to eql 1
+      end
+
+      context "plus matching languages with negative rule as false" do
+        it "return coincidences" do
+          do_request country: "fr", languages: languages_fr_en
+
+          expect(status).to be(200)
+          expect(JSON.parse(response_body)["data"]).not_to be_nil
+          expect(JSON.parse(response_body)["data"].count).to eql 1
+        end
+      end
+
+      context "plus not matching languages with negative rule as false" do
+        before do
+          RuleLanguage.first.update!(languages: languages_fr_en)
+        end
+
+        it "does not return coincidences" do
+          do_request country: "fr", languages: languages_it
+
+          expect(status).to be(200)
+          expect(JSON.parse(response_body)["data"]).not_to be_nil
+          expect(JSON.parse(response_body)["data"].count).to eql 0
+        end
+      end
+
+      context "plus not matching all languages with negative rule as true" do
+        before do
+          RuleLanguage.first.update!(languages: languages_en, negative_rule: true)
+        end
+
+        it "return coincidences" do
+          do_request country: "fr", languages: languages_fr_en
+
+          expect(status).to be(200)
+          expect(JSON.parse(response_body)["data"]).not_to be_nil
+          expect(JSON.parse(response_body)["data"].count).to eql 1
+        end
+      end
+
+      context "plus matching all languages with negative rule as true" do
+        before do
+          RuleLanguage.first.update!(languages: languages_fr_en, negative_rule: true)
+        end
+
+        it "does not return coincidences" do
+          do_request country: "fr", languages: languages_fr_en
+
+          expect(status).to be(200)
+          expect(JSON.parse(response_body)["data"]).not_to be_nil
+          expect(JSON.parse(response_body)["data"].count).to eql 0
+        end
+      end
+
+      context "plus not matching languages with negative rule as false" do
+        it "does not return coincidences" do
+          do_request country: "fr", languages: languages_it
+
+          expect(status).to be(200)
+          expect(JSON.parse(response_body)["data"]).not_to be_nil
+          expect(JSON.parse(response_body)["data"].count).to eql 0
+        end
+      end
+    end
+
+    context "when matching country param contained in country rule with negative rule as true" do
+      before do
+        RuleCountry.first.update!(negative_rule: true)
+      end
+
+      it "does not return coincidences" do
+        do_request country: "fr", languages: languages_fr_en
+
+        expect(status).to be(200)
+        expect(JSON.parse(response_body)["data"]).not_to be_nil
+        expect(JSON.parse(response_body)["data"].count).to eql 0
+      end
+    end
+
+    context "when not matching country param contained in country rule with negative rule as false" do
+      before do
+        RuleCountry.first.update!(negative_rule: false)
+      end
+
+      it "does not return coincidences" do
+        do_request country: "gb", languages: languages_fr_en
+
+        expect(status).to be(200)
+        expect(JSON.parse(response_body)["data"]).not_to be_nil
+        expect(JSON.parse(response_body)["data"].count).to eql 0
+      end
+    end
+
+    context "when not matching country param contained in country rule with negative rule as true" do
+      before do
+        RuleCountry.first.update!(negative_rule: true)
+        RuleLanguage.first.update!(negative_rule: false)
+      end
+
+      context "plus matching languages with negative rule as true" do
+        before do
+          RuleLanguage.first.update!(negative_rule: true)
+        end
+
+        it "does not return coincidences" do
+          do_request country: "gb", languages: languages_fr_en
+
+          expect(status).to be(200)
+          expect(JSON.parse(response_body)["data"]).not_to be_nil
+          expect(JSON.parse(response_body)["data"].count).to eql 0
+        end
+      end
+
+      context "plus matching languages with negative rule as false" do
+        before do
+          RuleLanguage.first.update!(negative_rule: false)
+        end
+
+        it "return coincidences" do
+          do_request country: "gb", languages: languages_fr_en
+
+          expect(status).to be(200)
+          expect(JSON.parse(response_body)["data"]).not_to be_nil
+          expect(JSON.parse(response_body)["data"].count).to eql 1
+        end
+      end
+    end
+  end
 
   get "resources/" do
     it "get all resources" do
@@ -229,47 +382,6 @@ resource "Resources" do
 
         expect(status).to be(204)
         expect(response_body).to be_empty
-      end
-    end
-
-    get "resources/suggestions" do
-      before(:each) do
-        FactoryBot.create(:tool_group, name: "one")
-        FactoryBot.create(:rule_country, tool_group: ToolGroup.first, countries: countries_fr_us)
-      end
-
-      # do_request languages: ["en", "es"], country: "fr", openness: "3"
-
-      context "when matching country param contained in country rule with negative rule as false" do
-        it "return coincidences" do
-          RuleCountry.first.update!(negative_rule: false)
-          do_request country: "fr"
-
-          expect(status).to be(200)
-          expect(JSON.parse(response_body)["data"]).not_to be_nil
-          expect(JSON.parse(response_body)["data"].count).to eql 1
-        end
-      end
-
-      context "when matching country param contained in country rule with negative rule as true" do
-        it "does not return coincidences" do
-          RuleCountry.first.update!(negative_rule: true)
-          do_request country: "fr"
-
-          expect(status).to be(200)
-          expect(JSON.parse(response_body)["data"]).not_to be_nil
-          expect(JSON.parse(response_body)["data"].count).to eql 0
-        end
-      end
-
-      context "when not matching country param contained in country rule" do
-        it "does not return coincidences" do
-          do_request country: "gr"
-
-          expect(status).to be(200)
-          expect(JSON.parse(response_body)["data"]).not_to be_nil
-          expect(JSON.parse(response_body)["data"].count).to eql 0
-        end
       end
     end
   end
