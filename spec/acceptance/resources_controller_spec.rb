@@ -9,25 +9,98 @@ resource "Resources" do
   let(:raw_post) { params.to_json }
   let(:authorization) { AuthToken.generic_token }
 
+  let(:tool_group_one) { FactoryBot.create(:tool_group, name: "one") }
+  let(:tool_group_two) { FactoryBot.create(:tool_group, name: "two") }
+  let(:tool_group_three) { FactoryBot.create(:tool_group, name: "three") }
+  let(:tool_group_four) { FactoryBot.create(:tool_group, name: "four") }
+
+  let(:resource_1) { Resource.find(1) }
+  let(:resource_2) { Resource.find(2) }
+  let(:resource_3) { Resource.find(3) }
+  let(:resource_4) { Resource.find(4) }
+  let(:resource_5) { Resource.find(5) }
+
   let(:languages_fr_en) { ["fr", "en"] }
+  let(:languages_fr_it) { ["fr", "it"] }
+  let(:languages_fr_es) { ["fr", "es"] }
   let(:languages_fr) { ["fr"] }
   let(:languages_it) { ["it"] }
   let(:languages_en) { ["en"] }
+  let(:languages_es) { ["es"] }
+
   let(:countries_fr) { ["FR"] }
   let(:countries_gb) { ["GB"] }
+  let(:countries_nz) { ["NZ"] }
   let(:countries_fr_us) { ["FR", "US"] }
-  let(:openness) { [3] }
-  let(:confidence) { [1, 2] }
+  let(:countries_gb_us_nz) { ["GB", "US", "NZ"] }
+
+  let(:openness_1) { [1] }
+  let(:openness_2) { [2] }
+  let(:openness_3) { [3] }
+  let(:openness_1_2) { [1, 2] }
+  let(:openness_2_3) { [2, 3] }
+  let(:openness_3_4) { [3, 4] }
+
+  let(:confidence_1) { [1] }
+  let(:confidence_2) { [2] }
+  let(:confidence_3) { [3] }
+  let(:confidence_1_2) { [1, 2] }
+  let(:confidence_2_3) { [2, 3] }
+  let(:confidence_3_4) { [3, 4] }
 
   get "resources/suggestions" do
     before(:each) do
-      FactoryBot.create(:tool_group, name: "one")
-      FactoryBot.create(:rule_country, tool_group: ToolGroup.first, countries: countries_fr_us)
-      FactoryBot.create(:rule_language, tool_group: ToolGroup.first, languages: languages_fr_en)
-      FactoryBot.create(:rule_praxis, tool_group: ToolGroup.first, openness: openness, confidence: confidence)
+      FactoryBot.create(:rule_country, tool_group: tool_group_one, countries: countries_fr_us)
+      FactoryBot.create(:rule_country, tool_group: tool_group_one, countries: countries_nz)
+      FactoryBot.create(:rule_language, tool_group: tool_group_one, languages: languages_fr_en)
+      FactoryBot.create(:rule_praxis, tool_group: tool_group_one, openness: openness_1, confidence: confidence_2)
+
+      FactoryBot.create(:rule_country, tool_group: tool_group_two, countries: countries_fr_us)
+      FactoryBot.create(:rule_language, tool_group: tool_group_two, languages: languages_fr_en)
+      FactoryBot.create(:rule_praxis, tool_group: tool_group_two, openness: openness_1, confidence: confidence_2)
+
+      FactoryBot.create(:rule_country, tool_group: tool_group_three, countries: countries_fr)
+      FactoryBot.create(:rule_language, tool_group: tool_group_three, languages: languages_fr_es)
+      FactoryBot.create(:rule_praxis, tool_group: tool_group_three, openness: openness_1, confidence: confidence_2)
+
+      FactoryBot.create(:rule_country, tool_group: tool_group_four, countries: countries_gb)
+      FactoryBot.create(:rule_language, tool_group: tool_group_four, languages: languages_fr_es)
+      FactoryBot.create(:rule_praxis, tool_group: tool_group_four, openness: openness_1, confidence: confidence_2)
+
+      ResourceToolGroup.create!(resource_id: resource_1.id, tool_group_id: tool_group_one.id, suggestions_weight: 2.0)
+      ResourceToolGroup.create!(resource_id: resource_2.id, tool_group_id: tool_group_one.id, suggestions_weight: 1.5)
+      ResourceToolGroup.create!(resource_id: resource_3.id, tool_group_id: tool_group_one.id, suggestions_weight: 1.7)
+      ResourceToolGroup.create!(resource_id: resource_4.id, tool_group_id: tool_group_one.id, suggestions_weight: 3.0)
+      ResourceToolGroup.create!(resource_id: resource_5.id, tool_group_id: tool_group_one.id, suggestions_weight: 1.0)
+
+      ResourceToolGroup.create!(resource_id: resource_1.id, tool_group_id: tool_group_two.id, suggestions_weight: 2.0)
+      ResourceToolGroup.create!(resource_id: resource_2.id, tool_group_id: tool_group_two.id, suggestions_weight: 1.5)
+      ResourceToolGroup.create!(resource_id: resource_3.id, tool_group_id: tool_group_two.id, suggestions_weight: 1.0)
+      ResourceToolGroup.create!(resource_id: resource_4.id, tool_group_id: tool_group_two.id, suggestions_weight: 1.3)
+      ResourceToolGroup.create!(resource_id: resource_5.id, tool_group_id: tool_group_two.id, suggestions_weight: 1.0)
+
+      ResourceToolGroup.create!(resource_id: resource_1.id, tool_group_id: tool_group_three.id, suggestions_weight: 2.0)
+      ResourceToolGroup.create!(resource_id: resource_2.id, tool_group_id: tool_group_three.id, suggestions_weight: 1.5)
+      ResourceToolGroup.create!(resource_id: resource_3.id, tool_group_id: tool_group_three.id, suggestions_weight: 1.1)
+      ResourceToolGroup.create!(resource_id: resource_4.id, tool_group_id: tool_group_three.id, suggestions_weight: 1.0)
+      ResourceToolGroup.create!(resource_id: resource_5.id, tool_group_id: tool_group_three.id, suggestions_weight: 1.2)
     end
 
-    # do_request languages: ["en", "es"], country: "fr", openness: "3"
+    context "when matching tool groups" do
+      before do
+        RuleCountry.all.each { |obj| obj.update!(negative_rule: false) }
+        RuleLanguage.all.each { |obj| obj.update!(negative_rule: false) }
+        RulePraxis.all.each { |obj| obj.update!(negative_rule: false) }
+      end
+
+      it "return coincidences ordered" do
+        do_request country: "fr", languages: languages_fr, openness: 1, confidence: 2
+
+        expect(status).to be(200)
+        expect(JSON.parse(response_body)["data"]).not_to be_nil
+        expect(JSON.parse(response_body)["data"].count).to eql 5
+      end
+    end
 
     context "when matching country param contained in country rule with negative rule as false" do
       before do
@@ -36,19 +109,76 @@ resource "Resources" do
       end
 
       it "return coincidences" do
-        do_request country: "fr", languages: languages_fr
+        do_request country: "fr", languages: languages_fr, openness: 1, confidence: 2
 
         expect(status).to be(200)
+
         expect(JSON.parse(response_body)["data"]).not_to be_nil
-        expect(JSON.parse(response_body)["data"].count).to eql 1
+        expect(JSON.parse(response_body)["data"].count).to eql 5
       end
 
       context "plus matching languages with negative rule as false" do
         it "return coincidences" do
-          do_request country: "fr", languages: languages_fr_en, openness: 1
+          do_request country: "fr", languages: languages_fr, openness: 1, confidence: 2
 
           expect(status).to be(200)
-          expect(JSON.parse(response_body)["data"].count).to eql 1
+          expect(JSON.parse(response_body)["data"].count).to eql 5
+        end
+
+        context "plus not matching openness" do
+          context "with negative rule as false" do
+            before do
+              RulePraxis.first.update!(negative_rule: false)
+            end
+            it "does not return coincidences" do
+              do_request country: "fr", languages: languages_fr_en, openness: 1
+
+              expect(status).to be(200)
+              expect(JSON.parse(response_body)["data"].count).to eql 0
+            end
+          end
+        end
+
+        context "plus not matching confidence" do
+          context "with negative rule as false" do
+            before do
+              RulePraxis.first.update!(negative_rule: false)
+            end
+            it "does not return coincidences" do
+              do_request country: "fr", languages: languages_fr_en, openness: 3, confidence: 4
+
+              expect(status).to be(200)
+              expect(JSON.parse(response_body)["data"].count).to eql 0
+            end
+          end
+        end
+
+        context "plus matching confidence" do
+          context "with negative rule as true" do
+            before do
+              RulePraxis.first.update!(negative_rule: true)
+            end
+            it "does not return coincidences" do
+              do_request country: "fr", languages: languages_fr_en, openness: 2, confidence: 2
+
+              expect(status).to be(200)
+              expect(JSON.parse(response_body)["data"].count).to eql 0
+            end
+          end
+        end
+
+        context "plus matching openness" do
+          context "with negative rule as true" do
+            before do
+              RulePraxis.first.update!(negative_rule: true)
+            end
+            it "does not return coincidences" do
+              do_request country: "gb", languages: languages_fr, openness: 2, confidence: 1
+
+              expect(status).to be(200)
+              expect(JSON.parse(response_body)["data"].count).to eql 0
+            end
+          end
         end
 
         context "plus matching openness" do
@@ -57,19 +187,19 @@ resource "Resources" do
               RulePraxis.first.update!(negative_rule: false)
             end
             it "return coincidences" do
-              do_request country: "fr", languages: languages_fr_en, openness: 3
+              do_request country: "fr", languages: languages_es, openness: 1, confidence: 2
 
               expect(status).to be(200)
-              expect(JSON.parse(response_body)["data"].count).to eql 1
+              expect(JSON.parse(response_body)["data"].count).to eql 5
             end
           end
 
           context "with negative rule as true" do
             before do
-              RulePraxis.first.update!(negative_rule: true)
+              RulePraxis.all.each { |obj| obj.update!(negative_rule: true) }
             end
             it "does not return coincidences" do
-              do_request country: "fr", languages: languages_fr_en, openness: 3
+              do_request country: "gb", languages: languages_fr_es, openness: 1, confidence: 2
 
               expect(status).to be(200)
               expect(JSON.parse(response_body)["data"].count).to eql 0
@@ -98,11 +228,11 @@ resource "Resources" do
         end
 
         it "return coincidences" do
-          do_request country: "fr", languages: languages_fr_en
+          do_request country: "fr", languages: languages_es, openness: 1, confidence: 2
 
           expect(status).to be(200)
           expect(JSON.parse(response_body)["data"]).not_to be_nil
-          expect(JSON.parse(response_body)["data"].count).to eql 1
+          expect(JSON.parse(response_body)["data"].count).to eql 5
         end
       end
 
@@ -185,11 +315,11 @@ resource "Resources" do
         end
 
         it "return coincidences" do
-          do_request country: "gb", languages: languages_fr_en
+          do_request country: "fr", languages: languages_fr_es, openness: 1, confidence: 2
 
           expect(status).to be(200)
           expect(JSON.parse(response_body)["data"]).not_to be_nil
-          expect(JSON.parse(response_body)["data"].count).to eql 1
+          expect(JSON.parse(response_body)["data"].count).to eql 5
         end
       end
     end

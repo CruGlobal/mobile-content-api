@@ -35,44 +35,75 @@ class ResourcesController < ApplicationController
   end
 
   def suggestions
-    resources_1 = ToolGroup
-      .matching_countries__negative_rule_false(params["country"])
-      .matching_languages__negative_rule_false(params["languages"])
-      .matching_praxes_openness__negative_rule_false(params["openness"])
-      .joins(:rule_countries, :rule_languages, :rule_praxes)
+    tool_groups = []
+    ToolGroup.all.each { |tool_group| tool_groups << tool_group if match_params(tool_group, params) }
 
-    resources_2 = ToolGroup
-      .matching_countries__negative_rule_false(params["country"])
-      .matching_languages__negative_rule_false(params["languages"])
-      .praxes_openness_not_matching__negative_rule_true(params["openness"])
-      .joins(:rule_countries, :rule_languages, :rule_praxes)
-
-    resources_3 = ToolGroup
-      .countries_not_matching__negative_rule_true(params["country"])
-      .matching_languages__negative_rule_false(params["languages"])
-      .matching_praxes_openness__negative_rule_false(params["openness"])
-      .joins(:rule_countries, :rule_languages, :rule_praxes)
-
-    resources_4 = ToolGroup
-      .countries_not_matching__negative_rule_true(params["country"])
-      .matching_languages__negative_rule_false(params["languages"])
-      .praxes_openness_not_matching__negative_rule_true(params["openness"])
-      .joins(:rule_countries, :rule_languages, :rule_praxes)
-
-    resources_5 = ToolGroup
-      .matching_countries__negative_rule_false(params["country"])
-      .languages_not_matching__negative_rule_true(params["languages"])
-      .joins(:rule_countries, :rule_languages, :rule_praxes)
-
-    resources_6 = ToolGroup
-      .countries_not_matching__negative_rule_true(params["country"])
-      .matching_languages__negative_rule_false(params["languages"])
-      .joins(:rule_countries, :rule_languages, :rule_praxes)
-
-    render json: resources_1 + resources_2 + resources_3 + resources_4 + resources_5 + resources_6, status: :ok
+    grouped_array = group_resources(tool_groups)
+    render json: order_results(grouped_array), status: :ok
   end
 
   private
+
+  def order_results(grouped_array)
+    result = grouped_array.map do |key, values|
+      counter = values.size
+      sum = values.sum { |o| o[:tool_group_suggestions_weight] * o[:resource_tool_group_suggestions_weight] }
+      average = sum / counter
+      [Resource.find(key), average]
+    end
+
+    sorted_result = result.sort_by { |subarray| -subarray[1] }
+    sorted_result.map { |subarray| subarray[0] }
+  end
+
+  def group_resources(tool_groups)
+    result = tool_groups.flat_map do |tool_group|
+      tool_group.resource_tool_groups.map do |resource|
+        {
+          tool_group_suggestions_weight: tool_group.suggestions_weight,
+          resource_id: resource.resource_id,
+          resource_tool_group_suggestions_weight: resource.suggestions_weight
+        }
+      end
+    end
+
+    result.group_by { |hash| hash[:resource_id] }
+  end
+
+  def match_params(tool_group, params)
+    country = params["country"].upcase
+    languages = params["languages"]
+    openness = params["openness"].to_i
+    confidence = params["confidence"].to_i
+
+    # Rule Countries
+    country_positive_match = tool_group.rule_countries.any? { |o| o.countries.include?(country) && !o.negative_rule }
+    country_negative_match = tool_group.rule_countries.any? { |o| o.countries.include?(country) && o.negative_rule }
+    return false if !country_positive_match || country_negative_match
+
+    # Rule Languages
+    negative_rule = tool_group.rule_languages.any? { |o| o.negative_rule }
+    language_positive_match = tool_group.rule_languages.any? { |o| (languages - o.languages).empty? && !o.negative_rule }
+    language_negative_match = tool_group.rule_languages.any? { |o| !(languages - o.languages).empty? && o.negative_rule }
+
+    if !negative_rule
+      return false if !language_positive_match
+    else
+      return false if !language_negative_match
+    end
+
+    # Rule Praxes - Openness
+    openness_positive_match = tool_group.rule_praxes.any? { |o| o.openness.include?(openness) && !o.negative_rule }
+    openness_negative_match = tool_group.rule_praxes.any? { |o| o.openness.include?(openness) && o.negative_rule }
+    return false if !openness_positive_match || openness_negative_match
+
+    # Rule Praxes - Confidence
+    confidence_positive_match = tool_group.rule_praxes.any? { |o| o.confidence.include?(confidence) && !o.negative_rule }
+    confidence_negative_match = tool_group.rule_praxes.any? { |o| o.confidence.include?(confidence) && o.negative_rule }
+    return false if !confidence_positive_match || confidence_negative_match
+
+    true
+  end
 
   def cached_index_json
     cache_key = Resource.index_cache_key(all_resources,
