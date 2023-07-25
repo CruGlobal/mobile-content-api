@@ -16,7 +16,7 @@ resource "Resources" do
   let(:countries_fr) { ["FR"] }
   let(:countries_gb) { ["GB"] }
   let(:countries_fr_us) { ["FR", "US"] }
-  let(:openness) { [1, 2, 3] }
+  let(:openness) { [3] }
   let(:confidence) { [1, 2] }
 
   get "resources/suggestions" do
@@ -24,6 +24,7 @@ resource "Resources" do
       FactoryBot.create(:tool_group, name: "one")
       FactoryBot.create(:rule_country, tool_group: ToolGroup.first, countries: countries_fr_us)
       FactoryBot.create(:rule_language, tool_group: ToolGroup.first, languages: languages_fr_en)
+      FactoryBot.create(:rule_praxis, tool_group: ToolGroup.first, openness: openness, confidence: confidence)
     end
 
     # do_request languages: ["en", "es"], country: "fr", openness: "3"
@@ -44,11 +45,36 @@ resource "Resources" do
 
       context "plus matching languages with negative rule as false" do
         it "return coincidences" do
-          do_request country: "fr", languages: languages_fr_en
+          do_request country: "fr", languages: languages_fr_en, openness: 1
 
           expect(status).to be(200)
-          expect(JSON.parse(response_body)["data"]).not_to be_nil
           expect(JSON.parse(response_body)["data"].count).to eql 1
+        end
+
+        context "plus matching openness" do
+          context "with negative rule as false" do
+            before do
+              RulePraxis.first.update!(negative_rule: false)
+            end
+            it "return coincidences" do
+              do_request country: "fr", languages: languages_fr_en, openness: 3
+
+              expect(status).to be(200)
+              expect(JSON.parse(response_body)["data"].count).to eql 1
+            end
+          end
+
+          context "with negative rule as true" do
+            before do
+              RulePraxis.first.update!(negative_rule: true)
+            end
+            it "does not return coincidences" do
+              do_request country: "fr", languages: languages_fr_en, openness: 3
+
+              expect(status).to be(200)
+              expect(JSON.parse(response_body)["data"].count).to eql 0
+            end
+          end
         end
       end
 

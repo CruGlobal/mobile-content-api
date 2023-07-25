@@ -19,9 +19,17 @@ class ToolGroup < ApplicationRecord
     where("languages && ARRAY[?]::varchar[] AND rule_languages.negative_rule = ?", language, false)
   }
 
+  scope :matching_praxes_openness__negative_rule_false, lambda { |oppeness|
+    where("openness && ARRAY[?]::integer[] AND rule_praxes.negative_rule = ?", oppeness, false)
+  }
+
+  scope :praxes_openness_not_matching__negative_rule_true, lambda { |oppeness|
+    where.not("openness && ARRAY[?]::integer[] AND rule_praxes.negative_rule = ?", oppeness, true)
+  }
+
   scope :languages_not_matching__negative_rule_true, lambda { |languages|
-    where("NOT ?::varchar[] <@ languages", "{#{languages.join(',')}}")
-    .where("rule_languages.negative_rule = ?", true)
+    where("NOT ?::varchar[] <@ languages", "{#{languages.join(",")}}")
+      .where("rule_languages.negative_rule = ?", true)
   }
 
   scope :countries_not_matching__negative_rule_true, lambda { |country|

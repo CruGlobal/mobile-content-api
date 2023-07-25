@@ -36,26 +36,40 @@ class ResourcesController < ApplicationController
 
   def suggestions
     resources_1 = ToolGroup
-                  .matching_countries__negative_rule_false(params["country"])
-                  .matching_languages__negative_rule_false(params["languages"])
-                  .joins(:rule_countries, :rule_languages)
+      .matching_countries__negative_rule_false(params["country"])
+      .matching_languages__negative_rule_false(params["languages"])
+      .matching_praxes_openness__negative_rule_false(params["openness"])
+      .joins(:rule_countries, :rule_languages, :rule_praxes)
 
     resources_2 = ToolGroup
-                  .countries_not_matching__negative_rule_true(params["country"])
-                  .matching_languages__negative_rule_false(params["languages"])
-                  .joins(:rule_countries, :rule_languages)
+      .matching_countries__negative_rule_false(params["country"])
+      .matching_languages__negative_rule_false(params["languages"])
+      .praxes_openness_not_matching__negative_rule_true(params["openness"])
+      .joins(:rule_countries, :rule_languages, :rule_praxes)
 
     resources_3 = ToolGroup
-                  .matching_countries__negative_rule_false(params["country"])
-                  .languages_not_matching__negative_rule_true(params["languages"])
-                  .joins(:rule_countries, :rule_languages)
+      .countries_not_matching__negative_rule_true(params["country"])
+      .matching_languages__negative_rule_false(params["languages"])
+      .matching_praxes_openness__negative_rule_false(params["openness"])
+      .joins(:rule_countries, :rule_languages, :rule_praxes)
 
     resources_4 = ToolGroup
-                  .countries_not_matching__negative_rule_true(params["country"])
-                  .matching_languages__negative_rule_false(params["languages"])
-                  .joins(:rule_countries, :rule_languages)
+      .countries_not_matching__negative_rule_true(params["country"])
+      .matching_languages__negative_rule_false(params["languages"])
+      .praxes_openness_not_matching__negative_rule_true(params["openness"])
+      .joins(:rule_countries, :rule_languages, :rule_praxes)
 
-    render json: resources_1 + resources_2 + resources_3 + resources_4, status: :ok
+    resources_5 = ToolGroup
+      .matching_countries__negative_rule_false(params["country"])
+      .languages_not_matching__negative_rule_true(params["languages"])
+      .joins(:rule_countries, :rule_languages, :rule_praxes)
+
+    resources_6 = ToolGroup
+      .countries_not_matching__negative_rule_true(params["country"])
+      .matching_languages__negative_rule_false(params["languages"])
+      .joins(:rule_countries, :rule_languages, :rule_praxes)
+
+    render json: resources_1 + resources_2 + resources_3 + resources_4 + resources_5 + resources_6, status: :ok
   end
 
   private
