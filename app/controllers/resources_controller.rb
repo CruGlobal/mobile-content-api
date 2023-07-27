@@ -71,25 +71,29 @@ class ResourcesController < ApplicationController
   end
 
   def match_params(tool_group, params)
-    country = params["country"].upcase
+    country = params["country"]&.upcase
     languages = params["languages"]
     openness = params["openness"].to_i
     confidence = params["confidence"].to_i
 
     # Rule Countries
-    country_positive_match = tool_group.rule_countries.any? { |o| o.countries.include?(country) && !o.negative_rule }
-    country_negative_match = tool_group.rule_countries.any? { |o| o.countries.include?(country) && o.negative_rule }
-    return false if !country_positive_match || country_negative_match
+    if country
+      country_positive_match = tool_group.rule_countries.any? { |o| o.countries.include?(country) && !o.negative_rule }
+      country_negative_match = tool_group.rule_countries.any? { |o| o.countries.include?(country) && o.negative_rule }
+      return false if !country_positive_match || country_negative_match
+    else
+      return false if tool_group.rule_countries.any?(&:negative_rule)
+    end
 
     # Rule Languages
     negative_rule = tool_group.rule_languages.any? { |o| o.negative_rule }
     language_positive_match = tool_group.rule_languages.any? { |o| (languages - o.languages).empty? && !o.negative_rule }
     language_negative_match = tool_group.rule_languages.any? { |o| !(languages - o.languages).empty? && o.negative_rule }
 
-    if !negative_rule
-      return false if !language_positive_match
-    else
+    if negative_rule
       return false if !language_negative_match
+    else
+      return false if !language_positive_match
     end
 
     # Rule Praxes - Openness
