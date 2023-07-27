@@ -9,7 +9,7 @@ class ToolGroupSerializer < ActiveModel::Serializer
   has_many :rule_languages, key: "rules-language"
   has_many :rule_countries, key: "rules-country"
   has_many :rule_praxes, key: "rules-praxis"
-  has_many :resource_tool_groups, key: "resource-tool-groups"
+  has_many :resource_tool_groups, key: "tools"
   has_many :resources, through: :resource_tool_groups
 
   def custom_rule_languages

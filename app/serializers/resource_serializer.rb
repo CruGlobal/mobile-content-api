@@ -17,9 +17,6 @@ class ResourceSerializer < ActiveModel::Serializer
   has_many :variants, if: -> { object&.resource_type&.name == "metatool" }
   has_many :translated_attributes, key: "translated-attributes"
 
-  has_many :resource_tool_groups
-  has_many :tool_groups, through: :resource_tool_groups
-
   belongs_to :default_variant, key: "default-variant", if: -> { object&.resource_type&.name == "metatool" }
 
   def attributes(*args)
