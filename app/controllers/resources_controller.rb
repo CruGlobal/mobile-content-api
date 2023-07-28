@@ -89,12 +89,7 @@ class ResourcesController < ApplicationController
     negative_rule = tool_group.rule_languages.any? { |o| o.negative_rule }
     language_positive_match = tool_group.rule_languages.any? { |o| (languages - o.languages).empty? && !o.negative_rule }
     language_negative_match = tool_group.rule_languages.any? { |o| !(languages - o.languages).empty? && o.negative_rule }
-
-    if negative_rule
-      return false if !language_negative_match
-    else
-      return false if !language_positive_match
-    end
+    return false unless negative_rule ? language_negative_match : language_positive_match
 
     # Rule Praxes - Openness
     openness_positive_match = tool_group.rule_praxes.any? { |o| o.openness.include?(openness) && !o.negative_rule }
