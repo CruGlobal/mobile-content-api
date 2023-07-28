@@ -5,6 +5,6 @@ class ResourceToolGroupSerializer < ActiveModel::Serializer
 
   type "tool-group-tool"
 
-  belongs_to :resource
+  belongs_to :resource, key: "tool"
   belongs_to :tool_group
 end
