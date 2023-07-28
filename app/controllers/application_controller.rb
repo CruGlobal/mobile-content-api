@@ -125,8 +125,8 @@ class ApplicationController < ActionController::Base
   end
 
   def formatted_errors(error)
-    error.record.errors.map do |attribute, errors|
-      errors.map { |error_message| {detail: "#{attribute} #{error_message}"} }
-    end.flatten
+    error.record.errors.flat_map do |attribute, errors|
+      errors.map { |error_message| { detail: "#{attribute} #{error_message}" } }
+    end
   end
 end

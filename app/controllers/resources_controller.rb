@@ -86,7 +86,7 @@ class ResourcesController < ApplicationController
     end
 
     # Rule Languages
-    negative_rule = tool_group.rule_languages.any? { |o| o.negative_rule }
+    negative_rule = tool_group.rule_languages.any?(&:negative_rule)
     language_positive_match = tool_group.rule_languages.any? { |o| (languages - o.languages).empty? && !o.negative_rule }
     language_negative_match = tool_group.rule_languages.any? { |o| !(languages - o.languages).empty? && o.negative_rule }
     return false unless negative_rule ? language_negative_match : language_positive_match
