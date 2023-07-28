@@ -27,7 +27,7 @@ class ToolGroupsController < ApplicationController
   end
 
   def update_tool
-    existing = ResourceToolGroup.find(params[:id])
+    existing = resource_tool_group
     existing.update!(
       resource_id: params[:data][:attributes]["resource-id"],
       suggestions_weight: params[:data][:attributes]["suggestions-weight"]
@@ -36,7 +36,6 @@ class ToolGroupsController < ApplicationController
   end
 
   def delete_tool
-    resource_tool_group = ResourceToolGroup.find(params[:id])
     resource_tool_group.destroy!
     head :no_content
   end
@@ -56,6 +55,10 @@ class ToolGroupsController < ApplicationController
   end
 
   private
+
+  def resource_tool_group
+    ResourceToolGroup.where(id: params[:id])[0]
+  end
 
   def tool_groups_ordered_by_name
     ToolGroup.order(name: :asc)
