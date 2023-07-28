@@ -1,5 +1,6 @@
 class RulePraxesController < ApplicationController
   before_action :authorize!
+  before_action :convert_hyphen_to_dash, only: [:create, :update]
 
   def create
     create_rule_praxis
