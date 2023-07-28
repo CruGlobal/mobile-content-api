@@ -96,9 +96,23 @@ resource "Resources" do
       it "return coincidences ordered" do
         do_request country: "fr", languages: languages_fr, openness: 1, confidence: 2
 
+        # Result ordered
+        # [
+        #   [#<Resource id: 1, name: "Knowing God Personally", ... >, 2.0],
+        #   [#<Resource id: 4, name: "metatool", ... >, 1.7666666666666666],
+        #   [#<Resource id: 2, name: "Satisfied?", ... >, 1.5],
+        #   [#<Resource id: 3, name: "Questions About God", ... >, 1.2666666666666666],
+        #   [#<Resource id: 5, name: "Knowing God Personally Variant", ... >, 1.0666666666666667]
+        # ]
+
         expect(status).to be(200)
         expect(JSON.parse(response_body)["data"]).not_to be_nil
         expect(JSON.parse(response_body)["data"].count).to eql 5
+        expect(JSON.parse(response_body)["data"][0]["attributes"]["name"]).to eql "Knowing God Personally"
+        expect(JSON.parse(response_body)["data"][1]["attributes"]["name"]).to eql "metatool"
+        expect(JSON.parse(response_body)["data"][2]["attributes"]["name"]).to eql "Satisfied?"
+        expect(JSON.parse(response_body)["data"][3]["attributes"]["name"]).to eql "Questions About God"
+        expect(JSON.parse(response_body)["data"][4]["attributes"]["name"]).to eql "Knowing God Personally Variant"
       end
     end
 
