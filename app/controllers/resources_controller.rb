@@ -81,8 +81,8 @@ class ResourcesController < ApplicationController
       country_positive_match = tool_group.rule_countries.any? { |o| o.countries.include?(country) && !o.negative_rule }
       country_negative_match = tool_group.rule_countries.any? { |o| o.countries.include?(country) && o.negative_rule }
       return false if !country_positive_match || country_negative_match
-    else
-      return false if tool_group.rule_countries.any?(&:negative_rule)
+    elsif tool_group.rule_countries.any?(&:negative_rule)
+      return false
     end
 
     # Rule Languages
