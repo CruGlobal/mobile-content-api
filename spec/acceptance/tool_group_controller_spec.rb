@@ -70,7 +70,14 @@ resource "ToolGroups" do
   post "tool-groups/:tool_group_id/tools" do
     let(:attrs) do
       {
-        "resource-id": Resource.first.id,
+        "relationships": {
+          "tool": {
+            "data": {
+              "type": "resource",
+              "id": Resource.first.id
+              }
+            }
+          },
         "suggestions-weight": "1.0"
       }
     end
