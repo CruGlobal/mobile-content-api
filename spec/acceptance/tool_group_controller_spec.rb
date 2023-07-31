@@ -68,24 +68,29 @@ resource "ToolGroups" do
   end
 
   post "tool-groups/:tool_group_id/tools" do
-    let(:attrs) do
+    let(:attributes) do
       {
-        "relationships": {
-          "tool": {
-            "data": {
-              "type": "resource",
-              "id": Resource.first.id
-              }
-            }
-          },
         "suggestions-weight": "1.0"
       }
     end
 
+    let(:relationships) {
+      {
+        "tool": {
+          "data": {
+            "type": "resource",
+            "id": Resource.first.id
+          }
+        }
+      }
+    }
+
     requires_authorization
 
     it "create tool group tool" do
-      do_request tool_group_id: tool_group_first.id, data: {type: "tool-group-tool", attributes: attrs}
+      do_request tool_group_id: tool_group_first.id, data: {
+        type: "tool-group-tool", attributes: attributes, relationships: relationships
+      }
       expect(status).to eq(201)
       expect(JSON.parse(response_body)["data"]).not_to be_nil
     end
