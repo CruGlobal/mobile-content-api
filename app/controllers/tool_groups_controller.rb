@@ -17,15 +17,14 @@ class ToolGroupsController < ApplicationController
     resource_id = params.dig(:data, :attributes, :relationships, :tool, :data, :id).to_i
     suggestions_weight = params.dig(:data, :attributes, 'suggestions-weight').to_f
 
-    ResourceToolGroup.create!(
+    resource_tool_group = ResourceToolGroup.create!(
       tool_group_id: tool_group_id,
       resource_id: resource_id,
       suggestions_weight: suggestions_weight
     )
 
-    tool_group = ToolGroup.find(params[:tool_group_id])
-    response.headers["Location"] = "tool_groups/#{tool_group.id}"
-    render json: tool_group, status: :created
+    response.headers["Location"] = "tool-groups/#{resource_tool_group.id}"
+    render json: resource_tool_group, status: :created
   rescue ActiveRecord::RecordInvalid => e
     render json: {errors: formatted_errors(e)}, status: :unprocessable_entity
   end
