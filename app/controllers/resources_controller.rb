@@ -71,6 +71,8 @@ class ResourcesController < ApplicationController
   end
 
   def match_params(tool_group, params)
+    return true if no_rules_for(tool_group)
+
     country = params["country"]&.upcase
     languages = params["languages"]
     openness = params["openness"].to_i
@@ -102,6 +104,12 @@ class ResourcesController < ApplicationController
     return false if !confidence_positive_match || confidence_negative_match
 
     true
+  end
+
+  def no_rules_for(tool_group)
+    tool_group.rule_languages.count.zero? &&
+    tool_group.rule_praxes.count.zero? &&
+    tool_group.rule_countries.count.zero?
   end
 
   def cached_index_json

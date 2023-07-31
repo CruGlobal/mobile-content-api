@@ -13,6 +13,7 @@ resource "Resources" do
   let(:tool_group_two) { FactoryBot.create(:tool_group, name: "two") }
   let(:tool_group_three) { FactoryBot.create(:tool_group, name: "three") }
   let(:tool_group_four) { FactoryBot.create(:tool_group, name: "four") }
+  let(:tool_group_five) { FactoryBot.create(:tool_group, name: "five") }
 
   let(:resource_1) { Resource.find(1) }
   let(:resource_2) { Resource.find(2) }
@@ -73,9 +74,6 @@ resource "Resources" do
       ResourceToolGroup.create!(resource_id: resource_4.id, tool_group_id: tool_group_one.id, suggestions_weight: 3.0)
       ResourceToolGroup.create!(resource_id: resource_5.id, tool_group_id: tool_group_one.id, suggestions_weight: 1.0)
 
-      ResourceToolGroup.create!(resource_id: resource_1.id, tool_group_id: tool_group_two.id, suggestions_weight: 2.0)
-      ResourceToolGroup.create!(resource_id: resource_2.id, tool_group_id: tool_group_two.id, suggestions_weight: 1.5)
-      ResourceToolGroup.create!(resource_id: resource_3.id, tool_group_id: tool_group_two.id, suggestions_weight: 1.0)
       ResourceToolGroup.create!(resource_id: resource_4.id, tool_group_id: tool_group_two.id, suggestions_weight: 1.3)
       ResourceToolGroup.create!(resource_id: resource_5.id, tool_group_id: tool_group_two.id, suggestions_weight: 1.0)
 
@@ -84,6 +82,46 @@ resource "Resources" do
       ResourceToolGroup.create!(resource_id: resource_3.id, tool_group_id: tool_group_three.id, suggestions_weight: 1.1)
       ResourceToolGroup.create!(resource_id: resource_4.id, tool_group_id: tool_group_three.id, suggestions_weight: 1.0)
       ResourceToolGroup.create!(resource_id: resource_5.id, tool_group_id: tool_group_three.id, suggestions_weight: 1.2)
+    end
+
+    context "when matching a tool group without rules" do
+      before do
+        RuleCountry.delete_all
+        RuleLanguage.delete_all
+        RulePraxis.delete_all
+        ResourceToolGroup.delete_all
+
+        # Tool group five with no rules
+        ResourceToolGroup.create!(resource_id: resource_1.id, tool_group_id: tool_group_five.id, suggestions_weight: 2.0)
+      end
+
+      it "return coincidence" do
+        do_request country: "fr", languages: languages_fr, openness: 1, confidence: 2
+
+        expect(status).to be(200)
+        expect(JSON.parse(response_body)["data"]).not_to be_nil
+        expect(JSON.parse(response_body)["data"].count).to eql 1
+      end
+    end
+
+    context "when matching tool groups including one without rules" do
+      before do
+        RuleCountry.delete_all
+        RuleLanguage.delete_all
+        RulePraxis.delete_all
+        ResourceToolGroup.where(tool_group_id: [tool_group_one.id, tool_group_three.id]).delete_all
+
+        # Tool group five with no rules
+        ResourceToolGroup.create!(resource_id: resource_1.id, tool_group_id: tool_group_five.id, suggestions_weight: 2.0)
+      end
+
+      it "return coincidences ordered" do
+        do_request country: "fr", languages: languages_fr, openness: 1, confidence: 2
+
+        expect(status).to be(200)
+        expect(JSON.parse(response_body)["data"]).not_to be_nil
+        expect(JSON.parse(response_body)["data"].count).to eql 3
+      end
     end
 
     context "when matching tool groups" do
