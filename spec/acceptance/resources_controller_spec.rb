@@ -84,6 +84,26 @@ resource "Resources" do
       ResourceToolGroup.create!(resource_id: resource_5.id, tool_group_id: tool_group_three.id, suggestions_weight: 1.2)
     end
 
+    context "when matching a tool group with single language rule" do
+      before do
+        RuleCountry.delete_all
+        RuleLanguage.delete_all
+        RulePraxis.delete_all
+        ResourceToolGroup.delete_all
+
+        FactoryBot.create(:rule_language, tool_group: tool_group_five, languages: languages_fr)
+        ResourceToolGroup.create!(resource_id: resource_5.id, tool_group_id: tool_group_five.id, suggestions_weight: 1.2)
+      end
+
+      it "return coincidence" do
+        do_request country: "mx", languages: languages_fr, openness: 5, confidence: 5
+
+        expect(status).to be(200)
+        expect(JSON.parse(response_body)["data"]).not_to be_nil
+        expect(JSON.parse(response_body)["data"].count).to eql 1
+      end
+    end
+
     context "when matching a tool group without rules" do
       before do
         RuleCountry.delete_all
