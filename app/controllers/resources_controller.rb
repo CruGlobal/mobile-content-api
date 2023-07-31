@@ -109,8 +109,8 @@ class ResourcesController < ApplicationController
 
   def no_rules_for(tool_group)
     tool_group.rule_languages.none? &&
-    tool_group.rule_praxes.none? &&
-    tool_group.rule_countries.none?
+      tool_group.rule_praxes.none? &&
+      tool_group.rule_countries.none?
   end
 
   # Returns true if the tool group has a single rule with a language
