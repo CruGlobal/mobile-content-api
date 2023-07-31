@@ -15,7 +15,7 @@ class ToolGroupsController < ApplicationController
   def create_tool
     tool_group_id = params[:tool_group_id].to_i
     resource_id = params.dig(:data, :relationships, :tool, :data, :id).to_i
-    suggestions_weight = params.dig(:data, :attributes, 'suggestions-weight').to_f
+    suggestions_weight = params.dig(:data, :attributes, "suggestions-weight").to_f
 
     resource_tool_group = ResourceToolGroup.create!(
       tool_group_id: tool_group_id,

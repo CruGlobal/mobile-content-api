@@ -76,10 +76,10 @@ resource "ToolGroups" do
 
     let(:relationships) {
       {
-        "tool": {
-          "data": {
-            "type": "resource",
-            "id": Resource.first.id
+        tool: {
+          data: {
+            type: "resource",
+            id: Resource.first.id
           }
         }
       }
