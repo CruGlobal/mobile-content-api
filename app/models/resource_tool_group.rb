@@ -4,4 +4,6 @@
 class ResourceToolGroup < ApplicationRecord
   belongs_to :resource
   belongs_to :tool_group
+
+  validates :tool_group_id, uniqueness: {scope: [:resource_id], message: "combination already exists"}
 end
