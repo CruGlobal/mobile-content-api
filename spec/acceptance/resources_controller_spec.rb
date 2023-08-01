@@ -95,7 +95,7 @@ resource "Resources" do
 
       context "if matching none of languages defined in rule" do
         it "does not return coincidences" do
-          do_request country: "mx", languages: languages_es
+          do_request "filter[country]": "mx", "filter[languages]": languages_es
 
           expect(status).to be(200)
           expect(JSON.parse(response_body)["data"].count).to eql 0
@@ -104,7 +104,7 @@ resource "Resources" do
 
       context "if matching any of the languages defined in rule" do
         it "return coincidences" do
-          do_request country: "mx", languages: languages_fr_it
+          do_request "filter[country]": "mx", "filter[languages]": languages_fr_it
 
           expect(status).to be(200)
           expect(JSON.parse(response_body)["data"].count).to eql 1
@@ -113,7 +113,7 @@ resource "Resources" do
 
       context "if matching at least one of languages defined in rule" do
         it "return coincidences" do
-          do_request country: "mx", languages: languages_fr
+          do_request "filter[country]": "mx", "filter[languages]": languages_fr
 
           expect(status).to be(200)
           expect(JSON.parse(response_body)["data"].count).to eql 1
@@ -122,7 +122,7 @@ resource "Resources" do
 
       context "if matching all of languages defined in rule" do
         it "return coincidences" do
-          do_request country: "mx", languages: languages_fr_en
+          do_request "filter[country]": "mx", "filter[languages]": languages_fr_en
 
           expect(status).to be(200)
           expect(JSON.parse(response_body)["data"].count).to eql 1
@@ -140,7 +140,7 @@ resource "Resources" do
       end
 
       it "should not return coincidences" do
-        do_request country: "mx", languages: languages_it
+        do_request "filter[country]": "mx", "filter[languages]": languages_it
 
         expect(status).to be(200)
         expect(JSON.parse(response_body)["data"].count).to eql 0
@@ -157,7 +157,7 @@ resource "Resources" do
       end
 
       it "return coincidence" do
-        do_request country: "fr", languages: languages_fr, openness: 1, confidence: 2
+        do_request "filter[country]": "fr", "filter[languages]": languages_fr, "filter[openness]": 1, "filter[confidence]": 2
 
         expect(status).to be(200)
         expect(JSON.parse(response_body)["data"].count).to eql 1
@@ -174,7 +174,7 @@ resource "Resources" do
       end
 
       it "return coincidences ordered" do
-        do_request country: "fr", languages: languages_fr, openness: 1, confidence: 2
+        do_request "filter[country]": "fr", "filter[languages]": languages_fr, "filter[openness]": 1, "filter[confidence]": 2
 
         expect(status).to be(200)
         expect(JSON.parse(response_body)["data"].count).to eql 3
@@ -189,7 +189,7 @@ resource "Resources" do
       end
 
       it "return coincidences ordered" do
-        do_request country: "fr", languages: languages_fr, openness: 1, confidence: 2
+        do_request "filter[country]": "fr", "filter[languages]": languages_fr, "filter[openness]": 1, "filter[confidence]": 2
 
         # Result ordered
         # [
@@ -217,7 +217,7 @@ resource "Resources" do
       end
 
       it "return coincidences" do
-        do_request country: "fr", languages: languages_fr, openness: 1, confidence: 2
+        do_request "filter[country]": "fr", "filter[languages]": languages_fr, "filter[openness]": 1, "filter[confidence]": 2
 
         expect(status).to be(200)
 
@@ -226,7 +226,7 @@ resource "Resources" do
 
       context "plus matching languages with negative rule as false" do
         it "return coincidences" do
-          do_request country: "fr", languages: languages_fr, openness: 1, confidence: 2
+          do_request "filter[country]": "fr", "filter[languages]": languages_fr, "filter[openness]": 1, "filter[confidence]": 2
 
           expect(status).to be(200)
           expect(JSON.parse(response_body)["data"].count).to eql 5
@@ -238,7 +238,7 @@ resource "Resources" do
               RulePraxis.first.update!(negative_rule: false)
             end
             it "does not return coincidences" do
-              do_request country: "fr", languages: languages_fr_en, openness: 1
+              do_request "filter[country]": "fr", "filter[languages]": languages_fr_en, "filter[openness]": 1
 
               expect(status).to be(200)
               expect(JSON.parse(response_body)["data"].count).to eql 0
@@ -252,7 +252,7 @@ resource "Resources" do
               RulePraxis.first.update!(negative_rule: false)
             end
             it "does not return coincidences" do
-              do_request country: "fr", languages: languages_fr_en, openness: 3, confidence: 4
+              do_request "filter[country]": "fr", "filter[languages]": languages_fr_en, "filter[openness]": 3, "filter[confidence]": 4
 
               expect(status).to be(200)
               expect(JSON.parse(response_body)["data"].count).to eql 0
@@ -266,7 +266,7 @@ resource "Resources" do
               RulePraxis.first.update!(negative_rule: true)
             end
             it "does not return coincidences" do
-              do_request country: "fr", languages: languages_fr_en, openness: 2, confidence: 2
+              do_request "filter[country]": "fr", "filter[languages]": languages_fr_en, "filter[openness]": 2, "filter[confidence]": 2
 
               expect(status).to be(200)
               expect(JSON.parse(response_body)["data"].count).to eql 0
@@ -280,7 +280,7 @@ resource "Resources" do
               RulePraxis.first.update!(negative_rule: true)
             end
             it "does not return coincidences" do
-              do_request country: "gb", languages: languages_fr, openness: 2, confidence: 1
+              do_request "filter[country]": "gb", "filter[languages]": languages_fr, "filter[openness]": 2, "filter[confidence]": 1
 
               expect(status).to be(200)
               expect(JSON.parse(response_body)["data"].count).to eql 0
@@ -294,7 +294,7 @@ resource "Resources" do
               RulePraxis.first.update!(negative_rule: false)
             end
             it "return coincidences" do
-              do_request country: "fr", languages: languages_es, openness: 1, confidence: 2
+              do_request "filter[country]": "fr", "filter[languages]": languages_es, "filter[openness]": 1, "filter[confidence]": 2
 
               expect(status).to be(200)
               expect(JSON.parse(response_body)["data"].count).to eql 5
@@ -306,7 +306,7 @@ resource "Resources" do
               RulePraxis.all.each { |obj| obj.update!(negative_rule: true) }
             end
             it "does not return coincidences" do
-              do_request country: "gb", languages: languages_fr_es, openness: 1, confidence: 2
+              do_request "filter[country]": "gb", "filter[languages]": languages_fr_es, "filter[openness]": 1, "filter[confidence]": 2
 
               expect(status).to be(200)
               expect(JSON.parse(response_body)["data"].count).to eql 0
@@ -321,7 +321,7 @@ resource "Resources" do
         end
 
         it "does not return coincidences" do
-          do_request country: "fr", languages: languages_it
+          do_request "filter[country]": "fr", "filter[languages]": languages_it
 
           expect(status).to be(200)
           expect(JSON.parse(response_body)["data"].count).to eql 0
@@ -334,7 +334,7 @@ resource "Resources" do
         end
 
         it "return coincidences" do
-          do_request country: "fr", languages: languages_es, openness: 1, confidence: 2
+          do_request "filter[country]": "fr", "filter[languages]": languages_es, "filter[openness]": 1, "filter[confidence]": 2
 
           expect(status).to be(200)
           expect(JSON.parse(response_body)["data"].count).to eql 5
@@ -347,7 +347,7 @@ resource "Resources" do
         end
 
         it "does not return coincidences" do
-          do_request country: "fr", languages: languages_fr_en
+          do_request "filter[country]": "fr", "filter[languages]": languages_fr_en
 
           expect(status).to be(200)
           expect(JSON.parse(response_body)["data"].count).to eql 0
@@ -356,7 +356,7 @@ resource "Resources" do
 
       context "plus not matching languages with negative rule as false" do
         it "does not return coincidences" do
-          do_request country: "fr", languages: languages_it
+          do_request "filter[country]": "fr", "filter[languages]": languages_it
 
           expect(status).to be(200)
           expect(JSON.parse(response_body)["data"].count).to eql 0
@@ -370,7 +370,7 @@ resource "Resources" do
       end
 
       it "does not return coincidences" do
-        do_request country: "fr", languages: languages_fr_en
+        do_request "filter[country]": "fr", "filter[languages]": languages_fr_en
 
         expect(status).to be(200)
         expect(JSON.parse(response_body)["data"].count).to eql 0
@@ -383,7 +383,7 @@ resource "Resources" do
       end
 
       it "does not return coincidences" do
-        do_request country: "gb", languages: languages_fr_en
+        do_request "filter[country]": "gb", "filter[languages]": languages_fr_en
 
         expect(status).to be(200)
         expect(JSON.parse(response_body)["data"].count).to eql 0
@@ -402,7 +402,7 @@ resource "Resources" do
         end
 
         it "does not return coincidences" do
-          do_request country: "gb", languages: languages_fr_en
+          do_request "filter[country]": "gb", "filter[languages]": languages_fr_en
 
           expect(status).to be(200)
           expect(JSON.parse(response_body)["data"].count).to eql 0
@@ -415,7 +415,7 @@ resource "Resources" do
         end
 
         it "return coincidences" do
-          do_request country: "fr", languages: languages_fr_es, openness: 1, confidence: 2
+          do_request "filter[country]": "fr", "filter[languages]": languages_fr_es, "filter[openness]": 1, "filter[confidence]": 2
 
           expect(status).to be(200)
           expect(JSON.parse(response_body)["data"].count).to eql 5

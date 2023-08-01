@@ -71,10 +71,10 @@ class ResourcesController < ApplicationController
   end
 
   def match_params(tool_group, params)
-    country = params["country"]&.upcase
-    languages = params["languages"]
-    openness = params["openness"].to_i
-    confidence = params["confidence"].to_i
+    country = params["filter"]["country"]&.upcase
+    languages = params["filter"]["languages"]
+    openness = params["filter"]["openness"].to_i
+    confidence = params["filter"]["confidence"].to_i
 
     return true if no_rules_for(tool_group)
     return true if language_rule(tool_group, languages)
