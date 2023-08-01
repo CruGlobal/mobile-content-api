@@ -80,29 +80,36 @@ class ResourcesController < ApplicationController
     return true if language_rule(tool_group, languages)
 
     # Rule Countries
-    if country
-      country_positive_match = tool_group.rule_countries.any? { |o| o.countries.include?(country) && !o.negative_rule }
-      country_negative_match = tool_group.rule_countries.any? { |o| o.countries.include?(country) && o.negative_rule }
-      return false if !country_positive_match || country_negative_match
-    elsif tool_group.rule_countries.any?(&:negative_rule)
-      return false
+    if tool_group.rule_countries.any?
+      if country
+        country_positive_match = tool_group.rule_countries.any? { |o| o.countries.include?(country) && !o.negative_rule }
+        country_negative_match = tool_group.rule_countries.any? { |o| o.countries.include?(country) && o.negative_rule }
+        return false if !country_positive_match || country_negative_match
+      elsif tool_group.rule_countries.any?(&:negative_rule)
+        return false
+      end
     end
 
     # Rule Languages
-    negative_rule = tool_group.rule_languages.any?(&:negative_rule)
-    language_positive_match = tool_group.rule_languages.any? { |o| (languages - o.languages).empty? && !o.negative_rule }
-    language_negative_match = tool_group.rule_languages.any? { |o| !(languages - o.languages).empty? && o.negative_rule }
-    return false unless negative_rule ? language_negative_match : language_positive_match
+    if tool_group.rule_languages.any?
+      negative_rule = tool_group.rule_languages.any?(&:negative_rule)
+      language_positive_match = tool_group.rule_languages.any? { |o| (languages - o.languages).empty? && !o.negative_rule }
+      language_negative_match = tool_group.rule_languages.any? { |o| !(languages - o.languages).empty? && o.negative_rule }
+      return false unless negative_rule ? language_negative_match : language_positive_match
+    end
 
-    # Rule Praxes - Openness
-    openness_positive_match = tool_group.rule_praxes.any? { |o| o.openness.include?(openness) && !o.negative_rule }
-    openness_negative_match = tool_group.rule_praxes.any? { |o| o.openness.include?(openness) && o.negative_rule }
-    return false if !openness_positive_match || openness_negative_match
+    # Rule Praxes
+    if tool_group.rule_praxes.any?
+      # Openness
+      openness_positive_match = tool_group.rule_praxes.any? { |o| o.openness.include?(openness) && !o.negative_rule }
+      openness_negative_match = tool_group.rule_praxes.any? { |o| o.openness.include?(openness) && o.negative_rule }
+      return false if !openness_positive_match || openness_negative_match
 
-    # Rule Praxes - Confidence
-    confidence_positive_match = tool_group.rule_praxes.any? { |o| o.confidence.include?(confidence) && !o.negative_rule }
-    confidence_negative_match = tool_group.rule_praxes.any? { |o| o.confidence.include?(confidence) && o.negative_rule }
-    return false if !confidence_positive_match || confidence_negative_match
+      # Confidence
+      confidence_positive_match = tool_group.rule_praxes.any? { |o| o.confidence.include?(confidence) && !o.negative_rule }
+      confidence_negative_match = tool_group.rule_praxes.any? { |o| o.confidence.include?(confidence) && o.negative_rule }
+      return false if !confidence_positive_match || confidence_negative_match
+    end
 
     true
   end

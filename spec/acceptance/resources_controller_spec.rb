@@ -652,7 +652,7 @@ resource "Resources" do
   def delete_all_rules
     RuleCountry.delete_all
     RuleLanguage.delete_all
-    RulePraxis.delete_all    
+    RulePraxis.delete_all
   end
 
   RSpec::Matchers.define :resource_id do |id|
