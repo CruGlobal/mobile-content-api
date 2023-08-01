@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 class ToolFilterService
-
   def initialize(params)
     @params = params
   end
@@ -14,7 +13,7 @@ class ToolFilterService
   end
 
   private
-  
+
   def order_results(grouped_array)
     result = grouped_array.map do |key, values|
       counter = values.size
