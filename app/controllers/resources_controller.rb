@@ -76,8 +76,8 @@ class ResourcesController < ApplicationController
     openness = params["openness"].to_i
     confidence = params["confidence"].to_i
 
-    return true if single_language_rule(tool_group, languages)
     return true if no_rules_for(tool_group)
+    return true if language_rule(tool_group, languages)
 
     # Rule Countries
     if country
@@ -113,14 +113,14 @@ class ResourcesController < ApplicationController
       tool_group.rule_countries.none?
   end
 
-  # Returns true if the tool group has a single rule with a language
+  # Returns true if the tool group has a single rule with a language/s
   # present in the 'languages' array, otherwise returns false.
-  def single_language_rule(tool_group, languages)
+  def language_rule(tool_group, languages)
     return false unless tool_group.rule_languages.one?
-    return false unless tool_group.rule_languages.first.languages.one?
+    return false unless tool_group.rule_praxes.none? || tool_group.rule_countries.none?
 
-    rule_language = tool_group.rule_languages.first.languages.first
-    languages.include?(rule_language)
+    rule_languages = tool_group.rule_languages.first.languages
+    (rule_languages & languages).any?
   end
 
   def cached_index_json

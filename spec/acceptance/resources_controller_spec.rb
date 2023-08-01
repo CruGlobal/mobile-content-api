@@ -84,31 +84,72 @@ resource "Resources" do
       ResourceToolGroup.create!(resource_id: resource_5.id, tool_group_id: tool_group_three.id, suggestions_weight: 1.2)
     end
 
-    context "when matching a tool group with single language rule" do
+    context "when matching a tool group with only language rule" do
       before do
-        RuleCountry.delete_all
-        RuleLanguage.delete_all
-        RulePraxis.delete_all
+        delete_all_rules
         ResourceToolGroup.delete_all
 
-        FactoryBot.create(:rule_language, tool_group: tool_group_five, languages: languages_fr)
+        FactoryBot.create(:rule_language, tool_group: tool_group_five, languages: languages_fr_en)
         ResourceToolGroup.create!(resource_id: resource_5.id, tool_group_id: tool_group_five.id, suggestions_weight: 1.2)
       end
 
-      it "return coincidence" do
-        do_request country: "mx", languages: languages_fr, openness: 5, confidence: 5
+      context "if matching none of languages defined in rule" do
+        it "does not return coincidences" do
+          do_request country: "mx", languages: languages_es
+
+          expect(status).to be(200)
+          expect(JSON.parse(response_body)["data"].count).to eql 0
+        end
+      end
+
+      context "if matching any of the languages defined in rule" do
+        it "return coincidences" do
+          do_request country: "mx", languages: languages_fr_it
+
+          expect(status).to be(200)
+          expect(JSON.parse(response_body)["data"].count).to eql 1
+        end
+      end
+
+      context "if matching at least one of languages defined in rule" do
+        it "return coincidences" do
+          do_request country: "mx", languages: languages_fr
+
+          expect(status).to be(200)
+          expect(JSON.parse(response_body)["data"].count).to eql 1
+        end
+      end
+
+      context "if matching all of languages defined in rule" do
+        it "return coincidences" do
+          do_request country: "mx", languages: languages_fr_en
+
+          expect(status).to be(200)
+          expect(JSON.parse(response_body)["data"].count).to eql 1
+        end
+      end
+    end
+
+    context "when not matching a tool group with only language rule" do
+      before do
+        delete_all_rules
+        ResourceToolGroup.delete_all
+
+        FactoryBot.create(:rule_language, tool_group: tool_group_five, languages: languages_fr_en)
+        ResourceToolGroup.create!(resource_id: resource_5.id, tool_group_id: tool_group_five.id, suggestions_weight: 1.2)
+      end
+
+      it "should not return coincidences" do
+        do_request country: "mx", languages: languages_it
 
         expect(status).to be(200)
-        expect(JSON.parse(response_body)["data"]).not_to be_nil
-        expect(JSON.parse(response_body)["data"].count).to eql 1
+        expect(JSON.parse(response_body)["data"].count).to eql 0
       end
     end
 
     context "when matching a tool group without rules" do
       before do
-        RuleCountry.delete_all
-        RuleLanguage.delete_all
-        RulePraxis.delete_all
+        delete_all_rules
         ResourceToolGroup.delete_all
 
         # Tool group five with no rules
@@ -119,16 +160,13 @@ resource "Resources" do
         do_request country: "fr", languages: languages_fr, openness: 1, confidence: 2
 
         expect(status).to be(200)
-        expect(JSON.parse(response_body)["data"]).not_to be_nil
         expect(JSON.parse(response_body)["data"].count).to eql 1
       end
     end
 
     context "when matching tool groups including one without rules" do
       before do
-        RuleCountry.delete_all
-        RuleLanguage.delete_all
-        RulePraxis.delete_all
+        delete_all_rules
         ResourceToolGroup.where(tool_group_id: [tool_group_one.id, tool_group_three.id]).delete_all
 
         # Tool group five with no rules
@@ -139,7 +177,6 @@ resource "Resources" do
         do_request country: "fr", languages: languages_fr, openness: 1, confidence: 2
 
         expect(status).to be(200)
-        expect(JSON.parse(response_body)["data"]).not_to be_nil
         expect(JSON.parse(response_body)["data"].count).to eql 3
       end
     end
@@ -164,7 +201,6 @@ resource "Resources" do
         # ]
 
         expect(status).to be(200)
-        expect(JSON.parse(response_body)["data"]).not_to be_nil
         expect(JSON.parse(response_body)["data"].count).to eql 5
         expect(JSON.parse(response_body)["data"][0]["attributes"]["name"]).to eql "Knowing God Personally"
         expect(JSON.parse(response_body)["data"][1]["attributes"]["name"]).to eql "metatool"
@@ -185,7 +221,6 @@ resource "Resources" do
 
         expect(status).to be(200)
 
-        expect(JSON.parse(response_body)["data"]).not_to be_nil
         expect(JSON.parse(response_body)["data"].count).to eql 5
       end
 
@@ -289,7 +324,6 @@ resource "Resources" do
           do_request country: "fr", languages: languages_it
 
           expect(status).to be(200)
-          expect(JSON.parse(response_body)["data"]).not_to be_nil
           expect(JSON.parse(response_body)["data"].count).to eql 0
         end
       end
@@ -303,7 +337,6 @@ resource "Resources" do
           do_request country: "fr", languages: languages_es, openness: 1, confidence: 2
 
           expect(status).to be(200)
-          expect(JSON.parse(response_body)["data"]).not_to be_nil
           expect(JSON.parse(response_body)["data"].count).to eql 5
         end
       end
@@ -317,7 +350,6 @@ resource "Resources" do
           do_request country: "fr", languages: languages_fr_en
 
           expect(status).to be(200)
-          expect(JSON.parse(response_body)["data"]).not_to be_nil
           expect(JSON.parse(response_body)["data"].count).to eql 0
         end
       end
@@ -327,7 +359,6 @@ resource "Resources" do
           do_request country: "fr", languages: languages_it
 
           expect(status).to be(200)
-          expect(JSON.parse(response_body)["data"]).not_to be_nil
           expect(JSON.parse(response_body)["data"].count).to eql 0
         end
       end
@@ -342,7 +373,6 @@ resource "Resources" do
         do_request country: "fr", languages: languages_fr_en
 
         expect(status).to be(200)
-        expect(JSON.parse(response_body)["data"]).not_to be_nil
         expect(JSON.parse(response_body)["data"].count).to eql 0
       end
     end
@@ -356,7 +386,6 @@ resource "Resources" do
         do_request country: "gb", languages: languages_fr_en
 
         expect(status).to be(200)
-        expect(JSON.parse(response_body)["data"]).not_to be_nil
         expect(JSON.parse(response_body)["data"].count).to eql 0
       end
     end
@@ -376,7 +405,6 @@ resource "Resources" do
           do_request country: "gb", languages: languages_fr_en
 
           expect(status).to be(200)
-          expect(JSON.parse(response_body)["data"]).not_to be_nil
           expect(JSON.parse(response_body)["data"].count).to eql 0
         end
       end
@@ -390,7 +418,6 @@ resource "Resources" do
           do_request country: "fr", languages: languages_fr_es, openness: 1, confidence: 2
 
           expect(status).to be(200)
-          expect(JSON.parse(response_body)["data"]).not_to be_nil
           expect(JSON.parse(response_body)["data"].count).to eql 5
         end
       end
@@ -620,6 +647,12 @@ resource "Resources" do
     page_client = double
     allow(page_client).to receive(:push_new_onesky_translation).with(false)
     allow(PageClient).to receive(:new).with(resource_id(resource_id), "en").and_return(page_client)
+  end
+
+  def delete_all_rules
+    RuleCountry.delete_all
+    RuleLanguage.delete_all
+    RulePraxis.delete_all    
   end
 
   RSpec::Matchers.define :resource_id do |id|
