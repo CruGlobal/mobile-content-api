@@ -47,7 +47,7 @@ class ToolFilterService
     confidence = params["filter"]["confidence"].to_i
 
     return true if no_rules_for(tool_group)
-    return true if language_rule(tool_group, languages)
+    return true if languages && language_rule(tool_group, languages)
 
     # Rule Countries
     if tool_group.rule_countries.any?
@@ -61,7 +61,7 @@ class ToolFilterService
     end
 
     # Rule Languages
-    if tool_group.rule_languages.any?
+    if tool_group.rule_languages.any? && languages
       negative_rule = tool_group.rule_languages.any?(&:negative_rule)
       language_positive_match = tool_group.rule_languages.any? { |o| (languages - o.languages).empty? && !o.negative_rule }
       language_negative_match = tool_group.rule_languages.any? { |o| !(languages - o.languages).empty? && o.negative_rule }
@@ -69,16 +69,22 @@ class ToolFilterService
     end
 
     # Rule Praxes
-    if tool_group.rule_praxes.any?
+    if (openness || confidence) && tool_group.rule_praxes.any?
       # Openness
-      openness_positive_match = tool_group.rule_praxes.any? { |o| o.openness.include?(openness) && !o.negative_rule }
-      openness_negative_match = tool_group.rule_praxes.any? { |o| o.openness.include?(openness) && o.negative_rule }
-      return false if !openness_positive_match || openness_negative_match
+      if openness
+        openness_positive_match = tool_group.rule_praxes.any? { |o| o.openness.include?(openness) && !o.negative_rule }
+        openness_negative_match = tool_group.rule_praxes.any? { |o| o.openness.include?(openness) && o.negative_rule }
+        return false if !openness_positive_match || openness_negative_match
+      end
 
       # Confidence
-      confidence_positive_match = tool_group.rule_praxes.any? { |o| o.confidence.include?(confidence) && !o.negative_rule }
-      confidence_negative_match = tool_group.rule_praxes.any? { |o| o.confidence.include?(confidence) && o.negative_rule }
-      return false if !confidence_positive_match || confidence_negative_match
+      if confidence
+        confidence_positive_match = tool_group.rule_praxes.any? { |o| o.confidence.include?(confidence) && !o.negative_rule }
+        confidence_negative_match = tool_group.rule_praxes.any? { |o| o.confidence.include?(confidence) && o.negative_rule }
+        return false if !confidence_positive_match || confidence_negative_match
+      end
+    elsif (openness || confidence) && !tool_group.rule_praxes.any?
+      return false
     end
 
     true
