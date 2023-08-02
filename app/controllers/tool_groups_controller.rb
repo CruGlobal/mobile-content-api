@@ -52,8 +52,11 @@ class ToolGroupsController < ApplicationController
 
   def destroy
     tool_group = ToolGroup.find(params[:id])
-    tool_group.destroy!
-    head :no_content
+    if tool_group.destroy!
+      head :no_content
+    else
+      head :not_found
+    end
   end
 
   def update
