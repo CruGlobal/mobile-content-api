@@ -48,7 +48,7 @@ class ToolFilterService
       confidence = params["filter"]["confidence"].to_i if params["filter"]["confidence"].present?
     end
 
-    if params.empty?
+    if country.nil? & languages.nil? & openness.nil? & confidence.nil?
       if no_rules_for(tool_group)
         return true
       else
