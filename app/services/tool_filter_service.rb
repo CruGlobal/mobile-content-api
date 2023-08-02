@@ -41,31 +41,47 @@ class ToolFilterService
   end
 
   def match_params(tool_group, params)
-    country = params["filter"]["country"]&.upcase
-    languages = params["filter"]["languages"]
-    openness = params["filter"]["openness"].to_i
-    confidence = params["filter"]["confidence"].to_i
+    if params.has_key?(:filter)
+      country = params["filter"]["country"]&.upcase if params["filter"]["country"].present?
+      languages = params["filter"]["language"] if params["filter"]["language"].present?
+      openness = params["filter"]["openness"].to_i if params["filter"]["openness"].present?
+      confidence = params["filter"]["confidence"].to_i if params["filter"]["confidence"].present?
+    end
+
+    if params.empty?
+      if no_rules_for(tool_group)
+        return true
+      else
+        return false
+      end
+    end
 
     return true if no_rules_for(tool_group)
-    return true if languages && language_rule(tool_group, languages)
 
     # Rule Countries
     if tool_group.rule_countries.any?
       if country
-        country_positive_match = tool_group.rule_countries.any? { |o| o.countries.include?(country) && !o.negative_rule }
-        country_negative_match = tool_group.rule_countries.any? { |o| o.countries.include?(country) && o.negative_rule }
-        return false if !country_positive_match || country_negative_match
+        if tool_group.rule_countries.any? { |o| o.countries.exclude?(country) && o.negative_rule }
+          return true
+        elsif tool_group.rule_countries.any? { |o| o.countries.include?(country) && o.negative_rule }
+          return false
+        elsif tool_group.rule_countries.any? { |o| o.countries.exclude?(country) && !o.negative_rule }
+          return false
+        end
       elsif tool_group.rule_countries.any?(&:negative_rule)
-        return false
+        return true
       end
     end
 
     # Rule Languages
     if tool_group.rule_languages.any? && languages
-      negative_rule = tool_group.rule_languages.any?(&:negative_rule)
-      language_positive_match = tool_group.rule_languages.any? { |o| (languages - o.languages).empty? && !o.negative_rule }
-      language_negative_match = tool_group.rule_languages.any? { |o| !(languages - o.languages).empty? && o.negative_rule }
-      return false unless negative_rule ? language_negative_match : language_positive_match
+      if tool_group.rule_languages.any? { |o| (languages & tool_group.rule_languages.first.languages).empty? && !o.negative_rule }
+        return false
+      elsif tool_group.rule_languages.any? { |o| !(languages - tool_group.rule_languages.first.languages).empty? && o.negative_rule }
+        return true
+      elsif tool_group.rule_languages.any? { |o| (languages - tool_group.rule_languages.first.languages).empty? && o.negative_rule }
+        return false
+      end
     end
 
     # Rule Praxes
@@ -94,15 +110,5 @@ class ToolFilterService
     tool_group.rule_languages.none? &&
       tool_group.rule_praxes.none? &&
       tool_group.rule_countries.none?
-  end
-
-  # Returns true if the tool group has a single rule with a language/s
-  # present in the 'languages' array, otherwise returns false.
-  def language_rule(tool_group, languages)
-    return false unless tool_group.rule_languages.one?
-    return false unless tool_group.rule_praxes.none? || tool_group.rule_countries.none?
-
-    rule_languages = tool_group.rule_languages.first.languages
-    (rule_languages & languages).any?
   end
 end
