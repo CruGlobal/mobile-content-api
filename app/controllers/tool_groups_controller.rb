@@ -39,8 +39,11 @@ class ToolGroupsController < ApplicationController
   end
 
   def delete_tool
-    resource_tool_group.destroy!
-    head :no_content
+    if resource_tool_group&.destroy!
+      head :no_content
+    else
+      head :not_found
+    end
   end
 
   def show
