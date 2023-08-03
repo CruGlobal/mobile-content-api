@@ -61,7 +61,7 @@ resource "Resources" do
     context "when matching a tool group with only language rule" do
       context "if matching none of languages defined in rule" do
         it "does not return coincidences" do
-          do_request "filter[country]": "fr", "filter[language]": languages_es
+          do_request "filter[language]": languages_es
 
           expect(status).to be(200)
           expect(JSON.parse(response_body)["data"].count).to eql 0
@@ -70,7 +70,7 @@ resource "Resources" do
 
       context "if matching any of the languages defined in rule" do
         it "return coincidences" do
-          do_request "filter[country]": "fr", "filter[language]": languages_fr_it
+          do_request "filter[language]": languages_fr_it
 
           expect(status).to be(200)
           expect(JSON.parse(response_body)["data"].count).to eql 5
@@ -79,7 +79,7 @@ resource "Resources" do
 
       context "if matching all of languages defined in rule" do
         it "return coincidences" do
-          do_request "filter[country]": "mx", "filter[language]": languages_fr_en
+          do_request "filter[language]": languages_fr_en
 
           expect(status).to be(200)
           expect(JSON.parse(response_body)["data"].count).to eql 5
@@ -91,7 +91,7 @@ resource "Resources" do
       it "return coincidence" do
         delete_all_rules
 
-        do_request "filter[country]": "fr", "filter[language]": languages_fr, "filter[openness]": 1, "filter[confidence]": 2
+        do_request
 
         expect(status).to be(200)
         expect(JSON.parse(response_body)["data"].count).to eql 5
@@ -163,6 +163,21 @@ resource "Resources" do
       end
     end
 
+    context "when not matching country rule cuz not passing country param" do
+      before do
+        delete_all_rules
+        FactoryBot.create(:rule_country, tool_group: tool_group_one, countries: countries_fr_us)
+      end
+
+      it "does not return coincidences" do
+        do_request
+
+        expect(status).to be(200)
+
+        expect(JSON.parse(response_body)["data"].count).to eql 0
+      end
+    end
+
     context "when matching country param contained in country rule with negative rule as false" do
       before do
         FactoryBot.create(:rule_country, tool_group: tool_group_one, countries: countries_fr_us)
@@ -175,16 +190,6 @@ resource "Resources" do
         expect(status).to be(200)
 
         expect(JSON.parse(response_body)["data"].count).to eql 5
-      end
-
-      context "plus not matching country rule cuz not passing in params" do
-        it "does not return coincidences" do
-          do_request "filter[country]": "fr"
-
-          expect(status).to be(200)
-
-          expect(JSON.parse(response_body)["data"].count).to eql 0
-        end
       end
 
       context "plus matching languages with negative rule as false" do

@@ -55,35 +55,24 @@ class ToolFilterService
     return true if no_rules_for(tool_group)
 
     # Rule Countries
-    if tool_group.rule_countries.any?
-      if country
-        if tool_group.rule_countries.any? do |o|
-          o.countries.exclude?(country) &&
-          o.negative_rule
-        end &&
-        tool_group.rule_languages.none? &&
-        tool_group.rule_praxes.none?
-          return true
-        elsif tool_group.rule_countries.any? { |o| o.countries.include?(country) && o.negative_rule }
-          return false
-        elsif tool_group.rule_countries.any? { |o| o.countries.exclude?(country) && !o.negative_rule }
-          return false
-        end
-      elsif tool_group.rule_countries.any?(&:negative_rule)
-        return true
+    if tool_group.rule_countries.any? && !country.nil?
+      if tool_group.rule_countries.any? { |o| o.countries.include?(country) && o.negative_rule }
+        return false
+      elsif tool_group.rule_countries.any? { |o| o.countries.exclude?(country) && !o.negative_rule }
+        return false
       end
+    elsif !tool_group.rule_countries.any? && !country.nil? && !tool_group.rule_languages.any?
+      return false
     end
 
     # Rule Languages
     if tool_group.rule_languages.any? && languages
       if tool_group.rule_languages.any? { |o| (languages & tool_group.rule_languages.first.languages).empty? && !o.negative_rule }
         return false
-      elsif tool_group.rule_languages.any? { |o| !(languages - tool_group.rule_languages.first.languages).empty? && o.negative_rule }
-        return true
       elsif tool_group.rule_languages.any? { |o| (languages - tool_group.rule_languages.first.languages).empty? && o.negative_rule }
         return false
       end
-    elsif tool_group.rule_languages.any? && languages.nil?
+    elsif tool_group.rule_languages.any? && !languages.nil?
       return false
     end
 
