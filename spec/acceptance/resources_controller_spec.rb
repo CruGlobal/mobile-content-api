@@ -177,6 +177,16 @@ resource "Resources" do
         expect(JSON.parse(response_body)["data"].count).to eql 5
       end
 
+      context "plus not matching country rule cuz not passing in params" do
+        it "does not return coincidences" do
+          do_request "filter[country]": "fr"
+
+          expect(status).to be(200)
+
+          expect(JSON.parse(response_body)["data"].count).to eql 0
+        end
+      end
+
       context "plus matching languages with negative rule as false" do
         it "return coincidences" do
           do_request "filter[country]": "fr", "filter[language]": languages_fr, "filter[openness]": 1, "filter[confidence]": 2

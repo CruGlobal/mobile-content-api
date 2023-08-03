@@ -82,6 +82,8 @@ class ToolFilterService
       elsif tool_group.rule_languages.any? { |o| (languages - tool_group.rule_languages.first.languages).empty? && o.negative_rule }
         return false
       end
+    elsif tool_group.rule_languages.any? && languages.nil?
+      return false
     end
 
     # Rule Praxes
