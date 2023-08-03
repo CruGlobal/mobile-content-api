@@ -57,7 +57,12 @@ class ToolFilterService
     # Rule Countries
     if tool_group.rule_countries.any?
       if country
-        if tool_group.rule_countries.any? { |o| o.countries.exclude?(country) && o.negative_rule }
+        if tool_group.rule_countries.any? do |o|
+          o.countries.exclude?(country) &&
+          o.negative_rule
+        end &&
+        tool_group.rule_languages.none? &&
+        tool_group.rule_praxes.none?
           return true
         elsif tool_group.rule_countries.any? { |o| o.countries.include?(country) && o.negative_rule }
           return false
