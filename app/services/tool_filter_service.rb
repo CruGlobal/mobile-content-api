@@ -49,11 +49,7 @@ class ToolFilterService
     end
 
     if country.nil? & languages.nil? & openness.nil? & confidence.nil?
-      if no_rules_for(tool_group)
-        return true
-      else
-        return false
-      end
+      return no_rules_for(tool_group)
     end
 
     return true if no_rules_for(tool_group)
