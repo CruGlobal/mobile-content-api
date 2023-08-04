@@ -48,12 +48,6 @@ class ToolFilterService
       confidence = params.dig("filter", "confidence")&.to_i
     end
 
-    if country.nil? & languages.nil? & openness.nil? & confidence.nil?
-      return no_rules_for(tool_group)
-    end
-
-    return true if no_rules_for(tool_group)
-
     # Country Rules
     if tool_group.rule_countries.any? { |o| o.negative_rule && o.countries.include?(country) }
       return false
@@ -80,11 +74,5 @@ class ToolFilterService
     end
 
     true
-  end
-
-  def no_rules_for(tool_group)
-    tool_group.rule_languages.none? &&
-      tool_group.rule_praxes.none? &&
-      tool_group.rule_countries.none?
   end
 end
