@@ -147,19 +147,19 @@ resource "Resources" do
 
         # Result ordered
         # ----------------------------------
-        # Knowing God Personally         2.0
-        # Satisfied?                     1.5
-        # metatool                       1.15
-        # Knowing God Personally Variant 1.1
-        # Questions About God            1.1
+        # "Knowing God Personally"          2.0
+        # "metatool"                        1.76
+        # "Satisfied?"                      1.5
+        # "Questions About God"             1.4
+        # "Knowing God Personally Variant"  1.06
 
         expect(status).to be(200)
         expect(JSON.parse(response_body)["data"].count).to eql 5
         expect(JSON.parse(response_body)["data"][0]["attributes"]["name"]).to eql "Knowing God Personally"
-        expect(JSON.parse(response_body)["data"][1]["attributes"]["name"]).to eql "Satisfied?"
-        expect(JSON.parse(response_body)["data"][2]["attributes"]["name"]).to eql "metatool"
-        expect(JSON.parse(response_body)["data"][3]["attributes"]["name"]).to eql "Knowing God Personally Variant"
-        expect(JSON.parse(response_body)["data"][4]["attributes"]["name"]).to eql "Questions About God"
+        expect(JSON.parse(response_body)["data"][1]["attributes"]["name"]).to eql "metatool"
+        expect(JSON.parse(response_body)["data"][2]["attributes"]["name"]).to eql "Satisfied?"
+        expect(JSON.parse(response_body)["data"][3]["attributes"]["name"]).to eql "Questions About God"
+        expect(JSON.parse(response_body)["data"][4]["attributes"]["name"]).to eql "Knowing God Personally Variant"
       end
     end
 
@@ -253,7 +253,7 @@ resource "Resources" do
         context "plus matching openness" do
           context "with negative rule as false" do
             it "return coincidences" do
-              do_request "filter[country]": "fr", "filter[language]": languages_fr, "filter[openness]": 1
+              do_request "filter[country]": "fr", "filter[language]": languages_fr, "filter[openness]": 1, "filter[confidence]": 2
 
               expect(status).to be(200)
               expect(JSON.parse(response_body)["data"].count).to eql 5
