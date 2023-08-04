@@ -124,16 +124,19 @@ resource "Resources" do
       let!(:translation_attribute_1) { FactoryBot.create(:translation_attribute, key: "key1", value: "translation content 1", translation: translation) }
       let!(:translation_attribute_2) { FactoryBot.create(:translation_attribute, key: "key2", value: "translation content 2", translation: translation) }
 
-      it "return coincidence with :include key" do
+      it "return coincidences with :include and :fields key values for attributes expecified" do
         delete_all_rules
 
-        do_request include: "latest-translations"
+        do_request include: "latest-translations", "fields[resource]": "name,abbreviation"
 
         expect(status).to be(200)
         json_body = JSON.parse(response_body)
+
         expect(json_body["included"].count).to be(5)
         expect(json_body.dig("included").first&.dig("attributes", "attr-key1")).to eq("translation content 1")
         expect(json_body.dig("included").first&.dig("attributes", "attr-key2")).to eq("translation content 2")
+        expect(json_body.dig("data").first&.dig("attributes", "name")).to eq("metatool")
+        expect(json_body.dig("data").first&.dig("attributes", "abbreviation")).to eq("meta")
       end
     end
 
