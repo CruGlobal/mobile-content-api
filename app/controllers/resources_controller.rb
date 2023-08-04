@@ -35,7 +35,7 @@ class ResourcesController < ApplicationController
   end
 
   def suggestions
-    render json: ToolFilterService.new(params).call, status: :ok
+    render json: ToolFilterService.new(params).call, include: params[:include], fields: field_params, status: :ok
   end
 
   private

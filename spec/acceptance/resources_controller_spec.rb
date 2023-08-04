@@ -119,6 +119,24 @@ resource "Resources" do
       end
     end
 
+    context "when matching a tool group with :include in params" do
+      let!(:translation) { Resource.first.latest_translations.first }
+      let!(:translation_attribute_1) { FactoryBot.create(:translation_attribute, key: "key1", value: "translation content 1", translation: translation) }
+      let!(:translation_attribute_2) { FactoryBot.create(:translation_attribute, key: "key2", value: "translation content 2", translation: translation) }
+
+      it "return coincidence with :include key" do
+        delete_all_rules
+
+        do_request include: "latest-translations"
+
+        expect(status).to be(200)
+        json_body = JSON.parse(response_body)
+        expect(json_body["included"].count).to be(5)
+        expect(json_body.dig("included").first&.dig("attributes", "attr-key1")).to eq("translation content 1")
+        expect(json_body.dig("included").first&.dig("attributes", "attr-key2")).to eq("translation content 2")
+      end
+    end
+
     context "when matching tool groups including one without rules" do
       it "return coincidences ordered" do
         delete_all_rules
