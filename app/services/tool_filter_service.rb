@@ -42,10 +42,10 @@ class ToolFilterService
 
   def match_params(tool_group, params)
     if params.has_key?(:filter)
-      country = params["filter"]["country"]&.upcase if params["filter"]["country"].present?
-      languages = params["filter"]["language"] if params["filter"]["language"].present?
-      openness = params["filter"]["openness"].to_i if params["filter"]["openness"].present?
-      confidence = params["filter"]["confidence"].to_i if params["filter"]["confidence"].present?
+      country = params.dig("filter", "country")&.upcase
+      languages = params.dig("filter", "language")
+      openness = params.dig("filter", "openness")&.to_i
+      confidence = params.dig("filter", "confidence")&.to_i
     end
 
     if country.nil? & languages.nil? & openness.nil? & confidence.nil?
