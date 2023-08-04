@@ -94,6 +94,18 @@ resource "Resources" do
           expect(JSON.parse(response_body)["data"].count).to eql 0
         end
       end
+
+      context "if doing request without params when negative rule positive" do
+        before do
+          RuleLanguage.all.each { |obj| obj.update!(negative_rule: true) }
+        end
+        it "does not return coincidences" do
+          do_request
+
+          expect(status).to be(200)
+          expect(JSON.parse(response_body)["data"].count).to eql 5
+        end
+      end
     end
 
     context "when matching a tool group without rules" do

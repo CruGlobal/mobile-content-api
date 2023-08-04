@@ -56,7 +56,7 @@ class ToolFilterService
     # Language Rules
     if tool_group.rule_languages.any? { |o| !o.negative_rule && (languages & o.languages).empty? }
       return false
-    elsif tool_group.rule_languages.any? { |o| o.negative_rule && (languages - o.languages).empty? }
+    elsif !languages.empty? && tool_group.rule_languages.any? { |o| o.negative_rule && (languages - o.languages).empty? }
       return false
     end
 
