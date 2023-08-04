@@ -99,7 +99,7 @@ resource "Resources" do
         before do
           RuleLanguage.all.each { |obj| obj.update!(negative_rule: true) }
         end
-        it "does not return coincidences" do
+        it "return coincidences" do
           do_request
 
           expect(status).to be(200)
