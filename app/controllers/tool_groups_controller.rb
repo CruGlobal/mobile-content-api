@@ -31,8 +31,9 @@ class ToolGroupsController < ApplicationController
 
   def update_tool
     existing = resource_tool_group
+
     existing.update!(
-      resource_id: params[:data][:attributes]["resource-id"],
+      resource_id: params[:data][:relationships][:tool][:data][:id],
       suggestions_weight: params[:data][:attributes]["suggestions-weight"]
     )
     render json: existing, status: :accepted
@@ -66,7 +67,7 @@ class ToolGroupsController < ApplicationController
   private
 
   def resource_tool_group
-    ResourceToolGroup.where(id: params[:id])[0]
+    ResourceToolGroup.where(resource_id: params[:id], tool_group_id: params[:tool_group_id])[0]
   end
 
   def tool_groups_ordered_by_name
