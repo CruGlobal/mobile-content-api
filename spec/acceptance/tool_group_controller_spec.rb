@@ -114,19 +114,19 @@ resource "ToolGroups" do
 
     it "update tool group tool" do
       do_request id: id, tool_group_id: tool_group_id, data: {
-          "type": "tool-group-tool",
-          "attributes": {
-           "suggestions-weight": suggestions_weight
-          },
-          "relationships": {
-           "tool": {
-            "data": {
-             "type": "resource",
-             "id": id
+        type: "tool-group-tool",
+        attributes: {
+          "suggestions-weight": suggestions_weight
+        },
+        relationships: {
+          tool: {
+            data: {
+              type: "resource",
+              id: id
             }
-           }
           }
         }
+      }
 
       expect(status).to eq(202)
       expect(JSON.parse(response_body)["data"]).not_to be_nil
