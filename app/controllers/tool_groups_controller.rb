@@ -67,7 +67,7 @@ class ToolGroupsController < ApplicationController
   private
 
   def resource_tool_group
-    ResourceToolGroup.where(resource_id: params[:id], tool_group_id: params[:tool_group_id])[0]
+    ResourceToolGroup.where(id: params[:id], tool_group_id: params[:tool_group_id])[0]
   end
 
   def tool_groups_ordered_by_name

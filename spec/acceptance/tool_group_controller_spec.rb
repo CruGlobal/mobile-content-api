@@ -101,19 +101,15 @@ resource "ToolGroups" do
 
     let(:tool_group_id) { ToolGroup.first.id }
     let(:suggestions_weight) { 0.5 }
-    let(:id) { resource.id }
+    let(:relationship) { ResourceToolGroup.create!(resource_id: resource.id, tool_group_id: tool_group_id, suggestions_weight: 1) }
     let(:attrs) do
       {
         "suggestions-weight": suggestions_weight
       }
     end
 
-    before do
-      ResourceToolGroup.create!(resource_id: id, tool_group_id: tool_group_id, suggestions_weight: 1)
-    end
-
     it "update tool group tool" do
-      do_request id: id, tool_group_id: tool_group_id, data: {
+      do_request id: relationship.id, tool_group_id: tool_group_id, data: {
         type: "tool-group-tool",
         attributes: {
           "suggestions-weight": suggestions_weight
@@ -122,7 +118,7 @@ resource "ToolGroups" do
           tool: {
             data: {
               type: "resource",
-              id: id
+              id: resource.id
             }
           }
         }
@@ -136,15 +132,11 @@ resource "ToolGroups" do
 
   delete "tool-groups/:tool_group_id/tools/:id" do
     let(:tool_group_id) { ToolGroup.first.id }
-    let(:id) { resource.id }
+    let(:relationship) { ResourceToolGroup.create!(resource_id: resource.id, tool_group_id: tool_group_id, suggestions_weight: 1) }
     requires_authorization
 
-    before do
-      ResourceToolGroup.create!(resource_id: id, tool_group_id: tool_group_id, suggestions_weight: 1)
-    end
-
     it "delete tool_group" do
-      do_request id: id, tool_group_id: tool_group_id
+      do_request id: relationship.id, tool_group_id: tool_group_id
 
       expect(status).to be(204)
     end
