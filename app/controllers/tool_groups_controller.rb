@@ -32,22 +32,15 @@ class ToolGroupsController < ApplicationController
   def update_tool
     existing = resource_tool_group
 
-    if existing&.update!(
+    existing.update!(
       resource_id: params[:data][:relationships][:tool][:data][:id],
       suggestions_weight: params[:data][:attributes]["suggestions-weight"]
     )
-      render json: existing, status: :accepted
-    else
-      head :not_found
-    end
+    render json: existing, status: :accepted
   end
 
   def delete_tool
-    if resource_tool_group&.destroy!
-      head :no_content
-    else
-      head :not_found
-    end
+    resource_tool_group.destroy!
   end
 
   def show
@@ -70,7 +63,7 @@ class ToolGroupsController < ApplicationController
   private
 
   def resource_tool_group
-    ResourceToolGroup.where(id: params[:id], tool_group_id: params[:tool_group_id])[0]
+    ResourceToolGroup.where(tool_group_id: params[:tool_group_id]).find(params[:id])
   end
 
   def tool_groups_ordered_by_name
