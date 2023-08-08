@@ -37,9 +37,37 @@ class OktaAuthService < BaseAuthService
 
     # reimplement setup_user to search on sso_guid (from user_atts) instead of using remote_user_id
     def setup_user(remote_user_id, user_atts)
-      user = User.where(primary_key => user_atts[primary_key]).first_or_initialize
-      user.update!(user_atts)
-      user
+      message = ""
+      create_user = user_atts["create_user"]
+      user = User.where(primary_key => user_atts[primary_key])
+
+      if create_user == true
+        if user.empty?
+          user = User.new(primary_key => user_atts[primary_key])
+          user.update!(user_atts)
+        else
+          message = "User account already exists."
+        end
+      elsif create_user == false
+        if user.empty?
+          message = "User account not found."
+        else
+          user = User.new(primary_key => user_atts[primary_key])
+          user.update!(user_atts)
+        end
+      elsif create_user.nil?
+        user = User.where(primary_key => user_atts[primary_key]).first_or_initialize
+        user.update!(user_atts)
+      end
+
+      json = {}
+      json = if message == "User account not found."
+        json_errors("user_not_found", "User account not found.")
+      elsif message == "User account already exists."
+        json_errors("user_already_exists", "User account already exists.")
+      end
+
+      json.blank? ? user : json
     end
 
     def extract_user_atts(access_token, _decoded_token)
@@ -59,6 +87,16 @@ class OktaAuthService < BaseAuthService
         sso_guid: userinfo_payload["ssoguid"],
         gr_master_person_id: userinfo_payload["grMasterPersonId"]
       }.with_indifferent_access
+    end
+
+    def json_errors(code, detail)
+      {errors:
+        [
+          {
+            code: code,
+            detail: detail
+          }
+        ]}
     end
   end
 end
