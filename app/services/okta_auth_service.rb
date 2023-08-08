@@ -60,7 +60,6 @@ class OktaAuthService < BaseAuthService
         user.update!(user_atts)
       end
 
-      json = {}
       json = if message == "User account not found."
         json_errors("user_not_found", "User account not found.")
       elsif message == "User account already exists."
