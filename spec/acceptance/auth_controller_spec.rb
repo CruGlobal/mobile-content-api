@@ -374,7 +374,7 @@ resource "Auth" do
 
           it "refresh token matches an existing user" do
             expect do
-              do_request data: {type: type, attributes: {apple_refresh_token: apple_refresh_token}}
+              do_request data: {type: type, attributes: {apple_refresh_token: apple_refresh_token, create_user: true}}
             end.to_not change(User, :count)
 
             user.reload

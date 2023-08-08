@@ -2,7 +2,7 @@
 
 class AppleAuthService < BaseAuthService
   class << self
-    def find_user_by_refresh_token(refresh_token)
+    def find_user_by_refresh_token(refresh_token, create_user = nil)
       apple_id_client.refresh_token = refresh_token
       find_user
     end

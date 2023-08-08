@@ -15,7 +15,7 @@ class AuthController < ApplicationController
       user, message, apple_refresh_token = AppleAuthService.find_user_by_auth_code(data_attrs[:apple_auth_code], data_attrs[:apple_given_name], data_attrs[:apple_family_name], data_attrs[:create_user])
       AuthToken.new(user: user, apple_refresh_token: apple_refresh_token)
     when :apple_refresh
-      user = AppleAuthService.find_user_by_refresh_token(data_attrs[:apple_refresh_token])
+      user, message = AppleAuthService.find_user_by_refresh_token(data_attrs[:apple_refresh_token], data_attrs[:create_user])
       AuthToken.new(user: user)
     when :google
       user, message = GoogleAuthService.find_user_by_token(data_attrs[:google_id_token], data_attrs[:create_user])
