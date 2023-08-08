@@ -6,12 +6,13 @@ class BaseAuthService
   include HTTParty
 
   class << self
-    def find_user_by_token(access_token)
+    def find_user_by_token(access_token, create_user)
       decoded_token = decode_token(access_token)
       validate_token!(access_token, decoded_token)
       validate_expected_fields!(decoded_token)
 
       user_atts = extract_user_atts(access_token, decoded_token)
+      user_atts["create_user"] = create_user
       setup_user(remote_user_id(decoded_token), user_atts)
     rescue JSON::ParserError, JWT::DecodeError => e
       raise self::FailedAuthentication, "#{e.class.name}: #{e.message}"
@@ -26,9 +27,30 @@ class BaseAuthService
     end
 
     def setup_user(remote_user_id, user_atts)
-      user = User.where(primary_key => remote_user_id).first_or_initialize
-      user.update!(user_atts)
-      user
+      message = ""
+      create_user = user_atts["create_user"]
+      user = User.where(primary_key => remote_user_id)
+
+      if create_user == true
+        if user.empty?
+          user = User.new(primary_key => remote_user_id)
+          user.update!(user_atts)
+        else
+          return user, "User account already exists."
+        end
+      elsif create_user == false
+        if user.empty?
+          return nil, "User account not found."
+        else
+          user = User.new(primary_key => remote_user_id)
+          user.update!(user_atts)
+        end
+      elsif create_user.nil?
+        user = User.where(primary_key => remote_user_id).first_or_initialize
+        user.update!(user_atts)
+      end
+
+      [user, message]
     end
 
     def service_name
