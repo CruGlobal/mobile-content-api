@@ -38,23 +38,14 @@ class OktaAuthService < BaseAuthService
     # reimplement setup_user to search on sso_guid (from user_atts) instead of using remote_user_id
     def setup_user(remote_user_id, user_atts)
       create_user = user_atts["create_user"]
-      user = User.where(primary_key => user_atts[primary_key])
+      users = User.where(primary_key => user_atts[primary_key])
 
-      if create_user == true
-        if user.empty?
-          user = User.new(primary_key => user_atts[primary_key])
-          user.update!(user_atts)
-        else
-          raise self::UserAlreadyExists
-        end
-      elsif create_user == false
-        if user.empty?
-          raise self::UserNotFound
-        else
-          user = User.new(primary_key => user_atts[primary_key])
-          user.update!(user_atts)
-        end
-      elsif create_user.nil?
+      raise self::UserAlreadyExists if create_user && !users.empty?
+      raise self::UserNotFound if !create_user.nil? && create_user && users.empty?
+
+      user = new_user(user_atts, primary_key) unless create_user.nil?
+
+      if create_user.nil?
         user = User.where(primary_key => user_atts[primary_key]).first_or_initialize
         user.update!(user_atts)
       end
@@ -66,6 +57,12 @@ class OktaAuthService < BaseAuthService
     rescue BaseAuthService::UserNotFound => e
       render json: json_errors(e.code, e.message), status: :bad_request
       nil
+    end
+
+    def new_user(user_atts, primary_key)
+      user = User.new(primary_key => user_atts[primary_key])
+      user.update!(user_atts)
+      user
     end
 
     def extract_user_atts(access_token, _decoded_token)
