@@ -51,12 +51,6 @@ class OktaAuthService < BaseAuthService
       end
 
       user
-    rescue BaseAuthService::UserAlreadyExists => e
-      render json: json_errors(e.code, e.message), status: :bad_request
-      nil
-    rescue BaseAuthService::UserNotFound => e
-      render json: json_errors(e.code, e.message), status: :bad_request
-      nil
     end
 
     def new_user(user_atts, primary_key)
