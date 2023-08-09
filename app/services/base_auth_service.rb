@@ -30,25 +30,22 @@ class BaseAuthService
       create_user = user_atts["create_user"]
       user = User.where(primary_key => remote_user_id)
 
-      if create_user == true
-        if user.empty?
-          user = User.new(primary_key => remote_user_id)
-          user.update!(user_atts)
-        else
-          raise self::UserAlreadyExists
-        end
-      elsif create_user == false
-        if user.empty?
-          raise self::UserNotFound
-        else
-          user = User.new(primary_key => remote_user_id)
-          user.update!(user_atts)
-        end
-      elsif create_user.nil?
+      raise self::UserAlreadyExists if create_user && !user.empty?
+      raise self::UserNotFound if !create_user && user.empty?
+
+      user = new_user(user_atts, primary_key, remote_user_id) unless create_user.nil?
+
+      if create_user.nil?
         user = User.where(primary_key => remote_user_id).first_or_initialize
         user.update!(user_atts)
       end
 
+      user
+    end
+
+    def new_user(user_atts, primary_key, remote_user_id)
+      user = User.new(primary_key => remote_user_id)
+      user.update!(user_atts)
       user
     end
 
