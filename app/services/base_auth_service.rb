@@ -27,7 +27,6 @@ class BaseAuthService
     end
 
     def setup_user(remote_user_id, user_atts)
-      message = ""
       create_user = user_atts["create_user"]
       user = User.where(primary_key => remote_user_id)
 
@@ -36,11 +35,11 @@ class BaseAuthService
           user = User.new(primary_key => remote_user_id)
           user.update!(user_atts)
         else
-          return user, "User account already exists."
+          raise self::UserAlreadyExists
         end
       elsif create_user == false
         if user.empty?
-          return nil, "User account not found."
+          raise self::UserNotFound
         else
           user = User.new(primary_key => remote_user_id)
           user.update!(user_atts)
@@ -50,7 +49,7 @@ class BaseAuthService
         user.update!(user_atts)
       end
 
-      [user, message]
+      user
     end
 
     def service_name
@@ -84,5 +83,23 @@ class BaseAuthService
   end
 
   class FailedAuthentication < StandardError
+  end
+
+  class UserNotFound < StandardError
+    attr_reader :code
+
+    def initialize(message = "User account not found.")
+      super(message)
+      @code = "user_not_found"
+    end
+  end
+
+  class UserAlreadyExists < StandardError
+    attr_reader :code
+
+    def initialize(message = "User account already exists.")
+      super(message)
+      @code = "user_already_exists"
+    end
   end
 end

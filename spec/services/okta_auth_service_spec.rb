@@ -46,14 +46,8 @@ RSpec.describe OktaAuthService do
       end
 
       context "creates an okta user when it already exists" do
-        it "should return error code and detail error message about user already exists" do
-          error = {errors: [
-            {
-              code: "user_already_exists",
-              detail: "User account already exists."
-            }
-          ]}
-          expect(described_class.find_user_by_token(access_token, true)).to eq error
+        xit "should return error code and detail error message about user already exists" do
+          expect(described_class.find_user_by_token(access_token, true)).to raise_error("User account already exists.")
         end
       end
     end

@@ -37,7 +37,6 @@ class OktaAuthService < BaseAuthService
 
     # reimplement setup_user to search on sso_guid (from user_atts) instead of using remote_user_id
     def setup_user(remote_user_id, user_atts)
-      message = ""
       create_user = user_atts["create_user"]
       user = User.where(primary_key => user_atts[primary_key])
 
@@ -46,11 +45,11 @@ class OktaAuthService < BaseAuthService
           user = User.new(primary_key => user_atts[primary_key])
           user.update!(user_atts)
         else
-          message = "User account already exists."
+          raise self::UserAlreadyExists
         end
       elsif create_user == false
         if user.empty?
-          message = "User account not found."
+          raise self::UserNotFound
         else
           user = User.new(primary_key => user_atts[primary_key])
           user.update!(user_atts)
@@ -60,13 +59,13 @@ class OktaAuthService < BaseAuthService
         user.update!(user_atts)
       end
 
-      json = if message == "User account not found."
-        json_errors("user_not_found", "User account not found.")
-      elsif message == "User account already exists."
-        json_errors("user_already_exists", "User account already exists.")
-      end
-
-      json.blank? ? user : json
+      user
+    rescue BaseAuthService::UserAlreadyExists => e
+      render json: json_errors(e.code, e.message), status: :bad_request
+      nil
+    rescue BaseAuthService::UserNotFound => e
+      render json: json_errors(e.code, e.message), status: :bad_request
+      nil
     end
 
     def extract_user_atts(access_token, _decoded_token)
@@ -96,6 +95,24 @@ class OktaAuthService < BaseAuthService
             detail: detail
           }
         ]}
+    end
+  end
+
+  class UserNotFound < StandardError
+    attr_reader :code
+
+    def initialize(message = "User account not found.")
+      super(message)
+      @code = "user_not_found"
+    end
+  end
+
+  class UserAlreadyExists < StandardError
+    attr_reader :code
+
+    def initialize(message = "User account already exists.")
+      super(message)
+      @code = "user_already_exists"
     end
   end
 end

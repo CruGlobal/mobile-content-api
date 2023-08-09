@@ -9,8 +9,8 @@ class AppleAuthService < BaseAuthService
 
     def find_user_by_auth_code(apple_auth_code, apple_given_name = nil, apple_family_name = nil, create_user = nil)
       apple_id_client.authorization_code = apple_auth_code
-      user, message = find_user(apple_given_name, apple_family_name, create_user)
-      [user, message, @response.refresh_token]
+      user = find_user(apple_given_name, apple_family_name, create_user)
+      [user, @response.refresh_token]
     end
 
     def find_user(apple_given_name = nil, apple_family_name = nil, create_user = nil)
