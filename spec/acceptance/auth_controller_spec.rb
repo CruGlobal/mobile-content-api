@@ -128,10 +128,10 @@ resource "Auth" do
         end
       end
 
-      context "user already exists" do
+      context "when user already exists" do
         let!(:user) { FactoryBot.create(:user, facebook_user_id: "10158730817232041", email: "daniel.frett@gmail.com", first_name: "First", last_name: "Last", sso_guid: "12345") }
 
-        it "matches an existing user and passing flag :create_user in nil" do
+        it "matches an existing user and passing flag ':create_user' in 'nil' it succeeds" do
           expect do
             do_request data: {type: type, attributes: {facebook_access_token: "authtoken", create_user: nil}}
           end.to_not change(User, :count)
@@ -148,7 +148,7 @@ resource "Auth" do
           expect(data["attributes"]["user-id"]).to eq(user.id)
         end
 
-        it "matches an existing user and passing flag :create_user in true" do
+        it "matches an existing user and passing flag ':create_user' in 'true' returns error code ':user_already_exists'" do
           expect do
             do_request data: {type: type, attributes: {facebook_access_token: "authtoken", create_user: true}}
           end.to_not change(User, :count)
@@ -225,25 +225,10 @@ resource "Auth" do
         allow(Google::Auth::IDTokens).to receive(:verify_oidc).and_return(verify_oidc_response)
       end
 
-      it "creates a google user" do
-        expect do
-          do_request data: {type: type, attributes: {google_id_token: google_id_token, create_user: true}}
-        end.to change(User, :count).by(1)
-
-        user = User.last
-        expect(user.email).to eq("andrewroth@gmail.com")
-        expect(user.first_name).to eq("Andrew")
-        expect(user.last_name).to eq("Roth")
-
-        expect(status).to be(201)
-        data = JSON.parse(response_body)["data"]
-        expect(data["attributes"]["user-id"]).to eq(user.id)
-      end
-
-      context "user already exists" do
+      context "when user already exists" do
         let!(:user) { FactoryBot.create(:user, google_user_id: google_user_id) }
 
-        it "matches an existing user" do
+        it "matches an existing user and passing flag 'create_user: true' it returns error 'user_already_exists'" do
           expect do
             do_request data: {type: type, attributes: {google_id_token: google_id_token, create_user: true}}
           end.to_not change(User, :count)
@@ -252,6 +237,21 @@ resource "Auth" do
           response = JSON.parse(response_body)
           expect(response["errors"][0]["code"]).to eq("user_already_exists")
           expect(response["errors"][0]["detail"]).to eq("User account already exists.")
+        end
+
+        it "matches an existing user and passing flag ':create_user' in 'nil' it succeeds" do
+          expect do
+            do_request data: {type: type, attributes: {google_id_token: google_id_token, create_user: nil}}
+          end.to_not change(User, :count)
+
+          user = User.last
+          expect(user.email).to eq("andrewroth@gmail.com")
+          expect(user.first_name).to eq("Andrew")
+          expect(user.last_name).to eq("Roth")
+
+          expect(status).to be(201)
+          data = JSON.parse(response_body)["data"]
+          expect(data["attributes"]["user-id"]).to eq(user.id)
         end
       end
 
@@ -265,6 +265,21 @@ resource "Auth" do
           response = JSON.parse(response_body)
           expect(response["errors"][0]["code"]).to eq("user_not_found")
           expect(response["errors"][0]["detail"]).to eq("User account not found.")
+        end
+
+        it "passing flag 'create_user: true' it creates a google user" do
+          expect do
+            do_request data: {type: type, attributes: {google_id_token: google_id_token, create_user: true}}
+          end.to change(User, :count).by(1)
+
+          user = User.last
+          expect(user.email).to eq("andrewroth@gmail.com")
+          expect(user.first_name).to eq("Andrew")
+          expect(user.last_name).to eq("Roth")
+
+          expect(status).to be(201)
+          data = JSON.parse(response_body)["data"]
+          expect(data["attributes"]["user-id"]).to eq(user.id)
         end
       end
 
@@ -337,8 +352,23 @@ resource "Auth" do
           expect(data["attributes"]["apple-refresh-token"]).to eq(verify_auth_code_response["refresh_token"])
         end
 
-        context "creates an apple user when it already exists" do
-          it "should return error code and detail error message about user already exists" do
+        context "when user does not exists" do
+          it "passing flag 'create_user: false' it returns error 'user_not_found'" do
+            expect do
+              do_request data: {type: type, attributes: {apple_auth_code: apple_auth_code, apple_given_name: "Levi", apple_family_name: "Eggert", create_user: false}}
+            end.to change(User, :count).by(0)
+
+            expect(status).to be(400)
+            response = JSON.parse(response_body)
+            expect(response["errors"][0]["code"]).to eq("user_not_found")
+            expect(response["errors"][0]["detail"]).to eq("User account not found.")
+          end
+        end
+
+        context "when user already exists" do
+          let!(:user) { FactoryBot.create(:user, apple_user_id: apple_user_id, first_name: "Levi", last_name: "Eggert") }
+
+          it "matches an existing user and passing flag 'create_user: true' it returns error 'user_already_exists'" do
             FactoryBot.create(:user, email: "levi.eggert@gmail.com", apple_user_id: "001361.a5cafb7f42c845b8809c48d0f2b00889.1804")
 
             expect do
@@ -350,10 +380,6 @@ resource "Auth" do
             expect(response["errors"][0]["code"]).to eq("user_already_exists")
             expect(response["errors"][0]["detail"]).to eq("User account already exists.")
           end
-        end
-
-        context "user already exists" do
-          let!(:user) { FactoryBot.create(:user, apple_user_id: apple_user_id, first_name: "Levi", last_name: "Eggert") }
 
           it "auth code matches an existing user" do
             expect do
