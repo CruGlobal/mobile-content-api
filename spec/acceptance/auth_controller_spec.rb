@@ -267,7 +267,7 @@ resource "Auth" do
           expect(response["errors"][0]["detail"]).to eq("User account not found.")
         end
 
-        it "passing flag 'create_user: true' it creates a google user" do
+        it "passing flag 'create_user: true' it succeeds" do
           expect do
             do_request data: {type: type, attributes: {google_id_token: google_id_token, create_user: true}}
           end.to change(User, :count).by(1)
@@ -379,6 +379,23 @@ resource "Auth" do
             response = JSON.parse(response_body)
             expect(response["errors"][0]["code"]).to eq("user_already_exists")
             expect(response["errors"][0]["detail"]).to eq("User account already exists.")
+          end
+
+          it "matches an existing user and passing flag ':create_user' in 'nil' it succeeds" do
+            expect do
+              do_request data: {type: type, attributes: {apple_auth_code: apple_auth_code, apple_given_name: "Levi", apple_family_name: "Eggert", create_user: nil}}
+            end.to change(User, :count).by(0)
+
+            user = User.last
+            expect(user.email).to eq("levi.eggert@gmail.com")
+            expect(user.first_name).to eq("Levi")
+            expect(user.last_name).to eq("Eggert")
+
+            expect(status).to be(201)
+            data = JSON.parse(response_body)["data"]
+            expect(data["attributes"]["user-id"]).to eq(user.id)
+            expect(data["attributes"]["token"]).to match(jwt_regex)
+            expect(data["attributes"]["apple-refresh-token"]).to eq(verify_auth_code_response["refresh_token"])
           end
 
           it "auth code matches an existing user" do
