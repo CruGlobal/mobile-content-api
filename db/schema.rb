@@ -162,6 +162,8 @@ ActiveRecord::Schema.define(version: 2023_07_19_224248) do
     t.boolean "is_translatable", default: false
     t.index ["key", "resource_id", "language_id"], name: "index_language_attributes_unique", unique: true
     t.index ["resource_id"], name: "index_language_attributes_on_resource_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "languages", id: :serial, force: :cascade do |t|
