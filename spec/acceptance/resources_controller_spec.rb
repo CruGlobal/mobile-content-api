@@ -45,6 +45,8 @@ resource "Resources" do
   let(:confidence_2_3) { [2, 3] }
   let(:confidence_3_4) { [3, 4] }
 
+  let(:resources_result) {["metatool", "Knowing God Personally", "Questions About God", "Satisfied?", "Knowing God Personally Variant"].sort}
+
   get "resources/suggestions" do
     before(:each) do
       # FactoryBot.create(:rule_country, tool_group: tool_group_one, countries: countries_fr_us)
@@ -60,7 +62,7 @@ resource "Resources" do
 
     context "when matching a tool group with only language rule" do
       context "if matching none of languages defined in rule" do
-        it "does not return coincidences" do
+        it "does not return suggested resources" do
           do_request "filter[language]": languages_es
 
           expect(status).to be(200)
@@ -69,25 +71,30 @@ resource "Resources" do
       end
 
       context "if matching any of the languages defined in rule" do
-        it "return coincidences" do
+        it "return suggested resources" do
           do_request "filter[language]": languages_fr_it
 
           expect(status).to be(200)
-          expect(JSON.parse(response_body)["data"].count).to eql 5
+          data = JSON.parse(response_body)["data"]
+
+          expect(data.count).to eql 5
+          expect(resources_matched(data)).to eql resources_result
         end
       end
 
       context "if matching all of languages defined in rule" do
-        it "return coincidences" do
+        it "return suggested resources" do
           do_request "filter[language]": languages_fr_en
 
           expect(status).to be(200)
-          expect(JSON.parse(response_body)["data"].count).to eql 5
+          data = JSON.parse(response_body)["data"]
+          expect(data.count).to eql 5
+          expect(resources_matched(data)).to eql resources_result
         end
       end
 
       context "if doing request without params" do
-        it "does not return coincidences" do
+        it "does not return suggested resources" do
           do_request
 
           expect(status).to be(200)
@@ -99,11 +106,14 @@ resource "Resources" do
         before do
           RuleLanguage.all.each { |obj| obj.update!(negative_rule: true) }
         end
-        it "return coincidences" do
+        it "return suggested resources" do
           do_request
 
           expect(status).to be(200)
-          expect(JSON.parse(response_body)["data"].count).to eql 5
+
+          data = JSON.parse(response_body)["data"]
+          expect(data.count).to eql 5
+          expect(resources_matched(data)).to eql resources_result
         end
       end
     end
@@ -115,7 +125,10 @@ resource "Resources" do
         do_request
 
         expect(status).to be(200)
-        expect(JSON.parse(response_body)["data"].count).to eql 5
+        data = JSON.parse(response_body)["data"]
+        expect(data.count).to eql 5
+
+        expect(resources_matched(data)).to eql resources_result
       end
     end
 
@@ -124,7 +137,7 @@ resource "Resources" do
       let!(:translation_attribute_1) { FactoryBot.create(:translation_attribute, key: "key1", value: "translation content 1", translation: translation) }
       let!(:translation_attribute_2) { FactoryBot.create(:translation_attribute, key: "key2", value: "translation content 2", translation: translation) }
 
-      it "return coincidences with :include and :fields key values for attributes expecified" do
+      it "return suggested resources with :include and :fields key values for attributes expecified" do
         delete_all_rules
 
         do_request include: "latest-translations", "fields[resource]": "name,abbreviation"
@@ -141,13 +154,15 @@ resource "Resources" do
     end
 
     context "when matching tool groups including one without rules" do
-      it "return coincidences ordered" do
+      it "return suggested resources ordered" do
         delete_all_rules
 
         do_request "filter[country]": "fr", "filter[language]": languages_fr, "filter[openness]": 1, "filter[confidence]": 2
 
         expect(status).to be(200)
-        expect(JSON.parse(response_body)["data"].count).to eql 5
+        data = JSON.parse(response_body)["data"]
+        expect(data.count).to eql 5
+        expect(resources_matched(data)).to eql resources_result
       end
     end
 
@@ -184,7 +199,7 @@ resource "Resources" do
         ResourceToolGroup.create!(resource_id: resource_5.id, tool_group_id: tool_group_three.id, suggestions_weight: 1.2)
       end
 
-      it "return coincidences ordered" do
+      it "return suggested resources ordered" do
         do_request "filter[country]": "fr", "filter[language]": languages_fr, "filter[openness]": 1, "filter[confidence]": 2
 
         # Result ordered
@@ -196,7 +211,9 @@ resource "Resources" do
         # "Knowing God Personally Variant"  1.06
 
         expect(status).to be(200)
-        expect(JSON.parse(response_body)["data"].count).to eql 5
+                  data = JSON.parse(response_body)["data"]
+          expect(data.count).to eql 5
+
         expect(JSON.parse(response_body)["data"][0]["attributes"]["name"]).to eql "Knowing God Personally"
         expect(JSON.parse(response_body)["data"][1]["attributes"]["name"]).to eql "metatool"
         expect(JSON.parse(response_body)["data"][2]["attributes"]["name"]).to eql "Satisfied?"
@@ -211,7 +228,7 @@ resource "Resources" do
         FactoryBot.create(:rule_country, tool_group: tool_group_one, countries: countries_fr_us)
       end
 
-      it "does not return coincidences" do
+      it "does not return suggested resources" do
         do_request
 
         expect(status).to be(200)
@@ -226,25 +243,31 @@ resource "Resources" do
         FactoryBot.create(:rule_praxis, tool_group: tool_group_one, openness: openness_1, confidence: confidence_2)
       end
 
-      it "return coincidences" do
+      it "return suggested resources" do
         do_request "filter[country]": "fr", "filter[language]": languages_fr, "filter[openness]": 1, "filter[confidence]": 2
 
         expect(status).to be(200)
 
-        expect(JSON.parse(response_body)["data"].count).to eql 5
+                  data = JSON.parse(response_body)["data"]
+          expect(data.count).to eql 5
+
+        expect(resources_matched(data)).to eql resources_result
       end
 
       context "plus matching languages with negative rule as false" do
-        it "return coincidences" do
+        it "return suggested resources" do
           do_request "filter[country]": "fr", "filter[language]": languages_fr, "filter[openness]": 1, "filter[confidence]": 2
 
           expect(status).to be(200)
-          expect(JSON.parse(response_body)["data"].count).to eql 5
+          data = JSON.parse(response_body)["data"]
+          expect(data.count).to eql 5
+
+          expect(resources_matched(data)).to eql resources_result
         end
 
         context "plus not matching openness" do
           context "with negative rule as false" do
-            it "does not return coincidences" do
+            it "does not return suggested resources" do
               do_request "filter[country]": "fr", "filter[language]": languages_fr_en, "filter[openness]": 2
 
               expect(status).to be(200)
@@ -255,7 +278,7 @@ resource "Resources" do
 
         context "plus not matching confidence" do
           context "with negative rule as false" do
-            it "does not return coincidences" do
+            it "does not return suggested resources" do
               do_request "filter[country]": "fr", "filter[language]": languages_fr_en, "filter[confidence]": 4
 
               expect(status).to be(200)
@@ -269,7 +292,7 @@ resource "Resources" do
             before do
               RulePraxis.first.update!(negative_rule: true)
             end
-            it "does not return coincidences" do
+            it "does not return suggested resources" do
               do_request "filter[country]": "fr", "filter[language]": languages_fr_en, "filter[confidence]": 2
 
               expect(status).to be(200)
@@ -283,7 +306,7 @@ resource "Resources" do
             before do
               RulePraxis.first.update!(negative_rule: true)
             end
-            it "does not return coincidences" do
+            it "does not return suggested resources" do
               do_request "filter[country]": "gb", "filter[language]": languages_fr, "filter[openness]": 2
 
               expect(status).to be(200)
@@ -294,11 +317,14 @@ resource "Resources" do
 
         context "plus matching openness" do
           context "with negative rule as false" do
-            it "return coincidences" do
+            it "return suggested resources" do
               do_request "filter[country]": "fr", "filter[language]": languages_fr, "filter[openness]": 1, "filter[confidence]": 2
 
               expect(status).to be(200)
-              expect(JSON.parse(response_body)["data"].count).to eql 5
+                        data = JSON.parse(response_body)["data"]
+          expect(data.count).to eql 5
+
+              expect(resources_matched(data)).to eql resources_result
             end
           end
 
@@ -306,7 +332,7 @@ resource "Resources" do
             before do
               RulePraxis.first.update!(negative_rule: true)
             end
-            it "does not return coincidences" do
+            it "does not return suggested resources" do
               do_request "filter[country]": "gb", "filter[language]": languages_fr_es, "filter[openness]": 1
 
               expect(status).to be(200)
@@ -321,7 +347,7 @@ resource "Resources" do
           RuleLanguage.first.update!(languages: languages_fr_en)
         end
 
-        it "does not return coincidences" do
+        it "does not return suggested resources" do
           do_request "filter[country]": "fr", "filter[language]": languages_it
 
           expect(status).to be(200)
@@ -334,11 +360,14 @@ resource "Resources" do
           RuleLanguage.first.update!(languages: languages_en, negative_rule: true)
         end
 
-        it "return coincidences" do
+        it "return suggested resources" do
           do_request "filter[country]": "fr", "filter[language]": languages_es, "filter[openness]": 1, "filter[confidence]": 2
 
           expect(status).to be(200)
-          expect(JSON.parse(response_body)["data"].count).to eql 5
+                    data = JSON.parse(response_body)["data"]
+          expect(data.count).to eql 5
+
+          expect(resources_matched(data)).to eql resources_result
         end
       end
 
@@ -347,7 +376,7 @@ resource "Resources" do
           RuleLanguage.first.update!(languages: languages_fr_en, negative_rule: true)
         end
 
-        it "does not return coincidences" do
+        it "does not return suggested resources" do
           do_request "filter[country]": "fr", "filter[language]": languages_fr_en
 
           expect(status).to be(200)
@@ -356,7 +385,7 @@ resource "Resources" do
       end
 
       context "plus not matching languages with negative rule as false" do
-        it "does not return coincidences" do
+        it "does not return suggested resources" do
           do_request "filter[country]": "fr", "filter[language]": languages_it
 
           expect(status).to be(200)
@@ -370,7 +399,7 @@ resource "Resources" do
         FactoryBot.create(:rule_country, tool_group: tool_group_one, countries: countries_fr_us, negative_rule: true)
       end
 
-      it "does not return coincidences" do
+      it "does not return suggested resources" do
         do_request "filter[country]": "fr"
 
         expect(status).to be(200)
@@ -382,7 +411,7 @@ resource "Resources" do
       before do
         FactoryBot.create(:rule_country, tool_group: tool_group_one, countries: countries_fr_us)
       end
-      it "does not return coincidences" do
+      it "does not return suggested resources" do
         do_request "filter[country]": "gb"
 
         expect(status).to be(200)
@@ -401,7 +430,7 @@ resource "Resources" do
           RuleLanguage.first.update!(negative_rule: true)
         end
 
-        it "does not return coincidences" do
+        it "does not return suggested resources" do
           do_request "filter[country]": "fr", "filter[language]": languages_fr_en
 
           expect(status).to be(200)
@@ -414,11 +443,14 @@ resource "Resources" do
           RuleLanguage.first.update!(negative_rule: false)
         end
 
-        it "return coincidences" do
+        it "return suggested resources" do
           do_request "filter[country]": "it", "filter[language]": languages_fr_en
 
           expect(status).to be(200)
-          expect(JSON.parse(response_body)["data"].count).to eql 5
+                    data = JSON.parse(response_body)["data"]
+          expect(data.count).to eql 5
+
+          expect(resources_matched(data)).to eql resources_result
         end
       end
     end
@@ -448,7 +480,9 @@ resource "Resources" do
       do_request "filter[system]": "GodTools"
 
       expect(status).to be(200)
-      expect(JSON.parse(response_body)["data"].count).to be(5)
+      data = JSON.parse(response_body)["data"]
+      expect(data.count).to eql 5
+      expect(resources_matched(data)).to eql resources_result
     end
 
     it "get all resources, include variations" do
@@ -657,5 +691,15 @@ resource "Resources" do
 
   RSpec::Matchers.define :resource_id do |id|
     match { |actual| (actual.id == id) }
+  end
+
+  def resources_matched(data)
+    resources = []
+    data.select do |element|
+      if element["attributes"] && element["attributes"]["name"]
+        resources << element["attributes"]["name"]
+      end
+    end
+    resources.sort
   end
 end
