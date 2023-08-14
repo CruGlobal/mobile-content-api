@@ -47,9 +47,9 @@ class ToolFilterService
     confidence = params.dig("filter", "confidence")&.to_i
 
     # Country Rules
-    if tool_group.rule_countries.any? { |o| o.negative_rule && o.countries.include?(country) }
-      return false
-    elsif tool_group.rule_countries.any? { |o| !o.negative_rule && o.countries.exclude?(country) }
+    if tool_group.rule_countries.any? do |o|
+      (o.negative_rule && o.countries.include?(country)) || (!o.negative_rule && o.countries.exclude?(country))
+    end
       return false
     end
 
