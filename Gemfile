@@ -111,4 +111,4 @@ group :development do
 end
 
 # Temporary security fix until new Ruby release
-gem "uri", "~> 0.10.3"
+gem "uri", "~> 0.12.2"
