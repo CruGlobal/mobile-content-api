@@ -45,7 +45,7 @@ resource "Resources" do
   let(:confidence_2_3) { [2, 3] }
   let(:confidence_3_4) { [3, 4] }
 
-  let(:resources_result) {["metatool", "Knowing God Personally", "Questions About God", "Satisfied?", "Knowing God Personally Variant"].sort}
+  let(:resources_result) { ["metatool", "Knowing God Personally", "Questions About God", "Satisfied?", "Knowing God Personally Variant"].sort }
 
   get "resources/suggestions" do
     before(:each) do
@@ -211,8 +211,8 @@ resource "Resources" do
         # "Knowing God Personally Variant"  1.06
 
         expect(status).to be(200)
-                  data = JSON.parse(response_body)["data"]
-          expect(data.count).to eql 5
+        data = JSON.parse(response_body)["data"]
+        expect(data.count).to eql 5
 
         expect(JSON.parse(response_body)["data"][0]["attributes"]["name"]).to eql "Knowing God Personally"
         expect(JSON.parse(response_body)["data"][1]["attributes"]["name"]).to eql "metatool"
@@ -248,8 +248,8 @@ resource "Resources" do
 
         expect(status).to be(200)
 
-                  data = JSON.parse(response_body)["data"]
-          expect(data.count).to eql 5
+        data = JSON.parse(response_body)["data"]
+        expect(data.count).to eql 5
 
         expect(resources_matched(data)).to eql resources_result
       end
@@ -321,8 +321,8 @@ resource "Resources" do
               do_request "filter[country]": "fr", "filter[language]": languages_fr, "filter[openness]": 1, "filter[confidence]": 2
 
               expect(status).to be(200)
-                        data = JSON.parse(response_body)["data"]
-          expect(data.count).to eql 5
+              data = JSON.parse(response_body)["data"]
+              expect(data.count).to eql 5
 
               expect(resources_matched(data)).to eql resources_result
             end
@@ -364,7 +364,7 @@ resource "Resources" do
           do_request "filter[country]": "fr", "filter[language]": languages_es, "filter[openness]": 1, "filter[confidence]": 2
 
           expect(status).to be(200)
-                    data = JSON.parse(response_body)["data"]
+          data = JSON.parse(response_body)["data"]
           expect(data.count).to eql 5
 
           expect(resources_matched(data)).to eql resources_result
@@ -447,7 +447,7 @@ resource "Resources" do
           do_request "filter[country]": "it", "filter[language]": languages_fr_en
 
           expect(status).to be(200)
-                    data = JSON.parse(response_body)["data"]
+          data = JSON.parse(response_body)["data"]
           expect(data.count).to eql 5
 
           expect(resources_matched(data)).to eql resources_result
