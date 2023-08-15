@@ -16,6 +16,7 @@ resource "ToolGroups" do
   let(:resource) { FactoryBot.create(:resource, system_id: 1, resource_type: metatool_resource_type, name: "Resource Test One", abbreviation: "test1") }
   let(:tool_group_first) { ToolGroup.first }
   let(:tool_group_last) { ToolGroup.last }
+  let(:invalid_id) { 999999 }
 
   before(:each) do
     %i[one two three].each do |name|
@@ -87,12 +88,21 @@ resource "ToolGroups" do
 
     requires_authorization
 
-    it "create tool group tool" do
+    it "create tool group tool succeeds" do
       do_request tool_group_id: tool_group_first.id, data: {
         type: "tool-group-tool", attributes: attributes, relationships: relationships
       }
       expect(status).to eq(201)
       expect(JSON.parse(response_body)["data"]).not_to be_nil
+    end
+
+    it "create tool group tool fails" do
+      do_request tool_group_id: invalid_id, data: {
+        type: "tool-group-tool", attributes: attributes, relationships: relationships
+      }
+
+      expect(status).to eq(400)
+      expect(JSON.parse(response_body)["errors"][0]["detail"]).to eql "Validation failed: Tool group must exist"
     end
   end
 
@@ -142,7 +152,7 @@ resource "ToolGroups" do
     end
 
     it "delete tool_group tool fails and returns ':not_found'" do
-      do_request id: 999999, tool_group_id: tool_group_id
+      do_request id: invalid_id, tool_group_id: tool_group_id
 
       expect(status).to be(404)
     end
@@ -323,7 +333,7 @@ resource "ToolGroups" do
     end
 
     it "delete tool_group fails and returns ':not_found'" do
-      do_request id: 999999
+      do_request id: invalid_id
 
       expect(status).to be(404)
     end
