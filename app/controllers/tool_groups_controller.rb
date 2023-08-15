@@ -49,11 +49,10 @@ class ToolGroupsController < ApplicationController
 
   def destroy
     tool_group = ToolGroup.find(params[:id])
-    if tool_group.destroy!
-      head :no_content
-    else
-      head :not_found
-    end
+    tool_group.destroy!
+    head :no_content
+  rescue ActiveRecord::RecordNotFound => e
+    render json: formatted_errors("record_not_found", e), status: :not_found
   end
 
   def update

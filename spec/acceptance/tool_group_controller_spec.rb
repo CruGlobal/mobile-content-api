@@ -135,13 +135,13 @@ resource "ToolGroups" do
     let(:relationship) { ResourceToolGroup.create!(resource_id: resource.id, tool_group_id: tool_group_id, suggestions_weight: 1) }
     requires_authorization
 
-    it "delete tool_group succeed and returns ':not_content'" do
+    it "delete tool_group tool succeed and returns ':not_content'" do
       do_request id: relationship.id, tool_group_id: tool_group_id
 
       expect(status).to be(204)
     end
 
-    it "delete tool_group fails and returns ':not_found'" do
+    it "delete tool_group tool fails and returns ':not_found'" do
       do_request id: 999999, tool_group_id: tool_group_id
 
       expect(status).to be(404)
@@ -316,10 +316,16 @@ resource "ToolGroups" do
 
     requires_authorization
 
-    it "delete tool_group" do
+    it "delete tool_group succeed and returns ':no_content'" do
       do_request
 
       expect(status).to be(204)
+    end
+
+    it "delete tool_group fails and returns ':not_found'" do
+      do_request id: 999999
+
+      expect(status).to be(404)
     end
   end
 
