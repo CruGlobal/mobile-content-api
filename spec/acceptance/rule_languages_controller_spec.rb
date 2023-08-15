@@ -33,10 +33,17 @@ resource "RuleLanguages" do
       }
     end
 
-    it "create rule language" do
+    it "create rule language succeed" do
       do_request tool_group_id: tool_group_id, data: {type: "tool-group-rules-language", attributes: attrs}
       expect(status).to eq(201)
       expect(JSON.parse(response_body)["data"]).not_to be_nil
+    end
+
+    it "create rule language fails" do
+      do_request tool_group_id: 99999999, data: {type: "tool-group-rules-language", attributes: attrs}
+
+      expect(status).to eq(404)
+      expect(JSON.parse(response_body)).to eql({"errors" => [{"source" => {"pointer" => "/data/attributes/id"}, "detail" => "Couldn't find ToolGroup with 'id'=99999999"}]})
     end
   end
 

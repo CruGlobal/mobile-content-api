@@ -4,8 +4,6 @@ class RuleLanguagesController < ApplicationController
 
   def create
     create_rule_language
-  rescue ActiveRecord::RecordInvalid => e
-    render json: {errors: formatted_errors(e)}, status: :unprocessable_entity
   end
 
   def update
@@ -26,6 +24,8 @@ class RuleLanguagesController < ApplicationController
     created = tool_group.rule_languages.create!(permit_params(:tool_group_id, :negative_rule, languages: []))
     response.headers["Location"] = "tool_groups/#{created.id}"
     render json: created, status: :created
+  rescue ActiveRecord::RecordNotFound => e
+    render json: formatted_errors("record_not_found", e), status: :not_found
   end
 
   def update_rule_language

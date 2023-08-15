@@ -5,7 +5,7 @@ class RulePraxesController < ApplicationController
   def create
     create_rule_praxis
   rescue ActiveRecord::RecordInvalid => e
-    render json: {errors: formatted_errors(e)}, status: :unprocessable_entity
+    render json: {errors: formatted_errors("record_invalid", e)}, status: :unprocessable_entity
   end
 
   def update
