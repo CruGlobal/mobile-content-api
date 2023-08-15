@@ -80,16 +80,20 @@ RSpec.describe ToolFilterService do
 
   context "when for praxes rule" do
     context "when negative rule false" do
-      it "it returns no resources if confidence does not matches" do
-        params = {"filter" => {"country" => "fr", "language" => ["fr"], "openness" => "1", "confidence" => "5"}}
+      context "for confidence present" do
+        it "it returns no resources if confidence does not matches" do
+          params = {"filter" => {"country" => "fr", "language" => ["fr"], "openness" => "1", "confidence" => "5"}}
 
-        expect(ToolFilterService.new(params).call.empty?).to eq true
+          expect(ToolFilterService.new(params).call.empty?).to eq true
+        end
       end
 
-      it "it returns no resources if openness does not matches" do
-        params = {"filter" => {"country" => "fr", "language" => ["fr"], "openness" => "5", "confidence" => "2"}}
+      context "for openness present" do
+        it "it returns no resources if openness does not matches" do
+          params = {"filter" => {"country" => "fr", "language" => ["fr"], "openness" => "5", "confidence" => "2"}}
 
-        expect(ToolFilterService.new(params).call.empty?).to eq true
+          expect(ToolFilterService.new(params).call.empty?).to eq true
+        end
       end
     end
 
@@ -98,16 +102,20 @@ RSpec.describe ToolFilterService do
         RulePraxis.first.update!(negative_rule: true)
       end
 
-      it "it returns no resources if confidence does not matches" do
-        params = {"filter" => {"country" => "fr", "language" => ["fr"], "openness" => "1", "confidence" => "2"}}
+      context "for confidence present" do
+        it "it returns no resources if confidence matches" do
+          params = {"filter" => {"country" => "fr", "language" => ["fr"], "openness" => "5", "confidence" => "2"}}
 
-        expect(ToolFilterService.new(params).call.empty?).to eq true
+          expect(ToolFilterService.new(params).call.empty?).to eq true
+        end
       end
 
-      it "it returns no resources if openness does not matches" do
-        params = {"filter" => {"country" => "fr", "language" => ["fr"], "openness" => "1", "confidence" => "2"}}
+      context "for openness present" do
+        it "it returns no resources if openness matches" do
+          params = {"filter" => {"country" => "us", "language" => ["en"], "openness" => "1", "confidence" => "5"}}
 
-        expect(ToolFilterService.new(params).call.empty?).to eq true
+          expect(ToolFilterService.new(params).call.empty?).to eq true
+        end
       end
     end
   end
