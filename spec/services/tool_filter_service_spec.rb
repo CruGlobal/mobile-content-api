@@ -110,6 +110,5 @@ RSpec.describe ToolFilterService do
         expect(ToolFilterService.new(params).call.empty?).to eq true
       end
     end
-
   end
 end
