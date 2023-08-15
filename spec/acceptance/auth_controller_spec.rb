@@ -270,6 +270,17 @@ resource "Auth" do
           data = JSON.parse(response_body)["data"]
           expect(data["attributes"]["user-id"]).to eq(user.id)
         end
+
+        it "matches an existing user and passing flag ':create_user' in 'false' it fails" do
+          expect do
+            do_request data: {type: type, attributes: {google_id_token: google_id_token, create_user: false}}
+          end.to_not change(User, :count)
+
+          expect(status).to be(400)
+          response = JSON.parse(response_body)
+          expect(response["errors"][0]["code"]).to eq("user_already_exists")
+          expect(response["errors"][0]["detail"]).to eq("User account already exists.")
+        end
       end
 
       context "when user does not exists" do
