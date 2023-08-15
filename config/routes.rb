@@ -6,6 +6,7 @@ Rails.application.routes.draw do
   resources :systems, only: [:index, :show]
   resources :languages
   resources :resource_types, only: [:index, :show]
+  get "resources/suggestions", to: "resources#suggestions"
 
   resources :resources do
     resources :languages, controller: :resource_languages, only: [:update, :show]
@@ -29,6 +30,27 @@ Rails.application.routes.draw do
   resources :auth, only: [:create, :show]
 
   resources :custom_manifests, only: [:create, :update, :destroy, :show]
+
+  resources :tool_groups, path: "tool-groups", only: [:create, :destroy, :index, :show, :update] do
+    post "tools", to: "tool_groups#create_tool"
+    put "tools/:id", to: "tool_groups#update_tool"
+    delete "tools/:id", to: "tool_groups#delete_tool"
+  end
+
+  # Rule Languages
+  resources :tool_groups, path: "tool-groups", only: [] do
+    resources :rule_languages, path: "rules-language", only: [:create, :destroy, :update]
+  end
+
+  # Rule Countries
+  resources :tool_groups, path: "tool-groups", only: [] do
+    resources :rule_countries, path: "rules-country", only: [:create, :destroy, :update]
+  end
+
+  # Rule Praxis
+  resources :tool_groups, path: "tool-groups", only: [] do
+    resources :rule_praxes, path: "rules-praxis", only: [:create, :destroy, :update]
+  end
 
   patch "user/counters/:id", to: "user_counters#update" # Legacy route for GodTools Android v5.7.0-v6.0.0
   patch "user/me/counters/:id", to: "user_counters#update" # Legacy route for GodTools Android v6.0.1+
