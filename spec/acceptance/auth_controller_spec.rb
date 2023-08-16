@@ -127,7 +127,24 @@ resource "Auth" do
           expect(response["errors"][0]["detail"]).to eq("User account not found.")
         end
 
-        it "passing flag 'create_user: true' it succeeds" do
+        it "passing flag 'create_user: nil' it succeeds and return user" do
+          expect do
+            do_request data: {type: type, attributes: {facebook_access_token: "authtoken", create_user: true}}
+          end.to change(User, :count).by(1)
+
+          user = User.last
+          expect(user.email).to eq("daniel.frett@gmail.com")
+          expect(user.first_name).to eq("Daniel")
+          expect(user.last_name).to eq("Frett")
+          expect(user.short_name).to eq("Daniel")
+          expect(user.name).to eq("Daniel Frett")
+
+          expect(status).to be(201)
+          data = JSON.parse(response_body)["data"]
+          expect(data["attributes"]["user-id"]).to eq(user.id)
+        end
+
+        it "passing flag 'create_user: true' it succeeds and return user" do
           expect do
             do_request data: {type: type, attributes: {facebook_access_token: "authtoken", create_user: true}}
           end.to change(User, :count).by(1)
@@ -276,10 +293,14 @@ resource "Auth" do
             do_request data: {type: type, attributes: {google_id_token: google_id_token, create_user: false}}
           end.to_not change(User, :count)
 
-          expect(status).to be(400)
-          response = JSON.parse(response_body)
-          expect(response["errors"][0]["code"]).to eq("user_already_exists")
-          expect(response["errors"][0]["detail"]).to eq("User account already exists.")
+          user = User.last
+          expect(user.email).to eq("andrewroth@gmail.com")
+          expect(user.first_name).to eq("Andrew")
+          expect(user.last_name).to eq("Roth")
+
+          expect(status).to be(201)
+          data = JSON.parse(response_body)["data"]
+          expect(data["attributes"]["user-id"]).to eq(user.id)
         end
       end
 
