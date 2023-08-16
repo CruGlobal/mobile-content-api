@@ -165,7 +165,7 @@ resource "Auth" do
       context "when user already exists" do
         let!(:user) { FactoryBot.create(:user, facebook_user_id: "10158730817232041", email: "daniel.frett@gmail.com", first_name: "First", last_name: "Last", sso_guid: "12345") }
 
-        it "matches an existing user and passing flag ':create_user' in 'nil' it succeeds" do
+        it "matches an existing user and passing flag ':create_user' in 'nil' it succeeds and return user" do
           expect do
             do_request data: {type: type, attributes: {facebook_access_token: "authtoken", create_user: nil}}
           end.to_not change(User, :count)
@@ -176,6 +176,23 @@ resource "Auth" do
           expect(user.last_name).to eq("Frett")
           expect(user.short_name).to eq("Daniel")
           expect(user.name).to eq("Daniel Frett")
+
+          expect(status).to be(201)
+          data = JSON.parse(response_body)["data"]
+          expect(data["attributes"]["user-id"]).to eq(user.id)
+        end
+
+        it "matches an existing user and passing flag ':create_user' in 'false' it succeeds and return user" do
+          expect do
+            do_request data: {type: type, attributes: {facebook_access_token: "authtoken", create_user: false}}
+          end.to_not change(User, :count)
+
+          user = User.last
+          expect(user.email).to eq("daniel.frett@gmail.com")
+          expect(user.first_name).to eq("First")
+          expect(user.last_name).to eq("Last")
+          expect(user.short_name).to eq(nil)
+          expect(user.name).to eq(nil)
 
           expect(status).to be(201)
           data = JSON.parse(response_body)["data"]
