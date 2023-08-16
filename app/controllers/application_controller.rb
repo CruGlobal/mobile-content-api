@@ -119,4 +119,18 @@ class ApplicationController < ActionController::Base
       errors.add(code, message)
     end
   end
+
+  def convert_hyphen_to_dash
+    params.deep_transform_keys! { |key| key.tr("-", "_") }
+  end
+
+  def formatted_errors(type, error)
+    if type == "record_invalid"
+      error.record.errors.flat_map do |attribute, errors|
+        errors.map { |error_message| {detail: "#{attribute} #{error_message}"} }
+      end
+    elsif type == "record_not_found"
+      {"errors" => [{source: {pointer: "/data/attributes/id"}, detail: error.message}]}
+    end
+  end
 end

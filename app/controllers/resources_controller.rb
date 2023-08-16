@@ -34,6 +34,10 @@ class ResourcesController < ApplicationController
     head :no_content
   end
 
+  def suggestions
+    render json: ToolFilterService.new(params).call, include: params[:include], fields: field_params, status: :ok
+  end
+
   private
 
   def cached_index_json

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2023_03_28_180034) do
+ActiveRecord::Schema.define(version: 2023_08_14_192639) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
@@ -156,7 +156,7 @@ ActiveRecord::Schema.define(version: 2023_03_28_180034) do
 
   create_table "language_attributes", force: :cascade do |t|
     t.integer "language_id", null: false
-    t.bigint "resource_id", null: false
+    t.integer "resource_id", null: false
     t.string "key", null: false
     t.string "value", null: false
     t.boolean "is_translatable", default: false
@@ -180,6 +180,16 @@ ActiveRecord::Schema.define(version: 2023_03_28_180034) do
     t.integer "position", null: false
     t.index ["position", "resource_id"], name: "index_pages_on_position_and_resource_id", unique: true
     t.index ["resource_id"], name: "index_pages_on_resource_id"
+  end
+
+  create_table "resource_tool_groups", force: :cascade do |t|
+    t.integer "resource_id", null: false
+    t.bigint "tool_group_id", null: false
+    t.float "suggestions_weight"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["resource_id"], name: "index_resource_tool_groups_on_resource_id"
+    t.index ["tool_group_id"], name: "index_resource_tool_groups_on_tool_group_id"
   end
 
   create_table "resource_types", id: :serial, force: :cascade do |t|
@@ -208,6 +218,34 @@ ActiveRecord::Schema.define(version: 2023_03_28_180034) do
     t.index ["system_id"], name: "index_resources_on_system_id"
   end
 
+  create_table "rule_countries", force: :cascade do |t|
+    t.bigint "tool_group_id", null: false
+    t.string "countries", default: [], array: true
+    t.boolean "negative_rule", default: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["tool_group_id"], name: "index_rule_countries_on_tool_group_id"
+  end
+
+  create_table "rule_languages", force: :cascade do |t|
+    t.bigint "tool_group_id", null: false
+    t.string "languages", default: [], array: true
+    t.boolean "negative_rule", default: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["tool_group_id"], name: "index_rule_languages_on_tool_group_id"
+  end
+
+  create_table "rule_praxes", force: :cascade do |t|
+    t.bigint "tool_group_id", null: false
+    t.integer "openness", default: [], array: true
+    t.integer "confidence", default: [], array: true
+    t.boolean "negative_rule", default: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["tool_group_id"], name: "index_rule_praxes_on_tool_group_id"
+  end
+
   create_table "systems", id: :serial, force: :cascade do |t|
     t.string "name", null: false
     t.index ["name"], name: "index_systems_on_name", unique: true
@@ -220,6 +258,13 @@ ActiveRecord::Schema.define(version: 2023_03_28_180034) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["resource_id", "name"], name: "index_tips_on_resource_id_and_name", unique: true
+  end
+
+  create_table "tool_groups", force: :cascade do |t|
+    t.string "name"
+    t.float "suggestions_weight"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
   end
 
   create_table "translated_attributes", force: :cascade do |t|
@@ -301,10 +346,15 @@ ActiveRecord::Schema.define(version: 2023_03_28_180034) do
   add_foreign_key "follow_ups", "destinations"
   add_foreign_key "follow_ups", "languages"
   add_foreign_key "pages", "resources"
+  add_foreign_key "resource_tool_groups", "resources"
+  add_foreign_key "resource_tool_groups", "tool_groups"
   add_foreign_key "resources", "resource_types"
   add_foreign_key "resources", "resources", column: "default_variant_id"
   add_foreign_key "resources", "resources", column: "metatool_id"
   add_foreign_key "resources", "systems"
+  add_foreign_key "rule_countries", "tool_groups"
+  add_foreign_key "rule_languages", "tool_groups"
+  add_foreign_key "rule_praxes", "tool_groups"
   add_foreign_key "translated_pages", "languages"
   add_foreign_key "translated_pages", "resources"
   add_foreign_key "translation_attributes", "translations"
