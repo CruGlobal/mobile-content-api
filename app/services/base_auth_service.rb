@@ -32,7 +32,7 @@ class BaseAuthService
 
       raise self::UserAlreadyExists if create_user && !users.empty?
       return users[0] if !create_user && !create_user.nil? && !users.empty?
-      raise self::UserNotFound if !create_user && users.empty?
+      raise self::UserNotFound if !create_user && !create_user.nil? && users.empty?
 
       user = new_user(user_atts, primary_key, remote_user_id) unless create_user.nil?
 
