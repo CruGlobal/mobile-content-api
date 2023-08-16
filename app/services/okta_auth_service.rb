@@ -41,7 +41,8 @@ class OktaAuthService < BaseAuthService
       users = User.where(primary_key => user_atts[primary_key])
 
       raise ::UserAlreadyExist::Error if create_user && !users.empty?
-      raise ::UserNotFound::Error if !create_user.nil? && create_user && users.empty?
+      return users[0] if !create_user && !create_user.nil? && !users.empty?
+      raise ::UserNotFound::Error if !create_user && !create_user.nil? && users.empty?
 
       user = new_user(user_atts, primary_key) unless create_user.nil?
 
