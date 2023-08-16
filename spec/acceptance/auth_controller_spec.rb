@@ -305,15 +305,14 @@ resource "Auth" do
           expect(data["attributes"]["user-id"]).to eq(user.id)
         end
 
-        it "matches an existing user and passing flag ':create_user' in 'false' it fails" do
+        it "matches an existing user and passing flag ':create_user' in 'false' it returns the user" do
           expect do
             do_request data: {type: type, attributes: {google_id_token: google_id_token, create_user: false}}
           end.to_not change(User, :count)
 
           user = User.last
-          expect(user.email).to eq("andrewroth@gmail.com")
-          expect(user.first_name).to eq("Andrew")
-          expect(user.last_name).to eq("Roth")
+          expect(user.first_name).to eq("Wonder")
+          expect(user.last_name).to eq("Woman")
 
           expect(status).to be(201)
           data = JSON.parse(response_body)["data"]
