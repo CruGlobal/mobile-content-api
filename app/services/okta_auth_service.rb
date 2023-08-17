@@ -48,7 +48,7 @@ class OktaAuthService < BaseAuthService
       if create_user.nil?
         ::CommonServiceAuthUserMethods.first_or_initialize_user(primary_key, user_atts[primary_key], user_atts)
       else
-        ::CommonServiceAuthUserMethods.create_user(primary_key, user_atts[primary_key], user_atts)
+        ::CommonServiceAuthUserMethods.new_user(primary_key, user_atts[primary_key], user_atts)
       end
     end
 
