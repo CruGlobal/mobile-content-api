@@ -41,8 +41,8 @@ class OktaAuthService < BaseAuthService
       create_user = user_atts["create_user"]
       users = User.where(primary_key => user_atts[primary_key])
 
-      ::CommonServiceAuthUserMethods::setup_validation(create_user, users)
-      user = ::CommonServiceAuthUserMethods::existent_user(create_user, users)
+      ::CommonServiceAuthUserMethods.setup_validation(create_user, users)
+      user = ::CommonServiceAuthUserMethods.existent_user(create_user, users)
       return user if user
 
       user = new_user(user_atts, primary_key) unless create_user.nil?
