@@ -2,49 +2,91 @@
 require "rails_helper"
 
 describe CommonServiceAuthUserMethods do
-  describe  "#user_not_found" do
+  describe "#user_already_exist" do
+    context "when user is found" do
+      let(:user) { FactoryBot.create(:user) }
+      let(:users) { [user] }
 
-   context "when user is not found" do
-    context "and :create_user passed as 'false'" do
-      let(:create_user) { false }
-      let(:users) { [] }
+      context "and :create_user passed as 'false'" do
+        let(:create_user) { false }
 
-      it "return true" do
-        expect(::CommonServiceAuthUserMethods.user_not_found(create_user, users)).to eql true
+        it "return false" do
+          expect(::CommonServiceAuthUserMethods.user_already_exist(create_user, users)).to eql false
+        end
+      end
+
+      context "and :create_user passed as 'true'" do
+        let(:create_user) { true }
+
+        it "return true" do
+          expect(::CommonServiceAuthUserMethods.user_already_exist(create_user, users)).to eql true
+        end
       end
     end
 
-    context "and :create_user passed as 'true'" do
-      let(:create_user) { true }
+    context "when user is not found" do
       let(:users) { [] }
 
-      it "return false" do
-        expect(::CommonServiceAuthUserMethods.user_not_found(create_user, users)).to eql false
+      context "and :create_user passed as 'false'" do
+        let(:create_user) { false }
+
+        it "return false" do
+          expect(::CommonServiceAuthUserMethods.user_already_exist(create_user, users)).to eql false
+        end
+      end
+
+      context "and :create_user passed as 'true'" do
+        let(:create_user) { true }
+
+        it "return true" do
+          expect(::CommonServiceAuthUserMethods.user_already_exist(create_user, users)).to eql false
+        end
       end
     end
-   end
+  end
 
-   context "when user is found" do
-     let(:user) { FactoryBot.create(:user) }
-     let(:users) { [user] }
+  describe "#user_not_found" do
+    context "when user is not found" do
+      context "and :create_user passed as 'false'" do
+        let(:create_user) { false }
+        let(:users) { [] }
 
-     context "and :create_user passed as 'true'" do
-       let(:create_user) { true }
+        it "return true" do
+          expect(::CommonServiceAuthUserMethods.user_not_found(create_user, users)).to eql true
+        end
+      end
 
-       it "return false" do
-         expect(::CommonServiceAuthUserMethods.user_not_found(create_user, users)).to eql false
-       end
-     end
+      context "and :create_user passed as 'true'" do
+        let(:create_user) { true }
+        let(:users) { [] }
 
-     context "and :create_user passed as 'nil'" do
-       let(:create_user) { nil }
+        it "return false" do
+          expect(::CommonServiceAuthUserMethods.user_not_found(create_user, users)).to eql false
+        end
+      end
+    end
 
-       it "return false" do
-         expect(::CommonServiceAuthUserMethods.user_not_found(create_user, users)).to eql false
-       end
-     end
-   end
- end
+    context "when user is found" do
+      let(:user) { FactoryBot.create(:user) }
+      let(:users) { [user] }
+
+      context "and :create_user passed as 'true'" do
+        let(:create_user) { true }
+
+        it "return false" do
+          expect(::CommonServiceAuthUserMethods.user_not_found(create_user, users)).to eql false
+        end
+      end
+
+      context "and :create_user passed as 'nil'" do
+        let(:create_user) { nil }
+
+        it "return false" do
+          expect(::CommonServiceAuthUserMethods.user_not_found(create_user, users)).to eql false
+        end
+      end
+    end
+  end
 
   describe "#new_user" do
     let(:primary_key) { "facebook_user_id" }
