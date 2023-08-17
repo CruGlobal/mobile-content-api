@@ -31,7 +31,7 @@ class BaseAuthService
       create_user = user_atts["create_user"]
       users = User.where(primary_key => remote_user_id)
 
-      ::CommonServiceAuthUserMethods.setup_validation(create_user, users)
+      ::CommonServiceAuthUserMethods.user_existence_validation(create_user, users)
       user = ::CommonServiceAuthUserMethods.existent_user(create_user, users)
       return user if user
 

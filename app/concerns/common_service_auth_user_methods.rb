@@ -2,7 +2,7 @@
 module CommonServiceAuthUserMethods
   extend ActiveSupport::Concern
 
-  def self.setup_validation(create_user, users)
+  def self.user_existence_validation(create_user, users)
     raise ::UserAlreadyExist::Error if user_already_exist(create_user, users)
     raise ::UserNotFound::Error if user_not_found(create_user, users)
   end
@@ -20,7 +20,7 @@ module CommonServiceAuthUserMethods
   end
 
   def self.existent_user(create_user, users)
-    return users[0] if !create_user && !create_user.nil? && !users.empty?
+    users[0] if !create_user && !create_user.nil? && !users.empty?
   end
 
   def self.user_already_exist(create_user, users)
