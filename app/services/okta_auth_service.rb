@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 class OktaAuthService < BaseAuthService
+  include ::CommonServiceAuthUserMethods
   LEEWAY = 0
   base_uri ENV.fetch("OKTA_SERVER_URL")
 
@@ -40,9 +41,9 @@ class OktaAuthService < BaseAuthService
       create_user = user_atts["create_user"]
       users = User.where(primary_key => user_atts[primary_key])
 
-      raise ::UserAlreadyExist::Error if create_user && !users.empty?
-      return users[0] if !create_user && !create_user.nil? && !users.empty?
-      raise ::UserNotFound::Error if !create_user && !create_user.nil? && users.empty?
+      ::CommonServiceAuthUserMethods::setup_validation(create_user, users)
+      user = ::CommonServiceAuthUserMethods::existent_user(create_user, users)
+      return user if user
 
       user = new_user(user_atts, primary_key) unless create_user.nil?
 

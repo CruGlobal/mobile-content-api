@@ -4,6 +4,7 @@ require "httparty"
 
 class BaseAuthService
   include HTTParty
+  include ::CommonServiceAuthUserMethods
 
   class << self
     def find_user_by_token(access_token, create_user)
@@ -30,9 +31,9 @@ class BaseAuthService
       create_user = user_atts["create_user"]
       users = User.where(primary_key => remote_user_id)
 
-      raise ::UserAlreadyExist::Error if create_user && !users.empty?
-      return users[0] if !create_user && !create_user.nil? && !users.empty?
-      raise ::UserNotFound::Error if !create_user && !create_user.nil? && users.empty?
+      ::CommonServiceAuthUserMethods::setup_validation(create_user, users)
+      user = ::CommonServiceAuthUserMethods::existent_user(create_user, users)
+      return user if user
 
       user = new_user(user_atts, primary_key, remote_user_id) unless create_user.nil?
 
