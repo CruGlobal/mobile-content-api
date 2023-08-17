@@ -7,6 +7,12 @@ module CommonServiceAuthUserMethods
     raise ::UserNotFound::Error if user_not_found(create_user, users)
   end
 
+  def self.first_or_initialize_user(primary_key, id, user_atts)
+    user = User.where(primary_key => id).first_or_initialize
+    user.update!(user_atts)
+    user
+  end
+
   def self.new_user(primary_key, id, user_atts)
     user = User.new(primary_key => id)
     user.update!(user_atts)

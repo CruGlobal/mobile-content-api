@@ -36,13 +36,10 @@ class BaseAuthService
       return user if user
 
       if create_user.nil?
-        user = User.where(primary_key => remote_user_id).first_or_initialize
-        user.update!(user_atts)
+        ::CommonServiceAuthUserMethods.first_or_initialize_user(primary_key, remote_user_id, user_atts)
       else
-        user = ::CommonServiceAuthUserMethods.new_user(primary_key, remote_user_id, user_atts)
+        ::CommonServiceAuthUserMethods.new_user(primary_key, remote_user_id, user_atts)
       end
-
-      user
     end
 
     def service_name

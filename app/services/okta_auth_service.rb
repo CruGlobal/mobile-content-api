@@ -46,13 +46,10 @@ class OktaAuthService < BaseAuthService
       return user if user
 
       if create_user.nil?
-        user = User.where(primary_key => user_atts[primary_key]).first_or_initialize
-        user.update!(user_atts)
+        ::CommonServiceAuthUserMethods.first_or_initialize_user(primary_key, user_atts[primary_key], user_atts)
       else
-        user = ::CommonServiceAuthUserMethods.create_user(primary_key, user_atts[primary_key], user_atts)
+        ::CommonServiceAuthUserMethods.create_user(primary_key, user_atts[primary_key], user_atts)
       end
-
-      user
     end
 
     def extract_user_atts(access_token, _decoded_token)
