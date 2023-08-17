@@ -129,5 +129,20 @@ RSpec.describe OktaAuthService do
         )
       end
     end
+
+    context "when error exists" do
+      let(:code) { "user_not_found" }
+      let(:detail) { "User account not found." }
+
+      it "returns json error" do
+        expect(OktaAuthService.send(:json_errors, code, detail)).to eql({errors:
+        [
+          {
+            code: code,
+            detail: detail
+          }
+        ]})
+      end
+    end
   end
 end
