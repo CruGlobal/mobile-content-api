@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2023_08_14_192639) do
+ActiveRecord::Schema.define(version: 2023_08_18_225350) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
@@ -305,6 +305,15 @@ ActiveRecord::Schema.define(version: 2023_08_14_192639) do
     t.index ["resource_id"], name: "index_translations_on_resource_id"
   end
 
+  create_table "user_attributes", force: :cascade do |t|
+    t.integer "user_id", null: false
+    t.string "key"
+    t.string "value"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["user_id"], name: "index_user_attributes_on_user_id"
+  end
+
   create_table "user_counters", force: :cascade do |t|
     t.integer "user_id"
     t.string "counter_name"
@@ -360,4 +369,5 @@ ActiveRecord::Schema.define(version: 2023_08_14_192639) do
   add_foreign_key "translation_attributes", "translations"
   add_foreign_key "translations", "languages"
   add_foreign_key "translations", "resources"
+  add_foreign_key "user_attributes", "users"
 end
