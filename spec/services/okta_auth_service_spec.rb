@@ -144,5 +144,30 @@ RSpec.describe OktaAuthService do
         ]})
       end
     end
+
+    context "when setup user correctly" do
+      let(:sso_guid) { "1234567890" }
+      let(:email) { "okta@okta.com" }
+
+      let(:okta_user_info) do
+        {
+          sso_guid: sso_guid,
+          email: email,
+          first_name: "Okta",
+          last_name: "Test",
+          name: "Okta Test"
+        }
+      end
+
+      it "returns user" do
+        expect do
+          OktaAuthService.send(:setup_user, nil, okta_user_info)
+        end.to change(User, :count).by(1)
+
+        user = User.last
+        expect(user.sso_guid).to eql(sso_guid)
+        expect(user.email).to eql(email)
+      end
+    end
   end
 end
