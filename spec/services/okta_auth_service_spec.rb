@@ -159,14 +159,49 @@ RSpec.describe OktaAuthService do
         }
       end
 
-      it "returns user" do
-        expect do
-          OktaAuthService.send(:setup_user, nil, okta_user_info)
-        end.to change(User, :count).by(1)
+      context "with ':create_user' as nil when user already exists" do
+        let!(:user) { FactoryBot.create(:user) }
+        let(:first_name) { "Okta 2" }
+        let(:last_name) { "Test 2" }
+        let(:name) { "Okta Test 2" }
+        let(:new_okta_user_info) do
+          {
+            sso_guid: sso_guid,
+            email: email,
+            first_name: first_name,
+            last_name: last_name,
+            name: name
+          }
+        end
 
-        user = User.last
-        expect(user.sso_guid).to eql(sso_guid)
-        expect(user.email).to eql(email)
+        before do
+          user.update!(okta_user_info)
+        end
+
+        it "returns the same user" do
+          expect do
+            OktaAuthService.send(:setup_user, nil, new_okta_user_info)
+          end.to change(User, :count).by(0)
+
+          user = User.last
+          expect(user.sso_guid).to eql(sso_guid)
+          expect(user.email).to eql(email)
+          expect(user.first_name).to eql(first_name)
+          expect(user.last_name).to eql(last_name)
+          expect(user.name).to eql(name)
+        end
+      end
+
+      context "with ':create_user' as true when the user does not exist" do
+        it "returns a new user" do
+          expect do
+            OktaAuthService.send(:setup_user, true, okta_user_info)
+          end.to change(User, :count).by(1)
+
+          user = User.last
+          expect(user.sso_guid).to eql(sso_guid)
+          expect(user.email).to eql(email)
+        end
       end
     end
   end
