@@ -2,6 +2,27 @@
 require "rails_helper"
 
 describe CommonServiceAuthUserMethods do
+  describe "#existent_user" do
+    context "when user already exists" do
+      let(:create_user) { false }
+      let(:user) { FactoryBot.create(:user) }
+      let(:users) { [user] }
+
+      it "returns an user object" do
+        expect(::CommonServiceAuthUserMethods.existent_user(create_user, users)).to eql users.first
+      end
+    end
+
+    context "when user does not already exists" do
+      let(:create_user) { false }
+      let(:users) { [] }
+
+      it "returns nil" do
+        expect(::CommonServiceAuthUserMethods.existent_user(create_user, users)).to eql nil
+      end
+    end
+  end
+
   describe "#user_already_exist" do
     context "when user is found" do
       let(:user) { FactoryBot.create(:user) }
