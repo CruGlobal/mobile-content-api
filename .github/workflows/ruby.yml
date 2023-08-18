@@ -34,6 +34,8 @@ jobs:
         uses: ruby/setup-ruby@v1
         with:
           bundler-cache: true
+        env:
+          BUNDLE_GEMS__CONTRIBSYS__COM: ${{ secrets.BUNDLE_GEMS__CONTRIBSYS__COM }}
 
       - name: Set up DB
         run: |
