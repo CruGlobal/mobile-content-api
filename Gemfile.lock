@@ -130,7 +130,7 @@ GEM
       rexml
     crass (1.0.6)
     date (3.3.3)
-    ddtrace (1.13.0)
+    ddtrace (1.13.1)
       debase-ruby_core_source (= 3.2.1)
       libdatadog (~> 3.0.0.1.0)
       libddwaf (~> 1.9.0.0.0)
@@ -554,7 +554,7 @@ DEPENDENCIES
   bundler-audit
   byebug
   capybara (>= 3.26)
-  ddtrace (~> 1.10)
+  ddtrace (~> 1.13)
   dogstatsd-ruby (~> 5.3)
   dotenv-rails
   equivalent-xml (~> 0.6.0)
