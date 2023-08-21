@@ -10,6 +10,12 @@ class UsersController < WithUserController
     render json: "", status: 204
   end
 
+  def me
+    @user.set_arbitrary_attributes!(params["data"]["attributes"])
+
+    render json: @user, status: :created
+  end
+
   protected
 
   def user_id_attribute
