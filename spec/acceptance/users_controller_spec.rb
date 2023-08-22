@@ -11,7 +11,7 @@ resource "UsersController" do
   let(:resource) { Resource.first }
   let(:resource2) { Resource.second }
 
-  patch "users/me" do
+  patch "users/update" do
     let(:user) { FactoryBot.create(:user) }
     let!(:user_attribute) { FactoryBot.create(:user_attribute, user_id: user.id) }
 
