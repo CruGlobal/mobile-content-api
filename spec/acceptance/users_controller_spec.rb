@@ -22,7 +22,8 @@ resource "UsersController" do
         type: "user",
         attributes: {
           "attr-new-attribute" => "new attribute",
-          "attr-remove-attribute" => nil
+          "attr-remove-attribute" => nil,
+          "attr-new-second-attribute" => "true"
         }
       }
     }
@@ -34,8 +35,8 @@ resource "UsersController" do
 
       expect(json_response).not_to be_nil
       expect(json_response["attributes"].has_key?("attr-remove-attribute")).to eql false
-      expect(json_response["attributes"].has_key?("attr-new-attribute")).to eql true
       expect(json_response["attributes"]["attr-new-attribute"]).to eql "new attribute"
+      expect(json_response["attributes"]["attr-new-second-attribute"]).to eql "true"
     end
   end
 
