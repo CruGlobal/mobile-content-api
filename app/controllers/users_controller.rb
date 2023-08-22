@@ -11,7 +11,7 @@ class UsersController < WithUserController
   end
 
   def update
-    @user.set_arbitrary_attributes!(params["data"]["attributes"])
+    @user.set_arbitrary_attributes!(data_attrs)
 
     render json: @user, status: :ok
   end
