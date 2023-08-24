@@ -38,7 +38,46 @@ class ResourcesController < ApplicationController
     render json: ToolFilterService.new(params).call, include: params[:include], fields: field_params, status: :ok
   end
 
+  def publish_translation
+    if valid_publish_params?
+      publish_translations
+      head :no_content
+    else
+      render json: {errors: {"errors" => [{source: {pointer: "/data/attributes/id"}, detail: "Record not found."}]}}, status: :unprocessable_entity
+    end
+  end
+
   private
+
+  def valid_publish_params?
+    params["data"] &&
+      params["data"]["relationships"] &&
+      params["data"]["relationships"]["languages"] &&
+      params["data"]["relationships"]["languages"]["data"] &&
+      params["resource_id"]
+  end
+
+  def publish_translations
+    languages = params["data"]["relationships"]["languages"]["data"]
+
+    languages.each do |lang|
+      publish_translation_for_language(lang)
+    end
+  end
+
+  def publish_translation_for_language(language_data)
+    translation = find_latest_translation(language_data["id"])
+    if translation
+      PublishTranslationJob.perform_async(translation.id)
+    end
+  end
+
+  def find_latest_translation(language_id)
+    Translation
+      .where(resource_id: params["resource_id"], language_id: language_id)
+      .order(version: :desc)
+      .first
+  end
 
   def cached_index_json
     cache_key = Resource.index_cache_key(all_resources,

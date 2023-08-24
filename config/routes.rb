@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require 'sidekiq/web'
+require "sidekiq/web"
 
 Rails.application.routes.draw do
   # For details on the DSL available within this file, see https://guides.rubyonrails.org/routing.html
@@ -13,6 +13,7 @@ Rails.application.routes.draw do
   resources :resources do
     resources :languages, controller: :resource_languages, only: [:update, :show]
     resources :translated_attributes, path: "translated-attributes", only: [:create, :update, :destroy]
+    post "translations/publish", to: "resources#publish_translation"
   end
   resources :drafts
   resources :translations, only: [:index, :show]
@@ -88,7 +89,7 @@ Rails.application.routes.draw do
     end
   end
 
-  mount Sidekiq::Web => '/sidekiq'
+  mount Sidekiq::Web => "/sidekiq"
   mount ActionCable.server => "/cable"
   mount Raddocs::App => "/docs"
 end

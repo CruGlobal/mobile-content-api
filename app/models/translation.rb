@@ -15,7 +15,7 @@ class Translation < ActiveRecord::Base
   validates_with UsesOneskyValidator
 
   before_destroy :prevent_destroy_published, if: :is_published
-  before_update :push_published_to_s3
+  # before_update :push_published_to_s3
   before_validation :set_defaults, on: :create
 
   def s3_url
@@ -76,6 +76,20 @@ class Translation < ActiveRecord::Base
     @manifest_translated_phrases ||= download_translated_phrases("name_description.xml")
   end
 
+  def push_published_to_s3
+    return unless is_published
+
+    if resource.uses_onesky?
+      ActiveRecord::Base.transaction do
+        phrases = manifest_translated_phrases
+        name_desc_onesky(phrases)
+        create_translated_attributes(phrases)
+      end
+    end
+
+    Package.new(self).push_to_s3
+  end
+
   private
 
   def page_structure(page_id)
@@ -90,20 +104,6 @@ class Translation < ActiveRecord::Base
 
   def prevent_destroy_published
     raise Error::TranslationError, "Cannot delete published draft: #{id}"
-  end
-
-  def push_published_to_s3
-    return unless is_published
-
-    if resource.uses_onesky?
-      ActiveRecord::Base.transaction do
-        phrases = manifest_translated_phrases
-        name_desc_onesky(phrases)
-        create_translated_attributes(phrases)
-      end
-    end
-
-    Package.new(self).push_to_s3
   end
 
   def name_desc_onesky(phrases)
