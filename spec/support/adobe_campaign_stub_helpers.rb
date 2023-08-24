@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require_relative "./fixtures/adobe_campaign_parsed_json_fixtures"
+require_relative "fixtures/adobe_campaign_parsed_json_fixtures"
 
 module AdobeCampaignStubHelpers
   include ::AdobeCampaignParsedJsonFixtures
