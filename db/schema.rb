@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2023_08_14_192639) do
+ActiveRecord::Schema.define(version: 2023_08_25_233539) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
@@ -160,8 +160,6 @@ ActiveRecord::Schema.define(version: 2023_08_14_192639) do
     t.string "key", null: false
     t.string "value", null: false
     t.boolean "is_translatable", default: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
     t.index ["key", "resource_id", "language_id"], name: "index_language_attributes_unique", unique: true
     t.index ["resource_id"], name: "index_language_attributes_on_resource_id"
   end
@@ -267,6 +265,16 @@ ActiveRecord::Schema.define(version: 2023_08_14_192639) do
     t.datetime "updated_at", precision: 6, null: false
   end
 
+  create_table "training_tips", force: :cascade do |t|
+    t.string "tool"
+    t.string "locale"
+    t.bigint "tip_id", null: false
+    t.boolean "is_completed"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["tip_id"], name: "index_training_tips_on_tip_id"
+  end
+
   create_table "translated_attributes", force: :cascade do |t|
     t.integer "resource_id"
     t.string "key"
@@ -313,7 +321,9 @@ ActiveRecord::Schema.define(version: 2023_08_14_192639) do
     t.date "last_decay", default: -> { "now()" }
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.string "values", default: [], array: true
     t.index ["user_id", "counter_name"], name: "index_user_counters_on_user_id_and_counter_name", unique: true
+    t.index ["values"], name: "index_user_counters_on_values", using: :gin
   end
 
   create_table "users", force: :cascade do |t|
@@ -355,6 +365,7 @@ ActiveRecord::Schema.define(version: 2023_08_14_192639) do
   add_foreign_key "rule_countries", "tool_groups"
   add_foreign_key "rule_languages", "tool_groups"
   add_foreign_key "rule_praxes", "tool_groups"
+  add_foreign_key "training_tips", "tips"
   add_foreign_key "translated_pages", "languages"
   add_foreign_key "translated_pages", "resources"
   add_foreign_key "translation_attributes", "translations"
