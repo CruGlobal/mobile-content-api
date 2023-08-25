@@ -33,5 +33,7 @@ module MobileContentApi
 
     ActiveModelSerializers.config.adapter = :json_api
     FileUtils.mkdir_p("pages")
+
+    config.active_job.queue_adapter = :sidekiq
   end
 end

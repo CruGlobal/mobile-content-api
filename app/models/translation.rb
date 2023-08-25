@@ -15,8 +15,13 @@ class Translation < ActiveRecord::Base
   validates_with UsesOneskyValidator
 
   before_destroy :prevent_destroy_published, if: :is_published
-  # before_update :push_published_to_s3
   before_validation :set_defaults, on: :create
+
+  scope :find_latest_translation, ->(resource_id, language_id) do
+    where(resource_id: resource_id, language_id: language_id)
+      .order(version: :desc)
+      .first
+  end
 
   def s3_url
     obj = Package.s3_object(self)

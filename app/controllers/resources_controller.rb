@@ -73,10 +73,7 @@ class ResourcesController < ApplicationController
   end
 
   def find_latest_translation(language_id)
-    Translation
-      .where(resource_id: params["resource_id"], language_id: language_id)
-      .order(version: :desc)
-      .first
+    Translation.find_latest_translation(params["resource_id"], language_id)
   end
 
   def cached_index_json

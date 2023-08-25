@@ -80,8 +80,6 @@ Rails.application.configure do
       resource "*", headers: :any, methods: [:get, :post, :put, :patch, :options, :delete]
     end
   end
-
-  config.active_job.queue_adapter = :sidekiq
 end
 
 Rails.application.routes.default_url_options = {
