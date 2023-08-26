@@ -16,12 +16,11 @@ resource "TrainingTips" do
     let(:attributes) do
       {
         tool: "kgp",
-	      locale: "en",
-	      "tip-id": tip.id,
-	      "is-completed": true
+        locale: "en",
+        "tip-id": tip.id,
+        "is-completed": true
       }
     end
-
 
     it "create training tip" do
       do_request data: {type: "training-tip", attributes: attributes}
