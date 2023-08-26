@@ -37,6 +37,8 @@ Rails.application.routes.draw do
     delete "tools/:id", to: "tool_groups#delete_tool"
   end
 
+  resources :training_tips, path: "training-tips"
+
   # Rule Languages
   resources :tool_groups, path: "tool-groups", only: [] do
     resources :rule_languages, path: "rules-language", only: [:create, :destroy, :update]
