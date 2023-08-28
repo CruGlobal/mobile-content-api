@@ -40,8 +40,9 @@ class ResourcesController < ApplicationController
 
   def publish_translation
     if valid_publish_params?
+      byebug
       publish_translations
-      head :no_content
+
     else
       render json: {errors: {"errors" => [{source: {pointer: "/data/attributes/id"}, detail: "Record not found."}]}}, status: :unprocessable_entity
     end
@@ -50,11 +51,7 @@ class ResourcesController < ApplicationController
   private
 
   def valid_publish_params?
-    params["data"] &&
-      params["data"]["relationships"] &&
-      params["data"]["relationships"]["languages"] &&
-      params["data"]["relationships"]["languages"]["data"] &&
-      params["resource_id"]
+    params.dig("data", "relationships", "languages", "data") && params["resource_id"]
   end
 
   def publish_translations
