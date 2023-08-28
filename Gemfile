@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 source "https://rubygems.org"
-source 'https://gems.contribsys.com/' do
-  gem 'sidekiq-pro', '< 6'
+source "https://gems.contribsys.com/" do
+  gem "sidekiq-pro", "< 6"
 end
 git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
