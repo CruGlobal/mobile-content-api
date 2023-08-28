@@ -1,6 +1,5 @@
 class PublishTranslationJob
   include Sidekiq::Job
-  queue_as :default
 
   def perform(id)
     translation = Translation.find(id)
