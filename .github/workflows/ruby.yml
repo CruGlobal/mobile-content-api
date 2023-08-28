@@ -64,6 +64,8 @@ jobs:
         uses: ruby/setup-ruby@v1
         with:
           bundler-cache: true
+        env:
+          BUNDLE_GEMS__CONTRIBSYS__COM: ${{ secrets.BUNDLE_GEMS__CONTRIBSYS__COM }}
 
       - name: Bundle audit
         run: bundle exec bundle audit check --update --ignore CVE-2015-9284
