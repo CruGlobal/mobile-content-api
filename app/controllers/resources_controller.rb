@@ -40,9 +40,7 @@ class ResourcesController < ApplicationController
 
   def publish_translation
     if valid_publish_params?
-      byebug
-      publish_translations
-
+      render json: publish_translations, status: :ok
     else
       render json: {errors: {"errors" => [{source: {pointer: "/data/attributes/id"}, detail: "Record not found."}]}}, status: :unprocessable_entity
     end
@@ -55,17 +53,20 @@ class ResourcesController < ApplicationController
   end
 
   def publish_translations
+    translations = []
     languages = params["data"]["relationships"]["languages"]["data"]
 
     languages.each do |lang|
-      publish_translation_for_language(lang)
+      translations << publish_translation_for_language(lang)
     end
+    translations
   end
 
   def publish_translation_for_language(language_data)
     translation = find_latest_translation(language_data["id"])
     if translation
       PublishTranslationJob.perform_async(translation.id)
+      translation
     end
   end
 
