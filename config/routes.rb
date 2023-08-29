@@ -89,9 +89,11 @@ Rails.application.routes.draw do
     end
   end
 
-  authenticate :user, lambda { |u| u.admin? } do
-    mount Sidekiq::Web => "/sidekiq"
-  end
+  Sidekiq::Web.use Rack::Auth::Basic do |username, password|
+    username == ENV.fetch("SIDEKIQ_USERNAME") && password == ENV.fetch("SIDEKIQ_PASSWORD")
+  end if Rails.env.production?
+  mount Sidekiq::Web, at: "/sidekiq"
+
   mount ActionCable.server => "/cable"
   mount Raddocs::App => "/docs"
 end
