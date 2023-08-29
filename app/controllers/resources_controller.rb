@@ -63,15 +63,15 @@ class ResourcesController < ApplicationController
   end
 
   def publish_translation_for_language(language_data)
-    translation = find_latest_translation(language_data["id"])
+    translation = find_or_create_latest_translation(language_data["id"])
     if translation
       PublishTranslationJob.perform_async(translation.id)
       translation
     end
   end
 
-  def find_latest_translation(language_id)
-    Translation.find_latest_translation(params["resource_id"], language_id)
+  def find_or_create_latest_translation(language_id)
+    Translation.find_or_create_by!(resource_id: params["resource_id"], language_id: language_id, is_published: false)
   end
 
   def cached_index_json
