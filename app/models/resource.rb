@@ -60,13 +60,11 @@ class Resource < ActiveRecord::Base
 
     return translation if translation && !translation.is_published
 
-    draft = if translation && translation.is_published
-              translation.create_new_version
-            else
-              create_first_draft(language_id)
-            end
-
-    draft
+    if translation&.is_published
+      translation.create_new_version
+    else
+      create_first_draft(language_id)
+    end
   end
 
   def latest_translations
