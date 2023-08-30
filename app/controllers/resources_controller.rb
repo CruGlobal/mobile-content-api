@@ -63,14 +63,14 @@ class ResourcesController < ApplicationController
   end
 
   def publish_translation_for_language(language_data)
-    draft_translation = find_or_create_latest_translation(language_data["id"])
+    draft_translation = find_or_create_draft_translation(language_data["id"])
     if draft_translation
       PublishTranslationJob.perform_async(draft_translation.id)
       draft_translation
     end
   end
 
-  def find_or_create_latest_translation(language_id)
+  def find_or_create_draft_translation(language_id)
     resource = Resource.find(params["resource_id"])
 
     draft = resource.create_draft(language_id) if resource
