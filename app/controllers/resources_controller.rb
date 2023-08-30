@@ -53,25 +53,28 @@ class ResourcesController < ApplicationController
   end
 
   def publish_translations
-    translations = []
+    draft_translations = []
     languages = params["data"]["relationships"]["languages"]["data"]
 
     languages.each do |lang|
-      translations << publish_translation_for_language(lang)
+      draft_translations << publish_translation_for_language(lang)
     end
-    translations
+    draft_translations
   end
 
   def publish_translation_for_language(language_data)
-    translation = find_or_create_latest_translation(language_data["id"])
-    if translation
-      PublishTranslationJob.perform_async(translation.id)
-      translation
+    draft_translation = find_or_create_latest_translation(language_data["id"])
+    if draft_translation
+      PublishTranslationJob.perform_async(draft_translation.id)
+      draft_translation
     end
   end
 
   def find_or_create_latest_translation(language_id)
-    Translation.find_or_create_by!(resource_id: params["resource_id"], language_id: language_id, is_published: false)
+    resource = Resource.find(params["resource_id"])
+
+    draft = resource.create_draft(language_id) if resource
+    draft
   end
 
   def cached_index_json

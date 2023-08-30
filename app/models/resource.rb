@@ -57,7 +57,8 @@ class Resource < ActiveRecord::Base
 
   def create_draft(language_id)
     translation = Translation.latest_translation(id, language_id)
-    translation ? translation.create_new_version : create_first_draft(language_id)
+    draft = translation ? translation.create_new_version : create_first_draft(language_id)
+    draft
   end
 
   def latest_translations
