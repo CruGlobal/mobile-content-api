@@ -82,8 +82,6 @@ class Translation < ActiveRecord::Base
   end
 
   def push_published_to_s3
-    return unless is_published
-
     if resource.uses_onesky?
       ActiveRecord::Base.transaction do
         phrases = manifest_translated_phrases
