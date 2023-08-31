@@ -1,5 +1,4 @@
-class TrainingTipsController < ApplicationController
-  before_action :authorize!
+class TrainingTipsController < WithUserController
   before_action :convert_hyphen_to_dash, only: [:create]
 
   def create
@@ -10,7 +9,7 @@ class TrainingTipsController < ApplicationController
 
   def create_training_tip
     created = TrainingTip.create!(permit_params(:tool, :locale, :tip_id, :is_completed, :user_id))
-    response.headers["Location"] = "tool_groups/#{created.id}"
+    response.headers["Location"] = "training_tips/#{created.id}"
     render json: created, status: :created
   rescue ActiveRecord::RecordInvalid => e
     render json: {errors: formatted_errors("record_invalid", e)}, status: :unprocessable_entity
