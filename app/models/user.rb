@@ -15,11 +15,11 @@ class User < ApplicationRecord
       attr_name.tr!("-", "_")
       attribute = user_attributes.where(key: attr_name).first_or_initialize
 
-      if value.nil?
-        attribute.destroy unless attribute.new_record?
-      else
+      if value
         attribute.value = value.to_s
         attribute.save!
+      else
+        attribute.destroy unless attribute.new_record?
       end
     end
   end
