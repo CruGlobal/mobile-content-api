@@ -10,6 +10,7 @@ resource "TrainingTips" do
   let(:authorization) { AuthToken.generic_token }
 
   let(:tip) { FactoryBot.create(:tip) }
+  let(:user) { FactoryBot.create(:user) }
 
   post "training-tips" do
     requires_authorization
@@ -18,7 +19,8 @@ resource "TrainingTips" do
         tool: "kgp",
         locale: "en",
         "tip-id": tip.id,
-        "is-completed": true
+        "is-completed": true,
+        user_id: user.id
       }
     end
 

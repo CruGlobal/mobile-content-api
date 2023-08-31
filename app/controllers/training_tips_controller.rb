@@ -9,7 +9,7 @@ class TrainingTipsController < ApplicationController
   private
 
   def create_training_tip
-    created = TrainingTip.create!(permit_params(:tool, :locale, :tip_id, :is_completed))
+    created = TrainingTip.create!(permit_params(:tool, :locale, :tip_id, :is_completed, :user_id))
     response.headers["Location"] = "tool_groups/#{created.id}"
     render json: created, status: :created
   rescue ActiveRecord::RecordInvalid => e
