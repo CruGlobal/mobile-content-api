@@ -91,8 +91,6 @@ class Translation < ActiveRecord::Base
     end
 
     Package.new(self).push_to_s3
-  rescue => e
-    Rollbar.error(e)
   end
 
   private
