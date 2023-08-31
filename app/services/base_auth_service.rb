@@ -4,9 +4,37 @@ require "httparty"
 
 class BaseAuthService
   include HTTParty
-  include ::CommonServiceAuthUserMethods
 
   class << self
+    def user_existence_validation(create_user, users)
+      raise ::UserAlreadyExist::Error if user_already_exist(create_user, users)
+      raise ::UserNotFound::Error if user_not_found(create_user, users)
+    end
+  
+    def first_or_initialize_user(primary_key, id, user_atts)
+      user = User.where(primary_key => id).first_or_initialize
+      user.update!(user_atts)
+      user
+    end
+  
+    def new_user(primary_key, id, user_atts)
+      user = User.new(primary_key => id)
+      user.update!(user_atts)
+      user
+    end
+  
+    def existent_user(create_user, users)
+      users[0] if !create_user && !create_user.nil? && !users.empty?
+    end
+  
+    def user_already_exist(create_user, users)
+      create_user && !users.empty?
+    end
+  
+    def user_not_found(create_user, users)
+      !create_user && !create_user.nil? && users.empty?
+    end
+  
     def find_user_by_token(access_token, create_user)
       decoded_token = decode_token(access_token)
       validate_token!(access_token, decoded_token)
@@ -31,14 +59,14 @@ class BaseAuthService
       create_user = user_atts["create_user"]
       users = User.where(primary_key => remote_user_id)
 
-      ::CommonServiceAuthUserMethods.user_existence_validation(create_user, users)
-      user = ::CommonServiceAuthUserMethods.existent_user(create_user, users)
+      user_existence_validation(create_user, users)
+      user = existent_user(create_user, users)
       return user if user
 
       if create_user.nil?
-        ::CommonServiceAuthUserMethods.first_or_initialize_user(primary_key, remote_user_id, user_atts)
+        first_or_initialize_user(primary_key, remote_user_id, user_atts)
       else
-        ::CommonServiceAuthUserMethods.new_user(primary_key, remote_user_id, user_atts)
+        new_user(primary_key, remote_user_id, user_atts)
       end
     end
 
