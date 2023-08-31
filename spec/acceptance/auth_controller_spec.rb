@@ -412,7 +412,7 @@ resource "Auth" do
             expect(response["errors"][0]["detail"]).to eq("User account not found.")
           end
 
-          it "passing flag 'create_user: true' it succedess" do
+          it "passing flag 'create_user: true' it success" do
             expect do
               do_request data: {type: type, attributes: {apple_auth_code: apple_auth_code, apple_given_name: "Levi", apple_family_name: "Eggert", create_user: true}}
             end.to change(User, :count).by(1)
