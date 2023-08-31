@@ -27,7 +27,6 @@ RSpec.describe BaseAuthService do
     end.to raise_exception(StandardError, "extending class should implement extract_user_atts(access_token, decoded_token)")
   end
 
-
   describe "#existent_user" do
     context "when user already exists" do
       let(:create_user) { false }
@@ -162,5 +161,4 @@ RSpec.describe BaseAuthService do
       expect(user.email).to eql email
     end
   end
-
 end

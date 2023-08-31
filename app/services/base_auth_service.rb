@@ -10,31 +10,31 @@ class BaseAuthService
       raise ::UserAlreadyExist::Error if user_already_exist(create_user, users)
       raise ::UserNotFound::Error if user_not_found(create_user, users)
     end
-  
+
     def first_or_initialize_user(primary_key, id, user_atts)
       user = User.where(primary_key => id).first_or_initialize
       user.update!(user_atts)
       user
     end
-  
+
     def new_user(primary_key, id, user_atts)
       user = User.new(primary_key => id)
       user.update!(user_atts)
       user
     end
-  
+
     def existent_user(create_user, users)
       users[0] if !create_user && !create_user.nil? && !users.empty?
     end
-  
+
     def user_already_exist(create_user, users)
       create_user && !users.empty?
     end
-  
+
     def user_not_found(create_user, users)
       !create_user && !create_user.nil? && users.empty?
     end
-  
+
     def find_user_by_token(access_token, create_user)
       decoded_token = decode_token(access_token)
       validate_token!(access_token, decoded_token)
