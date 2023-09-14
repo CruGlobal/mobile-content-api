@@ -16,4 +16,10 @@ class UserSerializer < ActiveModel::Serializer
   def family_name
     object.last_name
   end
+
+  def attributes(*args)
+    hash = super
+    object.user_attributes.each { |attribute| hash["attr_#{attribute.key}"] = attribute.value }
+    hash
+  end
 end
