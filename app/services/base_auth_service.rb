@@ -41,8 +41,7 @@ class BaseAuthService
       validate_expected_fields!(decoded_token)
 
       user_atts = extract_user_atts(access_token, decoded_token)
-      user_atts["create_user"] = create_user
-      setup_user(remote_user_id(decoded_token, user_atts), user_atts)
+      setup_user(remote_user_id(decoded_token, user_atts), user_atts, create_user)
     rescue JSON::ParserError, JWT::DecodeError => e
       raise self::FailedAuthentication, "#{e.class.name}: #{e.message}"
     end
@@ -55,8 +54,7 @@ class BaseAuthService
       end
     end
 
-    def setup_user(remote_user_id, user_atts)
-      create_user = user_atts["create_user"]
+    def setup_user(remote_user_id, user_atts, create_user)
       users = User.where(primary_key => remote_user_id)
 
       user_existence_validation(create_user, users)

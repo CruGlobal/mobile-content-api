@@ -27,9 +27,8 @@ class AppleAuthService < BaseAuthService
       user_atts = {apple_user_id: id_token.sub, email: id_token.email}
       user_atts["first_name"] = apple_given_name if apple_given_name.present?
       user_atts["last_name"] = apple_family_name if apple_family_name.present?
-      user_atts["create_user"] = create_user
 
-      setup_user(id_token.sub, user_atts)
+      setup_user(id_token.sub, user_atts, create_user)
     rescue JSON::ParserError, Faraday::ParsingError, AppleID::IdToken::VerificationFailed => e
       raise self::FailedAuthentication, "#{e.class.name}: #{e.message}"
     rescue AppleID::Client::Error => e
