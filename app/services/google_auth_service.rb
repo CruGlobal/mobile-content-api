@@ -24,7 +24,7 @@ class GoogleAuthService < BaseAuthService
       decode_token(google_id_token)
     end
 
-    def remote_user_id(decoded_token)
+    def remote_user_id(decoded_token, user_atts = {})
       decoded_token["sub"]
     end
 

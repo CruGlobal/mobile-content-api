@@ -31,24 +31,8 @@ class OktaAuthService < BaseAuthService
       end
     end
 
-    def remote_user_id(decoded_token)
-      # noop since remote_user_id for okta is ssoguid given in the userinfo call
-    end
-
-    # reimplement setup_user to search on sso_guid (from user_atts) instead of using remote_user_id
-    def setup_user(remote_user_id, user_atts)
-      create_user = user_atts["create_user"]
-      users = User.where(primary_key => user_atts[primary_key])
-
-      user_existence_validation(create_user, users)
-      user = existent_user(create_user, users)
-      return user if user
-
-      if create_user.nil?
-        first_or_initialize_user(primary_key, user_atts[primary_key], user_atts)
-      else
-        new_user(primary_key, user_atts[primary_key], user_atts)
-      end
+    def remote_user_id(decoded_token, user_atts = {})
+      user_atts[primary_key]
     end
 
     def extract_user_atts(access_token, _decoded_token)

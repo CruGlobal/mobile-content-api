@@ -180,7 +180,7 @@ RSpec.describe OktaAuthService do
 
         it "returns the same user" do
           expect do
-            OktaAuthService.send(:setup_user, nil, new_okta_user_info)
+            OktaAuthService.send(:setup_user, sso_guid, new_okta_user_info)
           end.to change(User, :count).by(0)
 
           user = User.last
@@ -195,7 +195,7 @@ RSpec.describe OktaAuthService do
       context "with ':create_user' as true when the user does not exist" do
         it "returns a new user" do
           expect do
-            OktaAuthService.send(:setup_user, true, okta_user_info)
+            OktaAuthService.send(:setup_user, sso_guid, okta_user_info)
           end.to change(User, :count).by(1)
 
           user = User.last

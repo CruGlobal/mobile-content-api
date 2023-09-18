@@ -42,7 +42,7 @@ class BaseAuthService
 
       user_atts = extract_user_atts(access_token, decoded_token)
       user_atts["create_user"] = create_user
-      setup_user(remote_user_id(decoded_token), user_atts)
+      setup_user(remote_user_id(decoded_token, user_atts), user_atts)
     rescue JSON::ParserError, JWT::DecodeError => e
       raise self::FailedAuthentication, "#{e.class.name}: #{e.message}"
     end
@@ -86,7 +86,7 @@ class BaseAuthService
       raise("extending class should implement expected_fields (returning array of strings)")
     end
 
-    def remote_user_id(decoded_token)
+    def remote_user_id(decoded_token, user_atts = {})
       raise("extending class should implement remote_user_id(decoded_token)")
     end
 
