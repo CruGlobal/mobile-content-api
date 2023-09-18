@@ -29,10 +29,10 @@ class AuthController < ApplicationController
 
     render json: token, status: :created if token
   rescue UserAlreadyExist::Error => e
-    render json: json_errors(e.code, e.message), status: :bad_request
+    render json: json_errors("user_already_exists", e.message), status: :bad_request
     nil
   rescue UserNotFound::Error => e
-    render json: json_errors(e.code, e.message), status: :bad_request
+    render json: json_errors("user_not_found", e.message), status: :bad_request
     nil
   rescue BaseAuthService::FailedAuthentication => e
     render_bad_request e.message
