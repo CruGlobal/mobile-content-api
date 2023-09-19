@@ -2,7 +2,7 @@
 
 class UserSerializer < ActiveModel::Serializer
   type "user"
-  attributes :sso_guid, :created_at, :name
+  attributes :sso_guid, :created_at, :name, :email
   attribute :first_name, key: "given-name"
   attribute :last_name, key: "family-name"
 
