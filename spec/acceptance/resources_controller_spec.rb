@@ -511,11 +511,11 @@ resource "Resources" do
     end
 
     it "only get name and system of resources" do
-      do_request "fields[resource]": "name,system"
+      do_request "fields[resource]": "name,system,attr-banner-image"
 
       expect(status).to be(200)
-      data = JSON.parse(response_body)["data"][1]
-      expect(data["attributes"].keys).to eq ["name"]
+      data = JSON.parse(response_body)["data"][0]
+      expect(data["attributes"].keys).to eq ["name", "attr-banner-image"]
       expect(data["relationships"].keys).to eq ["system"]
     end
 

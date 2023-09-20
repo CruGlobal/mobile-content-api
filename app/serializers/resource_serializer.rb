@@ -19,9 +19,13 @@ class ResourceSerializer < ActiveModel::Serializer
 
   belongs_to :default_variant, key: "default-variant", if: -> { object&.resource_type&.name == "metatool" }
 
-  def attributes(*args)
+  def attributes(requested_attrs = nil, reload = false)
     hash = super
-    object.resource_attributes.each { |attribute| hash["attr_#{attribute.key}"] = attribute.value }
+    object.resource_attributes.each { |attribute|
+      key = "attr-#{attribute.key}".tr("_", "-").to_sym
+      next unless requested_attrs.nil? || requested_attrs.include?(key)
+      hash[key] = attribute.value
+    }
     hash
   end
 end
