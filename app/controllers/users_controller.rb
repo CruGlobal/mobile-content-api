@@ -2,7 +2,7 @@
 
 class UsersController < WithUserController
   def show
-    render json: @user
+    render json: @user, include: params[:include], fields: field_params
   end
 
   def destroy
