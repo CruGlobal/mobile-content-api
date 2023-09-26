@@ -2,8 +2,9 @@
 
 class ResourceSerializer < ActiveModel::Serializer
   type "resource"
-  attributes :id, :name, :abbreviation, :description, :onesky_project_id, :total_views, :manifest
-  attribute :resource_type_name, key: "resource-type"
+  attributes :id, :name, :abbreviation, :description, :onesky_project_id, :manifest
+  attribute :resource_type_name, key: :"resource-type"
+  attribute :total_views, key: :"total-views"
 
   belongs_to :system
   belongs_to :metatool, if: -> { object&.resource_type&.name != "metatool" }
