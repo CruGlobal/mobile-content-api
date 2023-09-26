@@ -11,12 +11,6 @@ class BaseAuthService
       raise ::UserNotFound::Error if user_not_found(create_user, users)
     end
 
-    def first_or_create_user(primary_key, id, user_atts)
-      user = User.where(primary_key => id).first_or_initialize
-      user.update!(user_atts)
-      user
-    end
-
     def new_user(primary_key, id, user_atts)
       user = User.new(primary_key => id)
       user.update!(user_atts)
@@ -55,16 +49,16 @@ class BaseAuthService
     end
 
     def setup_user(remote_user_id, user_atts, create_user)
-      users = User.where(primary_key => remote_user_id)
+      user = User.where(primary_key => remote_user_id).first
 
-      user_existence_validation(create_user, users)
-      user = existent_user(create_user, users)
-      return user if user
+      raise ::UserAlreadyExist::Error if user && create_user
+      raise ::UserNotFound::Error if !user && !create_user.nil? && !create_user
 
-      if create_user.nil?
-        first_or_create_user(primary_key, remote_user_id, user_atts)
-      else
+      if !user && (create_user.nil? || create_user)
         new_user(primary_key, remote_user_id, user_atts)
+      else
+        user.update!(user_atts)
+        user
       end
     end
 

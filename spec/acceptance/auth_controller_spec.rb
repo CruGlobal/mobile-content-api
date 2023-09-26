@@ -189,10 +189,10 @@ resource "Auth" do
 
           user = User.last
           expect(user.email).to eq("daniel.frett@gmail.com")
-          expect(user.first_name).to eq("First")
-          expect(user.last_name).to eq("Last")
-          expect(user.short_name).to eq(nil)
-          expect(user.name).to eq(nil)
+          expect(user.first_name).to eq("Daniel")
+          expect(user.last_name).to eq("Frett")
+          expect(user.short_name).to eq("Daniel")
+          expect(user.name).to eq("Daniel Frett")
 
           expect(status).to be(201)
           data = JSON.parse(response_body)["data"]
@@ -311,8 +311,8 @@ resource "Auth" do
           end.to_not change(User, :count)
 
           user = User.last
-          expect(user.first_name).to eq("Wonder")
-          expect(user.last_name).to eq("Woman")
+          expect(user.first_name).to eq("Andrew")
+          expect(user.last_name).to eq("Roth")
 
           expect(status).to be(201)
           data = JSON.parse(response_body)["data"]
