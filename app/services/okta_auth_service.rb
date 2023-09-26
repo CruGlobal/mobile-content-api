@@ -53,15 +53,5 @@ class OktaAuthService < BaseAuthService
         gr_master_person_id: userinfo_payload["grMasterPersonId"]
       }.with_indifferent_access
     end
-
-    def json_errors(code, detail)
-      {errors:
-        [
-          {
-            code: code,
-            detail: detail
-          }
-        ]}
-    end
   end
 end
