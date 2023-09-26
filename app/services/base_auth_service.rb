@@ -6,27 +6,10 @@ class BaseAuthService
   include HTTParty
 
   class << self
-    def user_existence_validation(create_user, users)
-      raise ::UserAlreadyExist::Error if user_already_exist(create_user, users)
-      raise ::UserNotFound::Error if user_not_found(create_user, users)
-    end
-
     def new_user(primary_key, id, user_atts)
       user = User.new(primary_key => id)
       user.update!(user_atts)
       user
-    end
-
-    def existent_user(create_user, users)
-      users[0] if !create_user && !create_user.nil? && !users.empty?
-    end
-
-    def user_already_exist(create_user, users)
-      create_user && !users.empty?
-    end
-
-    def user_not_found(create_user, users)
-      !create_user && !create_user.nil? && users.empty?
     end
 
     def find_user_by_token(access_token, create_user)
