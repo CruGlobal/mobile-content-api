@@ -6,12 +6,6 @@ class BaseAuthService
   include HTTParty
 
   class << self
-    def new_user(primary_key, id, user_atts)
-      user = User.new(primary_key => id)
-      user.update!(user_atts)
-      user
-    end
-
     def find_user_by_token(access_token, create_user)
       decoded_token = decode_token(access_token)
       validate_token!(access_token, decoded_token)
@@ -38,11 +32,11 @@ class BaseAuthService
       raise ::UserNotFound::Error if !user && !create_user.nil? && !create_user
 
       if !user && (create_user.nil? || create_user)
-        new_user(primary_key, remote_user_id, user_atts)
-      else
-        user.update!(user_atts)
-        user
+        user = User.new(primary_key => remote_user_id)
       end
+
+      user.update!(user_atts)
+      user
     end
 
     def service_name
