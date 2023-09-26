@@ -1,4 +1,6 @@
 class User < ApplicationRecord
+  attr_accessor :create_user
+
   has_many :user_counters, dependent: :destroy
   has_many :favorite_tools, dependent: :destroy
   has_many :tools, through: :favorite_tools

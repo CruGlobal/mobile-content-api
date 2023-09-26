@@ -11,16 +11,16 @@ class AuthController < ApplicationController
     token = case method
     when :apple_auth
       # special case for apple, which has given and family name passed in
-      user, apple_refresh_token = AppleAuthService.find_user_by_auth_code(data_attrs[:apple_auth_code], data_attrs[:apple_given_name], data_attrs[:apple_family_name])
+      user, apple_refresh_token = AppleAuthService.find_user_by_auth_code(data_attrs[:apple_auth_code], data_attrs[:apple_given_name], data_attrs[:apple_family_name], data_attrs[:create_user])
       AuthToken.new(user: user, apple_refresh_token: apple_refresh_token)
     when :apple_refresh
-      user = AppleAuthService.find_user_by_refresh_token(data_attrs[:apple_refresh_token])
+      user = AppleAuthService.find_user_by_refresh_token(data_attrs[:apple_refresh_token], data_attrs[:create_user])
       AuthToken.new(user: user)
     when :google
-      user = GoogleAuthService.find_user_by_token(data_attrs[:google_id_token])
+      user = GoogleAuthService.find_user_by_token(data_attrs[:google_id_token], data_attrs[:create_user])
       AuthToken.new(user: user)
     when :okta, :facebook
-      user = "::#{method.to_s.capitalize}AuthService".constantize.find_user_by_token(data_attrs[:"#{method}_access_token"])
+      user = "::#{method.to_s.capitalize}AuthService".constantize.find_user_by_token(data_attrs[:"#{method}_access_token"], data_attrs[:create_user])
       AuthToken.new(user: user)
     else
       AccessCode.validate(data_attrs[:code])
@@ -28,6 +28,12 @@ class AuthController < ApplicationController
     end
 
     render json: token, status: :created if token
+  rescue UserAlreadyExist::Error => e
+    render json: json_errors("user_already_exists", e.message), status: :bad_request
+    nil
+  rescue UserNotFound::Error => e
+    render json: json_errors("user_not_found", e.message), status: :bad_request
+    nil
   rescue BaseAuthService::FailedAuthentication => e
     render_bad_request e.message
     nil
@@ -43,5 +49,15 @@ class AuthController < ApplicationController
     code.errors.add(:code, message)
 
     render_error(code, :bad_request)
+  end
+
+  def json_errors(code, detail)
+    {errors:
+      [
+        {
+          code: code,
+          detail: detail
+        }
+      ]}
   end
 end

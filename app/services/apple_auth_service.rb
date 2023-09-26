@@ -2,17 +2,18 @@
 
 class AppleAuthService < BaseAuthService
   class << self
-    def find_user_by_refresh_token(refresh_token)
+    def find_user_by_refresh_token(refresh_token, create_user = nil)
       apple_id_client.refresh_token = refresh_token
       find_user
     end
 
-    def find_user_by_auth_code(apple_auth_code, apple_given_name = nil, apple_family_name = nil)
+    def find_user_by_auth_code(apple_auth_code, apple_given_name = nil, apple_family_name = nil, create_user = nil)
       apple_id_client.authorization_code = apple_auth_code
-      [find_user(apple_given_name, apple_family_name), @response.refresh_token]
+      user = find_user(apple_given_name, apple_family_name, create_user)
+      [user, @response.refresh_token]
     end
 
-    def find_user(apple_given_name = nil, apple_family_name = nil)
+    def find_user(apple_given_name = nil, apple_family_name = nil, create_user = nil)
       @response = apple_id_client.access_token!
       id_token = @response.id_token
 
@@ -26,7 +27,8 @@ class AppleAuthService < BaseAuthService
       user_atts = {apple_user_id: id_token.sub, email: id_token.email}
       user_atts["first_name"] = apple_given_name if apple_given_name.present?
       user_atts["last_name"] = apple_family_name if apple_family_name.present?
-      setup_user(id_token.sub, user_atts)
+
+      setup_user(id_token.sub, user_atts, create_user)
     rescue JSON::ParserError, Faraday::ParsingError, AppleID::IdToken::VerificationFailed => e
       raise self::FailedAuthentication, "#{e.class.name}: #{e.message}"
     rescue AppleID::Client::Error => e
