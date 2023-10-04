@@ -349,13 +349,42 @@ resource "Auth" do
       end
 
       it "handles token expired" do
-        allow(Google::Auth::IDTokens).to receive(:verify_oidc).and_raise(Google::Auth::IDTokens::ExpiredTokenError)
+        allow(Google::Auth::IDTokens).to receive(:verify_oidc).and_raise(Google::Auth::IDTokens::ExpiredTokenError, "message")
 
         expect do
           do_request data: {type: type, attributes: {google_id_token: google_id_token}}
         end.to_not change(User, :count)
 
-        expect(response_body).to include("error")
+        expect(status).to be(400)
+        error = JSON.parse(response_body)["errors"][0]
+        expect(error["code"]).to eq("invalid_token")
+        expect(error["detail"]).to eq("message")
+      end
+
+      it "handles token invalid signature" do
+        allow(Google::Auth::IDTokens).to receive(:verify_oidc).and_raise(Google::Auth::IDTokens::SignatureError, "Token not verified as issued by Google")
+
+        expect do
+          do_request data: {type: type, attributes: {google_id_token: google_id_token}}
+        end.to_not change(User, :count)
+
+        expect(status).to be(400)
+        error = JSON.parse(response_body)["errors"][0]
+        expect(error["code"]).to eq("invalid_token")
+        expect(error["detail"]).to eq("Token not verified as issued by Google")
+      end
+
+      it "handles token invalid audience" do
+        allow(Google::Auth::IDTokens).to receive(:verify_oidc).and_raise(Google::Auth::IDTokens::AudienceMismatchError, "Token aud mismatch: 71275134527-st5s63prkvuh46t7ohb1gmhq39qokh78.apps.googleusercontent.com")
+
+        expect do
+          do_request data: {type: type, attributes: {google_id_token: google_id_token}}
+        end.to_not change(User, :count)
+
+        expect(status).to be(400)
+        error = JSON.parse(response_body)["errors"][0]
+        expect(error["code"]).to eq("invalid_token")
+        expect(error["detail"]).to include("Token aud mismatch")
       end
 
       it "handles token response not having all the fields needed" do

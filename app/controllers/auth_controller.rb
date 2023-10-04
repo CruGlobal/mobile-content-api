@@ -35,7 +35,8 @@ class AuthController < ApplicationController
     render json: json_errors("user_not_found", e.message), status: :bad_request
     nil
   rescue BaseAuthService::FailedAuthentication => e
-    render_bad_request e.message
+    # TODO: change this to an unauthorized status once the Android app has been updated
+    render json: json_errors("invalid_token", e.message), status: :bad_request
     nil
   rescue AccessCode::FailedAuthentication => e
     render_bad_request e.message
