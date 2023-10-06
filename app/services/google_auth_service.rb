@@ -4,8 +4,8 @@ class GoogleAuthService < BaseAuthService
   class << self
     def find_user_by_token(google_id_token, create_user)
       super
-    rescue Google::Auth::IDTokens::ExpiredTokenError => e
-      raise self::FailedAuthentication, e.message
+    rescue Google::Auth::IDTokens::SignatureError, Google::Auth::IDTokens::AudienceMismatchError, Google::Auth::IDTokens::ExpiredTokenError => e
+      raise FailedAuthentication, e.message
     end
 
     private
