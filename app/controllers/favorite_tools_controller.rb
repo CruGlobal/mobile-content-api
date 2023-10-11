@@ -36,6 +36,6 @@ class FavoriteToolsController < WithUserController
   end
 
   def render_current_favorites
-    render json: current_user.tools, fields: field_params({resource: []})
+    render json: current_user.tools, include: params[:include], fields: field_params({resource: []})
   end
 end
