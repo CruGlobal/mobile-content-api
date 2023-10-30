@@ -11,7 +11,8 @@ class AuthController < ApplicationController
     token = case method
     when :apple_auth
       # special case for apple, which has given and family name passed in
-      user, apple_refresh_token = AppleAuthService.find_user_by_auth_code(data_attrs[:apple_auth_code], data_attrs[:apple_given_name], data_attrs[:apple_family_name], data_attrs[:create_user])
+      user, apple_refresh_token = AppleAuthService.find_user_by_auth_code(data_attrs[:apple_auth_code], data_attrs[:apple_given_name], data_attrs[:apple_family_name],
+        data_attrs[:apple_name], data_attrs[:create_user])
       AuthToken.new(user: user, apple_refresh_token: apple_refresh_token)
     when :apple_refresh
       user = AppleAuthService.find_user_by_refresh_token(data_attrs[:apple_refresh_token], data_attrs[:create_user])

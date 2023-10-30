@@ -432,7 +432,7 @@ resource "Auth" do
         context "when user does not exists" do
           it "passing flag 'create_user: false' it returns error 'user_not_found'" do
             expect do
-              do_request data: {type: type, attributes: {apple_auth_code: apple_auth_code, apple_given_name: "Levi", apple_family_name: "Eggert", create_user: false}}
+              do_request data: {type: type, attributes: {apple_auth_code: apple_auth_code, apple_given_name: "Levi", apple_family_name: "Eggert", apple_name: "Levi Eggert Apple Name", create_user: false}}
             end.to change(User, :count).by(0)
 
             expect(status).to be(400)
@@ -443,13 +443,14 @@ resource "Auth" do
 
           it "passing flag 'create_user: true' it success" do
             expect do
-              do_request data: {type: type, attributes: {apple_auth_code: apple_auth_code, apple_given_name: "Levi", apple_family_name: "Eggert", create_user: true}}
+              do_request data: {type: type, attributes: {apple_auth_code: apple_auth_code, apple_given_name: "Levi", apple_family_name: "Eggert", apple_name: "Levi Eggert Apple Name", create_user: true}}
             end.to change(User, :count).by(1)
 
             user = User.last
             expect(user.email).to eq("levi.eggert@gmail.com")
             expect(user.first_name).to eq("Levi")
             expect(user.last_name).to eq("Eggert")
+            expect(user.name).to eq("Levi Eggert Apple Name")
 
             expect(status).to be(201)
             data = JSON.parse(response_body)["data"]
@@ -466,7 +467,7 @@ resource "Auth" do
             FactoryBot.create(:user, email: "levi.eggert@gmail.com", apple_user_id: "001361.a5cafb7f42c845b8809c48d0f2b00889.1804")
 
             expect do
-              do_request data: {type: type, attributes: {apple_auth_code: apple_auth_code, apple_given_name: "Levi", apple_family_name: "Eggert", create_user: true}}
+              do_request data: {type: type, attributes: {apple_auth_code: apple_auth_code, apple_given_name: "Levi", apple_family_name: "Eggert", apple_name: "Levi Eggert Apple Name", create_user: true}}
             end.to change(User, :count).by(0)
 
             expect(status).to be(400)
@@ -477,7 +478,7 @@ resource "Auth" do
 
           it "matches an existing user and passing flag ':create_user' in 'nil' it succeeds" do
             expect do
-              do_request data: {type: type, attributes: {apple_auth_code: apple_auth_code, apple_given_name: "Levi", apple_family_name: "Eggert", create_user: nil}}
+              do_request data: {type: type, attributes: {apple_auth_code: apple_auth_code, apple_given_name: "Levi", apple_family_name: "Eggert", apple_name: "Levi Eggert Apple Name", create_user: nil}}
             end.to change(User, :count).by(0)
 
             user = User.last
@@ -535,7 +536,7 @@ resource "Auth" do
           ).to_return(status: 200, body: "INVALID JSON", headers: {"Content-Type" => "application/json"})
 
         expect do
-          do_request data: {type: type, attributes: {apple_auth_code: apple_auth_code, apple_given_name: "Levi", apple_family_name: "Eggert"}}
+          do_request data: {type: type, attributes: {apple_auth_code: apple_auth_code, apple_given_name: "Levi", apple_family_name: "Eggert", apple_name: "Levi Eggert Apple Name"}}
         end.to_not change(User, :count)
 
         expect(response_body.inspect).to include("Faraday::ParsingError")
@@ -547,7 +548,7 @@ resource "Auth" do
           .to_return(status: 200, body: "invalid keys")
 
         expect do
-          do_request data: {type: type, attributes: {apple_auth_code: apple_auth_code, apple_given_name: "Levi", apple_family_name: "Eggert"}}
+          do_request data: {type: type, attributes: {apple_auth_code: apple_auth_code, apple_given_name: "Levi", apple_family_name: "Eggert", apple_name: "Levi Eggert Apple Name"}}
         end.to_not change(User, :count)
 
         expect(response_body.inspect).to include("error")
@@ -563,7 +564,7 @@ resource "Auth" do
 
         it "handles client error" do
           expect do
-            do_request data: {type: type, attributes: {apple_auth_code: apple_auth_code, apple_given_name: "Levi", apple_family_name: "Eggert"}}
+            do_request data: {type: type, attributes: {apple_auth_code: apple_auth_code, apple_given_name: "Levi", apple_family_name: "Eggert", apple_name: "Levi Eggert Apple Name"}}
           end.to_not change(User, :count)
 
           expect(response_body.inspect).to include("AppleID::Client::Error")
@@ -575,7 +576,7 @@ resource "Auth" do
           ENV["SECRET_KEY_BASE"] = "secret"
 
           expect do
-            do_request data: {type: type, attributes: {apple_auth_code: apple_auth_code, apple_given_name: "Levi", apple_family_name: "Eggert"}}
+            do_request data: {type: type, attributes: {apple_auth_code: apple_auth_code, apple_given_name: "Levi", apple_family_name: "Eggert", apple_name: "Levi Eggert Apple Name"}}
           end.to_not change(User, :count)
 
           expect(response_body.inspect).to include("AppleID::Client::Error")
