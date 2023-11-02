@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 require "simplecov"
-require_relative "./support/test_helpers"
-require_relative "./support/adobe_campaign_stub_helpers"
+require_relative "support/test_helpers"
+require_relative "support/adobe_campaign_stub_helpers"
 
 if ENV["CI"] == "true"
   require "simplecov-cobertura"

@@ -26,6 +26,15 @@ resource "FavoriteTools" do
       json_response = JSON.parse(response_body)["data"]
       expect(json_response).to match_array([{"type" => "resource", "id" => resource.id.to_s}, {"type" => "resource", "id" => resource2.id.to_s}])
     end
+
+    it "returns an index of all favorited tools with additional fields" do
+      do_request "fields[resource]": "name"
+      json_response = JSON.parse(response_body)["data"]
+      expect(json_response).to match_array([
+        {"type" => "resource", "id" => resource.id.to_s, "attributes" => {"name" => resource.name}},
+        {"type" => "resource", "id" => resource2.id.to_s, "attributes" => {"name" => resource2.name}}
+      ])
+    end
   end
 
   post "users/me/relationships/favorite-tools" do

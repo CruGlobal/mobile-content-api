@@ -11,6 +11,36 @@ resource "UsersController" do
   let(:resource) { Resource.first }
   let(:resource2) { Resource.second }
 
+  patch "users/:id" do
+    let(:user) { FactoryBot.create(:user) }
+    let!(:user_attribute) { FactoryBot.create(:user_attribute, user_id: user.id) }
+    let(:id) { user.id }
+
+    requires_okta_login
+
+    let(:data) {
+      {
+        type: "user",
+        attributes: {
+          "attr-new-attribute" => "new attribute",
+          "attr-remove-attribute" => nil,
+          "attr-new-second-attribute" => "true"
+        }
+      }
+    }
+
+    it "returns appropriate data" do
+      do_request id: id, data: data
+      expect(status).to eq(200)
+      json_response = JSON.parse(response_body)["data"]
+
+      expect(json_response).not_to be_nil
+      expect(json_response["attributes"].has_key?("attr-remove-attribute")).to eql false
+      expect(json_response["attributes"]["attr-new-attribute"]).to eql "new attribute"
+      expect(json_response["attributes"]["attr-new-second-attribute"]).to eql "true"
+    end
+  end
+
   get "users/me" do
     let(:user) { FactoryBot.create(:user) }
     requires_okta_login

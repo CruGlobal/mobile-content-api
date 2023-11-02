@@ -2,8 +2,9 @@
 
 class ResourceSerializer < ActiveModel::Serializer
   type "resource"
-  attributes :id, :name, :abbreviation, :description, :onesky_project_id, :total_views, :manifest
-  attribute :resource_type_name, key: "resource-type"
+  attributes :id, :name, :abbreviation, :description, :onesky_project_id, :manifest
+  attribute :resource_type_name, key: :"resource-type"
+  attribute :total_views, key: :"total-views"
 
   belongs_to :system
   belongs_to :metatool, if: -> { object&.resource_type&.name != "metatool" }
@@ -19,9 +20,13 @@ class ResourceSerializer < ActiveModel::Serializer
 
   belongs_to :default_variant, key: "default-variant", if: -> { object&.resource_type&.name == "metatool" }
 
-  def attributes(*args)
+  def attributes(requested_attrs = nil)
     hash = super
-    object.resource_attributes.each { |attribute| hash["attr_#{attribute.key}"] = attribute.value }
+    object.resource_attributes.each { |attribute|
+      key = "attr-#{attribute.key}".tr("_", "-").to_sym
+      next unless requested_attrs.nil? || requested_attrs.include?(key)
+      hash[key] = attribute.value
+    }
     hash
   end
 end

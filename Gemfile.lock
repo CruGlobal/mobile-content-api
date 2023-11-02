@@ -47,9 +47,9 @@ GEM
       erubi (~> 1.4)
       rails-dom-testing (~> 2.0)
       rails-html-sanitizer (~> 1.1, >= 1.2.0)
-    active_model_serializers (0.10.13)
-      actionpack (>= 4.1, < 7.1)
-      activemodel (>= 4.1, < 7.1)
+    active_model_serializers (0.10.14)
+      actionpack (>= 4.1)
+      activemodel (>= 4.1)
       case_transform (>= 0.2)
       jsonapi-renderer (>= 0.1.1.beta1, < 0.3)
     active_storage_validations (1.0.4)
@@ -136,13 +136,16 @@ GEM
     crack (0.4.5)
       rexml
     crass (1.0.6)
-    date (3.3.3)
-    ddtrace (1.13.0)
-      debase-ruby_core_source (= 3.2.1)
-      libdatadog (~> 3.0.0.1.0)
-      libddwaf (~> 1.9.0.0.0)
+    datadog-ci (0.2.0)
       msgpack
-    debase-ruby_core_source (3.2.1)
+    date (3.3.3)
+    ddtrace (1.15.0)
+      datadog-ci (~> 0.2.0)
+      debase-ruby_core_source (= 3.2.2)
+      libdatadog (~> 5.0.0.1.0)
+      libddwaf (~> 1.14.0.0.0)
+      msgpack
+    debase-ruby_core_source (3.2.2)
     declarative (0.0.20)
     diff-lcs (1.5.0)
     docile (1.4.0)
@@ -237,8 +240,8 @@ GEM
     jsonapi-renderer (0.2.2)
     jwt (2.7.1)
     language_server-protocol (3.17.0.3)
-    libdatadog (3.0.0.1.0)
-    libddwaf (1.9.0.0.1)
+    libdatadog (5.0.0.1.0)
+    libddwaf (1.14.0.0.0)
       ffi (~> 1.0)
     lint_roller (1.1.0)
     listen (3.8.0)
@@ -322,7 +325,7 @@ GEM
       byebug (~> 11.0)
       pry (>= 0.13, < 0.15)
     public_suffix (5.0.3)
-    puma (5.6.7)
+    puma (6.4.0)
       nio4r (~> 2.0)
     racc (1.7.1)
     rack (2.2.8)
@@ -554,7 +557,7 @@ PLATFORMS
 
 DEPENDENCIES
   action-cable-testing
-  active_model_serializers (= 0.10.13)
+  active_model_serializers (= 0.10.14)
   active_storage_validations
   adobe-campaign (~> 0.4.1)
   amazing_print
@@ -565,7 +568,7 @@ DEPENDENCIES
   bundler-audit
   byebug
   capybara (>= 3.26)
-  ddtrace (~> 1.10)
+  ddtrace (~> 1.15)
   dogstatsd-ruby (~> 5.3)
   dotenv-rails
   equivalent-xml (~> 0.6.0)
@@ -585,7 +588,7 @@ DEPENDENCIES
   ougai (~> 2.0)
   pg
   pry-byebug
-  puma (~> 5.0)
+  puma (~> 6.0)
   rack-cors
   rack-mini-profiler (~> 3.0)
   raddocs
