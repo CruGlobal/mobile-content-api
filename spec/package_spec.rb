@@ -372,16 +372,6 @@ describe Package do
     expect(Dir.exist?(directory)).to be_falsey
   end
 
-  def mock_onesky(project_id = nil)
-    ENV["ONESKY_API_SECRET"] ||= ""
-    project_id ||= Resource.find(1).onesky_project_id
-    response = RestClient::Response.new('{ "1":"value" }')
-    response.instance_variable_set :@code, 200
-    allow(RestClient).to receive(:get)
-      .with("https://platform.api.onesky.io/1/projects/#{project_id}/translations", any_args)
-      .and_return(response)
-  end
-
   def mock_dir_deletion
     allow(PageClient).to receive(:delete_temp_dir)
   end

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2023_08_18_225350) do
+ActiveRecord::Schema.define(version: 2023_11_02_190816) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
@@ -300,6 +300,7 @@ ActiveRecord::Schema.define(version: 2023_08_18_225350) do
     t.string "translated_description"
     t.string "manifest_name"
     t.string "translated_tagline"
+    t.text "publishing_errors"
     t.index ["language_id"], name: "index_translations_on_language_id"
     t.index ["resource_id", "language_id", "version"], name: "index_translations_on_resource_id_and_language_id_and_version", unique: true
     t.index ["resource_id"], name: "index_translations_on_resource_id"

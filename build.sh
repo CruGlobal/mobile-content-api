@@ -6,6 +6,7 @@ sleep 5
 PG_IP=$(docker inspect --format='{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' $PROJECT_NAME-postgres)
 
 docker buildx build $DOCKER_ARGS \
+    --build-arg SIDEKIQ_CREDS=$SIDEKIQ_CREDS \
     --build-arg TEST_DB_PASSWORD=password \
     --build-arg TEST_DB_USER=postgres \
     --build-arg TEST_DB_HOST=$PG_IP \

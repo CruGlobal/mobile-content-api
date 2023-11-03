@@ -47,7 +47,13 @@ class DraftsController < SecureController
 
   def edit
     translation = load_translation
-    translation.update_draft(data_attrs)
+
+    # Note that this endpoint isn't used for anything other than publishing to s3. Eventually once the new client switches
+    # to the new way of publishing, we'll delete this file
+    # see: https://jira.cru.org/browse/GT-2182
+    do_publishing = data_attrs[:is_published]
+
+    translation.push_published_to_s3 if do_publishing
     render json: translation, status: :ok
   end
 
