@@ -162,7 +162,7 @@ describe Translation do
     it "uploads the translation to S3" do
       package = double
       allow(Package).to receive(:new).and_return(package)
-      allow(package).to receive(:push_published_to_s3)
+      allow(package).to receive(:push_to_s3)
     end
 
     context "translated name and description" do

@@ -89,7 +89,7 @@ class Translation < ActiveRecord::Base
     end
 
     Package.new(self).push_to_s3
-    update(is_published: true)
+    update(is_published: true, publishing_errors: nil)
   end
 
   private

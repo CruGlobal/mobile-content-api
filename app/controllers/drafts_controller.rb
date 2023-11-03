@@ -53,7 +53,7 @@ class DraftsController < SecureController
     # see: https://jira.cru.org/browse/GT-2182
     do_publishing = data_attrs[:is_published]
 
-    translation.push_published_to_s3
+    translation.push_published_to_s3 if do_publishing
     render json: translation, status: :ok
   end
 
