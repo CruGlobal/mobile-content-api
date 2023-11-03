@@ -55,10 +55,6 @@ class Translation < ActiveRecord::Base
     Translation.create!(resource: resource, language: language, version: version + 1)
   end
 
-  def update_draft(params)
-    update!(params.permit(:is_published))
-  end
-
   def object_name
     "#{resource.system.name}/#{resource.abbreviation}/#{language.code}/#{zip_name}"
   end
@@ -82,6 +78,8 @@ class Translation < ActiveRecord::Base
   end
 
   def push_published_to_s3
+    return if is_published
+
     if resource.uses_onesky?
       ActiveRecord::Base.transaction do
         phrases = manifest_translated_phrases
@@ -91,6 +89,7 @@ class Translation < ActiveRecord::Base
     end
 
     Package.new(self).push_to_s3
+    update(is_published: true)
   end
 
   private

@@ -133,7 +133,7 @@ resource "Drafts" do
       before do
         translation = Translation.find(3)
         allow(Translation).to receive(:find).with(id).and_return(translation)
-        allow(translation).to receive(:update_draft).with(ActionController::Parameters.new(attrs))
+        allow(translation).to receive(:push_published_to_s3)
 
         do_request data: {type: :translation, attributes: attrs}
       end
@@ -150,7 +150,7 @@ resource "Drafts" do
     context "all phrases are not translated" do
       it "returns conflict", document: false do
         translation = Translation.find(1)
-        allow(translation).to receive(:update_draft).and_raise(Error::TextNotFoundError, "Translated phrase not found.")
+        allow(translation).to receive(:push_published_to_s3).and_raise(Error::TextNotFoundError, "Translated phrase not found.")
         allow(Translation).to receive(:find).with(id).and_return(translation)
 
         do_request data: {type: :translation, attributes: attrs}

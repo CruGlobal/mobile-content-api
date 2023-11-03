@@ -1,4 +1,28 @@
 require "rails_helper"
 RSpec.describe PublishTranslationJob, type: :job do
-  pending "add some examples to (or delete) #{__FILE__}"
+  let!(:translation) { Resource.first.latest_translations.first }
+  let!(:package) { Package.new(translation) }
+
+  before do
+    translation.update(is_published: false)
+  end
+
+  it "captures errors into publishing_errors" do
+    mock_onesky
+    PublishTranslationJob.new.perform(translation.id)
+    expect(translation.reload.is_published).to be false
+    expect(translation.publishing_errors).to eq("Translated phrase not found: ID: 89a09d72-114f-4d89-a72c-ca204c796fd9, base text: Knowing God Personally")
+  end
+
+  it "sets the is_published to true" do
+    allow(Translation).to receive(:find).with(translation.id).and_return(translation)
+    allow(Package).to receive(:new).with(translation).and_return(package)
+    allow(package).to receive(:push_to_s3)
+    allow(translation).to receive(:manifest_translated_phrases).and_return(nil)
+    allow(translation).to receive(:name_desc_onesky).with(nil)
+    allow(translation).to receive(:create_translated_attributes).with(nil)
+
+    PublishTranslationJob.new.perform(translation.id)
+    expect(translation.reload.is_published).to be true
+  end
 end

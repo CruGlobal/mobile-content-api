@@ -150,7 +150,7 @@ describe Translation do
     expect { translation.destroy! }.to raise_error(Error::TranslationError, "Cannot delete published draft: 1")
   end
 
-  context "is_published set to true" do
+  context "publishing" do
     let(:translation) { described_class.find(3) }
 
     before do
@@ -162,9 +162,7 @@ describe Translation do
     it "uploads the translation to S3" do
       package = double
       allow(Package).to receive(:new).and_return(package)
-      allow(package).to receive(:push_to_s3)
-
-      translation.update(is_published: true)
+      allow(package).to receive(:push_published_to_s3)
     end
 
     context "translated name and description" do
@@ -174,41 +172,41 @@ describe Translation do
         allow(Package).to receive(:new).and_return(package)
       end
 
-      xit "updates from OneSky" do
-        translation.update!(is_published: true)
+      it "updates from OneSky" do
+        translation.push_published_to_s3
 
         expect(translation.translated_name).to eq("kgp german")
         expect(translation.translated_description).to eq("german description")
       end
 
-      xit "includes the tagline" do
-        translation.update!(is_published: true)
+      it "includes the tagline" do
+        translation.push_published_to_s3
 
         expect(translation.translated_tagline).to eq("german tagline")
       end
 
-      xit "translated name is updated prior to building zip" do # Package needs the translated name/description
+      it "translated name is updated prior to building zip" do # Package needs the translated name/description
         allow(translation).to receive(:translated_name=)
 
-        translation.update!(is_published: true)
+        translation.push_published_to_s3
 
         expect(translation).to have_received(:translated_name=).ordered
         expect(package).to have_received(:push_to_s3).ordered
       end
 
-      xit "translated description is updated prior to building zip" do
+      it "translated description is updated prior to building zip" do
         allow(translation).to receive(:translated_description=)
 
-        translation.update!(is_published: true)
+        translation.push_published_to_s3
 
         expect(translation).to have_received(:translated_description=).ordered
         expect(package).to have_received(:push_to_s3).ordered
       end
 
-      xit "translated tagline is updated prior to building zip" do
+      it "translated tagline is updated prior to building zip" do
         allow(translation).to receive(:translated_tagline=)
 
-        translation.update!(is_published: true)
+        translation.push_published_to_s3
 
         expect(translation).to have_received(:translated_tagline=).ordered
         expect(package).to have_received(:push_to_s3).ordered
@@ -231,9 +229,9 @@ describe Translation do
         allow(Package).to receive(:new).and_return(package)
       end
 
-      xit "builds the translation attributes" do
+      it "builds the translation attributes" do
         expect do
-          translation.update!(is_published: true)
+          translation.push_published_to_s3
         end.to change(TranslationAttribute, :count).by(2)
         translation.reload
         expect(translation.translation_attributes.pluck(:key, :value).sort)
@@ -245,10 +243,10 @@ describe Translation do
           FactoryBot.create(:translated_attribute, resource_id: resource.id, key: "required_2",
             onesky_phrase_id: "onesky_required_2", required: true)
         }
-        xit "raises an error and doesn't create any translation attributes" do
+        it "raises an error and doesn't create any translation attributes" do
           expect do
             expect do
-              translation.update!(is_published: true)
+              translation.push_published_to_s3
             end.to raise_error(Error::TextNotFoundError)
           end.to_not change(TranslationAttribute, :count)
         end

@@ -5,9 +5,8 @@ class PublishTranslationJob
     translation = Translation.find(id)
     begin
       translation.push_published_to_s3
-      translation.update!(is_published: true)
     rescue => e
-      translation.errors.add(:error, e)
+      translation.update(publishing_errors: e.to_s)
     end
   end
 end
