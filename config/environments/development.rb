@@ -80,6 +80,8 @@ Rails.application.configure do
       resource "*", headers: :any, methods: [:get, :post, :put, :patch, :options, :delete]
     end
   end
+
+  config.log_level = :debug
 end
 
 Rails.application.routes.default_url_options = {
