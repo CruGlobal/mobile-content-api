@@ -3,7 +3,7 @@
 require "page_client"
 
 class ResourcesController < ApplicationController
-  before_action :authorize!, only: [:create, :update, :push_to_onesky]
+  before_action :authorize!, only: [:create, :update, :push_to_onesky, :publish_translation]
 
   def index
     render json: cached_index_json, status: :ok
