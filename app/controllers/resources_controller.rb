@@ -65,8 +65,8 @@ class ResourcesController < ApplicationController
   def publish_translation_for_language(language_data)
     draft_translation = find_or_create_draft_translation(language_data["id"])
     if draft_translation
-      PublishTranslationJob.perform_async(draft_translation.id)
       draft_translation.update(publishing_errors: nil)
+      PublishTranslationJob.perform_async(draft_translation.id)
       draft_translation
     end
   end

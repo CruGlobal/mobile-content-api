@@ -1,6 +1,8 @@
 class PublishTranslationJob
   include Sidekiq::Job
 
+  sidekiq_options lock: :until_executed
+
   def perform(id)
     translation = Translation.find(id)
     begin
