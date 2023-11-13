@@ -28,7 +28,7 @@ jobs:
 
     steps:
       - name: Check out files
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Set up Ruby
         uses: ruby/setup-ruby@v1
@@ -56,7 +56,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Check out files
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Set up Ruby
         uses: ruby/setup-ruby@v1
@@ -64,7 +64,7 @@ jobs:
           bundler-cache: true
 
       - name: Bundle audit
-        run: bundle exec bundle audit check --update --ignore CVE-2015-9284
+        run: bundle exec bundle audit check --update ${{ vars.CVE_IGNORES && format('--ignore {0}', vars.CVE_IGNORES) }}
 
       - name: Brakeman
         run: bundle exec brakeman -A -q --ensure-latest --no-pager

@@ -59,11 +59,11 @@ gem "tzinfo-data", platforms: [:mingw, :mswin, :x64_mingw, :jruby]
 
 gem "pg"
 
-gem "active_model_serializers", "0.10.13"
+gem "active_model_serializers", "0.10.14"
 gem "active_storage_validations"
 gem "adobe-campaign", "~> 0.4.1"
 gem "aws-sdk-s3"
-gem "ddtrace", "~> 1.10"
+gem "ddtrace", "~> 1.15"
 gem "dogstatsd-ruby", "~> 5.3"
 gem "file_validators"
 gem "google-apis-analyticsreporting_v4"

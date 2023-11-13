@@ -2,12 +2,18 @@
 
 class UsersController < WithUserController
   def show
-    render json: @user
+    render json: @user, include: params[:include], fields: field_params
   end
 
   def destroy
     @user.destroy!
     render json: "", status: 204
+  end
+
+  def update
+    @user.set_arbitrary_attributes!(data_attrs)
+
+    render json: @user, status: :ok
   end
 
   protected

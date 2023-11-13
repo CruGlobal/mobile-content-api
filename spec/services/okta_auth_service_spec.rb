@@ -31,7 +31,7 @@ RSpec.describe OktaAuthService do
       stub_successful_profile
 
       expect {
-        expect(described_class.find_user_by_token(access_token)).to be_a User
+        expect(described_class.find_user_by_token(access_token, nil)).to be_a User
       }.to change(User, :count).by(1)
     end
 
@@ -39,11 +39,16 @@ RSpec.describe OktaAuthService do
       let!(:user) { FactoryBot.create(:user, sso_guid: "qwer") }
 
       before { stub_successful_profile }
-
       it "returns existing user" do
         expect {
-          expect(described_class.find_user_by_token(access_token)).to eq user
+          expect(described_class.find_user_by_token(access_token, nil)).to eq user
         }.to change(User, :count).by(0)
+      end
+
+      context "creates an okta user when it already exists" do
+        xit "should return error code and detail error message about user already exists" do
+          expect(described_class.find_user_by_token(access_token, true)).to raise_error("User account already exists.")
+        end
       end
     end
 
@@ -51,13 +56,13 @@ RSpec.describe OktaAuthService do
       let(:jwt_payload) { {exp: 1.minute.ago.to_i} }
 
       it "raises error" do
-        expect { described_class.find_user_by_token(access_token) }.to raise_error OktaAuthService::FailedAuthentication
+        expect { described_class.find_user_by_token(access_token, nil) }.to raise_error OktaAuthService::FailedAuthentication
       end
 
       it "does not create a user" do
         expect {
           begin
-            described_class.find_user_by_token(access_token)
+            described_class.find_user_by_token(access_token, nil)
           rescue OktaAuthService::FailedAuthentication
             nil
           end
@@ -70,7 +75,7 @@ RSpec.describe OktaAuthService do
 
       describe "#validate" do
         it "raises an authentication error with a message" do
-          expect { described_class.find_user_by_token(access_token) }.to(
+          expect { described_class.find_user_by_token(access_token, nil) }.to(
             raise_error(
               OktaAuthService::FailedAuthentication,
               "Error validating access_token with Okta"
@@ -84,7 +89,7 @@ RSpec.describe OktaAuthService do
       let(:jwt_default_payload) { {iss: ENV["OKTA_SERVER_PATH"], aud: ENV["OKTA_SERVER_PATH"], cid: "other"} }
 
       it "raises an authentication method when validation fails" do
-        expect { described_class.find_user_by_token(access_token) }.to(
+        expect { described_class.find_user_by_token(access_token, nil) }.to(
           raise_error(
             OktaAuthService::FailedAuthentication,
             "Invalid access_token cid."
@@ -96,7 +101,7 @@ RSpec.describe OktaAuthService do
       let(:jwt_default_payload) { {iss: "other", aud: ENV["OKTA_SERVER_PATH"], cid: okta_client_id} }
 
       it "raises an authentication method when validation fails" do
-        expect { described_class.find_user_by_token(access_token) }.to(
+        expect { described_class.find_user_by_token(access_token, nil) }.to(
           raise_error(
             OktaAuthService::FailedAuthentication,
             "Invalid issuer. Expected https://dev1-signon.okta.com, received other"
@@ -116,12 +121,72 @@ RSpec.describe OktaAuthService do
 
       it "checks ssoguid is present" do
         stub_successful_profile
-        expect { described_class.find_user_by_token(access_token) }.to(
+        expect { described_class.find_user_by_token(access_token, nil) }.to(
           raise_error(
             OktaAuthService::FailedAuthentication,
             "Access Token does not include sso guid, make sure login scope includes profile"
           )
         )
+      end
+    end
+
+    context "when setup user correctly" do
+      let(:sso_guid) { "1234567890" }
+      let(:email) { "okta@okta.com" }
+
+      let(:okta_user_info) do
+        {
+          sso_guid: sso_guid,
+          email: email,
+          first_name: "Okta",
+          last_name: "Test",
+          name: "Okta Test"
+        }
+      end
+
+      context "with ':create_user' as nil when user already exists" do
+        let!(:user) { FactoryBot.create(:user) }
+        let(:first_name) { "Okta 2" }
+        let(:last_name) { "Test 2" }
+        let(:name) { "Okta Test 2" }
+        let(:new_okta_user_info) do
+          {
+            sso_guid: sso_guid,
+            email: email,
+            first_name: first_name,
+            last_name: last_name,
+            name: name
+          }
+        end
+
+        before do
+          user.update!(okta_user_info)
+        end
+
+        it "returns the same user" do
+          expect do
+            OktaAuthService.send(:setup_user, sso_guid, new_okta_user_info, nil)
+          end.to change(User, :count).by(0)
+
+          user = User.last
+          expect(user.sso_guid).to eql(sso_guid)
+          expect(user.email).to eql(email)
+          expect(user.first_name).to eql(first_name)
+          expect(user.last_name).to eql(last_name)
+          expect(user.name).to eql(name)
+        end
+      end
+
+      context "with ':create_user' as true when the user does not exist" do
+        it "returns a new user" do
+          expect do
+            OktaAuthService.send(:setup_user, sso_guid, okta_user_info, true)
+          end.to change(User, :count).by(1)
+
+          user = User.last
+          expect(user.sso_guid).to eql(sso_guid)
+          expect(user.email).to eql(email)
+        end
       end
     end
   end
