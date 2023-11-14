@@ -28,13 +28,22 @@ describe Resource do
     end
 
     context "existing resource/language combination" do
-      xit "adds a new version" do
+      it "adds a new version if already published" do
         translation = instance_double(Translation, create_new_version: nil)
         allow(Translation).to receive(:latest_translation).with(resource.id, language.id).and_return(translation)
+        allow(translation).to receive(:is_published).and_return(true)
 
         resource.create_draft(language.id)
 
         expect(translation).to have_received(:create_new_version)
+      end
+
+      it "returns current translation is not published" do
+        translation = instance_double(Translation, create_new_version: nil)
+        allow(Translation).to receive(:latest_translation).with(resource.id, language.id).and_return(translation)
+        allow(translation).to receive(:is_published).and_return(false)
+
+        expect(resource.create_draft(language.id)).to eq(translation)
       end
     end
   end
