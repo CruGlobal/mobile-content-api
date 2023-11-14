@@ -3,7 +3,7 @@
 require "page_client"
 
 class ResourcesController < ApplicationController
-  before_action :authorize!, only: [:create, :update, :push_to_onesky]
+  before_action :authorize!, only: [:create, :update, :push_to_onesky, :publish_translation]
 
   def index
     render json: cached_index_json, status: :ok
@@ -38,7 +38,45 @@ class ResourcesController < ApplicationController
     render json: ToolFilterService.new(params).call, include: params[:include], fields: field_params, status: :ok
   end
 
+  def publish_translation
+    if valid_publish_params?
+      render json: publish_translations, status: :ok
+    else
+      render json: {errors: {"errors" => [{source: {pointer: "/data/attributes/id"}, detail: "Record not found."}]}}, status: :unprocessable_entity
+    end
+  end
+
   private
+
+  def valid_publish_params?
+    params.dig("data", "relationships", "languages", "data") && params["resource_id"]
+  end
+
+  def publish_translations
+    draft_translations = []
+    languages = params["data"]["relationships"]["languages"]["data"]
+
+    languages.each do |lang|
+      draft_translations << publish_translation_for_language(lang)
+    end
+    draft_translations
+  end
+
+  def publish_translation_for_language(language_data)
+    draft_translation = find_or_create_draft_translation(language_data["id"])
+    if draft_translation
+      draft_translation.update(publishing_errors: nil)
+      PublishTranslationJob.perform_async(draft_translation.id)
+      draft_translation
+    end
+  end
+
+  def find_or_create_draft_translation(language_id)
+    resource = Resource.find(params["resource_id"])
+
+    draft = resource.create_draft(language_id) if resource
+    draft
+  end
 
   def cached_index_json
     cache_key = Resource.index_cache_key(all_resources,

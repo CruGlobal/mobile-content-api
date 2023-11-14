@@ -1,6 +1,9 @@
 # frozen_string_literal: true
 
 source "https://rubygems.org"
+source "https://gems.contribsys.com/" do
+  gem "sidekiq-pro", "< 6"
+end
 git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
 ruby "3.0.6"
@@ -84,6 +87,8 @@ gem "rubyzip", ">= 1.2.2"
 gem "validates_email_format_of"
 gem "googleauth"
 gem "apple_id"
+gem "sidekiq-failures"
+gem "sidekiq-unique-jobs"
 
 group :development, :test do
   gem "action-cable-testing"

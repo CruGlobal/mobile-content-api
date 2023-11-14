@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require "sidekiq/pro/web"
+
 Rails.application.routes.draw do
   # For details on the DSL available within this file, see https://guides.rubyonrails.org/routing.html
 
@@ -11,6 +13,7 @@ Rails.application.routes.draw do
   resources :resources do
     resources :languages, controller: :resource_languages, only: [:update, :show]
     resources :translated_attributes, path: "translated-attributes", only: [:create, :update, :destroy]
+    post "translations/publish", to: "resources#publish_translation"
   end
   resources :drafts
   resources :translations, only: [:index, :show]
@@ -86,6 +89,13 @@ Rails.application.routes.draw do
       end
     end
   end
+
+  if Rails.env.production? || Rails.env.staging?
+    Sidekiq::Web.use Rack::Auth::Basic do |username, password|
+      username == ENV.fetch("SIDEKIQ_USERNAME") && password == ENV.fetch("SIDEKIQ_PASSWORD")
+    end
+  end
+  mount Sidekiq::Web, at: "/sidekiq"
 
   mount ActionCable.server => "/cable"
   mount Raddocs::App => "/docs"
