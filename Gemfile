@@ -2,7 +2,7 @@
 
 source "https://rubygems.org"
 source "https://gems.contribsys.com/" do
-  gem "sidekiq-pro", "< 6"
+  gem "sidekiq-pro", "< 7.2.1"
 end
 git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
