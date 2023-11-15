@@ -2,12 +2,14 @@
 
 require "rails_helper"
 
-RSpec.describe TrainingTip, type: :model do
+RSpec.describe UserTrainingTip, type: :model do
   context "create new training tip" do
-    let!(:tip) { FactoryBot.create(:tip) }
-    let!(:user) { FactoryBot.create(:user) }
+    let(:tip_id) { "tip" }
+    let(:user) { FactoryBot.create(:user) }
+    let(:tool) { Resource.first }
+    let(:language) { Language.first }
 
-    subject { TrainingTip.new(tool: "Tool 1", locale: "en", tip_id: tip.id, is_completed: true, user: user) }
+    subject { UserTrainingTip.new(tool_id: tool.id, language_id: language.id, tip_id: tip_id, is_completed: true, user: user) }
 
     it "is valid" do
       expect(subject).to be_valid
