@@ -2,8 +2,11 @@
 
 require "acceptance_helper"
 require "page_client"
+require "sidekiq/testing"
 
 resource "Resources" do
+  include ActiveJob::TestHelper
+
   header "Accept", "application/vnd.api+json"
   header "Content-Type", "application/vnd.api+json"
   let(:raw_post) { params.to_json }
@@ -671,6 +674,46 @@ resource "Resources" do
 
         expect(status).to be(204)
         expect(response_body).to be_empty
+      end
+    end
+  end
+
+  post "resources/:resource_id/translations/publish" do
+    requires_authorization
+    let(:resource_id) { resource_1.id }
+    let!(:language) { Language.first }
+
+    before do
+      Sidekiq::Queues.clear_all
+    end
+
+    it "returns error if params missing" do
+      do_request
+
+      expect(status).to be(422)
+    end
+
+    it "makes a new translation and publishes the resource" do
+      do_request "data" => {"relationships" => {"languages" => {"data" => [{"id" => language.id}]}}}
+
+      expect(PublishTranslationJob.jobs.size).to eq(1)
+      translation = Translation.find(PublishTranslationJob.jobs.last["args"].first)
+      expect(translation.language).to eq(language)
+      expect(translation.resource).to eq(resource_1)
+    end
+
+    context "unpublished translation exists already" do
+      let!(:translation) { FactoryBot.create(:translation, version: 10, resource_id: resource_id, language_id: language.id, is_published: false) }
+
+      it "reuses an existing translation and publishes the resource" do
+        expect do
+          do_request "data" => {"relationships" => {"languages" => {"data" => [{"id" => language.id}]}}}
+        end.to_not change(Translation, :count)
+
+        expect(PublishTranslationJob.jobs.size).to eq(1)
+        translation = Translation.find(PublishTranslationJob.jobs.last["args"].first)
+        expect(translation.language).to eq(language)
+        expect(translation.resource).to eq(resource_1)
       end
     end
   end
