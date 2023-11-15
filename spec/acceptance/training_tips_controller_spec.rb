@@ -46,8 +46,8 @@ resource "UserTrainingTips" do
 
     it "create user training tip" do
       do_request data: {type: "training-tip", attributes: attributes, relationships: relationships}
+
       expect(status).to eq(201)
-      puts response_body.inspect
       data = JSON.parse(response_body)["data"]
       expect(data).not_to be_nil
       expect(data["attributes"]).to eq(serializer_output_style(attributes))
