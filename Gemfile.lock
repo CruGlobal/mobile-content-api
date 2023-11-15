@@ -615,7 +615,7 @@ DEPENDENCIES
   rubyzip (>= 1.2.2)
   selenium-webdriver (>= 4.0.0.rc1)
   sidekiq-failures
-  sidekiq-pro (< 6)!
+  sidekiq-pro (< 7.2.1)!
   sidekiq-unique-jobs
   simplecov-cobertura
   spring
