@@ -135,6 +135,7 @@ resource "ToolGroups" do
       }
 
       expect(status).to eq(202)
+      puts response_body.inspect
       expect(JSON.parse(response_body)["data"]).not_to be_nil
       expect(JSON.parse(response_body)["data"]["attributes"]["suggestions-weight"]).to eql suggestions_weight
     end

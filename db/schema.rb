@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2023_08_31_183151) do
+ActiveRecord::Schema.define(version: 2023_11_13_201357) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
@@ -265,17 +265,6 @@ ActiveRecord::Schema.define(version: 2023_08_31_183151) do
     t.datetime "updated_at", precision: 6, null: false
   end
 
-  create_table "training_tips", force: :cascade do |t|
-    t.string "tool"
-    t.string "locale"
-    t.bigint "tip_id", null: false
-    t.boolean "is_completed"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
-    t.integer "user_id"
-    t.index ["tip_id"], name: "index_training_tips_on_tip_id"
-  end
-
   create_table "translated_attributes", force: :cascade do |t|
     t.integer "resource_id"
     t.string "key"
@@ -309,6 +298,7 @@ ActiveRecord::Schema.define(version: 2023_08_31_183151) do
     t.string "translated_description"
     t.string "manifest_name"
     t.string "translated_tagline"
+    t.text "publishing_errors"
     t.index ["language_id"], name: "index_translations_on_language_id"
     t.index ["resource_id", "language_id", "version"], name: "index_translations_on_resource_id_and_language_id_and_version", unique: true
     t.index ["resource_id"], name: "index_translations_on_resource_id"
@@ -331,9 +321,21 @@ ActiveRecord::Schema.define(version: 2023_08_31_183151) do
     t.date "last_decay", default: -> { "now()" }
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.string "values", default: [], array: true
     t.index ["user_id", "counter_name"], name: "index_user_counters_on_user_id_and_counter_name", unique: true
-    t.index ["values"], name: "index_user_counters_on_values", using: :gin
+  end
+
+  create_table "user_training_tips", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.bigint "tool_id", null: false
+    t.bigint "language_id", null: false
+    t.string "tip_id"
+    t.boolean "is_completed"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["id", "tool_id", "language_id", "tip_id"], name: "training-tips-unique-index", unique: true
+    t.index ["language_id"], name: "index_user_training_tips_on_language_id"
+    t.index ["tool_id"], name: "index_user_training_tips_on_tool_id"
+    t.index ["user_id"], name: "index_user_training_tips_on_user_id"
   end
 
   create_table "users", force: :cascade do |t|
@@ -375,11 +377,13 @@ ActiveRecord::Schema.define(version: 2023_08_31_183151) do
   add_foreign_key "rule_countries", "tool_groups"
   add_foreign_key "rule_languages", "tool_groups"
   add_foreign_key "rule_praxes", "tool_groups"
-  add_foreign_key "training_tips", "tips"
   add_foreign_key "translated_pages", "languages"
   add_foreign_key "translated_pages", "resources"
   add_foreign_key "translation_attributes", "translations"
   add_foreign_key "translations", "languages"
   add_foreign_key "translations", "resources"
   add_foreign_key "user_attributes", "users"
+  add_foreign_key "user_training_tips", "languages"
+  add_foreign_key "user_training_tips", "resources", column: "tool_id"
+  add_foreign_key "user_training_tips", "users"
 end

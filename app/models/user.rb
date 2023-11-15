@@ -4,7 +4,7 @@ class User < ApplicationRecord
   has_many :user_counters, dependent: :destroy
   has_many :favorite_tools, dependent: :destroy
   has_many :tools, through: :favorite_tools
-  has_many :training_tips
+  has_many :user_training_tips, dependent: :destroy
 
   has_many :user_attributes, dependent: :destroy
 

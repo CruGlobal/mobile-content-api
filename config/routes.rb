@@ -37,8 +37,6 @@ Rails.application.routes.draw do
     delete "tools/:id", to: "tool_groups#delete_tool"
   end
 
-  resources :training_tips, path: "training-tips"
-
   # Rule Languages
   resources :tool_groups, path: "tool-groups", only: [] do
     resources :rule_languages, path: "rules-language", only: [:create, :destroy, :update]
@@ -66,6 +64,10 @@ Rails.application.routes.draw do
     resources :favorite_tools, path: "favorite-tools", only: [:index, :create]
   end
   delete "users/me/relationships/favorite-tools", to: "favorite_tools#destroy"
+
+  scope "users/me" do
+    resources :training_tips, path: "training-tips", only: [:create, :update, :destroy]
+  end
 
   get "monitors/lb"
   get "monitors/commit"
