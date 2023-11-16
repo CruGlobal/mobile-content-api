@@ -10,6 +10,6 @@ class CreateUserTrainingTip < ActiveRecord::Migration[6.1]
       t.timestamps
     end
 
-    add_index :user_training_tips, [:id, :tool_id, :language_id, :tip_id], unique: true, name: "training-tips-unique-index"
+    add_index :user_training_tips, [:user_id, :tool_id, :language_id, :tip_id], unique: true, name: "training-tips-unique-index"
   end
 end

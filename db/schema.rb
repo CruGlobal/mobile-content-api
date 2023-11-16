@@ -334,9 +334,9 @@ ActiveRecord::Schema.define(version: 2023_11_02_190816) do
     t.boolean "is_completed"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.index ["id", "tool_id", "language_id", "tip_id"], name: "training-tips-unique-index", unique: true
     t.index ["language_id"], name: "index_user_training_tips_on_language_id"
     t.index ["tool_id"], name: "index_user_training_tips_on_tool_id"
+    t.index ["user_id", "tool_id", "language_id", "tip_id"], name: "training-tips-unique-index", unique: true
     t.index ["user_id"], name: "index_user_training_tips_on_user_id"
   end
 
