@@ -13,14 +13,14 @@ resource "UserTrainingTips" do
   post "users/me/training-tips" do
     let(:attributes) do
       {
-        tip_id: "tip id here",
-        is_completed: true
+        "tip-id": "tip id here",
+        "is-completed": true
       }
     end
 
     let(:attributes_invalid) do
       {
-        tip_id: ""
+        "tip-id": ""
       }
     end
 
@@ -73,8 +73,8 @@ resource "UserTrainingTips" do
 
     let(:attributes) do
       {
-        tip_id: "new tip id",
-        is_completed: true
+        "tip-id": "new tip id",
+        "is-completed": true
       }
     end
 
