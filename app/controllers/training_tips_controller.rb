@@ -1,5 +1,5 @@
 class TrainingTipsController < WithUserController
-  before_action :convert_hyphen_to_dash, only: [:create]
+  before_action :convert_hyphen_to_dash, only: [:create, :update]
 
   def create
     user_training_tip = @user.user_training_tips.create!(permitted_params)
