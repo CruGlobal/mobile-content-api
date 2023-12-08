@@ -45,29 +45,34 @@ class ToolFilterService
     languages = params.dig("filter", "language") || []
     openness = params.dig("filter", "openness")&.to_i
     confidence = params.dig("filter", "confidence")&.to_i
+    country_negative_rule = params.dig("filter", "country_negative_rule")&.to_b
+    language_negative_rule = params.dig("filter", "language_negative_rule")&.to_b
+    praxis_negative_rule = params.dig("filter", "praxis_negative_rule")&.to_b
 
     # Country Rules
-    if tool_group.rule_countries.any? do |o|
-      (o.negative_rule && o.countries.include?(country)) || (!o.negative_rule && o.countries.exclude?(country))
-    end
+    if tool_group.rule_countries.any? { |o| (country_negative_rule.nil? || !country_negative_rule) && ((o.negative_rule && o.countries.include?(country)) || (!o.negative_rule && o.countries.exclude?(country)))}
+      return false
+    elsif tool_group.rule_countries.any? { |o| (country_negative_rule && o.countries.include?(country)) }
       return false
     end
 
     # Language Rules
-    if tool_group.rule_languages.any? { |o| !o.negative_rule && (languages & o.languages).empty? }
+    # If no lanugages match
+    if tool_group.rule_languages.any? { |o| (language_negative_rule.nil? || !country_negative_rule) && !o.negative_rule && (languages & o.languages).empty? }
       return false
+    # has languages,negative true and all languages are equal
     elsif !languages.empty? && tool_group.rule_languages.any? { |o| o.negative_rule && (languages - o.languages).empty? }
       return false
     end
 
     # Praxis Rules
-    if tool_group.rule_praxes.any? { |o| o.openness.present? && o.negative_rule && o.openness.include?(openness) }
+    if tool_group.rule_praxes.any? { |o| (praxis_negative_rule.nil? || praxis_negative_rule) && o.openness.present? && o.negative_rule && o.openness.include?(openness) }
       return false
-    elsif tool_group.rule_praxes.any? { |o| o.openness.present? && !o.negative_rule && o.openness.exclude?(openness) }
+    elsif tool_group.rule_praxes.any? { |o| (praxis_negative_rule.nil? || !praxis_negative_rule) && o.openness.present? && !o.negative_rule && o.openness.exclude?(openness) }
       return false
-    elsif tool_group.rule_praxes.any? { |o| o.confidence.present? && o.negative_rule && o.confidence.include?(confidence) }
+    elsif tool_group.rule_praxes.any? { |o| (praxis_negative_rule.nil? || praxis_negative_rule) && o.confidence.present? && o.negative_rule && o.confidence.include?(confidence) }
       return false
-    elsif tool_group.rule_praxes.any? { |o| o.confidence.present? && !o.negative_rule && o.confidence.exclude?(confidence) }
+    elsif tool_group.rule_praxes.any? { |o| (praxis_negative_rule.nil? || !praxis_negative_rule) && o.confidence.present? && !o.negative_rule && o.confidence.exclude?(confidence) }
       return false
     end
 
