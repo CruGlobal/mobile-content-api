@@ -7,6 +7,7 @@ class UserSerializer < ActiveModel::Serializer
   attribute :last_name, key: "family-name"
 
   has_many :tools, key: "favorite-tools"
+  has_many :user_training_tips, key: "training-tips"
 
   def created_at
     object.created_at.iso8601 # without this, the default serializer datetime will add 3 ms digits which we prefer not to have
