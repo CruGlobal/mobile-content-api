@@ -28,7 +28,7 @@ class PublishChannel < BaseSharingChannel
     return unless validate_publisher_channel_id_format && validate_receive_message_format(data)
 
     set_metadata(:last_message, data)
-    transmit({data: {type: "confirm-#{data.dig("data", "type")}", id: data.dig("data", "id"), attributes: (data.dig("data", "attributes") || {})}})
+    transmit({data: {type: "confirm-#{data.dig("data", "type")}", id: data.dig("data", "id"), attributes: data.dig("data", "attributes") || {}}})
 
     # send message to subscriber
     SubscribeChannel.broadcast_to metadata[:subscriber_channel_id], data
