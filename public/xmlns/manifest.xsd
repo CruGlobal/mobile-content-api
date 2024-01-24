@@ -211,7 +211,7 @@
                 <xs:documentation>The code of the tool this manifest is for</xs:documentation>
             </xs:annotation>
         </xs:attribute>
-        <xs:attribute name="locale" type="xs:token" use="optional">
+        <xs:attribute name="locale" type="content:locale" use="optional">
             <xs:annotation>
                 <xs:documentation>The language this manifest is for</xs:documentation>
             </xs:annotation>
