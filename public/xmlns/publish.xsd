@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:content="https://mobile-content-api.cru.org/xmlns/content"
+    xmlns:publish="https://mobile-content-api.cru.org/xmlns/publish"
+    xmlns:xs="http://www.w3.org/2001/XMLSchema"
+    elementFormDefault="qualified" targetNamespace="https://mobile-content-api.cru.org/xmlns/publish">
+
+    <xs:import namespace="https://mobile-content-api.cru.org/xmlns/content" schemaLocation="content.xsd" />
+
+    <!-- region external attributes -->
+    <xs:attributeGroup name="contentFiltering">
+        <xs:annotation>
+            <xs:documentation>This attribute group is the set of attributes that can appear on elements to filter what
+                elements are published.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:attribute ref="publish:if-locale">
+            <xs:annotation>
+                <xs:documentation>Only include the element this attribute is on when publishing in the listed locales.
+                </xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+        <xs:attribute ref="publish:if-locale-not">
+            <xs:annotation>
+                <xs:documentation>Only include the element this attribute is on when not publishing in the listed
+                    locales.
+                </xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+    </xs:attributeGroup>
+
+    <xs:attribute name="if-locale" type="content:locales" />
+    <xs:attribute name="if-locale-not" type="content:locales" />
+    <!-- endregion external attributes -->
+</xs:schema>

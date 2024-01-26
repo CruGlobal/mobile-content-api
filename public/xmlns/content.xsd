@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <xs:schema xmlns:analytics="https://mobile-content-api.cru.org/xmlns/analytics"
     xmlns:content="https://mobile-content-api.cru.org/xmlns/content"
+    xmlns:publish="https://mobile-content-api.cru.org/xmlns/publish"
     xmlns:training="https://mobile-content-api.cru.org/xmlns/training" xmlns:xs="http://www.w3.org/2001/XMLSchema"
     elementFormDefault="qualified" targetNamespace="https://mobile-content-api.cru.org/xmlns/content">
 
     <xs:import namespace="https://mobile-content-api.cru.org/xmlns/analytics" schemaLocation="analytics.xsd" />
+    <xs:import namespace="https://mobile-content-api.cru.org/xmlns/publish" schemaLocation="publish.xsd" />
     <xs:import namespace="https://mobile-content-api.cru.org/xmlns/training" schemaLocation="training.xsd" />
 
     <!-- region Value Definitions -->
@@ -258,6 +260,19 @@
         </xs:list>
     </xs:simpleType>
 
+    <xs:simpleType name="locale">
+        <xs:restriction base="xs:token">
+            <!-- language(-script)(-region) -->
+            <xs:pattern value="[a-zA-Z]{2,3}(-[a-zA-Z]{4})?(-[a-zA-Z]{2}|-[0-9]{3})?" />
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="locales">
+        <xs:annotation>
+            <xs:documentation>A space separated list of locales</xs:documentation>
+        </xs:annotation>
+        <xs:list itemType="content:locale" />
+    </xs:simpleType>
+
     <xs:simpleType name="version">
         <xs:restriction base="xs:token">
             <xs:pattern value="[0-9]+(\.[0-9]+)*" />
@@ -284,6 +299,7 @@
 
         <xs:attributeGroup ref="content:contentRestrictions" />
         <xs:attributeGroup ref="content:visibilityAttributes" />
+        <xs:attributeGroup ref="publish:contentFiltering" />
     </xs:attributeGroup>
 
     <xs:attributeGroup name="contentRestrictions">
@@ -381,7 +397,7 @@
             <xs:documentation>Vertical stack of content with margin/padding on the top and bottom.</xs:documentation>
         </xs:annotation>
         <xs:complexType>
-            <xs:choice minOccurs="1" maxOccurs="unbounded">
+            <xs:choice minOccurs="0" maxOccurs="unbounded">
                 <xs:group ref="content:elements" />
                 <xs:group ref="content:fixedSpacerOnly" />
             </xs:choice>
@@ -458,6 +474,7 @@
                         </xs:attribute>
 
                         <xs:attributeGroup ref="content:visibilityAttributes" />
+                        <xs:attributeGroup ref="publish:contentFiltering" />
                     </xs:complexType>
                 </xs:element>
 
@@ -979,10 +996,12 @@
                 the "followup:send" event and any other events triggered at the same time are prevented from firing.
             </xs:documentation>
         </xs:annotation>
-        <xs:choice maxOccurs="unbounded">
+        <xs:choice minOccurs="0" maxOccurs="unbounded">
             <xs:group ref="content:elements" />
             <xs:group ref="content:fixedSpacerOnly" />
         </xs:choice>
+
+        <xs:attributeGroup ref="content:baseAttributes" />
     </xs:complexType>
     <!-- endregion form -->
 
@@ -1012,6 +1031,8 @@
             </xs:annotation>
         </xs:attribute>
         <xs:attribute name="value" type="xs:string" />
+
+        <xs:attributeGroup ref="content:baseAttributes" />
     </xs:complexType>
     <!-- endregion input -->
 
@@ -1065,6 +1086,8 @@
                     </xs:restriction>
                 </xs:simpleType>
             </xs:attribute>
+
+            <xs:attributeGroup ref="content:baseAttributes" />
         </xs:complexType>
     </xs:element>
     <xs:group name="fixedSpacerOnly">
@@ -1079,6 +1102,8 @@
                             </xs:restriction>
                         </xs:simpleType>
                     </xs:attribute>
+
+                    <xs:attributeGroup ref="content:baseAttributes" />
                 </xs:complexType>
             </xs:element>
         </xs:choice>
