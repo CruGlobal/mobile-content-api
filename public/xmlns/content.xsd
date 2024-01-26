@@ -264,6 +264,12 @@
             <xs:pattern value="[a-zA-Z]{2,3}(-[a-zA-Z]{4})?(-[a-zA-Z]{2}|-[0-9]{3})?" />
         </xs:restriction>
     </xs:simpleType>
+    <xs:simpleType name="locales">
+        <xs:annotation>
+            <xs:documentation>A space separated list of locales</xs:documentation>
+        </xs:annotation>
+        <xs:list itemType="content:locale" />
+    </xs:simpleType>
 
     <xs:simpleType name="version">
         <xs:restriction base="xs:token">

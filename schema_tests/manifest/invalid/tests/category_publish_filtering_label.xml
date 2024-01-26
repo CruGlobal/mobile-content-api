@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<manifest xmlns="https://mobile-content-api.cru.org/xmlns/manifest"
+    xmlns:content="https://mobile-content-api.cru.org/xmlns/content"
+    xmlns:publish="https://mobile-content-api.cru.org/xmlns/publish">
+    <title>
+        <content:text i18n-id="name">Knowing God Personally</content:text>
+    </title>
+
+    <categories>
+        <category id="test" banner="test.jpg">
+            <label>
+                <content:text publish:if-locale="en">Label</content:text>
+            </label>
+        </category>
+    </categories>
+</manifest>
