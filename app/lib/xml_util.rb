@@ -3,9 +3,14 @@
 module XmlUtil
   XMLNS_CONTENT = "https://mobile-content-api.cru.org/xmlns/content"
   XMLNS_MANIFEST = "https://mobile-content-api.cru.org/xmlns/manifest"
+  XMLNS_PUBLISH = "https://mobile-content-api.cru.org/xmlns/publish"
   XMLNS_SHAREABLE = "https://mobile-content-api.cru.org/xmlns/shareable"
   XMLNS_TRACT = "https://mobile-content-api.cru.org/xmlns/tract"
   XMLNS_TRAINING = "https://mobile-content-api.cru.org/xmlns/training"
+
+  def self.filterable_nodes(xml)
+    xpath_namespace(xml, "//*[@publish:if-locale or @publish:if-locale-not]")
+  end
 
   def self.translatable_nodes(xml)
     xpath_namespace(xml, "//content:text[@i18n-id]")
@@ -24,7 +29,7 @@ module XmlUtil
   end
 
   def self.xpath_namespace(xml, string)
-    xml.xpath(string, "manifest" => XMLNS_MANIFEST, "content" => XMLNS_CONTENT, "shareable" => XMLNS_SHAREABLE, "tract" => XMLNS_TRACT, "training" => XMLNS_TRAINING)
+    xml.xpath(string, "manifest" => XMLNS_MANIFEST, "content" => XMLNS_CONTENT, "publish" => XMLNS_PUBLISH, "shareable" => XMLNS_SHAREABLE, "tract" => XMLNS_TRACT, "training" => XMLNS_TRAINING)
   end
 
   def self.get_or_create_child(xml, ns, name)

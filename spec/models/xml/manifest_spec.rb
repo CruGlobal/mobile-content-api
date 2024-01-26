@@ -76,7 +76,7 @@ describe Xml::Manifest do
       expect(result.content).to eq(title)
     end
 
-    context "manifest with categories" do
+    context "with categories" do
       let(:title) { "Otázky o Bohu" }
       let(:translation) do
         t = Translation.find(1)
@@ -84,6 +84,7 @@ describe Xml::Manifest do
 <manifest xmlns="https://mobile-content-api.cru.org/xmlns/manifest"
           xmlns:article="https://mobile-content-api.cru.org/xmlns/article"
           xmlns:content="https://mobile-content-api.cru.org/xmlns/content"
+          xmlns:pub="https://mobile-content-api.cru.org/xmlns/publish"
           category-label-color="rgba(255,255,255,1)">
     <title><content:text i18n-id="name">Questions about God</content:text></title>
     <categories>
@@ -102,6 +103,26 @@ describe Xml::Manifest do
                <content:text i18n-id="about_life">About Life</content:text>
            </label>
         </category>
+        <category id="english-only" banner="english.jpg" pub:if-locale="en-AU en">
+           <label>
+               <content:text i18n-id="english-only" />
+           </label>
+        </category>
+        <category id="not-english" banner="not-english.jpg" pub:if-locale-not="en-AU en">
+           <label>
+               <content:text i18n-id="not-english" />
+           </label>
+        </category>
+        <category id="french-only" banner="french.jpg" pub:if-locale="fr">
+           <label>
+               <content:text i18n-id="french-only" />
+           </label>
+        </category>
+        <category id="not-french" banner="not-french.jpg" pub:if-locale-not="fr">
+           <label>
+               <content:text i18n-id="not-french" />
+           </label>
+        </category>
         <category id="everything" banner="missing.jpg">
            <label>
                <content:text i18n-id="everything">Everything</content:text>
@@ -117,6 +138,8 @@ describe Xml::Manifest do
           "about_god" => "O Bohu",
           "about_jesus" => "O Ježišovi",
           "about_life" => "O Živote",
+          "english-only" => "English Only",
+          "not-french" => "Not French",
           "everything" => "Všetko Ostatné"
         }
         allow(t).to(receive(:manifest_translated_phrases).and_return(phrases))
@@ -153,6 +176,15 @@ describe Xml::Manifest do
         result = XmlUtil.xpath_namespace(manifest.document, "//manifest:category/manifest:label/content:text")
         expect(result.first.content).to eq("O Bohu")
         expect(result.last.content).to eq("Všetko Ostatné")
+      end
+
+      it "filters categories based on locale publish attributes" do
+        result = XmlUtil.xpath_namespace(manifest.document, "//manifest:category")
+        expect(result.size).to eq(6)
+        expect(result[2][:id]).to eq("about-life")
+        expect(result[3][:id]).to eq("english-only")
+        expect(result[4][:id]).to eq("not-french")
+        expect(result[5][:id]).to eq("everything")
       end
 
       it "uses custom manifest structure when found" do

@@ -2,6 +2,7 @@
 
 module Xml
   class Manifest
+    include Filterable
     include Translatable
 
     attr_reader :document
@@ -15,6 +16,7 @@ module Xml
       manifest_node = @document.root
       add_manifest_metadata(manifest_node)
 
+      filter_node_content(@document, @translation)
       phrases = manifest_translated_phrases(manifest_node)
       translate_node_content(@document, phrases, true)
       translate_node_attributes(@document, phrases, true)

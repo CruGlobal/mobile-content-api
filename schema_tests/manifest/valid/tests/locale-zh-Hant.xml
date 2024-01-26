@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<manifest xmlns="https://mobile-content-api.cru.org/xmlns/manifest"
+    xmlns:content="https://mobile-content-api.cru.org/xmlns/content" locale="zh-Hant">
+    <title>
+        <content:text i18n-id="name">Locale: zh-Hant</content:text>
+    </title>
+</manifest>

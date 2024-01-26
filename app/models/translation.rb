@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 class Translation < ActiveRecord::Base
+  include Xml::Filterable
   include Xml::Translatable
 
   belongs_to :resource, touch: true
@@ -28,6 +29,7 @@ class Translation < ActiveRecord::Base
     phrases = download_translated_phrases(page.filename)
     xml = Nokogiri::XML(page_structure(page_id))
 
+    xml = filter_node_content(xml, self)
     xml = translate_node_content(xml, phrases, strict)
     xml = translate_node_attributes(xml, phrases, strict)
 
@@ -39,6 +41,7 @@ class Translation < ActiveRecord::Base
     phrases = download_translated_phrases("tip_#{tip.name}.json")
     xml = Nokogiri::XML(tip_structure(tip_id))
 
+    xml = filter_node_content(xml, self)
     xml = translate_node_content(xml, phrases, strict)
     xml = translate_node_attributes(xml, phrases, strict)
 
