@@ -11,6 +11,7 @@
         {
             "matchManagers": ["ruby-version"],
             "matchPackageNames": ["ruby"],
+            "allowedVersions": "<=3.1",
             "separateMultipleMajor": true
         }
     ],
