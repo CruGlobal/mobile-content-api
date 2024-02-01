@@ -11,7 +11,7 @@
         {
             "matchManagers": ["ruby-version"],
             "matchPackageNames": ["ruby"],
-            "allowedVersions": "< 2.8"
+            "separateMultipleMajor": true
         }
     ],
     "lockFileMaintenance": { "enabled": true }
