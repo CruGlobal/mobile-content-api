@@ -9,9 +9,9 @@
             "rangeStrategy": "update-lockfile"
         },
         {
-            "matchManagers": ["ruby-version"],
+            "matchManagers": ["bundler", "ruby-version"],
             "matchPackageNames": ["ruby"],
-            "allowedVersions": "< 2.8"
+            "allowedVersions": "<3.2"
         }
     ],
     "lockFileMaintenance": { "enabled": true }
