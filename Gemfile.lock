@@ -110,7 +110,7 @@ GEM
     aws-sigv4 (1.8.0)
       aws-eventstream (~> 1, >= 1.0.2)
     base64 (0.2.0)
-    bigdecimal (3.1.4)
+    bigdecimal (3.1.6)
     bindata (2.4.15)
     bindex (0.8.1)
     bootsnap (1.18.3)
@@ -558,7 +558,7 @@ GEM
       activesupport
       faraday (~> 2.0)
       faraday-follow_redirects
-    webmock (3.20.0)
+    webmock (3.21.0)
       addressable (>= 2.8.0)
       crack (>= 0.3.2)
       hashdiff (>= 0.4.0, < 2.0.0)
