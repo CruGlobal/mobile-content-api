@@ -111,7 +111,7 @@ GEM
       aws-eventstream (~> 1, >= 1.0.2)
     base64 (0.2.0)
     bigdecimal (3.1.6)
-    bindata (2.4.15)
+    bindata (2.5.0)
     bindex (0.8.1)
     bootsnap (1.18.3)
       msgpack (~> 1.2)
@@ -239,9 +239,10 @@ GEM
       ruby-vips (>= 2.0.17, < 3)
     jmespath (1.6.2)
     json (2.7.1)
-    json-jwt (1.16.4)
+    json-jwt (1.16.6)
       activesupport (>= 4.2)
       aes_key_wrap
+      base64
       bindata
       faraday (~> 2.0)
       faraday-follow_redirects
@@ -279,7 +280,7 @@ GEM
     mini_magick (4.12.0)
     mini_mime (1.1.5)
     mini_portile2 (2.8.5)
-    minitest (5.20.0)
+    minitest (5.22.2)
     msgpack (1.7.2)
     multi_json (1.15.0)
     multi_xml (0.6.0)
