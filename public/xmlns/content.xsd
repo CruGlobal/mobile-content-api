@@ -1005,36 +1005,36 @@
         </xs:complexType>
     </xs:element>
 
-    <!-- region input -->
-    <xs:element name="input" type="content:input" />
-    <xs:complexType name="input">
-        <xs:all>
-            <xs:element name="label" maxOccurs="1" minOccurs="0" type="content:textChild" />
-            <xs:element name="placeholder" maxOccurs="1" minOccurs="0" type="content:textChild" />
-        </xs:all>
-        <xs:attribute name="name" type="xs:string" use="required" />
-        <xs:attribute name="type" default="text">
-            <xs:simpleType>
-                <xs:restriction base="xs:string">
-                    <xs:enumeration value="text" />
-                    <xs:enumeration value="email" />
-                    <xs:enumeration value="phone" />
-                    <xs:enumeration value="hidden" />
-                </xs:restriction>
-            </xs:simpleType>
-        </xs:attribute>
-        <xs:attribute name="required" type="xs:boolean" default="false">
-            <xs:annotation>
-                <xs:documentation>Is this input required or not. A required field must contain at least one
-                    non-whitespace character
-                </xs:documentation>
-            </xs:annotation>
-        </xs:attribute>
-        <xs:attribute name="value" type="xs:string" />
+    <xs:element name="input">
+        <xs:complexType>
+            <xs:all>
+                <xs:element name="label" type="content:textChild" minOccurs="0" />
+                <xs:element name="placeholder" type="content:textChild" minOccurs="0" />
+            </xs:all>
 
-        <xs:attributeGroup ref="content:baseAttributes" />
-    </xs:complexType>
-    <!-- endregion input -->
+            <xs:attribute name="name" type="xs:string" use="required" />
+            <xs:attribute name="type" default="text">
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:enumeration value="text" />
+                        <xs:enumeration value="email" />
+                        <xs:enumeration value="phone" />
+                        <xs:enumeration value="hidden" />
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:attribute>
+            <xs:attribute name="required" type="xs:boolean" default="false">
+                <xs:annotation>
+                    <xs:documentation>Is this input required or not. A required field must contain at least one
+                        non-whitespace character
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
+            <xs:attribute name="value" type="xs:string" />
+
+            <xs:attributeGroup ref="content:baseAttributes" />
+        </xs:complexType>
+    </xs:element>
 
     <xs:element name="fallback">
         <xs:annotation>
