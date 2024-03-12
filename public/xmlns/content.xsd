@@ -722,12 +722,16 @@
             <xs:attribute name="loop" type="xs:boolean" default="true" />
             <xs:attribute name="play-listeners" type="content:listeners">
                 <xs:annotation>
-                    <xs:documentation>event_ids that trigger playback of this animation.</xs:documentation>
+                    <xs:documentation>event_ids that trigger playback of this animation. These listeners are only
+                        "active" when the animation is not already playing and is in the current active content stack.
+                    </xs:documentation>
                 </xs:annotation>
             </xs:attribute>
             <xs:attribute name="stop-listeners" type="content:listeners">
                 <xs:annotation>
-                    <xs:documentation>event_ids that will stop playback of this animation.</xs:documentation>
+                    <xs:documentation>event_ids that will stop playback of this animation. These listeners are only
+                        "active" when the animation is already playing and is in the current active content stack.
+                    </xs:documentation>
                 </xs:annotation>
             </xs:attribute>
 
