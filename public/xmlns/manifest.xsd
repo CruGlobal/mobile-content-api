@@ -57,7 +57,12 @@
             <xs:element name="tips" minOccurs="0">
                 <xs:complexType>
                     <xs:sequence>
-                        <xs:element name="tip" minOccurs="0" maxOccurs="unbounded" type="manifest:tipType" />
+                        <xs:element name="tip" minOccurs="0" maxOccurs="unbounded">
+                            <xs:complexType>
+                                <xs:attribute name="id" type="content:id" use="required" />
+                                <xs:attribute name="src" type="xs:string" use="required" />
+                            </xs:complexType>
+                        </xs:element>
                     </xs:sequence>
                 </xs:complexType>
                 <xs:unique name="tipId">
@@ -190,11 +195,6 @@
 
     <xs:complexType name="resource">
         <xs:attribute name="filename" type="xs:string" use="required" />
-        <xs:attribute name="src" type="xs:string" use="required" />
-    </xs:complexType>
-
-    <xs:complexType name="tipType">
-        <xs:attribute name="id" type="xs:string" use="required" />
         <xs:attribute name="src" type="xs:string" use="required" />
     </xs:complexType>
 
