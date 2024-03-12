@@ -986,24 +986,24 @@
         </xs:complexType>
     </xs:element>
 
-    <!-- region form -->
-    <xs:element name="form" type="content:form" />
-    <xs:complexType name="form">
-        <xs:annotation>
-            <xs:documentation>This element wraps a collection of descendant input elements. Whenever a "followup:send"
-                event is triggered by a descendant element the form will validate all descendant inputs and submit the
-                data to the follow_ups endpoint on the mobile-content-api. If any descendant input fails to validate,
-                the "followup:send" event and any other events triggered at the same time are prevented from firing.
-            </xs:documentation>
-        </xs:annotation>
-        <xs:choice minOccurs="0" maxOccurs="unbounded">
-            <xs:group ref="content:elements" />
-            <xs:group ref="content:fixedSpacerOnly" />
-        </xs:choice>
+    <xs:element name="form">
+        <xs:complexType>
+            <xs:annotation>
+                <xs:documentation>This element wraps a collection of descendant input elements. Whenever a
+                    "followup:send" event is triggered by a descendant element the form will validate all descendant
+                    inputs and submit the data to the follow_ups endpoint on the mobile-content-api. If any descendant
+                    input fails to validate, the "followup:send" event and any other events triggered at the same time
+                    are prevented from firing.
+                </xs:documentation>
+            </xs:annotation>
+            <xs:choice minOccurs="0" maxOccurs="unbounded">
+                <xs:group ref="content:elements" />
+                <xs:group ref="content:fixedSpacerOnly" />
+            </xs:choice>
 
-        <xs:attributeGroup ref="content:baseAttributes" />
-    </xs:complexType>
-    <!-- endregion form -->
+            <xs:attributeGroup ref="content:baseAttributes" />
+        </xs:complexType>
+    </xs:element>
 
     <!-- region input -->
     <xs:element name="input" type="content:input" />
