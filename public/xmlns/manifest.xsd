@@ -42,7 +42,13 @@
             <xs:element name="pages" minOccurs="0" maxOccurs="1">
                 <xs:complexType>
                     <xs:choice>
-                        <xs:element name="page" minOccurs="0" maxOccurs="unbounded" type="manifest:page" />
+                        <xs:element name="page" minOccurs="0" maxOccurs="unbounded">
+                            <xs:complexType>
+                                <xs:attribute name="filename" type="xs:string" />
+                                <xs:attribute name="src" type="xs:string" use="required" />
+                            </xs:complexType>
+                        </xs:element>
+
                         <xs:group ref="article:manifestElements" />
                     </xs:choice>
                 </xs:complexType>
@@ -191,11 +197,6 @@
         </xs:attribute>
 
         <xs:attributeGroup ref="publish:contentFiltering" />
-    </xs:complexType>
-
-    <xs:complexType name="page">
-        <xs:attribute name="filename" type="xs:string" use="optional" />
-        <xs:attribute name="src" type="xs:string" use="required" />
     </xs:complexType>
 
     <xs:attributeGroup name="toolMetaData">
