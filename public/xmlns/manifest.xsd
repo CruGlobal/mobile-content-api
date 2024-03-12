@@ -25,12 +25,6 @@
         </xs:restriction>
     </xs:simpleType>
 
-    <xs:simpleType name="categoryId">
-        <xs:restriction base="xs:token">
-            <xs:pattern value="[a-zA-Z0-9_\-]+" />
-        </xs:restriction>
-    </xs:simpleType>
-
     <xs:complexType name="manifest">
         <xs:all>
             <xs:element name="title" minOccurs="0" maxOccurs="1" type="content:textChild" />
@@ -174,7 +168,7 @@
             </xs:element>
             <xs:group ref="article:categoryElements" />
         </xs:sequence>
-        <xs:attribute name="id" type="manifest:categoryId" use="required">
+        <xs:attribute name="id" type="content:id" use="required">
             <xs:annotation>
                 <xs:documentation>The id of this category, category ids should be unique within a single manifest.
                 </xs:documentation>
