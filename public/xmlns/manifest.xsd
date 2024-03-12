@@ -16,6 +16,28 @@
     <xs:import namespace="https://mobile-content-api.cru.org/xmlns/shareable" schemaLocation="shareable.xsd" />
     <xs:import namespace="https://mobile-content-api.cru.org/xmlns/tract" schemaLocation="tract.xsd" />
 
+    <xs:annotation>
+        <xs:documentation>
+            Events and Listeners
+            --------------------
+
+            Throughout the content spec there are elements that trigger events and listeners that listen for events.
+            Whenever an element triggers an event or a series of events, each event triggered is processed in sequence.
+            For each event any "active" listeners that match the element will fire. Once each triggered event is
+            processed, the next triggered event will be processed with the updated "active" listeners.
+
+            For example, if tract page 1 is active with the hero active and an animation running in the hero. Then if a
+            sequence of 2 events are triggered, and the first event matches listeners for the running animation, card 2,
+            and page 2. Then the animation listener will trigger, card 2 will be displayed, and the tool will jump to
+            page 2. The second fired event will now be processed and apply to the newly active page 2, and not trigger
+            any content listeners on page 1.
+
+            Because multiple events can be triggered in sequence by any element that triggers events, it makes sense to
+            prefer triggering multiple subsequent events when resolution of a single event to multiple listeners would
+            give ambiguous results.
+        </xs:documentation>
+    </xs:annotation>
+
     <xs:simpleType name="toolType">
         <xs:restriction base="xs:token">
             <xs:enumeration value="article" />
