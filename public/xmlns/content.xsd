@@ -435,7 +435,9 @@
                         </xs:sequence>
                         <xs:attribute name="listeners" type="content:listeners">
                             <xs:annotation>
-                                <xs:documentation>event_ids that trigger this tab</xs:documentation>
+                                <xs:documentation>event_ids that trigger this tab. These listeners are only "active"
+                                    when the containing tabs content element is in the current active content stack.
+                                </xs:documentation>
                             </xs:annotation>
                         </xs:attribute>
                     </xs:complexType>
