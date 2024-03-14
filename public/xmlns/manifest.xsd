@@ -35,7 +35,8 @@
             Throughout the content spec there are elements that trigger events and listeners that listen for events.
             Whenever an element triggers an event or a series of events, each event triggered is processed in sequence.
             For each event any "active" listeners that match the element will fire. Once each triggered event is
-            processed, the next triggered event will be processed with the updated "active" listeners.
+            processed, the next triggered event will be processed with the updated "active" listeners. Unless otherwise
+            specified content visibility attributes have no impact on whether a listener is "active".
 
             For example, if tract page 1 is active with the hero active and an animation running in the hero. Then if a
             sequence of 2 events are triggered, and the first event matches listeners for the running animation, card 2,
