@@ -262,8 +262,8 @@
 
     <xs:simpleType name="locale">
         <xs:restriction base="xs:token">
-            <!-- language(-script)(-region) -->
-            <xs:pattern value="[a-zA-Z]{2,3}(-[a-zA-Z]{4})?(-[a-zA-Z]{2}|-[0-9]{3})?" />
+            <!-- langtag: language(-script)(-region)(-x-privateuse) -->
+            <xs:pattern value="[a-zA-Z]{2,3}(-[a-zA-Z]{4})?(-[a-zA-Z]{2}|-[0-9]{3})?(-[xX]-[a-zA-Z0-9]{2,8})?" />
         </xs:restriction>
     </xs:simpleType>
     <xs:simpleType name="locales">
