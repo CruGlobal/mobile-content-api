@@ -18,6 +18,17 @@
 
     <xs:annotation>
         <xs:documentation>
+            Content Stacks
+            --------------
+
+            All of the content within the content spec is built around the concept of a content stack. A content stack
+            is a vertical stack of content that supports vertical scrolling. We try to avoid doing absolute positioning
+            of content to avoid responsive issues with differing screen sizes.
+
+            Throughout the content spec we will refer to an active content stack to reference the current content stack
+            being rendered on the screen. For example for a tract tool showing a card, the active content stack refers
+            to all content elements that are in that card.
+
             Events and Listeners
             --------------------
 
