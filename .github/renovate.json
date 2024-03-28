@@ -11,7 +11,7 @@
         {
             "matchManagers": ["bundler", "ruby-version"],
             "matchPackageNames": ["ruby"],
-            "allowedVersions": "<3.2"
+            "seperateMultipleMinor": true
         }
     ],
     "lockFileMaintenance": { "enabled": true }
