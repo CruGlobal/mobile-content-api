@@ -11,7 +11,12 @@
         {
             "matchManagers": ["bundler", "ruby-version"],
             "matchPackageNames": ["ruby"],
-            "seperateMultipleMinor": true
+            "separateMultipleMinor": true
+        },
+        {
+            "matchManagers": ["bundler"],
+            "matchPackageNames": ["rails"],
+            "separateMinorPatch": true
         }
     ],
     "lockFileMaintenance": { "enabled": true }
