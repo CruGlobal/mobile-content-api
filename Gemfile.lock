@@ -540,7 +540,7 @@ GEM
     uber (0.1.0)
     unf (0.1.4)
       unf_ext
-    unf_ext (0.0.8.2)
+    unf_ext (0.0.9.1)
     unicode-display_width (2.5.0)
     uri (0.10.3)
     validate_email (0.1.6)
@@ -549,7 +549,7 @@ GEM
     validate_url (1.0.15)
       activemodel (>= 3.0.0)
       public_suffix
-    validates_email_format_of (1.8.0)
+    validates_email_format_of (1.8.2)
       i18n (>= 0.8.0)
       simpleidn
     web-console (4.2.1)
