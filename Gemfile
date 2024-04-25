@@ -6,7 +6,7 @@ source "https://gems.contribsys.com/" do
 end
 git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
-ruby "3.1.4"
+ruby "3.1.5"
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem "rails", "~> 6.1.7.4"
@@ -114,6 +114,3 @@ group :development do
   # Access an IRB console on exception pages or by using <%= console %> anywhere in the code.
   gem "amazing_print"
 end
-
-# Temporary security fix until new Ruby release
-gem "uri", "~> 0.10.3"

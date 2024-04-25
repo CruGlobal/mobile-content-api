@@ -32,10 +32,20 @@
 
         <xs:attribute name="listeners" type="content:listeners">
             <xs:annotation>
-                <xs:documentation>event_ids that trigger this page</xs:documentation>
+                <xs:documentation>This is a list of event_ids that will cause navigation to jump to this page. Page
+                    listeners are always "active".
+                </xs:documentation>
             </xs:annotation>
         </xs:attribute>
-        <xs:attribute name="dismiss-listeners" type="content:listeners" />
+        <xs:attribute name="dismiss-listeners" type="content:listeners">
+            <xs:annotation>
+                <xs:documentation>This is the list of event_ids that will pop this page off a navigation stack. This
+                    listener is only "active" when the page is on top of the navigation stack.
+
+                    This listener currently only applies to the cyoa tool type.
+                </xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
 
         <xs:attribute name="primary-color" type="content:colorValue">
             <xs:annotation>
