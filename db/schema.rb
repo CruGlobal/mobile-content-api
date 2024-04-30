@@ -10,8 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2023_11_02_190816) do
-
+ActiveRecord::Schema[7.0].define(version: 2024_04_30_201610) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
   enable_extension "plpgsql"
@@ -19,7 +18,7 @@ ActiveRecord::Schema.define(version: 2023_11_02_190816) do
 
   create_table "access_codes", id: :serial, force: :cascade do |t|
     t.string "code", null: false
-    t.datetime "expiration", default: "2016-01-01 01:00:00", null: false
+    t.datetime "expiration", precision: nil, default: "2016-01-01 01:00:00", null: false
     t.index ["code"], name: "index_access_codes_on_code", unique: true
   end
 
@@ -28,7 +27,7 @@ ActiveRecord::Schema.define(version: 2023_11_02_190816) do
     t.string "record_type", null: false
     t.bigint "record_id", null: false
     t.bigint "blob_id", null: false
-    t.datetime "created_at", null: false
+    t.datetime "created_at", precision: nil, null: false
     t.index ["blob_id"], name: "index_active_storage_attachments_on_blob_id"
     t.index ["record_type", "record_id", "name", "blob_id"], name: "index_active_storage_attachments_uniqueness", unique: true
   end
@@ -39,8 +38,8 @@ ActiveRecord::Schema.define(version: 2023_11_02_190816) do
     t.string "content_type"
     t.text "metadata"
     t.bigint "byte_size", null: false
-    t.string "checksum", null: false
-    t.datetime "created_at", null: false
+    t.string "checksum"
+    t.datetime "created_at", precision: nil, null: false
     t.string "service_name", null: false
     t.index ["key"], name: "index_active_storage_blobs_on_key", unique: true
   end
@@ -75,7 +74,7 @@ ActiveRecord::Schema.define(version: 2023_11_02_190816) do
   create_table "auth_tokens", id: :serial, force: :cascade do |t|
     t.string "token", null: false
     t.integer "access_code_id", null: false
-    t.datetime "expiration", default: "2016-01-01 01:00:00", null: false
+    t.datetime "expiration", precision: nil, default: "2016-01-01 01:00:00", null: false
     t.index ["access_code_id"], name: "index_auth_tokens_on_access_code_id"
     t.index ["token"], name: "index_auth_tokens_on_token", unique: true
   end
@@ -84,8 +83,8 @@ ActiveRecord::Schema.define(version: 2023_11_02_190816) do
     t.string "structure", null: false
     t.integer "resource_id", null: false
     t.integer "language_id", null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.index ["language_id"], name: "index_custom_manifests_on_language_id"
     t.index ["resource_id", "language_id"], name: "index_custom_manifests_on_resource_id_and_language_id", unique: true
     t.index ["resource_id"], name: "index_custom_manifests_on_resource_id"
@@ -104,8 +103,8 @@ ActiveRecord::Schema.define(version: 2023_11_02_190816) do
     t.string "structure", null: false
     t.integer "tip_id", null: false
     t.integer "language_id", null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.index ["language_id"], name: "index_custom_tips_on_language_id"
     t.index ["tip_id", "language_id"], name: "index_custom_tips_on_tip_id_and_language_id", unique: true
     t.index ["tip_id"], name: "index_custom_tips_on_tip_id"
@@ -115,8 +114,8 @@ ActiveRecord::Schema.define(version: 2023_11_02_190816) do
     t.string "provider"
     t.string "uid"
     t.string "pid"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.index ["pid"], name: "index_deletion_requests_on_pid"
   end
 
@@ -132,8 +131,8 @@ ActiveRecord::Schema.define(version: 2023_11_02_190816) do
   create_table "favorite_tools", force: :cascade do |t|
     t.integer "tool_id"
     t.integer "user_id"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "follow_ups", id: :serial, force: :cascade do |t|
@@ -150,7 +149,7 @@ ActiveRecord::Schema.define(version: 2023_11_02_190816) do
     t.integer "countries", default: 0, null: false
     t.integer "launches", default: 0, null: false
     t.integer "gospel_presentations", default: 0, null: false
-    t.datetime "updated_at", null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.index ["id"], name: "index_global_activity_analytics_on_id", unique: true
   end
 
@@ -160,8 +159,8 @@ ActiveRecord::Schema.define(version: 2023_11_02_190816) do
     t.string "key", null: false
     t.string "value", null: false
     t.boolean "is_translatable", default: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.index ["key", "resource_id", "language_id"], name: "index_language_attributes_unique", unique: true
     t.index ["resource_id"], name: "index_language_attributes_on_resource_id"
   end
@@ -186,8 +185,8 @@ ActiveRecord::Schema.define(version: 2023_11_02_190816) do
     t.integer "resource_id", null: false
     t.bigint "tool_group_id", null: false
     t.float "suggestions_weight"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.index ["resource_id"], name: "index_resource_tool_groups_on_resource_id"
     t.index ["tool_group_id"], name: "index_resource_tool_groups_on_tool_group_id"
   end
@@ -207,8 +206,8 @@ ActiveRecord::Schema.define(version: 2023_11_02_190816) do
     t.integer "resource_type_id", null: false
     t.string "manifest"
     t.integer "total_views", default: 0, null: false
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at", precision: nil
+    t.datetime "updated_at", precision: nil
     t.bigint "metatool_id"
     t.bigint "default_variant_id"
     t.index ["abbreviation"], name: "index_resources_on_abbreviation", unique: true
@@ -222,8 +221,8 @@ ActiveRecord::Schema.define(version: 2023_11_02_190816) do
     t.bigint "tool_group_id", null: false
     t.string "countries", default: [], array: true
     t.boolean "negative_rule", default: false
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.index ["tool_group_id"], name: "index_rule_countries_on_tool_group_id"
   end
 
@@ -231,8 +230,8 @@ ActiveRecord::Schema.define(version: 2023_11_02_190816) do
     t.bigint "tool_group_id", null: false
     t.string "languages", default: [], array: true
     t.boolean "negative_rule", default: false
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.index ["tool_group_id"], name: "index_rule_languages_on_tool_group_id"
   end
 
@@ -241,8 +240,8 @@ ActiveRecord::Schema.define(version: 2023_11_02_190816) do
     t.integer "openness", default: [], array: true
     t.integer "confidence", default: [], array: true
     t.boolean "negative_rule", default: false
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.index ["tool_group_id"], name: "index_rule_praxes_on_tool_group_id"
   end
 
@@ -255,16 +254,16 @@ ActiveRecord::Schema.define(version: 2023_11_02_190816) do
     t.integer "resource_id"
     t.string "name"
     t.string "structure"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.index ["resource_id", "name"], name: "index_tips_on_resource_id_and_name", unique: true
   end
 
   create_table "tool_groups", force: :cascade do |t|
     t.string "name"
     t.float "suggestions_weight"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "translated_attributes", force: :cascade do |t|
@@ -272,8 +271,8 @@ ActiveRecord::Schema.define(version: 2023_11_02_190816) do
     t.string "key"
     t.string "onesky_phrase_id"
     t.boolean "required", default: false
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "translated_pages", id: :serial, force: :cascade do |t|
@@ -306,12 +305,23 @@ ActiveRecord::Schema.define(version: 2023_11_02_190816) do
     t.index ["resource_id"], name: "index_translations_on_resource_id"
   end
 
+  create_table "translations_bkup", id: false, force: :cascade do |t|
+    t.integer "id"
+    t.boolean "is_published"
+    t.integer "version"
+    t.integer "resource_id"
+    t.integer "language_id"
+    t.string "translated_name"
+    t.string "translated_description"
+    t.string "manifest_name"
+  end
+
   create_table "user_attributes", force: :cascade do |t|
     t.integer "user_id", null: false
     t.string "key"
     t.string "value"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.index ["user_id"], name: "index_user_attributes_on_user_id"
   end
 
@@ -321,8 +331,8 @@ ActiveRecord::Schema.define(version: 2023_11_02_190816) do
     t.integer "count", default: 0
     t.float "decayed_count", default: 0.0
     t.date "last_decay", default: -> { "now()" }
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.index ["user_id", "counter_name"], name: "index_user_counters_on_user_id_and_counter_name", unique: true
   end
 
@@ -331,8 +341,8 @@ ActiveRecord::Schema.define(version: 2023_11_02_190816) do
     t.string "last_name"
     t.citext "email", null: false
     t.string "sso_guid"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.boolean "admin", default: false, null: false
     t.string "short_name"
     t.string "facebook_user_id"

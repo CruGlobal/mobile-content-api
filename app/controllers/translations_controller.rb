@@ -24,6 +24,6 @@ class TranslationsController < ApplicationController
   end
 
   def redirect
-    redirect_to @translation.s3_url, status: :found
+    redirect_to @translation.s3_url, status: :found, allow_other_host: true
   end
 end
