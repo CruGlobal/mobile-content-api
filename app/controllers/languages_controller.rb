@@ -12,7 +12,7 @@ class LanguagesController < ApplicationController
   end
 
   def create
-    language = Language.create!(permit_params(:name, :code, :direction))
+    language = Language.create!(permit_params(:name, :code, :direction, :force_language_creation))
     response.headers["Location"] = "languages/#{language.id}"
     render json: language, status: :created
   rescue ActiveRecord::RecordNotUnique

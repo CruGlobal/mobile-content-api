@@ -2,7 +2,7 @@
 
 class LanguageSerializer < ActiveModel::Serializer
   type "language"
-  attributes :id, :code, :name, :direction
+  attributes :id, :code, :name, :direction, :force_language_name
 
   has_many :translations
   has_many :custom_pages
