@@ -3,7 +3,7 @@ class TrainingTipsController < WithUserController
 
   def create
     user_training_tip = @user.user_training_tips.create!(permitted_params)
-    response.headers["Location"] = "users/me/training-tips/#{user_training_tip.id}"
+    response.headers["Location"] = "users/#{@user.id}/training-tips/#{user_training_tip.id}"
     render json: user_training_tip, status: :created
   rescue ActiveRecord::RecordInvalid => e
     render json: {errors: formatted_errors("record_invalid", e)}, status: :unprocessable_entity
@@ -11,14 +11,14 @@ class TrainingTipsController < WithUserController
 
   def update
     user_training_tip = @user.user_training_tips.find(params[:id])
-    user_training_tip.update(permitted_params)
+    user_training_tip.update!(permitted_params)
     response.headers["Location"] = "users/me/training-tips/#{user_training_tip.id}"
     render json: user_training_tip
   end
 
   def destroy
     user_training_tip = @user.user_training_tips.find(params[:id])
-    user_training_tip.destroy
+    user_training_tip.destroy!
     head :no_content
   end
 
