@@ -45,7 +45,6 @@ ARG TEST_DB_PORT=5432
 RUN cp spec/fixtures/service_account_cred.json.actions config/secure/service_account_cred.json \
     && RAILS_ENV=test bundle exec rails db:create db:schema:load docs:generate \
     && rm config/secure/service_account_cred.json \
-    && RAILS_ENV=test bundle exec rails assets:clobber assets:precompile \
     && chown -R webapp:webapp /home/webapp/
 
 # Define volumes used by ECS to share public html and extra nginx config with nginx container
