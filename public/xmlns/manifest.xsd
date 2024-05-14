@@ -3,6 +3,7 @@
     xmlns:content="https://mobile-content-api.cru.org/xmlns/content"
     xmlns:manifest="https://mobile-content-api.cru.org/xmlns/manifest"
     xmlns:page="https://mobile-content-api.cru.org/xmlns/page"
+    xmlns:publish="https://mobile-content-api.cru.org/xmlns/publish"
     xmlns:shareable="https://mobile-content-api.cru.org/xmlns/shareable"
     xmlns:xs="http://www.w3.org/2001/XMLSchema"
     elementFormDefault="qualified" targetNamespace="https://mobile-content-api.cru.org/xmlns/manifest">
@@ -11,8 +12,43 @@
     <xs:import namespace="https://mobile-content-api.cru.org/xmlns/content" schemaLocation="content.xsd" />
     <xs:import namespace="https://mobile-content-api.cru.org/xmlns/lesson" schemaLocation="lesson.xsd" />
     <xs:import namespace="https://mobile-content-api.cru.org/xmlns/page" schemaLocation="page.xsd" />
+    <xs:import namespace="https://mobile-content-api.cru.org/xmlns/publish" schemaLocation="publish.xsd" />
     <xs:import namespace="https://mobile-content-api.cru.org/xmlns/shareable" schemaLocation="shareable.xsd" />
     <xs:import namespace="https://mobile-content-api.cru.org/xmlns/tract" schemaLocation="tract.xsd" />
+
+    <xs:annotation>
+        <xs:documentation>
+            Content Stacks
+            --------------
+
+            All of the content within the content spec is built around the concept of a content stack. A content stack
+            is a vertical stack of content that supports vertical scrolling. We try to avoid doing absolute positioning
+            of content to avoid responsive issues with differing screen sizes.
+
+            Throughout the content spec we will refer to an active content stack to reference the current content stack
+            being rendered on the screen. For example for a tract tool showing a card, the active content stack refers
+            to all content elements that are in that card.
+
+            Events and Listeners
+            --------------------
+
+            Throughout the content spec there are elements that trigger events and listeners that listen for events.
+            Whenever an element triggers an event or a series of events, each event triggered is processed in sequence.
+            For each event any "active" listeners that match the element will fire. Once each triggered event is
+            processed, the next triggered event will be processed with the updated "active" listeners. Unless otherwise
+            specified content visibility attributes have no impact on whether a listener is "active".
+
+            For example, if tract page 1 is active with the hero active and an animation running in the hero. Then if a
+            sequence of 2 events are triggered, and the first event matches listeners for the running animation, card 2,
+            and page 2. Then the animation listener will trigger, card 2 will be displayed, and the tool will jump to
+            page 2. The second fired event will now be processed and apply to the newly active page 2, and not trigger
+            any content listeners on page 1.
+
+            Because multiple events can be triggered in sequence by any element that triggers events, it makes sense to
+            prefer triggering multiple subsequent events when resolution of a single event to multiple listeners would
+            give ambiguous results.
+        </xs:documentation>
+    </xs:annotation>
 
     <xs:simpleType name="toolType">
         <xs:restriction base="xs:token">
@@ -23,140 +59,154 @@
         </xs:restriction>
     </xs:simpleType>
 
-    <xs:simpleType name="categoryId">
-        <xs:restriction base="xs:token">
-            <xs:pattern value="[a-zA-Z0-9_\-]+" />
-        </xs:restriction>
-    </xs:simpleType>
+    <xs:element name="manifest">
+        <xs:complexType>
+            <xs:all>
+                <xs:element name="title" type="content:textChild" minOccurs="0" maxOccurs="1" />
+                <xs:element name="categories" minOccurs="0">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element name="category" type="manifest:category" minOccurs="0" maxOccurs="unbounded" />
+                        </xs:sequence>
+                    </xs:complexType>
+                    <xs:unique name="categoryId">
+                        <xs:selector xpath="category" />
+                        <xs:field xpath="@id" />
+                    </xs:unique>
+                </xs:element>
+                <xs:element name="pages" minOccurs="0" maxOccurs="1">
+                    <xs:complexType>
+                        <xs:choice>
+                            <xs:element name="page" minOccurs="0" maxOccurs="unbounded">
+                                <xs:complexType>
+                                    <xs:attribute name="filename" type="xs:string" />
+                                    <xs:attribute name="src" type="xs:string" use="required" />
+                                </xs:complexType>
+                            </xs:element>
 
-    <xs:complexType name="manifest">
-        <xs:all>
-            <xs:element name="title" minOccurs="0" maxOccurs="1" type="content:textChild" />
-            <xs:element name="categories" minOccurs="0">
-                <xs:complexType>
-                    <xs:sequence>
-                        <xs:element name="category" minOccurs="0" maxOccurs="unbounded" type="manifest:category" />
-                    </xs:sequence>
-                </xs:complexType>
-                <xs:unique name="categoryId">
-                    <xs:selector xpath="category" />
-                    <xs:field xpath="@id" />
-                </xs:unique>
-            </xs:element>
-            <xs:element name="pages" minOccurs="0" maxOccurs="1">
-                <xs:complexType>
-                    <xs:choice>
-                        <xs:element name="page" minOccurs="0" maxOccurs="unbounded" type="manifest:page" />
-                        <xs:group ref="article:manifestElements" />
-                    </xs:choice>
-                </xs:complexType>
-            </xs:element>
-            <xs:element name="resources" minOccurs="0" maxOccurs="1">
-                <xs:complexType>
-                    <xs:sequence>
-                        <xs:element name="resource" minOccurs="0" maxOccurs="unbounded" type="manifest:resource" />
-                    </xs:sequence>
-                </xs:complexType>
-            </xs:element>
-            <xs:element name="tips" minOccurs="0">
-                <xs:complexType>
-                    <xs:sequence>
-                        <xs:element name="tip" minOccurs="0" maxOccurs="unbounded" type="manifest:tipType" />
-                    </xs:sequence>
-                </xs:complexType>
-                <xs:unique name="tipId">
-                    <xs:annotation>
-                        <xs:documentation>Tip ids are unique within the context of a manifest</xs:documentation>
-                    </xs:annotation>
-                    <xs:selector xpath="manifest:tip" />
-                    <xs:field xpath="@id" />
-                </xs:unique>
-            </xs:element>
+                            <xs:group ref="article:manifestElements" />
+                        </xs:choice>
+                    </xs:complexType>
+                </xs:element>
+                <xs:element name="resources" minOccurs="0" maxOccurs="1">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element name="resource" minOccurs="0" maxOccurs="unbounded">
+                                <xs:complexType>
+                                    <xs:attribute name="filename" type="xs:string" use="required" />
+                                    <xs:attribute name="src" type="xs:string" use="required" />
+                                </xs:complexType>
+                            </xs:element>
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+                <xs:element name="tips" minOccurs="0">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element name="tip" minOccurs="0" maxOccurs="unbounded">
+                                <xs:complexType>
+                                    <xs:attribute name="id" type="content:id" use="required" />
+                                    <xs:attribute name="src" type="xs:string" use="required" />
+                                </xs:complexType>
+                            </xs:element>
+                        </xs:sequence>
+                    </xs:complexType>
+                    <xs:unique name="tipId">
+                        <xs:annotation>
+                            <xs:documentation>Tip ids are unique within the context of a manifest</xs:documentation>
+                        </xs:annotation>
+                        <xs:selector xpath="manifest:tip" />
+                        <xs:field xpath="@id" />
+                    </xs:unique>
+                </xs:element>
 
-            <xs:element ref="shareable:items" minOccurs="0" />
-        </xs:all>
+                <xs:element ref="shareable:items" minOccurs="0" />
+            </xs:all>
 
-        <xs:attributeGroup ref="manifest:toolMetaData" />
-        <xs:attribute name="primary-color" type="content:colorValue" default="rgba(59,164,219,1)">
-            <xs:annotation>
-                <xs:documentation>The primary color of this tool. Defaults to rgba(59,164,219,1).</xs:documentation>
-            </xs:annotation>
-        </xs:attribute>
-        <xs:attribute name="primary-text-color" type="content:colorValue" default="rgba(255,255,255,1)">
-            <xs:annotation>
-                <xs:documentation>The text color for text displayed on top of the primary-color. Defaults to
-                    rgba(255,255,255,1).
-                </xs:documentation>
-            </xs:annotation>
-        </xs:attribute>
-        <xs:attribute name="text-color" type="content:colorValue" use="optional" default="rgba(90,90,90,1)">
-            <xs:annotation>
-                <xs:documentation>The default text color for text content within this tool. Defaults to
-                    rgba(90,90,90,1).
-                </xs:documentation>
-            </xs:annotation>
-        </xs:attribute>
+            <xs:attributeGroup ref="manifest:toolMetaData" />
+            <xs:attribute name="primary-color" type="content:colorValue" default="rgba(59,164,219,1)">
+                <xs:annotation>
+                    <xs:documentation>The primary color of this tool. Defaults to rgba(59,164,219,1).</xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
+            <xs:attribute name="primary-text-color" type="content:colorValue" default="rgba(255,255,255,1)">
+                <xs:annotation>
+                    <xs:documentation>The text color for text displayed on top of the primary-color. Defaults to
+                        rgba(255,255,255,1).
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
+            <xs:attribute name="text-color" type="content:colorValue" default="rgba(90,90,90,1)">
+                <xs:annotation>
+                    <xs:documentation>The default text color for text content within this tool. Defaults to
+                        rgba(90,90,90,1).
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
 
-        <xs:attribute name="background-color" type="content:colorValue" default="rgba(255,255,255,1)">
-            <xs:annotation>
-                <xs:documentation>This is the background color for this tool. This is the bottom-most background
-                    layer.
-                </xs:documentation>
-            </xs:annotation>
-        </xs:attribute>
-        <xs:attribute name="background-image" type="xs:string" use="optional" />
-        <xs:attribute name="background-image-align" type="content:imageGravity" use="optional" default="center">
-            <xs:annotation>
-                <xs:documentation>This defines how we align the background image. This defaults to center.
-                </xs:documentation>
-            </xs:annotation>
-        </xs:attribute>
-        <xs:attribute name="background-image-scale-type" type="content:imageScaleType" use="optional" default="fill">
-            <xs:annotation>
-                <xs:documentation>This defines how we should scale the background image. This defaults to fill.
-                </xs:documentation>
-            </xs:annotation>
-        </xs:attribute>
+            <xs:attribute name="background-color" type="content:colorValue" default="rgba(255,255,255,1)">
+                <xs:annotation>
+                    <xs:documentation>This is the background color for this tool. This is the bottom-most background
+                        layer.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
+            <xs:attribute name="background-image" type="xs:string" />
+            <xs:attribute name="background-image-align" type="content:imageGravity" default="center">
+                <xs:annotation>
+                    <xs:documentation>This defines how we align the background image. This defaults to center.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
+            <xs:attribute name="background-image-scale-type" type="content:imageScaleType" default="fill">
+                <xs:annotation>
+                    <xs:documentation>This defines how we should scale the background image. This defaults to fill.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
 
-        <xs:attribute name="navbar-color" type="content:colorValue" use="optional">
-            <xs:annotation>
-                <xs:documentation>This defines the color of the application navigation bar for this tool. For lesson
-                    tool types this defaults to transparent, for all other tool types this defaults to the
-                    primary-color.
-                </xs:documentation>
-            </xs:annotation>
-        </xs:attribute>
-        <xs:attribute name="navbar-control-color" type="content:colorValue" use="optional">
-            <xs:annotation>
-                <xs:documentation>This defines the color of controls on the application navigation bar for this tool.
-                    For lesson tool types this defaults to the primary-color, for all other tool types this defaults to
-                    the primary-text-color.
-                </xs:documentation>
-            </xs:annotation>
-        </xs:attribute>
+            <xs:attribute name="navbar-color" type="content:colorValue" use="optional">
+                <xs:annotation>
+                    <xs:documentation>This defines the color of the application navigation bar for this tool. For lesson
+                        tool types this defaults to transparent, for all other tool types this defaults to the
+                        primary-color.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
+            <xs:attribute name="navbar-control-color" type="content:colorValue" use="optional">
+                <xs:annotation>
+                    <xs:documentation>This defines the color of controls on the application navigation bar for this
+                        tool. For lesson tool types this defaults to the primary-color, for all other tool types this
+                        defaults to the primary-text-color.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
 
-        <xs:attribute name="category-label-color" type="content:colorValue">
-            <xs:annotation>
-                <xs:documentation>The category label color. This defaults to text-color.</xs:documentation>
-            </xs:annotation>
-        </xs:attribute>
+            <xs:attribute name="category-label-color" type="content:colorValue">
+                <xs:annotation>
+                    <xs:documentation>The category label color. This defaults to text-color.</xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
 
-        <xs:attribute name="text-scale" type="xs:float" default="1">
-            <xs:annotation>
-                <xs:documentation>Defines how much to scale all the text content in this tool by.</xs:documentation>
-            </xs:annotation>
-        </xs:attribute>
+            <xs:attribute name="text-scale" type="xs:float" default="1">
+                <xs:annotation>
+                    <xs:documentation>Defines how much to scale all the text content in this tool by.</xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
 
-        <xs:attribute name="dismiss-listeners" type="content:listeners">
-            <xs:annotation>
-                <xs:documentation>This attribute defines events that will dismiss this tool.</xs:documentation>
-            </xs:annotation>
-        </xs:attribute>
+            <xs:attribute name="dismiss-listeners" type="content:listeners">
+                <xs:annotation>
+                    <xs:documentation>This attribute defines events that will close this tool. This listener is always
+                        "active".
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
 
-        <!-- Import any external groups of attributes we want to support -->
-        <xs:attributeGroup ref="content:manifest" />
-        <xs:attributeGroup ref="page:manifest" />
-    </xs:complexType>
+            <!-- Import any external groups of attributes we want to support -->
+            <xs:attributeGroup ref="content:manifest" />
+            <xs:attributeGroup ref="page:manifest" />
+        </xs:complexType>
+    </xs:element>
 
     <xs:complexType name="category">
         <xs:annotation>
@@ -172,7 +222,7 @@
             </xs:element>
             <xs:group ref="article:categoryElements" />
         </xs:sequence>
-        <xs:attribute name="id" type="manifest:categoryId" use="required">
+        <xs:attribute name="id" type="content:id" use="required">
             <xs:annotation>
                 <xs:documentation>The id of this category, category ids should be unique within a single manifest.
                 </xs:documentation>
@@ -183,21 +233,8 @@
                 <xs:documentation>The banner image to use for this category</xs:documentation>
             </xs:annotation>
         </xs:attribute>
-    </xs:complexType>
 
-    <xs:complexType name="page">
-        <xs:attribute name="filename" type="xs:string" use="optional" />
-        <xs:attribute name="src" type="xs:string" use="required" />
-    </xs:complexType>
-
-    <xs:complexType name="resource">
-        <xs:attribute name="filename" type="xs:string" use="required" />
-        <xs:attribute name="src" type="xs:string" use="required" />
-    </xs:complexType>
-
-    <xs:complexType name="tipType">
-        <xs:attribute name="id" type="xs:string" use="required" />
-        <xs:attribute name="src" type="xs:string" use="required" />
+        <xs:attributeGroup ref="publish:contentFiltering" />
     </xs:complexType>
 
     <xs:attributeGroup name="toolMetaData">
@@ -211,7 +248,7 @@
                 <xs:documentation>The code of the tool this manifest is for</xs:documentation>
             </xs:annotation>
         </xs:attribute>
-        <xs:attribute name="locale" type="xs:token" use="optional">
+        <xs:attribute name="locale" type="content:locale" use="optional">
             <xs:annotation>
                 <xs:documentation>The language this manifest is for</xs:documentation>
             </xs:annotation>
@@ -222,7 +259,4 @@
             </xs:annotation>
         </xs:attribute>
     </xs:attributeGroup>
-
-    <!-- root element -->
-    <xs:element name="manifest" type="manifest:manifest" />
 </xs:schema>

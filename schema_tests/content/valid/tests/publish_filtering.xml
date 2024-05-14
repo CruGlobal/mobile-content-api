@@ -1,0 +1,13 @@
+<content:paragraph xmlns:content="https://mobile-content-api.cru.org/xmlns/content"
+    xmlns:publish="https://mobile-content-api.cru.org/xmlns/publish"
+    publish:if-locale="en" publish:if-locale-not="fr">
+    <content:spacer height="20" mode="fixed" publish:if-locale="en" publish:if-locale-not="fr" />
+    <content:text publish:if-locale="en" publish:if-locale-not="fr" />
+    <content:image resource="image.png" publish:if-locale="en" publish:if-locale-not="fr" />
+    <content:flow publish:if-locale="en">
+        <content:item publish:if-locale="en" />
+    </content:flow>
+    <content:form publish:if-locale="en">
+        <content:input name="name" publish:if-locale="en" />
+    </content:form>
+</content:paragraph>

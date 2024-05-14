@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <xs:schema xmlns:analytics="https://mobile-content-api.cru.org/xmlns/analytics"
     xmlns:content="https://mobile-content-api.cru.org/xmlns/content"
+    xmlns:publish="https://mobile-content-api.cru.org/xmlns/publish"
     xmlns:training="https://mobile-content-api.cru.org/xmlns/training" xmlns:xs="http://www.w3.org/2001/XMLSchema"
     elementFormDefault="qualified" targetNamespace="https://mobile-content-api.cru.org/xmlns/content">
 
     <xs:import namespace="https://mobile-content-api.cru.org/xmlns/analytics" schemaLocation="analytics.xsd" />
+    <xs:import namespace="https://mobile-content-api.cru.org/xmlns/publish" schemaLocation="publish.xsd" />
     <xs:import namespace="https://mobile-content-api.cru.org/xmlns/training" schemaLocation="training.xsd" />
 
     <!-- region Value Definitions -->
@@ -258,6 +260,19 @@
         </xs:list>
     </xs:simpleType>
 
+    <xs:simpleType name="locale">
+        <xs:restriction base="xs:token">
+            <!-- langtag: language(-script)(-region)(-x-privateuse) -->
+            <xs:pattern value="[a-zA-Z]{2,3}(-[a-zA-Z]{4})?(-[a-zA-Z]{2}|-[0-9]{3})?(-[xX]-[a-zA-Z0-9]{2,8})?" />
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="locales">
+        <xs:annotation>
+            <xs:documentation>A space separated list of locales</xs:documentation>
+        </xs:annotation>
+        <xs:list itemType="content:locale" />
+    </xs:simpleType>
+
     <xs:simpleType name="version">
         <xs:restriction base="xs:token">
             <xs:pattern value="[0-9]+(\.[0-9]+)*" />
@@ -284,6 +299,7 @@
 
         <xs:attributeGroup ref="content:contentRestrictions" />
         <xs:attributeGroup ref="content:visibilityAttributes" />
+        <xs:attributeGroup ref="publish:contentFiltering" />
     </xs:attributeGroup>
 
     <xs:attributeGroup name="contentRestrictions">
@@ -381,7 +397,7 @@
             <xs:documentation>Vertical stack of content with margin/padding on the top and bottom.</xs:documentation>
         </xs:annotation>
         <xs:complexType>
-            <xs:choice minOccurs="1" maxOccurs="unbounded">
+            <xs:choice minOccurs="0" maxOccurs="unbounded">
                 <xs:group ref="content:elements" />
                 <xs:group ref="content:fixedSpacerOnly" />
             </xs:choice>
@@ -419,7 +435,9 @@
                         </xs:sequence>
                         <xs:attribute name="listeners" type="content:listeners">
                             <xs:annotation>
-                                <xs:documentation>event_ids that trigger this tab</xs:documentation>
+                                <xs:documentation>event_ids that trigger this tab. These listeners are only "active"
+                                    when the containing tabs content element is in the current active content stack.
+                                </xs:documentation>
                             </xs:annotation>
                         </xs:attribute>
                     </xs:complexType>
@@ -458,6 +476,7 @@
                         </xs:attribute>
 
                         <xs:attributeGroup ref="content:visibilityAttributes" />
+                        <xs:attributeGroup ref="publish:contentFiltering" />
                     </xs:complexType>
                 </xs:element>
 
@@ -705,12 +724,16 @@
             <xs:attribute name="loop" type="xs:boolean" default="true" />
             <xs:attribute name="play-listeners" type="content:listeners">
                 <xs:annotation>
-                    <xs:documentation>event_ids that trigger playback of this animation.</xs:documentation>
+                    <xs:documentation>event_ids that trigger playback of this animation. These listeners are only
+                        "active" when the animation is not already playing and is in the current active content stack.
+                    </xs:documentation>
                 </xs:annotation>
             </xs:attribute>
             <xs:attribute name="stop-listeners" type="content:listeners">
                 <xs:annotation>
-                    <xs:documentation>event_ids that will stop playback of this animation.</xs:documentation>
+                    <xs:documentation>event_ids that will stop playback of this animation. These listeners are only
+                        "active" when the animation is already playing and is in the current active content stack.
+                    </xs:documentation>
                 </xs:annotation>
             </xs:attribute>
 
@@ -969,51 +992,55 @@
         </xs:complexType>
     </xs:element>
 
-    <!-- region form -->
-    <xs:element name="form" type="content:form" />
-    <xs:complexType name="form">
-        <xs:annotation>
-            <xs:documentation>This element wraps a collection of descendant input elements. Whenever a "followup:send"
-                event is triggered by a descendant element the form will validate all descendant inputs and submit the
-                data to the follow_ups endpoint on the mobile-content-api. If any descendant input fails to validate,
-                the "followup:send" event and any other events triggered at the same time are prevented from firing.
-            </xs:documentation>
-        </xs:annotation>
-        <xs:choice maxOccurs="unbounded">
-            <xs:group ref="content:elements" />
-            <xs:group ref="content:fixedSpacerOnly" />
-        </xs:choice>
-    </xs:complexType>
-    <!-- endregion form -->
-
-    <!-- region input -->
-    <xs:element name="input" type="content:input" />
-    <xs:complexType name="input">
-        <xs:all>
-            <xs:element name="label" maxOccurs="1" minOccurs="0" type="content:textChild" />
-            <xs:element name="placeholder" maxOccurs="1" minOccurs="0" type="content:textChild" />
-        </xs:all>
-        <xs:attribute name="name" type="xs:string" use="required" />
-        <xs:attribute name="type" default="text">
-            <xs:simpleType>
-                <xs:restriction base="xs:string">
-                    <xs:enumeration value="text" />
-                    <xs:enumeration value="email" />
-                    <xs:enumeration value="phone" />
-                    <xs:enumeration value="hidden" />
-                </xs:restriction>
-            </xs:simpleType>
-        </xs:attribute>
-        <xs:attribute name="required" type="xs:boolean" default="false">
+    <xs:element name="form">
+        <xs:complexType>
             <xs:annotation>
-                <xs:documentation>Is this input required or not. A required field must contain at least one
-                    non-whitespace character
+                <xs:documentation>This element wraps a collection of descendant input elements. Whenever a
+                    "followup:send" event is triggered by a descendant element the form will validate all descendant
+                    inputs and submit the data to the follow_ups endpoint on the mobile-content-api. If any descendant
+                    input fails to validate, the "followup:send" event and any other events triggered at the same time
+                    are prevented from firing.
                 </xs:documentation>
             </xs:annotation>
-        </xs:attribute>
-        <xs:attribute name="value" type="xs:string" />
-    </xs:complexType>
-    <!-- endregion input -->
+            <xs:choice minOccurs="0" maxOccurs="unbounded">
+                <xs:group ref="content:elements" />
+                <xs:group ref="content:fixedSpacerOnly" />
+            </xs:choice>
+
+            <xs:attributeGroup ref="content:baseAttributes" />
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="input">
+        <xs:complexType>
+            <xs:all>
+                <xs:element name="label" type="content:textChild" minOccurs="0" />
+                <xs:element name="placeholder" type="content:textChild" minOccurs="0" />
+            </xs:all>
+
+            <xs:attribute name="name" type="xs:string" use="required" />
+            <xs:attribute name="type" default="text">
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:enumeration value="text" />
+                        <xs:enumeration value="email" />
+                        <xs:enumeration value="phone" />
+                        <xs:enumeration value="hidden" />
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:attribute>
+            <xs:attribute name="required" type="xs:boolean" default="false">
+                <xs:annotation>
+                    <xs:documentation>Is this input required or not. A required field must contain at least one
+                        non-whitespace character
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
+            <xs:attribute name="value" type="xs:string" />
+
+            <xs:attributeGroup ref="content:baseAttributes" />
+        </xs:complexType>
+    </xs:element>
 
     <xs:element name="fallback">
         <xs:annotation>
@@ -1065,6 +1092,8 @@
                     </xs:restriction>
                 </xs:simpleType>
             </xs:attribute>
+
+            <xs:attributeGroup ref="content:baseAttributes" />
         </xs:complexType>
     </xs:element>
     <xs:group name="fixedSpacerOnly">
@@ -1079,6 +1108,8 @@
                             </xs:restriction>
                         </xs:simpleType>
                     </xs:attribute>
+
+                    <xs:attributeGroup ref="content:baseAttributes" />
                 </xs:complexType>
             </xs:element>
         </xs:choice>

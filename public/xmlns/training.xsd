@@ -56,13 +56,13 @@
         </xs:complexType>
     </xs:element>
 
-    <xs:attribute name="tip" type="xs:string"/>
+    <xs:attribute name="tip" type="content:id" />
 
     <xs:group name="contentElements">
         <xs:choice>
             <xs:element name="tip">
                 <xs:complexType>
-                    <xs:attribute name="id" type="xs:string" use="required" />
+                    <xs:attribute name="id" type="content:id" use="required" />
                 </xs:complexType>
             </xs:element>
         </xs:choice>

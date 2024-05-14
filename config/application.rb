@@ -13,7 +13,7 @@ require_relative "../lib/log/logger"
 module MobileContentApi
   class Application < Rails::Application
     # Initialize configuration defaults for originally generated Rails version.
-    config.load_defaults 6.1
+    config.load_defaults 7.0
 
     # Configuration for the application, engines, and railties goes here.
     #
@@ -26,7 +26,7 @@ module MobileContentApi
     # Send all logs to stdout, which docker reads and sends to datadog.
     config.logger = Log::Logger.new($stdout) unless Rails.env.test? # we don't need a logger in test env
 
-    config.redis_conf = YAML.safe_load(ERB.new(File.read(Rails.root.join("config", "redis.yml"))).result, [Symbol], [], true)
+    config.redis_conf = YAML.safe_load(ERB.new(File.read(Rails.root.join("config", "redis.yml"))).result, permitted_classes: [Symbol], aliases: true)
     redis_cache_conf = config.redis_conf["cache"]
     redis_cache_conf[:url] = "redis://" + redis_cache_conf[:host] + "/" + redis_cache_conf[:db].to_s
     config.cache_store = :redis_cache_store, redis_cache_conf

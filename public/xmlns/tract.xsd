@@ -172,15 +172,18 @@
 
         <!-- hidden: DEFAULT( false ) whether this card is hidden. hidden cards can still be displayed if they have a listener that is triggered. -->
         <xs:attribute name="hidden" type="xs:boolean" use="optional" />
-        <xs:attribute name="listeners" type="content:listeners" use="optional">
+        <xs:attribute name="listeners" type="content:listeners">
             <xs:annotation>
-                <xs:documentation>This attribute defines events that will trigger display of this card.
+                <xs:documentation>This attribute defines events that will trigger display of this card. Card listeners
+                    are only "active" when the containing page is active.
                 </xs:documentation>
             </xs:annotation>
         </xs:attribute>
-        <xs:attribute name="dismiss-listeners" type="content:listeners" use="optional">
+        <xs:attribute name="dismiss-listeners" type="content:listeners">
             <xs:annotation>
-                <xs:documentation>This attribute defines events that will dismiss this card.</xs:documentation>
+                <xs:documentation>This attribute defines events that will dismiss this card. Card dismiss-listeners are
+                    only "active" when the card is the currently active card.
+                </xs:documentation>
             </xs:annotation>
         </xs:attribute>
     </xs:complexType>
@@ -232,8 +235,20 @@
                 <xs:element ref="content:paragraph" />
             </xs:choice>
         </xs:sequence>
-        <xs:attribute name="listeners" type="content:listeners" use="required" />
-        <xs:attribute name="dismiss-listeners" type="content:listeners" use="required" />
+        <xs:attribute name="listeners" type="content:listeners" use="required">
+            <xs:annotation>
+                <xs:documentation>This attribute defines events that will trigger display of this modal. Modal listeners
+                    are only "active" when the containing page is active.
+                </xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="dismiss-listeners" type="content:listeners" use="required">
+            <xs:annotation>
+                <xs:documentation>This attribute defines events that will dismiss this modal. Modal dismiss-listeners
+                    are only "active" when the modal is being displayed.
+                </xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
         <xs:attribute name="text-scale" type="xs:float" default="1">
             <xs:annotation>
                 <xs:documentation>Defines how much to scale all the text content in this modal by.</xs:documentation>

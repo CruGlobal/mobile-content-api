@@ -1,7 +1,7 @@
 require "datadog/statsd"
 require "redis"
 
-redis_conf = YAML.safe_load(ERB.new(File.read(Rails.root.join("config", "redis.yml"))).result, [Symbol], [], true)["sidekiq"]
+redis_conf = YAML.safe_load(ERB.new(File.read(Rails.root.join("config", "redis.yml"))).result, permitted_classes: [Symbol], aliases: true)["sidekiq"]
 
 redis_settings = {url: Redis.new(redis_conf).id}
 
@@ -43,4 +43,4 @@ if ENV["AWS_EXECUTION_ENV"].present?
   Sidekiq::Pro.dogstatsd = -> { Datadog::Statsd.new socket_path: "/var/run/datadog/dsd.socket" }
 end
 
-Sidekiq.default_worker_options = {"backtrace" => true}
+Sidekiq.default_job_options = {"backtrace" => true}
