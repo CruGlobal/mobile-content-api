@@ -2,6 +2,7 @@
 
 class LanguagesController < ApplicationController
   before_action :authorize!, only: [:create, :destroy]
+  before_action :convert_hyphen_to_dash, only: :create
 
   def index
     render json: Language.all.order(name: :asc), include: params[:include], fields: field_params, status: :ok
