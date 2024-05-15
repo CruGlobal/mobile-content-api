@@ -45,7 +45,7 @@ resource "Languages" do
     end
 
     it "sets force language name" do
-      do_request data: {type: :language, attributes: {name: "Elvish", code: "ev", force_language_name: true}}
+      do_request data: {type: :language, attributes: {name: "Elvish", code: "ev", :"force-language-name" => true}}
 
       expect(status).to be(201)
       expect(JSON.parse(response_body)["data"]["attributes"]["force-language-name"]).to be true
