@@ -45,7 +45,7 @@ resource "Languages" do
     end
 
     it "sets force language name" do
-      do_request data: {type: :language, attributes: {name: "Elvish", code: "ev", :"force-language-name" => true}}
+      do_request data: {type: :language, attributes: {name: "Elvish", code: "ev", "force-language-name": true}}
 
       expect(status).to be(201)
       expect(JSON.parse(response_body)["data"]["attributes"]["force-language-name"]).to be true
@@ -93,7 +93,7 @@ resource "Languages" do
     let(:language) { Language.find(id) }
 
     it "updates a language" do
-      do_request data: {type: :language, attributes: {name: "Dwarvish", :"force-language-name" => true, direction: "rtl"}}
+      do_request data: {type: :language, attributes: {name: "Dwarvish", "force-language-name": true, direction: "rtl"}}
 
       expect(status).to be(202)
       expect(JSON.parse(response_body)["data"]).not_to be_nil
@@ -139,7 +139,7 @@ resource "Languages" do
 
         expect(status).to be(422)
         # the delete stops after the first dependent hit
-        expect(JSON.parse(response_body)).to eq({"errors" =>["Cannot delete record because dependent translations exist"]})
+        expect(JSON.parse(response_body)).to eq({"errors" => ["Cannot delete record because dependent translations exist"]})
 
         # delete translation to check that the next dependent (custom tip) gets hit
         translation.destroy
@@ -148,7 +148,7 @@ resource "Languages" do
         end.to_not change(Language, :count)
 
         expect(status).to be(422)
-        expect(JSON.parse(response_body)).to eq({"errors" =>["Cannot delete record because dependent custom tips exist"]})
+        expect(JSON.parse(response_body)).to eq({"errors" => ["Cannot delete record because dependent custom tips exist"]})
       end
     end
   end

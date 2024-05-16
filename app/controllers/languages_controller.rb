@@ -25,7 +25,7 @@ class LanguagesController < ApplicationController
     language.update!(permit_params(:name, :direction, :force_language_name))
     response.headers["Location"] = "languages/#{language.id}"
     render json: language, status: :accepted
-  rescue ActiveRecord::RecordInvalid => e 
+  rescue ActiveRecord::RecordInvalid => e
     render json: {errors: formatted_errors("record_invalid", e)}, status: :unprocessable_entity
   end
 
