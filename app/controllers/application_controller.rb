@@ -127,7 +127,7 @@ class ApplicationController < ActionController::Base
   def formatted_errors(type, error)
     if type == "record_invalid"
       error.record.errors.flat_map do |attribute, errors|
-        errors.map { |error_message| {detail: "#{attribute} #{error_message}"} }
+        errors ? errors.map { |error_message| {detail: "#{attribute} #{error_message}"} } : attribute.full_message
       end
     elsif type == "record_not_found"
       {"errors" => [{source: {pointer: "/data/attributes/id"}, detail: error.message}]}

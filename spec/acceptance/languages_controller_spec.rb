@@ -87,8 +87,28 @@ resource "Languages" do
     end
   end
 
+  put "languages/:id" do
+    requires_authorization
+    let(:id) { 3 }
+    let(:language) { Language.find(id) }
+
+    it "updates a language" do
+      do_request data: {type: :language, attributes: {name: "Dwarvish", :"force-language-name" => true, direction: "rtl"}}
+
+      expect(status).to be(202)
+      expect(JSON.parse(response_body)["data"]).not_to be_nil
+      expect(JSON.parse(response_body)["data"]["attributes"]["force-language-name"]).to be true
+      expect(response_headers["Location"]).to match(%r{languages/\d+})
+    end
+
+    it "validates direction" do
+      do_request data: {type: :language, attributes: {direction: "invalid"}}
+    end
+  end
+
   delete "languages/:id" do
     let(:id) { 3 }
+    let(:language) { Language.find(id) }
 
     before do
       header "Authorization", :authorization
@@ -97,10 +117,39 @@ resource "Languages" do
     requires_authorization
 
     it "delete a language" do
-      do_request
+      expect do
+        do_request
+      end.to change(Language, :count).by(-1)
 
       expect(status).to be(204)
       expect(response_body).to be_empty
+    end
+
+    context "has associated objects" do
+      let(:resource) { Resource.first }
+      let!(:translation) { FactoryBot.create(:translation, resource: resource, language_id: id) }
+      let!(:custom_tip) { FactoryBot.create(:custom_tip, language_id: id) }
+      let!(:custom_tip) { FactoryBot.create(:custom_tip, language_id: id) }
+      let!(:attribute2) { FactoryBot.create(:language_attribute, language_id: id, resource: resource, key: "language_attribute", value: "language_value") }
+
+      it "doesn't delete" do
+        expect do
+          do_request
+        end.to_not change(Language, :count)
+
+        expect(status).to be(422)
+        # the delete stops after the first dependent hit
+        expect(JSON.parse(response_body)).to eq({"errors" =>["Cannot delete record because dependent translations exist"]})
+
+        # delete translation to check that the next dependent (custom tip) gets hit
+        translation.destroy
+        expect do
+          do_request
+        end.to_not change(Language, :count)
+
+        expect(status).to be(422)
+        expect(JSON.parse(response_body)).to eq({"errors" =>["Cannot delete record because dependent custom tips exist"]})
+      end
     end
   end
 end
