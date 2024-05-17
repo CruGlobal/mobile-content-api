@@ -139,7 +139,7 @@ resource "Languages" do
 
         expect(status).to be(422)
         # the delete stops after the first dependent hit
-        expect(JSON.parse(response_body)).to eq({"errors"=>[{"detail"=>"Cannot delete record because dependent translations exist", "source"=>{"relationship"=>"translations"}}]})
+        expect(JSON.parse(response_body)).to eq({"errors" => [{"detail" => "Cannot delete record because dependent translations exist", "source" => {"relationship" => "translations"}}]})
 
         # delete translation to check that the next dependent (custom tip) gets hit
         translation.destroy
@@ -148,7 +148,7 @@ resource "Languages" do
         end.to_not change(Language, :count)
 
         expect(status).to be(422)
-        expect(JSON.parse(response_body)).to eq({"errors"=>[{"detail"=>"Cannot delete record because dependent custom tips exist", "source"=>{"relationship"=>"custom tips"}}]})
+        expect(JSON.parse(response_body)).to eq({"errors" => [{"detail" => "Cannot delete record because dependent custom tips exist", "source" => {"relationship" => "custom tips"}}]})
       end
     end
   end
