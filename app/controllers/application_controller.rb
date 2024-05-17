@@ -127,7 +127,7 @@ class ApplicationController < ActionController::Base
   def formatted_errors(type, error)
     case type
     when "record_invalid"
-      errors = error.record.errors.collect do |error|
+      error.record.errors.collect do |error|
         # "{\"errors\":[{\"source\":{\"pointer\":\"/data/attributes/id\"},\"detail\":\"Validation failed: Suggestions weight can't be blank\"}]}"
         if error.attribute == :base
           case error.type
