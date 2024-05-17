@@ -125,11 +125,22 @@ class ApplicationController < ActionController::Base
   end
 
   def formatted_errors(type, error)
-    if type == "record_invalid"
-      error.record.errors.flat_map do |attribute, errors|
-        errors ? errors.map { |error_message| {detail: "#{attribute} #{error_message}"} } : attribute.full_message
+    case type
+    when "record_invalid"
+      errors = error.record.errors.collect do |error|
+        # "{\"errors\":[{\"source\":{\"pointer\":\"/data/attributes/id\"},\"detail\":\"Validation failed: Suggestions weight can't be blank\"}]}"
+        if error.attribute == :base
+          case error.type
+          when :"restrict_dependent_destroy.has_many", :"restrict_dependent_destroy.has_one"
+            {source: {relationship: error.options[:record]}, detail: error.full_message}
+          else
+            {detail: error.full_message}
+          end
+        else
+          {source: {pointer: "/data/attributes/#{error.attribute}", details: "Validation failed: #{error.full_message}"}}
+        end
       end
-    elsif type == "record_not_found"
+    when "record_not_found"
       {"errors" => [{source: {pointer: "/data/attributes/id"}, detail: error.message}]}
     end
   end
