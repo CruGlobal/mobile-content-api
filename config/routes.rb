@@ -18,7 +18,7 @@ Rails.application.routes.draw do
     resources :translated_attributes, path: "translated-attributes", only: [:create, :update, :destroy]
     post "translations/publish", to: "resources#publish_translation"
   end
-  resources :drafts
+  resources :drafts, only: [:index, :show, :create, :destroy]
   resources :translations, only: [:index, :show]
   resources :pages, only: [:create, :update, :show]
   resources :tips, only: [:create, :update]

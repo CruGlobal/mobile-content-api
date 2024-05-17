@@ -123,43 +123,6 @@ resource "Drafts" do
     end
   end
 
-  put "drafts/:id" do
-    let(:id) { "3" }
-    let(:attrs) { {is_published: true} }
-
-    requires_authorization
-
-    context "all phrases are translated" do
-      before do
-        translation = Translation.find(3)
-        allow(Translation).to receive(:find).with(id).and_return(translation)
-        allow(translation).to receive(:push_published_to_s3)
-
-        do_request data: {type: :translation, attributes: attrs}
-      end
-
-      it "update draft" do
-        expect(JSON.parse(response_body)["data"]).not_to be_nil
-      end
-
-      it "returns OK", document: false do
-        expect(status).to be(200)
-      end
-    end
-
-    context "all phrases are not translated" do
-      it "returns conflict", document: false do
-        translation = Translation.find(1)
-        allow(translation).to receive(:push_published_to_s3).and_raise(Error::TextNotFoundError, "Translated phrase not found.")
-        allow(Translation).to receive(:find).with(id).and_return(translation)
-
-        do_request data: {type: :translation, attributes: attrs}
-
-        expect(status).to be(409)
-      end
-    end
-  end
-
   delete "drafts/:id" do
     let(:id) { 1 }
     let(:translation) { double }
