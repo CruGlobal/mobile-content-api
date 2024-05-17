@@ -62,9 +62,8 @@ resource "ToolGroups" do
     it "returns error message when tool group is not created" do
       do_request data: {type: "tool-group", attributes: attrs_invalid}
 
-      puts response_body.inspect
       expect(status).to eq(422)
-      expect(JSON.parse(response_body)).to eq("errors" => [{"source"=>{"details"=>"Validation failed: Suggestions weight can't be blank", "pointer"=>"/data/attributes/suggestions_weight"}}])
+      expect(JSON.parse(response_body)).to eq("errors" => [{"source"=>{"pointer"=>"/data/attributes/suggestions_weight"}, "detail"=>"Validation failed: Suggestions weight can't be blank"}])
     end
   end
 
@@ -102,7 +101,7 @@ resource "ToolGroups" do
       }
 
       expect(status).to eq(422)
-      expect(JSON.parse(response_body)).to eq("errors" => [{"source"=>{"details"=>"Validation failed: Tool group must exist", "pointer"=>"/data/attributes/tool_group"}}])
+      expect(JSON.parse(response_body)).to eq("errors" => [{"source"=>{"pointer"=>"/data/attributes/tool_group"}, "detail"=>"Validation failed: Tool group must exist"}])
     end
   end
 
