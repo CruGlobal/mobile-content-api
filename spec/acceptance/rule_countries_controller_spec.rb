@@ -52,7 +52,7 @@ resource "RuleCountries" do
       it "returns an error" do
         do_request tool_group_id: tool_group_id, data: {type: "tool-group-rules-country", attributes: invalid_attrs}
 
-        expect(status).to eq(400)
+        expect(status).to eq(422)
         expect(JSON.parse(response_body)["data"]).to be_nil
         expect(JSON.parse(response_body)["errors"][0]["detail"]).to eql "Validation failed: Countries must contain only ISO-3166 alpha-2 country codes"
       end

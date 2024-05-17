@@ -134,10 +134,10 @@ class ApplicationController < ActionController::Base
           when :"restrict_dependent_destroy.has_many", :"restrict_dependent_destroy.has_one"
             {source: {relationship: error.options[:record]}, detail: error.full_message}
           else
-            {detail: error.full_message}
+            {detail: "Validation failed: #{error.full_message}"}
           end
         else
-          {source: {pointer: "/data/attributes/#{error.attribute}", details: "Validation failed: #{error.full_message}"}}
+          {source: {pointer: "/data/attributes/#{error.attribute}"}, detail: "Validation failed: #{error.full_message}"}
         end
       end
     when "record_not_found"
