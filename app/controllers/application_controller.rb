@@ -141,7 +141,7 @@ class ApplicationController < ActionController::Base
         end
       end
     when "record_not_found"
-      {"errors" => [{source: {pointer: "/data/attributes/id"}, detail: error.message}]}
+      [{source: {pointer: "/data/attributes/id"}, detail: error.message}]
     end
   end
 end
