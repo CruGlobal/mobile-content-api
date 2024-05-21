@@ -66,10 +66,14 @@ Rails.application.routes.draw do
   delete "users/:id", to: "users#destroy"
   patch "users/:id", to: "users#update"
 
-  scope "users/me/relationships" do
+  scope "users/:user_id/relationships" do
     resources :favorite_tools, path: "favorite-tools", only: [:index, :create]
   end
-  delete "users/me/relationships/favorite-tools", to: "favorite_tools#destroy"
+  delete "users/:user_id/relationships/favorite-tools", to: "favorite_tools#destroy"
+
+  scope "users/:user_id" do
+    resources :training_tips, path: "training-tips", only: [:create, :update, :destroy]
+  end
 
   get "monitors/lb"
   get "monitors/commit"

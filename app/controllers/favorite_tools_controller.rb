@@ -7,14 +7,14 @@ class FavoriteToolsController < WithUserController
 
   def create
     tool_ids.each do |tool_id|
-      current_user.tools << Resource.find(tool_id) unless current_user.tool_ids.include?(tool_id.to_i)
+      @user.tools << Resource.find(tool_id) unless @user.tool_ids.include?(tool_id.to_i)
     end
     render_current_favorites
   end
 
   def destroy
-    current_user.favorite_tools.where(tool_id: tool_ids).delete_all
-    current_user.tools.reload
+    @user.favorite_tools.where(tool_id: tool_ids).delete_all
+    @user.tools.reload
     render_current_favorites
   end
 
@@ -36,6 +36,6 @@ class FavoriteToolsController < WithUserController
   end
 
   def render_current_favorites
-    render json: current_user.tools, include: params[:include], fields: field_params({resource: []})
+    render json: @user.tools, include: params[:include], fields: field_params({resource: []})
   end
 end
