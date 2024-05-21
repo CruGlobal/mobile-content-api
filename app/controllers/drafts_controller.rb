@@ -26,10 +26,6 @@ class DraftsController < SecureController
     head :no_content
   end
 
-  def update
-    edit
-  end
-
   def destroy
     load_translation.destroy!
     head :no_content
@@ -43,18 +39,6 @@ class DraftsController < SecureController
 
   def language_id
     data_attrs[:language_id]
-  end
-
-  def edit
-    translation = load_translation
-
-    # Note that this endpoint isn't used for anything other than publishing to s3. Eventually once the new client switches
-    # to the new way of publishing, we'll delete this file
-    # see: https://jira.cru.org/browse/GT-2182
-    do_publishing = data_attrs[:is_published]
-
-    translation.push_published_to_s3 if do_publishing
-    render json: translation, status: :ok
   end
 
   def load_translation
