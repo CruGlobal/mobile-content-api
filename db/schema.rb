@@ -336,6 +336,20 @@ ActiveRecord::Schema[7.0].define(version: 2024_04_30_201610) do
     t.index ["user_id", "counter_name"], name: "index_user_counters_on_user_id_and_counter_name", unique: true
   end
 
+  create_table "user_training_tips", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.bigint "tool_id", null: false
+    t.bigint "language_id", null: false
+    t.string "tip_id"
+    t.boolean "is_completed"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["language_id"], name: "index_user_training_tips_on_language_id"
+    t.index ["tool_id"], name: "index_user_training_tips_on_tool_id"
+    t.index ["user_id", "tool_id", "language_id", "tip_id"], name: "training-tips-unique-index", unique: true
+    t.index ["user_id"], name: "index_user_training_tips_on_user_id"
+  end
+
   create_table "users", force: :cascade do |t|
     t.string "first_name"
     t.string "last_name"
@@ -381,4 +395,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_04_30_201610) do
   add_foreign_key "translations", "languages"
   add_foreign_key "translations", "resources"
   add_foreign_key "user_attributes", "users"
+  add_foreign_key "user_training_tips", "languages"
+  add_foreign_key "user_training_tips", "resources", column: "tool_id"
+  add_foreign_key "user_training_tips", "users"
 end
