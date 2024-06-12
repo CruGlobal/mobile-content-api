@@ -9,7 +9,7 @@ module Log
 
       def _call(severity, time, progname, data)
         data.delete(:request)
-        super(severity, time, progname, data)
+        super
       end
     end
   end
