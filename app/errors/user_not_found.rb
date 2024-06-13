@@ -3,7 +3,7 @@
 module UserNotFound
   class Error < StandardError
     def initialize(message = "User account not found.")
-      super(message)
+      super
     end
   end
 end
