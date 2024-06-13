@@ -3,7 +3,7 @@
 module UserAlreadyExist
   class Error < StandardError
     def initialize(message = "User account already exists.")
-      super(message)
+      super
     end
   end
 end
