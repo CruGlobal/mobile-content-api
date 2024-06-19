@@ -16,6 +16,15 @@ resource "Languages" do
       expect(status).to be(200)
     end
 
+    it "only get fields specified" do
+      do_request "fields[language]": "code,name,force-language-name,translations"
+
+      expect(status).to be(200)
+      data = JSON.parse(response_body)["data"][0]
+      expect(data["attributes"].keys).to match_array(["code", "name", "force-language-name"])
+      expect(data["relationships"].keys).to eq ["translations"]
+    end
+
     it "sorts by name ascending", document: false do
       do_request
 
