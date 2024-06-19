@@ -84,7 +84,7 @@ resource "RulePraxes" do
       it "returns an error" do
         do_request tool_group_id: tool_group_id, data: {type: "tool-group-rules-praxis", attributes: repeated_attrs}
 
-        expect(status).to eq(400)
+        expect(status).to eq(422)
         expect(JSON.parse(response_body)["data"]).to be_nil
         expect(JSON.parse(response_body)["errors"][0]["detail"]).to eql "Validation failed: Tool group combination already exists"
       end
@@ -94,7 +94,7 @@ resource "RulePraxes" do
       it "returns an error" do
         do_request tool_group_id: tool_group_id, data: {type: "tool-group-rules-praxis", attributes: empty_attrs}
 
-        expect(status).to eq(400)
+        expect(status).to eq(422)
         expect(JSON.parse(response_body)["data"]).to be_nil
         expect(JSON.parse(response_body)["errors"][0]["detail"]).to eql "Validation failed: Either 'openness' or 'confidence' must be present"
       end
@@ -104,7 +104,7 @@ resource "RulePraxes" do
       it "returns an error" do
         do_request tool_group_id: tool_group_id, data: {type: "tool-group-rules-praxis", attributes: non_valid_openness_attr}
 
-        expect(status).to eq(400)
+        expect(status).to eq(422)
         expect(JSON.parse(response_body)["data"]).to be_nil
         expect(JSON.parse(response_body)["errors"][0]["detail"]).to eql "Validation failed: Openness must contain integer values between 1 and 5 or an empty array"
       end
@@ -114,7 +114,7 @@ resource "RulePraxes" do
       it "returns an error" do
         do_request tool_group_id: tool_group_id, data: {type: "tool-group-rules-praxis", attributes: non_valid_confidence_attr}
 
-        expect(status).to eq(400)
+        expect(status).to eq(422)
         expect(JSON.parse(response_body)["data"]).to be_nil
         expect(JSON.parse(response_body)["errors"][0]["detail"]).to eql "Validation failed: Confidence must contain integer values between 1 and 5 or an empty array"
       end
