@@ -25,7 +25,7 @@ class RuleLanguagesController < ApplicationController
     response.headers["Location"] = "tool_groups/#{created.id}"
     render json: created, status: :created
   rescue ActiveRecord::RecordNotFound => e
-    render json: formatted_errors("record_not_found", e), status: :not_found
+    render json: {errors: formatted_errors("record_not_found", e)}, status: :not_found
   end
 
   def update_rule_language

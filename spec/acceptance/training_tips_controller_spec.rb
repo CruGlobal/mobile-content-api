@@ -57,7 +57,7 @@ resource "UserTrainingTips" do
     it "returns error message when user training tip is not created" do
       do_request data: {type: "training-tips", attributes: attributes_invalid, relationships: relationships}
 
-      expect(status).to eq(400)
+      expect(status).to eq(422)
       expect(JSON.parse(response_body)["errors"]).not_to be_empty
       expect(JSON.parse(response_body)["errors"][0]["detail"]).to eql "Validation failed: Tip can't be blank"
     end
