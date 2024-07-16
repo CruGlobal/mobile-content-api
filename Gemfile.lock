@@ -414,7 +414,7 @@ GEM
       mime-types (>= 1.16, < 4.0)
       netrc (~> 0.8)
     retriable (3.1.2)
-    rexml (3.3.1)
+    rexml (3.3.2)
       strscan
     rollbar (3.5.2)
     rspec (3.13.0)
@@ -500,7 +500,7 @@ GEM
     spring (4.2.1)
     spring-commands-rspec (1.0.4)
       spring (>= 0.9.1)
-    standard (1.39.1)
+    standard (1.39.2)
       language_server-protocol (~> 3.17.0.2)
       lint_roller (~> 1.0)
       rubocop (~> 1.64.0)
