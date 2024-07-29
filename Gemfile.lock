@@ -141,13 +141,13 @@ GEM
       rexml
     crass (1.0.6)
     csv (3.3.0)
-    datadog-ci (0.7.0)
+    datadog-ci (0.8.3)
       msgpack
     date (3.3.4)
-    ddtrace (1.20.0)
-      datadog-ci (~> 0.7.0)
+    ddtrace (1.23.3)
+      datadog-ci (~> 0.8.1)
       debase-ruby_core_source (= 3.3.1)
-      libdatadog (~> 5.0.0.1.0)
+      libdatadog (~> 7.0.0.1.0)
       libddwaf (~> 1.14.0.0.0)
       msgpack
     debase-ruby_core_source (3.3.1)
@@ -256,7 +256,7 @@ GEM
     jwt (2.8.2)
       base64
     language_server-protocol (3.17.0.3)
-    libdatadog (5.0.0.1.0)
+    libdatadog (7.0.0.1.0)
     libddwaf (1.14.0.0.0)
       ffi (~> 1.0)
     lint_roller (1.1.0)
@@ -573,7 +573,7 @@ DEPENDENCIES
   bootsnap
   brakeman
   bundler-audit
-  ddtrace (~> 1.15)
+  ddtrace (~> 1.23)
   debug
   dogstatsd-ruby (~> 5.3)
   dotenv-rails
