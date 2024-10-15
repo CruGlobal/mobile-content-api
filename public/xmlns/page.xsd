@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+    elementFormDefault="qualified" targetNamespace="https://mobile-content-api.cru.org/xmlns/page">
+
+    <xs:include schemaLocation="page_base.xsd" />
+    <xs:include schemaLocation="page_cardcollection.xsd" />
+    <xs:include schemaLocation="page_content.xsd" />
+</xs:schema>
