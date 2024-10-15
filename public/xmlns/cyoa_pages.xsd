@@ -4,6 +4,7 @@
 
     <xs:include schemaLocation="page_content.xsd" />
     <xs:include schemaLocation="page_cardcollection.xsd" />
+    <xs:include schemaLocation="page_pagecollection.xsd" />
 
     <xs:element name="page" type="page:BasePageType" />
 </xs:schema>
