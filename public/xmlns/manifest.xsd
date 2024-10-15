@@ -11,7 +11,7 @@
     <xs:import namespace="https://mobile-content-api.cru.org/xmlns/article" schemaLocation="article.xsd" />
     <xs:import namespace="https://mobile-content-api.cru.org/xmlns/content" schemaLocation="content.xsd" />
     <xs:import namespace="https://mobile-content-api.cru.org/xmlns/lesson" schemaLocation="lesson.xsd" />
-    <xs:import namespace="https://mobile-content-api.cru.org/xmlns/page" schemaLocation="page.xsd" />
+    <xs:import namespace="https://mobile-content-api.cru.org/xmlns/page" schemaLocation="page_base.xsd" />
     <xs:import namespace="https://mobile-content-api.cru.org/xmlns/publish" schemaLocation="publish.xsd" />
     <xs:import namespace="https://mobile-content-api.cru.org/xmlns/shareable" schemaLocation="shareable.xsd" />
     <xs:import namespace="https://mobile-content-api.cru.org/xmlns/tract" schemaLocation="tract.xsd" />

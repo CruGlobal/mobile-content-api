@@ -4,7 +4,7 @@
     elementFormDefault="qualified" targetNamespace="https://mobile-content-api.cru.org/xmlns/page">
 
     <xs:import namespace="https://mobile-content-api.cru.org/xmlns/content" schemaLocation="content.xsd" />
-    <xs:include schemaLocation="page.xsd" />
+    <xs:include schemaLocation="page_base.xsd" />
 
     <xs:complexType name="content">
         <xs:complexContent>
