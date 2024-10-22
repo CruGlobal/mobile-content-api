@@ -32,8 +32,16 @@
 
         <xs:attribute name="listeners" type="content:listeners">
             <xs:annotation>
-                <xs:documentation>This is a list of event_ids that will cause navigation to jump to this page. Page
-                    listeners are always "active".
+                <xs:documentation>
+                    This is a list of event_ids that will cause navigation to jump to this page.
+
+                    - Page listeners are only "active" when the page collection containing them is active.
+                    - At this time the only defined page collections are a "pagecollection" page and the overall
+                      manifest.
+                    - If there are nested page collections, resolution should start with inner page collections and work
+                      out to the manifest as the final outer page collection to check.
+                    - If multiple pages have listeners that match a single event, only the first matched page should
+                      be triggered.
                 </xs:documentation>
             </xs:annotation>
         </xs:attribute>
