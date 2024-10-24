@@ -197,7 +197,7 @@ GEM
       rexml
     google-cloud-env (2.1.1)
       faraday (>= 1.0, < 3.a)
-    googleauth (1.11.1)
+    googleauth (1.11.2)
       faraday (>= 1.0, < 3.a)
       google-cloud-env (~> 2.1)
       jwt (>= 1.4, < 3.0)
