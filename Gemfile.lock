@@ -605,7 +605,7 @@ DEPENDENCIES
   rubocop-rspec
   rubyzip (>= 1.2.2)
   sidekiq-failures
-  sidekiq-pro (< 7.2.1)!
+  sidekiq-pro (< 7.3.3)!
   sidekiq-unique-jobs
   simplecov-cobertura
   spring-commands-rspec
