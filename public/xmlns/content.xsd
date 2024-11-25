@@ -255,6 +255,17 @@
                             </xs:documentation>
                         </xs:annotation>
                     </xs:enumeration>
+                    <xs:enumeration value="page-collection">
+                        <xs:annotation>
+                            <xs:documentation>The cyoa page-collection page type.
+
+                                Platform support:
+                                - Android Not Supported
+                                - iOS Not Supported
+                                - Web Not Supported
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:enumeration>
                 </xs:restriction>
             </xs:simpleType>
         </xs:list>

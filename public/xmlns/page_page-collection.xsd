@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<xs:schema xmlns:content="https://mobile-content-api.cru.org/xmlns/content"
+    xmlns:page="https://mobile-content-api.cru.org/xmlns/page" xmlns:xs="http://www.w3.org/2001/XMLSchema"
+    elementFormDefault="qualified" targetNamespace="https://mobile-content-api.cru.org/xmlns/page">
+
+    <xs:import namespace="https://mobile-content-api.cru.org/xmlns/content" schemaLocation="content.xsd" />
+    <xs:include schemaLocation="page_base.xsd" />
+    <xs:include schemaLocation="page_content.xsd" />
+
+    <xs:complexType name="page-collection">
+        <xs:annotation>
+            <xs:documentation>
+                A page collection can contains one or more content pages. These pages are presented as a swipeable
+                ViewPager.
+
+                The following attributes/elements are ignored for any children pages:
+                - cyoa:parent - For CYOA tools the parent attribute of the page collection is used for navigation and
+                                the parent attribute of any children pages is ignored.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:complexContent>
+            <xs:extension base="page:BasePageType">
+                <xs:sequence>
+                    <xs:element name="pages">
+                        <xs:complexType>
+                            <xs:choice maxOccurs="unbounded">
+                                <xs:element name="import">
+                                    <xs:complexType>
+                                        <xs:attribute name="filename" type="xs:string" use="required" />
+                                    </xs:complexType>
+                                </xs:element>
+                                <xs:element name="page" type="page:BasePageType">
+                                    <xs:annotation>
+                                        <xs:documentation>This elements allows us to directly embed a content page in
+                                            the page collection xml.
+                                        </xs:documentation>
+                                    </xs:annotation>
+                                </xs:element>
+                            </xs:choice>
+                        </xs:complexType>
+                    </xs:element>
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+</xs:schema>

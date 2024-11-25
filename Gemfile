@@ -79,7 +79,7 @@ gem "pg"
 
 gem "active_model_serializers", "0.10.14"
 gem "active_storage_validations"
-gem "adobe-campaign", "~> 0.4.1"
+gem "adobe-campaign", "~> 0.4"
 gem "aws-sdk-s3"
 gem "ddtrace", "~> 1.15"
 gem "dogstatsd-ruby", "~> 5.3"
@@ -116,7 +116,7 @@ group :development, :test do
   gem "guard-rubocop"
   gem "pry-byebug"
   gem "rspec"
-  gem "rspec-rails", "~> 6.0"
+  gem "rspec-rails", "~> 7.0"
   gem "rspec_api_documentation"
   gem "rubocop-rspec", require: false
   gem "simplecov-cobertura", require: false

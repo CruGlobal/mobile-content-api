@@ -1,18 +1,37 @@
 <!-- Choose Your Own Adventure -->
-<xs:schema xmlns:content="https://mobile-content-api.cru.org/xmlns/content"
-    xmlns:cyoa="https://mobile-content-api.cru.org/xmlns/cyoa"
+<xs:schema xmlns:cyoa="https://mobile-content-api.cru.org/xmlns/cyoa"
     xmlns:xs="http://www.w3.org/2001/XMLSchema"
     elementFormDefault="qualified" targetNamespace="https://mobile-content-api.cru.org/xmlns/cyoa">
 
-    <xs:import namespace="https://mobile-content-api.cru.org/xmlns/content" schemaLocation="content.xsd" />
     <xs:import namespace="https://mobile-content-api.cru.org/xmlns/page" schemaLocation="cyoa_pages.xsd" />
 
-    <xs:attribute name="parent" type="content:id" />
+    <xs:simpleType name="page-parent">
+        <xs:annotation>
+            <xs:documentation>parent page id with optional parameters</xs:documentation>
+        </xs:annotation>
+        <xs:restriction base="xs:token">
+            <!-- Generic page -->
+            <xs:pattern value="[a-zA-Z0-9_.-]+" />
+            <!-- page-collection Page -->
+            <xs:pattern value="[a-zA-Z0-9_.-]+(\?active-page=[a-zA-Z0-9_.-]+)?" />
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:attribute name="parent" type="cyoa:page-parent" />
+    <xs:attribute name="parent_override_page-collection" type="cyoa:page-parent" />
 
     <xs:attributeGroup name="page">
         <xs:attribute ref="cyoa:parent">
             <xs:annotation>
                 <xs:documentation>This defines the parent of this page in a cyoa tool. This defaults to no parent page.
+                </xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+        <xs:attribute ref="cyoa:parent_override_page-collection">
+            <xs:annotation>
+                <xs:documentation>
+                    This provides a temporary override to the parent attribute when the page-collection feature is
+                    supported. This attribute will go away once page-collections are widely supported.
                 </xs:documentation>
             </xs:annotation>
         </xs:attribute>
