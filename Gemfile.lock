@@ -54,7 +54,7 @@ GEM
       erubi (~> 1.4)
       rails-dom-testing (~> 2.0)
       rails-html-sanitizer (~> 1.1, >= 1.2.0)
-    active_model_serializers (0.10.14)
+    active_model_serializers (0.10.15)
       actionpack (>= 4.1)
       activemodel (>= 4.1)
       case_transform (>= 0.2)
@@ -290,7 +290,7 @@ GEM
     mime-types-data (3.2023.1003)
     mini_mime (1.1.5)
     mini_portile2 (2.8.8)
-    minitest (5.25.1)
+    minitest (5.25.4)
     msgpack (1.7.3)
     multi_json (1.15.0)
     multi_xml (0.6.0)
@@ -569,7 +569,7 @@ PLATFORMS
 
 DEPENDENCIES
   action-cable-testing
-  active_model_serializers (= 0.10.14)
+  active_model_serializers (= 0.10.15)
   active_storage_validations
   adobe-campaign (~> 0.4.1)
   amazing_print
