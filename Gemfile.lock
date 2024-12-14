@@ -317,7 +317,7 @@ GEM
     notiffany (0.1.3)
       nenv (~> 0.1)
       shellany (~> 0.0)
-    oj (3.16.7)
+    oj (3.16.8)
       bigdecimal (>= 3.0)
       ostruct (>= 0.2)
     openid_connect (2.2.1)
@@ -333,7 +333,7 @@ GEM
       validate_url
       webfinger (~> 2.0)
     os (1.1.4)
-    ostruct (0.6.0)
+    ostruct (0.6.1)
     ougai (2.0.0)
       oj (~> 3.10)
     parallel (1.26.3)
