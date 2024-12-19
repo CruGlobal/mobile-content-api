@@ -167,7 +167,7 @@ GEM
       railties (>= 6.1)
     equivalent-xml (0.6.0)
       nokogiri (>= 1.4.3)
-    erubi (1.13.0)
+    erubi (1.13.1)
     factory_bot (6.4.6)
       activesupport (>= 5.0.0)
     factory_bot_rails (6.4.3)
