@@ -16,6 +16,9 @@
                 The following attributes/elements are ignored for any children pages:
                 - cyoa:parent - For CYOA tools the parent attribute of the page collection is used for navigation and
                                 the parent attribute of any children pages is ignored.
+                - dismiss-listeners - For CYOA tools dismiss-listeners for a child page are ignored, it is still
+                                      possible to specify dismiss-listeners on the page collection page to dismiss the
+                                      entire page-collection page.
             </xs:documentation>
         </xs:annotation>
         <xs:complexContent>
