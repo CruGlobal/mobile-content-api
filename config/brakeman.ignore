@@ -18,6 +18,9 @@
       },
       "user_input": null,
       "confidence": "Medium",
+      "cwe_id": [
+        328
+      ],
       "note": ""
     },
     {
@@ -38,6 +41,9 @@
       },
       "user_input": "params[:id]",
       "confidence": "Weak",
+      "cwe_id": [
+        285
+      ],
       "note": ""
     },
     {
@@ -58,6 +64,28 @@
       },
       "user_input": "params[:id]",
       "confidence": "Weak",
+      "cwe_id": [
+        285
+      ],
+      "note": ""
+    },
+    {
+      "warning_type": "Unmaintained Dependency",
+      "warning_code": 123,
+      "fingerprint": "40be17ee84017c91503dab23873e24bdd71665ab665bf6f351cfc09ff83e6582",
+      "check_name": "EOLRuby",
+      "message": "Support for Ruby 3.1.5 ends on 2025-03-31",
+      "file": ".ruby-version",
+      "line": 1,
+      "link": "https://brakemanscanner.org/docs/warning_types/unmaintained_dependency/",
+      "code": null,
+      "render_path": null,
+      "location": null,
+      "user_input": null,
+      "confidence": "Medium",
+      "cwe_id": [
+        1104
+      ],
       "note": ""
     },
     {
@@ -78,6 +106,9 @@
       },
       "user_input": "params[:id]",
       "confidence": "Weak",
+      "cwe_id": [
+        285
+      ],
       "note": ""
     },
     {
@@ -98,6 +129,9 @@
       },
       "user_input": "params[:id]",
       "confidence": "Weak",
+      "cwe_id": [
+        285
+      ],
       "note": ""
     },
     {
@@ -118,46 +152,28 @@
       },
       "user_input": "params[:id]",
       "confidence": "Weak",
+      "cwe_id": [
+        285
+      ],
       "note": ""
     },
     {
-      "warning_type": "Unscoped Find",
-      "warning_code": 82,
-      "fingerprint": "6be5c8addbc8d76b082450203735dbef45eb851c62d2651bbd18f2923af5ec01",
-      "check_name": "UnscopedFind",
-      "message": "Unscoped call to `TranslatedAttribute#find`",
-      "file": "app/controllers/translated_attributes_controller.rb",
-      "line": 34,
-      "link": "https://brakemanscanner.org/docs/warning_types/unscoped_find/",
-      "code": "TranslatedAttribute.find(params[:id])",
+      "warning_type": "Unmaintained Dependency",
+      "warning_code": 122,
+      "fingerprint": "98b26f60d776fd41ee6f088c833725145be9aac2d7c5b33780241c273622db42",
+      "check_name": "EOLRails",
+      "message": "Support for Rails 7.0.8.7 ends on 2025-04-01",
+      "file": "Gemfile.lock",
+      "line": 376,
+      "link": "https://brakemanscanner.org/docs/warning_types/unmaintained_dependency/",
+      "code": null,
       "render_path": null,
-      "location": {
-        "type": "method",
-        "class": "TranslatedAttributesController",
-        "method": "load_translated_attr"
-      },
-      "user_input": "params[:id]",
-      "confidence": "Weak",
-      "note": ""
-    },
-    {
-      "warning_type": "Unscoped Find",
-      "warning_code": 82,
-      "fingerprint": "6cd997ffb13a4c8a2fb40e6c82b51568111797f7e0d5a122731b1c8843a1de74",
-      "check_name": "UnscopedFind",
-      "message": "Unscoped call to `Resource#find`",
-      "file": "app/controllers/resources_controller.rb",
-      "line": 44,
-      "link": "https://brakemanscanner.org/docs/warning_types/unscoped_find/",
-      "code": "Resource.find(params[:id])",
-      "render_path": null,
-      "location": {
-        "type": "method",
-        "class": "ResourcesController",
-        "method": "load_resource"
-      },
-      "user_input": "params[:id]",
-      "confidence": "Weak",
+      "location": null,
+      "user_input": null,
+      "confidence": "Medium",
+      "cwe_id": [
+        1104
+      ],
       "note": ""
     },
     {
@@ -178,6 +194,9 @@
       },
       "user_input": "params[:id]",
       "confidence": "Weak",
+      "cwe_id": [
+        285
+      ],
       "note": ""
     },
     {
@@ -198,6 +217,9 @@
       },
       "user_input": "params[:id]",
       "confidence": "Weak",
+      "cwe_id": [
+        285
+      ],
       "note": ""
     },
     {
@@ -207,7 +229,7 @@
       "check_name": "UnscopedFind",
       "message": "Unscoped call to `Translation#find`",
       "file": "app/controllers/drafts_controller.rb",
-      "line": 55,
+      "line": 45,
       "link": "https://brakemanscanner.org/docs/warning_types/unscoped_find/",
       "code": "Translation.find(params[:id])",
       "render_path": null,
@@ -218,6 +240,9 @@
       },
       "user_input": "params[:id]",
       "confidence": "Weak",
+      "cwe_id": [
+        285
+      ],
       "note": ""
     },
     {
@@ -238,29 +263,11 @@
       },
       "user_input": "params[:id]",
       "confidence": "Weak",
-      "note": ""
-    },
-    {
-      "warning_type": "Unscoped Find",
-      "warning_code": 82,
-      "fingerprint": "f501c5dcef74c03b8700d274ea48b9474b6b5e563e90aca467b1c9a7d2ce995d",
-      "check_name": "UnscopedFind",
-      "message": "Unscoped call to `Resource#find`",
-      "file": "app/controllers/resource_languages_controller.rb",
-      "line": 17,
-      "link": "https://brakemanscanner.org/docs/warning_types/unscoped_find/",
-      "code": "Resource.find(params[:resource_id])",
-      "render_path": null,
-      "location": {
-        "type": "method",
-        "class": "ResourceLanguagesController",
-        "method": "get_resource"
-      },
-      "user_input": "params[:resource_id]",
-      "confidence": "Weak",
+      "cwe_id": [
+        285
+      ],
       "note": ""
     }
   ],
-  "updated": "2021-01-29 16:05:14 -0500",
-  "brakeman_version": "5.0.0"
+  "brakeman_version": "7.0.0"
 }
