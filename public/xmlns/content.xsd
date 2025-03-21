@@ -2,12 +2,14 @@
 <xs:schema xmlns:analytics="https://mobile-content-api.cru.org/xmlns/analytics"
     xmlns:content="https://mobile-content-api.cru.org/xmlns/content"
     xmlns:publish="https://mobile-content-api.cru.org/xmlns/publish"
-    xmlns:training="https://mobile-content-api.cru.org/xmlns/training" xmlns:xs="http://www.w3.org/2001/XMLSchema"
+    xmlns:training="https://mobile-content-api.cru.org/xmlns/training"
+    xmlns:web="https://mobile-content-api.cru.org/xmlns/web" xmlns:xs="http://www.w3.org/2001/XMLSchema"
     elementFormDefault="qualified" targetNamespace="https://mobile-content-api.cru.org/xmlns/content">
 
     <xs:import namespace="https://mobile-content-api.cru.org/xmlns/analytics" schemaLocation="analytics.xsd" />
     <xs:import namespace="https://mobile-content-api.cru.org/xmlns/publish" schemaLocation="publish.xsd" />
     <xs:import namespace="https://mobile-content-api.cru.org/xmlns/training" schemaLocation="training.xsd" />
+    <xs:import namespace="https://mobile-content-api.cru.org/xmlns/web" schemaLocation="web.xsd" />
 
     <!-- region Value Definitions -->
     <xs:simpleType name="colorValue">
@@ -34,6 +36,13 @@
             </xs:documentation>
         </xs:annotation>
         <xs:restriction base="xs:string" />
+    </xs:simpleType>
+
+    <xs:simpleType name="fontWeight">
+        <xs:restriction base="xs:int">
+            <xs:minInclusive value="1" />
+            <xs:maxInclusive value="1000" />
+        </xs:restriction>
     </xs:simpleType>
 
     <xs:simpleType name="gravity">
@@ -124,7 +133,11 @@
         <xs:list>
             <xs:simpleType>
                 <xs:restriction base="xs:token">
-                    <xs:enumeration value="bold" />
+                    <xs:enumeration value="bold">
+                        <xs:annotation>
+                            <xs:documentation>2025-03-25: Deprecated in favor of font-weight.</xs:documentation>
+                        </xs:annotation>
+                    </xs:enumeration>
                     <xs:enumeration value="italic" />
                     <xs:enumeration value="underline" />
                 </xs:restriction>
@@ -631,6 +644,11 @@
                         <xs:documentation>Defines the OneSky translation id for this text.</xs:documentation>
                     </xs:annotation>
                 </xs:attribute>
+                <xs:attribute name="font-weight" type="content:fontWeight">
+                    <xs:annotation>
+                        <xs:documentation>Defines the font-weight to use for this text.</xs:documentation>
+                    </xs:annotation>
+                </xs:attribute>
                 <xs:attribute name="text-align" type="content:horizontalGravity" use="optional">
                     <xs:annotation>
                         <xs:documentation>Defines the alignment of the text. This defaults to start.</xs:documentation>
@@ -654,6 +672,8 @@
                         <xs:documentation>Defines any typeface styles to apply to this text content.</xs:documentation>
                     </xs:annotation>
                 </xs:attribute>
+
+                <xs:attributeGroup ref="web:contentTextType" />
             </xs:extension>
         </xs:simpleContent>
     </xs:complexType>
