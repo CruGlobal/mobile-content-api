@@ -2,12 +2,14 @@
 <xs:schema xmlns:analytics="https://mobile-content-api.cru.org/xmlns/analytics"
     xmlns:content="https://mobile-content-api.cru.org/xmlns/content"
     xmlns:publish="https://mobile-content-api.cru.org/xmlns/publish"
-    xmlns:training="https://mobile-content-api.cru.org/xmlns/training" xmlns:xs="http://www.w3.org/2001/XMLSchema"
+    xmlns:training="https://mobile-content-api.cru.org/xmlns/training"
+    xmlns:web="https://mobile-content-api.cru.org/xmlns/web" xmlns:xs="http://www.w3.org/2001/XMLSchema"
     elementFormDefault="qualified" targetNamespace="https://mobile-content-api.cru.org/xmlns/content">
 
     <xs:import namespace="https://mobile-content-api.cru.org/xmlns/analytics" schemaLocation="analytics.xsd" />
     <xs:import namespace="https://mobile-content-api.cru.org/xmlns/publish" schemaLocation="publish.xsd" />
     <xs:import namespace="https://mobile-content-api.cru.org/xmlns/training" schemaLocation="training.xsd" />
+    <xs:import namespace="https://mobile-content-api.cru.org/xmlns/web" schemaLocation="web.xsd" />
 
     <!-- region Value Definitions -->
     <xs:simpleType name="colorValue">
@@ -666,6 +668,8 @@
                         <xs:documentation>Defines any typeface styles to apply to this text content.</xs:documentation>
                     </xs:annotation>
                 </xs:attribute>
+
+                <xs:attributeGroup ref="web:contentTextType" />
             </xs:extension>
         </xs:simpleContent>
     </xs:complexType>

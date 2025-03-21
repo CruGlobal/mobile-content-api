@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:content="https://mobile-content-api.cru.org/xmlns/content"
+    xmlns:web="https://mobile-content-api.cru.org/xmlns/web" xmlns:xs="http://www.w3.org/2001/XMLSchema"
+    elementFormDefault="qualified" targetNamespace="https://mobile-content-api.cru.org/xmlns/web">
+    <xs:annotation>
+        <xs:documentation>
+            This XML Schema contains all the defined web override attributes.
+        </xs:documentation>
+    </xs:annotation>
+
+    <xs:import namespace="https://mobile-content-api.cru.org/xmlns/content" schemaLocation="content.xsd" />
+
+    <!-- region: content:text attributes -->
+    <xs:attribute name="font-weight" type="content:fontWeight" />
+    <xs:attribute name="text-scale" type="xs:float" default="1.0" />
+
+    <xs:attributeGroup name="contentTextType">
+        <xs:attribute ref="web:font-weight" />
+        <xs:attribute ref="web:text-scale" />
+    </xs:attributeGroup>
+    <!-- endregion: content:text attributes -->
+</xs:schema>
