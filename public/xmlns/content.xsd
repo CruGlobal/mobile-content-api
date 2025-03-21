@@ -36,6 +36,13 @@
         <xs:restriction base="xs:string" />
     </xs:simpleType>
 
+    <xs:simpleType name="fontWeight">
+        <xs:restriction base="xs:int">
+            <xs:minInclusive value="1" />
+            <xs:maxInclusive value="1000" />
+        </xs:restriction>
+    </xs:simpleType>
+
     <xs:simpleType name="gravity">
         <xs:annotation>
             <xs:documentation>This type defines common gravity constants that determine how elements are positioned.
@@ -629,6 +636,11 @@
                 <xs:attribute name="i18n-id" type="xs:string">
                     <xs:annotation>
                         <xs:documentation>Defines the OneSky translation id for this text.</xs:documentation>
+                    </xs:annotation>
+                </xs:attribute>
+                <xs:attribute name="font-weight" type="content:fontWeight">
+                    <xs:annotation>
+                        <xs:documentation>Defines the font-weight to use for this text.</xs:documentation>
                     </xs:annotation>
                 </xs:attribute>
                 <xs:attribute name="text-align" type="content:horizontalGravity" use="optional">
