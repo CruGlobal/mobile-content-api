@@ -10,9 +10,24 @@
 
     <xs:import namespace="https://mobile-content-api.cru.org/xmlns/content" schemaLocation="content.xsd" />
 
+    <!-- region: content:flow attributes -->
+    <xs:attribute name="item-width" type="content:dimension" />
+    <xs:attribute name="row-gravity" type="content:horizontalGravity" />
+    <xs:attribute name="width" type="content:dimension" />
+
+
+    <xs:attributeGroup name="contentFlowElement">
+        <xs:attribute ref="web:item-width" />
+        <xs:attribute ref="web:row-gravity" />
+    </xs:attributeGroup>
+    <xs:attributeGroup name="contentFlowItemElement">
+        <xs:attribute ref="web:width" />
+    </xs:attributeGroup>
+    <!-- endregion: content:flow attributes -->
+
     <!-- region: content:text attributes -->
     <xs:attribute name="font-weight" type="content:fontWeight" />
-    <xs:attribute name="text-scale" type="xs:float" default="1.0" />
+    <xs:attribute name="text-scale" type="xs:float" />
 
     <xs:attributeGroup name="contentTextType">
         <xs:attribute ref="web:font-weight" />
