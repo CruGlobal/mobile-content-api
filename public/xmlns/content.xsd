@@ -501,6 +501,7 @@
 
                         <xs:attributeGroup ref="content:visibilityAttributes" />
                         <xs:attributeGroup ref="publish:contentFiltering" />
+                        <xs:attributeGroup ref="web:contentFlowItemElement" />
                     </xs:complexType>
                 </xs:element>
 
@@ -521,6 +522,7 @@
             </xs:attribute>
 
             <xs:attributeGroup ref="content:baseAttributes" />
+            <xs:attributeGroup ref="web:contentFlowElement" />
         </xs:complexType>
     </xs:element>
 

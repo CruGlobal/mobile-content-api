@@ -1,4 +1,6 @@
-<content:flow xmlns:content="https://mobile-content-api.cru.org/xmlns/content" item-width="50%" row-gravity="center">
+<content:flow xmlns:content="https://mobile-content-api.cru.org/xmlns/content"
+    xmlns:web="https://mobile-content-api.cru.org/xmlns/web" item-width="50%" row-gravity="end" web:item-width="25%"
+    web:row-gravity="center">
     <content:spacer height="20" mode="fixed" />
     <content:item width="3">
         <content:text>Test</content:text>
@@ -9,7 +11,7 @@
     </content:paragraph>
     <content:item width="1%" />
     <content:item width="13%" />
-    <content:item width="100%" />
+    <content:item web:width="50%" width="100%" />
     <content:item width="1" />
     <content:item width="12345" />
 </content:flow>
