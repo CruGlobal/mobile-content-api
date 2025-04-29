@@ -17,6 +17,9 @@
                         <xs:annotation>
                             <xs:documentation>
                                 This is header content shown above the cards pager.
+
+                                Default Styles:
+                                - text-align: center
                             </xs:documentation>
                         </xs:annotation>
                         <xs:complexType>
