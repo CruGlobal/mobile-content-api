@@ -13,6 +13,22 @@
         <xs:complexContent>
             <xs:extension base="page:BasePageType">
                 <xs:sequence>
+                    <xs:element name="header" minOccurs="0">
+                        <xs:annotation>
+                            <xs:documentation>
+                                This is header content shown above the cards pager.
+
+                                Default Styles:
+                                - text-align: center
+                            </xs:documentation>
+                        </xs:annotation>
+                        <xs:complexType>
+                            <xs:choice minOccurs="0" maxOccurs="unbounded">
+                                <xs:group ref="content:elements" />
+                                <xs:group ref="content:fixedSpacerOnly" />
+                            </xs:choice>
+                        </xs:complexType>
+                    </xs:element>
                     <xs:element name="cards">
                         <xs:complexType>
                             <xs:sequence maxOccurs="unbounded">
