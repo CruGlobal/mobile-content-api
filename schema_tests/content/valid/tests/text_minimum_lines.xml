@@ -1,0 +1,2 @@
+<content:text xmlns:content="https://mobile-content-api.cru.org/xmlns/content"
+    xmlns:web="https://mobile-content-api.cru.org/xmlns/web" minimum-lines="2" web:minimum-lines="5" />
