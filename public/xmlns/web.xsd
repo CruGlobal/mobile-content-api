@@ -31,6 +31,9 @@
     <xs:attribute name="text-color" type="content:colorValue" />
     <xs:attribute name="text-scale" type="xs:float" />
     <xs:attribute name="text-style" type="content:textStyles" />
+
+    <xs:attribute name="start-image-size" type="content:textImageSize" />
+    <xs:attribute name="end-image-size" type="content:textImageSize" />
     <xs:attribute name="minimum-lines" type="content:textMinimumLines" />
 
     <xs:attributeGroup name="contentTextType">
@@ -39,6 +42,10 @@
         <xs:attribute ref="web:text-color" />
         <xs:attribute ref="web:text-scale" />
         <xs:attribute ref="web:text-style" />
+    </xs:attributeGroup>
+    <xs:attributeGroup name="contentTextElement">
+        <xs:attribute ref="web:start-image-size" />
+        <xs:attribute ref="web:end-image-size" />
         <xs:attribute ref="web:minimum-lines" />
     </xs:attributeGroup>
     <!-- endregion: content:text attributes -->
