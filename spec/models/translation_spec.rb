@@ -77,7 +77,7 @@ describe Translation do
   end
 
   it "error is raised if strict mode and translated phrase not found" do
-    mock_onesky(page_name, [[element_one_id, phrase_one]].to_h.to_json.to_s)
+    mock_onesky(page_name, [[element_one_id, phrase_one]].to_h.to_json)
     translation = described_class.find(1)
 
     expect { translation.translated_page(1, true) }
@@ -85,7 +85,7 @@ describe Translation do
   end
 
   it "error is raised if strict mode and translated phrase for attribute not found" do
-    mock_onesky(page_name, [[element_one_id, phrase_one], [element_two_id, phrase_two]].to_h.to_json.to_s)
+    mock_onesky(page_name, [[element_one_id, phrase_one], [element_two_id, phrase_two]].to_h.to_json)
     translation = described_class.find(1)
 
     expect { translation.translated_page(1, true) }

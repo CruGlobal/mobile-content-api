@@ -28,10 +28,12 @@
     <!-- region: content:text attributes -->
     <xs:attribute name="font-weight" type="content:fontWeight" />
     <xs:attribute name="text-scale" type="xs:float" />
+    <xs:attribute name="minimum-lines" type="content:textMinimumLines" />
 
     <xs:attributeGroup name="contentTextType">
         <xs:attribute ref="web:font-weight" />
         <xs:attribute ref="web:text-scale" />
+        <xs:attribute ref="web:minimum-lines" />
     </xs:attributeGroup>
     <!-- endregion: content:text attributes -->
 </xs:schema>

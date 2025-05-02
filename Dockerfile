@@ -18,7 +18,7 @@ RUN apk upgrade --no-cache
 RUN apk --no-cache add libc6-compat git postgresql-libs tzdata
 
 # Copy dependency definitions and lock files
-COPY Gemfile Gemfile.lock ./
+COPY Gemfile Gemfile.lock .ruby-version ./
 
 # Install bundler version which created the lock file and configure it
 ARG SIDEKIQ_CREDS

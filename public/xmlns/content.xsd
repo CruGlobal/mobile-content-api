@@ -620,17 +620,12 @@
                         </xs:simpleType>
                     </xs:attribute>
 
-                    <xs:attribute name="minimum-lines" default="0">
+                    <xs:attribute name="minimum-lines" default="0" type="content:textMinimumLines">
                         <xs:annotation>
                             <xs:documentation>Defines the minimum number of lines to reserve vertical space for when
                                 rendering this text element.
                             </xs:documentation>
                         </xs:annotation>
-                        <xs:simpleType>
-                            <xs:restriction base="xs:int">
-                                <xs:minInclusive value="0" />
-                            </xs:restriction>
-                        </xs:simpleType>
                     </xs:attribute>
 
                     <xs:attributeGroup ref="content:baseAttributes" />
@@ -684,6 +679,12 @@
             <xs:element name="text" type="content:textType" />
         </xs:sequence>
     </xs:complexType>
+
+    <xs:simpleType name="textMinimumLines">
+        <xs:restriction base="xs:int">
+            <xs:minInclusive value="0" />
+        </xs:restriction>
+    </xs:simpleType>
     <!-- endregion text -->
 
     <xs:element name="image">
