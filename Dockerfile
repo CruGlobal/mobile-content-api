@@ -26,7 +26,7 @@ RUN gem install bundler -v $(awk '/^BUNDLED WITH/ { getline; print $1; exit }' G
     && bundle config --global gems.contribsys.com $SIDEKIQ_CREDS
 
 # Install build-dependencies, then install gems, subsequently removing build-dependencies
-RUN apk --no-cache add --virtual build-deps build-base postgresql-dev \
+RUN apk --no-cache add --virtual build-deps build-base postgresql-dev yaml-dev \
     && bundle install --jobs 20 --retry 2 \
     && apk del build-deps
 
