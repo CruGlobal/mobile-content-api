@@ -6,7 +6,7 @@ source "https://gems.contribsys.com/" do
 end
 git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
-ruby "3.1.6"
+ruby file: ".ruby-version"
 
 # Bundle edge Rails instead: gem "rails", github: "rails/rails", branch: "main"
 gem "rails", "~> 7.0.8"
@@ -80,10 +80,13 @@ gem "pg"
 gem "active_model_serializers", "0.10.15"
 gem "active_storage_validations"
 gem "adobe-campaign", "~> 0.4"
+gem "apple_id"
 gem "aws-sdk-s3"
-gem "ddtrace", "~> 1.15"
+gem "concurrent-ruby", "1.3.4" # remove when upgrading to Rails 7.1
+gem "datadog"
 gem "dogstatsd-ruby", "~> 5.3"
 gem "file_validators"
+gem "googleauth"
 gem "google-apis-analyticsreporting_v4"
 gem "httparty"
 gem "jwt"
@@ -92,18 +95,16 @@ gem "nokogiri"
 gem "oj", "~> 3.16.0"
 gem "ougai", "~> 2.0"
 gem "rack-cors", require: "rack/cors"
-gem "raddocs"
+gem "raddocs", github: "CruGlobal/raddocs"
 # action cable currently requires redis < 5. This should be fixed in rails >= 7.0.4
 # relevant issue: https://github.com/redis/redis-rb/issues/1142
 gem "redis", "< 5"
 gem "rest-client", "~> 2.1.0"
 gem "rollbar"
 gem "rubyzip", ">= 1.2.2"
-gem "validates_email_format_of"
-gem "googleauth"
-gem "apple_id"
 gem "sidekiq-failures"
 gem "sidekiq-unique-jobs"
+gem "validates_email_format_of"
 
 group :development, :test do
   gem "action-cable-testing"

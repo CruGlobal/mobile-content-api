@@ -18,7 +18,7 @@ RUN apk upgrade --no-cache
 RUN apk --no-cache add libc6-compat git postgresql-libs tzdata
 
 # Copy dependency definitions and lock files
-COPY Gemfile Gemfile.lock ./
+COPY Gemfile Gemfile.lock .ruby-version ./
 
 # Install bundler version which created the lock file and configure it
 ARG SIDEKIQ_CREDS
@@ -26,7 +26,7 @@ RUN gem install bundler -v $(awk '/^BUNDLED WITH/ { getline; print $1; exit }' G
     && bundle config --global gems.contribsys.com $SIDEKIQ_CREDS
 
 # Install build-dependencies, then install gems, subsequently removing build-dependencies
-RUN apk --no-cache add --virtual build-deps build-base postgresql-dev \
+RUN apk --no-cache add --virtual build-deps build-base postgresql-dev yaml-dev \
     && bundle install --jobs 20 --retry 2 \
     && apk del build-deps
 
