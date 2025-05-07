@@ -589,17 +589,12 @@
                             </xs:documentation>
                         </xs:annotation>
                     </xs:attribute>
-                    <xs:attribute name="start-image-size" default="40">
+                    <xs:attribute name="start-image-size" type="content:textImageSize" default="40">
                         <xs:annotation>
                             <xs:documentation>Defines the size in "density-independent pixels"/"points" of the start
                                 image. This defaults to 40.
                             </xs:documentation>
                         </xs:annotation>
-                        <xs:simpleType>
-                            <xs:restriction base="xs:int">
-                                <xs:minInclusive value="1" />
-                            </xs:restriction>
-                        </xs:simpleType>
                     </xs:attribute>
                     <xs:attribute name="end-image" type="xs:string">
                         <xs:annotation>
@@ -607,17 +602,12 @@
                             </xs:documentation>
                         </xs:annotation>
                     </xs:attribute>
-                    <xs:attribute name="end-image-size" default="40">
+                    <xs:attribute name="end-image-size" type="content:textImageSize" default="40">
                         <xs:annotation>
                             <xs:documentation>Defines the size in "density-independent pixels"/"points" of the end
                                 image. This defaults to 40.
                             </xs:documentation>
                         </xs:annotation>
-                        <xs:simpleType>
-                            <xs:restriction base="xs:int">
-                                <xs:minInclusive value="1" />
-                            </xs:restriction>
-                        </xs:simpleType>
                     </xs:attribute>
 
                     <xs:attribute name="minimum-lines" default="0" type="content:textMinimumLines">
@@ -629,6 +619,7 @@
                     </xs:attribute>
 
                     <xs:attributeGroup ref="content:baseAttributes" />
+                    <xs:attributeGroup ref="web:contentTextElement" />
                 </xs:extension>
             </xs:simpleContent>
         </xs:complexType>
@@ -680,6 +671,11 @@
         </xs:sequence>
     </xs:complexType>
 
+    <xs:simpleType name="textImageSize">
+        <xs:restriction base="xs:int">
+            <xs:minInclusive value="1" />
+        </xs:restriction>
+    </xs:simpleType>
     <xs:simpleType name="textMinimumLines">
         <xs:restriction base="xs:int">
             <xs:minInclusive value="0" />

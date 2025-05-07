@@ -1,0 +1,4 @@
+<content:text xmlns:content="https://mobile-content-api.cru.org/xmlns/content"
+    xmlns:web="https://mobile-content-api.cru.org/xmlns/web" font-weight="400" minimum-lines="2" text-align="center"
+    text-color="rgba(255,0,0,1)" text-style="italic" web:font-weight="700" web:minimum-lines="5"
+    web:text-align="start" web:text-color="rgba(0,255,255,1)" web:text-style="underline" />
