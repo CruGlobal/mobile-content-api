@@ -102,7 +102,7 @@ GEM
       rails (>= 3.1)
       rest-client (>= 1.6.0)
     aes_key_wrap (1.1.0)
-    amazing_print (1.7.2)
+    amazing_print (1.8.0)
     apple_id (1.6.4)
       json-jwt (~> 1.16)
       openid_connect (~> 2.2)
@@ -662,7 +662,7 @@ CHECKSUMS
   addressable (2.8.7) sha256=462986537cf3735ab5f3c0f557f14155d778f4b43ea4f485a9deb9c8f7c58232
   adobe-campaign (0.4.4) sha256=621c51db7655c22fa9a16d792a5d9d8d077fe4cb0073e2fef6e107e4712a0909
   aes_key_wrap (1.1.0) sha256=b935f4756b37375895db45669e79dfcdc0f7901e12d4e08974d5540c8e0776a5
-  amazing_print (1.7.2) sha256=c89a1dfe4f8508c1e780871d51b8786efd100f625201f6e1d18a0d4dedaac702
+  amazing_print (1.8.0) sha256=3a76c6247a1678d46645f64751949c73e45886ab0a8a065b74c1786ec9d6cb05
   apple_id (1.6.4) sha256=9c05a2fd3b580e8f9382637ffb2dfc30be671f33d586c5b3849c82b09ed84759
   ast (2.4.3) sha256=954615157c1d6a382bc27d690d973195e79db7f55e9765ac7c481c60bdb4d383
   attr_required (1.0.2) sha256=f0ebfc56b35e874f4d0ae799066dbc1f81efefe2364ca3803dc9ea6a4de6cb99
