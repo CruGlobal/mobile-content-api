@@ -177,10 +177,10 @@ GEM
     equivalent-xml (0.6.0)
       nokogiri (>= 1.4.3)
     erubi (1.13.1)
-    factory_bot (6.4.6)
-      activesupport (>= 5.0.0)
-    factory_bot_rails (6.4.3)
-      factory_bot (~> 6.4)
+    factory_bot (6.5.1)
+      activesupport (>= 6.1.0)
+    factory_bot_rails (6.4.4)
+      factory_bot (~> 6.5)
       railties (>= 5.0.0)
     faraday (2.13.1)
       faraday-net_http (>= 2.0, < 3.5)
@@ -703,8 +703,8 @@ CHECKSUMS
   dotenv-rails (3.1.8) sha256=46c9d1226a8b58a83b5f61325aa8cffd25cea1c0fafdfbbbee1e5dfea77980c4
   equivalent-xml (0.6.0) sha256=8919761efa848ad0846369ff8be1f646b17e5061698c4867b09829000cc3f487
   erubi (1.13.1) sha256=a082103b0885dbc5ecf1172fede897f9ebdb745a4b97a5e8dc63953db1ee4ad9
-  factory_bot (6.4.6) sha256=1a9486ce98d318d740d8f5804b885a8265a28f326ecf2bcd4ce9fb27a71a6e04
-  factory_bot_rails (6.4.3) sha256=ea73ceac1c0ff3dc11fff390bf2ea8a2604066525ed8ecd3b3bc2c267226dcc8
+  factory_bot (6.5.1) sha256=40581ea7bec0aee05514b8f4f99ed477274bdf1884c1372de5209e60322d6ca9
+  factory_bot_rails (6.4.4) sha256=139e17caa2c50f098fddf5e5e1f29e8067352024e91ca1186d018b36589e5c88
   faraday (2.13.1) sha256=cc531eb5467e7d74d4517630fa96f1a7003647cbf20a9a3e067d098941217b75
   faraday-follow_redirects (0.3.0) sha256=d92d975635e2c7fe525dd494fcd4b9bb7f0a4a0ec0d5f4c15c729530fdb807f9
   faraday-net_http (3.4.0) sha256=a1f1e4cd6a2cf21599c8221595e27582d9936819977bbd4089a601f24c64e54a
