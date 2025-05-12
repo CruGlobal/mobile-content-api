@@ -68,7 +68,7 @@ GEM
       activemodel (>= 4.1)
       case_transform (>= 0.2)
       jsonapi-renderer (>= 0.1.1.beta1, < 0.3)
-    active_storage_validations (1.4.0)
+    active_storage_validations (2.0.3)
       activejob (>= 6.1.4)
       activemodel (>= 6.1.4)
       activestorage (>= 6.1.4)
@@ -655,7 +655,7 @@ CHECKSUMS
   actiontext (7.0.8.7) sha256=cb75d2db97d5b2c8caccdc0f643541df36c2c53f076a2d49b226f971d8d528a0
   actionview (7.0.8.7) sha256=be975bc9c61903fe5da80a97c345271159033bcbba63988c7f27b6b8b98f7fed
   active_model_serializers (0.10.15) sha256=08275b2083ab4e8304279d838b99af546878e0d879a8154f731b0d16cb8b0c4c
-  active_storage_validations (1.4.0) sha256=0ecd80d46c9d7a657020dfeb335041cb12e779e11ccd9ddc3946e77679537b00
+  active_storage_validations (2.0.3) sha256=afd5e2658eee8a321e30ac5be7bdb704ff1780f88096bcf068baa40452441a6f
   activejob (7.0.8.7) sha256=eff4db3aeaee34863a47570089d11d5577ed0ea42b1475dc9be6a413be182a20
   activemodel (7.0.8.7) sha256=f13b04bb055c1e85b965ce40b0a2e671b8d97835083597bc7fbc04cde0f40a83
   activerecord (7.0.8.7) sha256=f94fc8510e58a18e462c5ee8862c9be75e2bfad0688e8d022b86a6e05df2a45a
