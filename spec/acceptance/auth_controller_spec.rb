@@ -263,7 +263,7 @@ resource "Auth" do
           do_request data: {type: type, attributes: {facebook_access_token: "authtoken"}}
         end.to_not change(User, :count)
 
-        expect(response_body).to include("unexpected token")
+        expect(response_body).to include("invalid_token")
       end
     end
     context "google" do
