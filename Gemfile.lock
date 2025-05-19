@@ -153,8 +153,8 @@ GEM
       rexml
     crass (1.0.6)
     csv (3.3.3)
-    datadog (2.15.0)
-      datadog-ruby_core_source (~> 3.4)
+    datadog (2.16.0)
+      datadog-ruby_core_source (~> 3.4, >= 3.4.1)
       libdatadog (~> 16.0.1.1.0)
       libddwaf (~> 1.22.0.0.2)
       logger
@@ -691,7 +691,7 @@ CHECKSUMS
   crack (0.4.6) sha256=ee251d0aab36ab196946b851fd129870d66bdde4855cfdb3078d86a619c28864
   crass (1.0.6) sha256=dc516022a56e7b3b156099abc81b6d2b08ea1ed12676ac7a5657617f012bd45d
   csv (3.3.3) sha256=7e2966befb7bdaf7d5e9b36e1de73e6a5e7a72f584f180a1726aec88a1b0a900
-  datadog (2.15.0) sha256=f6c02a56730b928c3dd350ca30b770d7550a9454af94274a344cb6334eb75235
+  datadog (2.16.0) sha256=c7fc5c0b02e17c5c5dfa6036f49cbc9f43f0e8c7d87d6c288dcbf74de647c577
   datadog-ruby_core_source (3.4.1) sha256=fa40f1c3c8f764b6651a6443382b57d39aeb3c9f94b5af98f499bcfc678a2fb9
   date (3.4.1) sha256=bf268e14ef7158009bfeaec40b5fa3c7271906e88b196d958a89d4b408abe64f
   debug (1.10.0) sha256=11e28ca74875979e612444104f3972bd5ffb9e79179907d7ad46dba44bd2e7a4
