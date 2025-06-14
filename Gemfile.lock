@@ -127,7 +127,7 @@ GEM
       aws-sigv4 (~> 1.5)
     aws-sigv4 (1.11.0)
       aws-eventstream (~> 1, >= 1.0.2)
-    base64 (0.2.0)
+    base64 (0.3.0)
     bigdecimal (3.1.9)
     bindata (2.5.0)
     bindex (0.8.1)
@@ -674,7 +674,7 @@ CHECKSUMS
   aws-sdk-kms (1.101.0) sha256=44d8b5b69ce7394cc02f30f9a35bea04ea12c947b5ffe1471535eea5119368d7
   aws-sdk-s3 (1.186.1) sha256=5b703b8aafc26ca4f3f927368412da5f4b8f74909bb0e4651eb8afe8aa105803
   aws-sigv4 (1.11.0) sha256=50a8796991a862324442036ad7a395920572b84bb6cd29b945e5e1800e8da1db
-  base64 (0.2.0) sha256=0f25e9b21a02a0cc0cea8ef92b2041035d39350946e8789c562b2d1a3da01507
+  base64 (0.3.0) sha256=27337aeabad6ffae05c265c450490628ef3ebd4b67be58257393227588f5a97b
   bigdecimal (3.1.9) sha256=2ffc742031521ad69c2dfc815a98e426a230a3d22aeac1995826a75dabfad8cc
   bindata (2.5.0) sha256=29dccb8ba1cc9de148f24bb88930840c62db56715f0f80eccadd624d9f3d2623
   bindex (0.8.1) sha256=7b1ecc9dc539ed8bccfc8cb4d2732046227b09d6f37582ff12e50a5047ceb17e
