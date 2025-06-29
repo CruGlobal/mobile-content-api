@@ -271,7 +271,7 @@ GEM
       faraday (~> 2.0)
       faraday-follow_redirects
     jsonapi-renderer (0.2.2)
-    jwt (2.10.1)
+    jwt (2.10.2)
       base64
     language_server-protocol (3.17.0.5)
     libdatadog (18.1.0.1.0)
@@ -744,7 +744,7 @@ CHECKSUMS
   json (2.12.0) sha256=b30fce000756de94c756679c7e57ed41f03f8cc8dde2d2dc00a7c44005da0a50
   json-jwt (1.16.6) sha256=ab451f9cd8743cecc4137f4170806046c1d8a6d4ee6e8570e0b5c958409b266c
   jsonapi-renderer (0.2.2) sha256=b5c44b033d61b4abdb6500fa4ab84807ca0b36ea0e59e47a2c3ca7095a6e447b
-  jwt (2.10.1) sha256=e6424ae1d813f63e761a04d6284e10e7ec531d6f701917fadcd0d9b2deaf1cc5
+  jwt (2.10.2) sha256=31e1ee46f7359883d5e622446969fe9c118c3da87a0b1dca765ce269c3a0c4f4
   language_server-protocol (3.17.0.5) sha256=fd1e39a51a28bf3eec959379985a72e296e9f9acfce46f6a79d31ca8760803cc
   libdatadog (18.1.0.1.0) sha256=fbdd74d24c2474544418f183a31725c4ee4da85341c1310dcbe292c5ec151b09
   libdatadog (18.1.0.1.0-x86_64-linux) sha256=e5c2a5b0d15aa1edd426a62f687b0efbad6d63592a7022bcbecb735b91d7e048
