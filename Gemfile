@@ -8,8 +8,8 @@ git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
 ruby file: ".ruby-version"
 
-# Bundle edge Rails instead: gem 'rails', '~> 7.1.4.2'
-gem 'rails', '~> 7.1.4.2'
+# Bundle edge Rails instead: gem 'rails', '~> 8.0.0'
+gem 'rails', '~> 8.0.0'
 
 # The original asset pipeline for Rails [https://github.com/rails/sprockets-rails]
 # gem "sprockets-rails"
