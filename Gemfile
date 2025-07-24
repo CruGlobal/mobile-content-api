@@ -83,6 +83,7 @@ gem "adobe-campaign", "~> 0.4"
 gem "apple_id"
 gem "aws-sdk-s3"
 gem "concurrent-ruby", "1.3.4" # remove when upgrading to Rails 7.1
+gem "crowdin-api", "~> 1.12.0"
 gem "datadog"
 gem "dogstatsd-ruby", "~> 5.3"
 gem "file_validators"

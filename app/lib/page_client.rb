@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 require "xml_util"
-require "one_sky"
+require "crowdin"
 
 class PageClient
   def initialize(resource, language_code)
@@ -10,11 +10,11 @@ class PageClient
   end
 
   # I don't think it's critical to push all these files every time a new language is added, but we might as well do so
-  # because that will help keep OneSky up to date with the pages and phrases stored in the database.
-  def push_new_onesky_translation(keep_existing_phrases = true)
+  # because that will help keep CrowdIn up to date with the pages and phrases stored in the database.
+  def push_new_crowdin_translation(keep_existing_phrases = true)
     push_resource_pages(keep_existing_phrases)
     push_name_description
-    push_translatable_attributes if @resource.uses_onesky?
+    push_translatable_attributes if @resource.uses_crowdin?
 
     self.class.delete_temp_pages
   rescue => e
@@ -55,8 +55,8 @@ class PageClient
   def push_page(phrases, filename, keep_existing_phrases)
     File.write("pages/#{filename}", phrases.to_json)
 
-    OneSky.push_phrases "pages/#{filename}",
-      project_id: @resource.onesky_project_id,
+    CrowdIn.push_phrases "pages/#{filename}",
+      project_id: @resource.crowdin_project_id,
       language_code: @language_code,
       keep_existing: keep_existing_phrases
   end

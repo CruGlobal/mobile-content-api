@@ -280,7 +280,7 @@ describe Package do
       end
 
       it "creates manifest node" do
-        mock_onesky translation.resource.onesky_project_id
+        mock_crowdin translation.resource.crowdin_project_id
 
         push
 

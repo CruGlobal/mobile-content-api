@@ -112,6 +112,6 @@ class ResourcesController < ApplicationController
   end
 
   def permitted_params
-    permit_params(:name, :abbreviation, :manifest, :onesky_project_id, :system_id, :description, :resource_type_id, :metatool_id, :default_variant_id)
+    permit_params(:name, :abbreviation, :manifest, :crowdin_project_id, :system_id, :description, :resource_type_id, :metatool_id, :default_variant_id)
   end
 end

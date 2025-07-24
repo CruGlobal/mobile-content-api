@@ -1,30 +1,55 @@
-# Mobile Content API [![codecov](https://codecov.io/gh/CruGlobal/mobile-content-api/branch/master/graph/badge.svg)](https://app.codecov.io/gh/CruGlobal/mobile-content-api)
+# Mobile Content API
 
-Staging push status: [![staging push status](https://github.com/CruGlobal/mobile-content-api/actions/workflows/ruby.yml/badge.svg?event=push&branch=staging)](https://github.com/CruGlobal/mobile-content-api/actions/workflows/ruby.yml)
+The Mobile Content API is a set of JSON-based API endpoints to drive content for mobile applications.
 
-Master push status: [![master push status](https://github.com/CruGlobal/mobile-content-api/actions/workflows/ruby.yml/badge.svg?event=push&branch=master)](https://github.com/CruGlobal/mobile-content-api/actions/workflows/ruby.yml)
+## Requirements
+* Docker (or Ruby 3.1 + PostgreSQL 14)
 
-* Ruby version: 2.6.6
-* Bundler version: 1.17.3
-* Rails version: 5.2.3
-* `Draft` --> `Translation.is_published == false`
-* You will need to set the following environment variables:
-    * MOBILE_CONTENT_API_BUCKET
-    * AWS_REGION
-    * ONESKY_API_KEY
-    * ONESKY_API_SECRET
-    * ADOBE_ANALYTICS_REPORT_URL
-    * ADOBE_ANALYTICS_COMPANY_ID
-    * ADOBE_ANALYTICS_CLIENT_ID
-    * ADOBE_ANALYTICS_JWT_TOKEN
-    * ADOBE_ANALYTICS_CLIENT_SECRET
-    * ADOBE_ANALYTICS_EXCHANGE_JWT_URL
-* You will also need to set AWS credentials.
+## Setup via Docker
+```bash
+cp .env.sample .env
+docker-compose up
+```
+## Setup without Docker
+* Create database user:
+```bash
+createuser mobilecontentapi
+```
+* Create database configuration (config/database.yml):
+```yaml
+development:
+  adapter: postgresql
+  database: mobilecontentapi_development
+  username: mobilecontentapi
+  min_messages: WARNING
 
+test:
+  adapter: postgresql
+  database: mobilecontentapi_test
+  username: mobilecontentapi
+  min_messages: WARNING
+```
 
-## Local setup
+* Setup gems and database:
+```bash
+cp .env.sample .env
+./bin/setup
+```
 
-1. `bundle install`
-1. `rails db:create db:schema:load`
+## Testing
+Run tests with `bundle exec rspec` or set up Docker to run them automatically with Guard:
+```bash
+docker-compose -f docker-compose.yml -f docker-compose.test.yml up
+```
 
-Use `rspec` to run tests and check if setup is correct.
+## CrowdIn Integration
+
+This application integrates with CrowdIn for translations. To use this feature, you need to:
+
+1. Create a CrowdIn account and project
+2. Get your CrowdIn API token from the CrowdIn account settings
+3. Set the following environment variables:
+   - `CROWDIN_API_TOKEN`: Your CrowdIn API token
+   - `CROWDIN_ORGANIZATION_DOMAIN`: (Optional) Your organization domain if using CrowdIn Enterprise
+
+Each resource can be associated with a CrowdIn project using the `crowdin_project_id` attribute.
