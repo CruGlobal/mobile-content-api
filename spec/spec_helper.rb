@@ -134,12 +134,43 @@ RSpec.configure do |config|
 
     def mock_onesky(project_id = nil)
       ENV["ONESKY_API_SECRET"] ||= ""
-      project_id ||= Resource.find(1).onesky_project_id
+      project_id ||= Resource.find(1).crowdin_project_id
       response = RestClient::Response.new('{ "1":"value" }')
       response.instance_variable_set :@code, 200
       allow(RestClient).to receive(:get)
         .with("https://platform.api.onesky.io/1/projects/#{project_id}/translations", any_args)
         .and_return(response)
+    end
+    
+    def mock_crowdin(project_id = nil)
+      ENV["CROWDIN_API_TOKEN"] ||= "test_token"
+      project_id ||= Resource.find(1).crowdin_project_id
+      
+      # Mock the CrowdIn client and API calls
+      crowdin_client = double("Crowdin::Client")
+      allow(Crowdin::Client).to receive(:new).and_return(crowdin_client)
+      
+      # Mock source_files API
+      source_files_api = double("Crowdin::SourceFilesApi")
+      allow(crowdin_client).to receive(:source_files).and_return(source_files_api)
+      allow(source_files_api).to receive(:list_files).and_return({"data" => []})
+      allow(source_files_api).to receive(:add_file).and_return(double.as_null_object)
+      allow(source_files_api).to receive(:update_file).and_return(double.as_null_object)
+      
+      # Mock storages API
+      storages_api = double("Crowdin::StoragesApi")
+      allow(crowdin_client).to receive(:storages).and_return(storages_api)
+      allow(storages_api).to receive(:add_storage).and_return({"data" => {"id" => 123}})
+      
+      # Mock translations API
+      translations_api = double("Crowdin::TranslationsApi")
+      allow(crowdin_client).to receive(:translations).and_return(translations_api)
+      allow(translations_api).to receive(:build_project_file_translation).and_return({"data" => {"url" => "https://example.com/translation"}})
+      
+      # Mock the response from the download URL
+      response = RestClient::Response.new('{ "1":"value" }')
+      response.instance_variable_set :@code, 200
+      allow(RestClient).to receive(:get).and_return(response)
     end
   })
 end

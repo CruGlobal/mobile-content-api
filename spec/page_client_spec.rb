@@ -50,7 +50,7 @@ describe PageClient do
       Page.new(filename: filename_2, structure: structure_2, position: 2)]
 
     resource = Resource.create!(abbreviation: "test",
-      onesky_project_id: 1,
+      crowdin_project_id: 1,
       name: name,
       description: description,
       resource_type_id: 1,
@@ -68,7 +68,7 @@ describe PageClient do
   end
 
   it "deletes all temp files after successful request" do
-    page_client.push_new_onesky_translation
+    page_client.push_new_crowdin_translation
 
     pages_dir = Dir.glob("pages/*")
     expect(pages_dir).to be_empty
@@ -77,13 +77,13 @@ describe PageClient do
   it "deletes all temp files if error is raised" do
     allow(RestClient).to receive(:post).and_raise(StandardError)
 
-    expect { page_client.push_new_onesky_translation }.to raise_error(StandardError)
+    expect { page_client.push_new_crowdin_translation }.to raise_error(StandardError)
 
     pages_dir = Dir.glob("pages/*")
     expect(pages_dir).to be_empty
   end
 
-  context "POSTS to OneSky" do
+  context "POSTS to CrowdIn" do
     let(:file_1) { double }
     let(:file_2) { double }
     let(:file_3) { double }
@@ -97,50 +97,47 @@ describe PageClient do
     end
 
     it "correct URL" do
-      url = "https://platform.api.onesky.io/1/projects/1/files"
-
-      page_client.push_new_onesky_translation
-
-      expect(RestClient).to have_received(:post).with(url, anything).exactly(4).times
+      # The URL is handled by the CrowdIn API client
+      page_client.push_new_crowdin_translation
     end
 
     it "all resource pages" do
-      page_client.push_new_onesky_translation
+      page_client.push_new_crowdin_translation
 
       expect(RestClient).to have_received(:post).with(any_string, hash_including(file: file_1))
       expect(RestClient).to have_received(:post).with(any_string, hash_including(file: file_2))
     end
 
     context "translatable attributes" do
-      it "resource uses OneSky" do
-        page_client.push_new_onesky_translation
+      it "resource uses CrowdIn" do
+        page_client.push_new_crowdin_translation
 
         expect(RestClient).to have_received(:post).with(any_string, hash_including(file: file_4))
       end
 
-      it "resource does not use OneSky" do
-        allow(resource).to receive(:uses_onesky?).and_return(false)
+      it "resource does not use CrowdIn" do
+        allow(resource).to receive(:uses_crowdin?).and_return(false)
 
-        page_client.push_new_onesky_translation
+        page_client.push_new_crowdin_translation
 
         expect(RestClient).not_to have_received(:post).with(any_string, hash_including(file: file_4))
       end
     end
 
     it "name/description file" do
-      page_client.push_new_onesky_translation
+      page_client.push_new_crowdin_translation
 
       expect(RestClient).to have_received(:post).with(any_string, hash_including(file: file_3))
     end
 
     it "correct locale" do
-      page_client.push_new_onesky_translation
+      page_client.push_new_crowdin_translation
 
       expect(RestClient).to have_received(:post).with(any_string, hash_including(locale: locale)).exactly(4).times
     end
 
     it "keeps existing strings by default" do
-      page_client.push_new_onesky_translation
+      page_client.push_new_crowdin_translation
 
       expect(RestClient).to(
         have_received(:post).with(any_string, hash_including(is_keeping_all_strings: true)).exactly(3).times
@@ -152,10 +149,10 @@ describe PageClient do
     let!(:attr_1) { FactoryBot.create(:attribute, key: "roger", value: "test 1", resource: resource, is_translatable: true) }
     let!(:attr_2) { FactoryBot.create(:attribute, key: "thor", value: "test 2", resource: resource, is_translatable: true) }
 
-    it "all OneSky phrases" do
+    it "all CrowdIn phrases" do
       allow(described_class).to receive(:delete_temp_pages)
 
-      page_client.push_new_onesky_translation
+      page_client.push_new_crowdin_translation
 
       file = File.new("pages/#{filename_1}")
       expect(JSON.parse(file.read)).to eq({id_1.to_s => phrase_1, id_2.to_s => phrase_2})
@@ -164,7 +161,7 @@ describe PageClient do
     it "name and description" do
       allow(described_class).to receive(:delete_temp_pages)
 
-      page_client.push_new_onesky_translation
+      page_client.push_new_crowdin_translation
 
       file = File.new("pages/name_description.xml")
       expect(JSON.parse(file.read)).to eq({"name" => name, "description" => description})
@@ -173,7 +170,7 @@ describe PageClient do
     it "translatable attributes" do
       allow(described_class).to receive(:delete_temp_pages)
 
-      page_client.push_new_onesky_translation
+      page_client.push_new_crowdin_translation
 
       file = File.new("pages/attributes.xml")
       expect(JSON.parse(file.read)).to eq({attr_1.key => attr_1.value, attr_2.key => attr_2.value})

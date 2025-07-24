@@ -10,9 +10,9 @@ describe Resource do
     let(:language) { Language.find(3) }
 
     context "new resource/language combination" do
-      it "pushes to OneSky" do
+      it "pushes to CrowdIn" do
         allow(PageClient).to(receive(:new).with(resource, language.code)
-                                 .and_return(instance_double(PageClient, push_new_onesky_translation: :created)))
+                                 .and_return(instance_double(PageClient, push_new_crowdin_translation: :created)))
 
         resource.create_draft(language.id)
       end

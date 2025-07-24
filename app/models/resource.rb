@@ -51,8 +51,8 @@ class Resource < ActiveRecord::Base
     end
   end
 
-  def uses_onesky?
-    onesky_project_id.present?
+  def uses_crowdin?
+    crowdin_project_id.present?
   end
 
   def create_draft(language_id)
