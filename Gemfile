@@ -98,7 +98,7 @@ gem "rack-cors", require: "rack/cors"
 gem "raddocs", github: "CruGlobal/raddocs"
 # action cable currently requires redis < 5. This should be fixed in rails >= 7.0.4
 # relevant issue: https://github.com/redis/redis-rb/issues/1142
-gem "redis", "< 5"
+gem "redis", "< 6"
 gem "rest-client", "~> 2.1.0"
 gem "rollbar"
 gem "rubyzip", ">= 1.2.2"
