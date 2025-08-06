@@ -6,6 +6,7 @@ require "validates_email_format_of/rspec_matcher"
 describe FollowUp do
   let(:growth_space_destination) { Destination.growth_spaces.first! }
   let(:adobe_campaigns_destination) { Destination.adobe_campaigns.first! }
+  let(:salesforce_destination) { Destination.salesforce.first! }
   let(:email) { "bob@test.org" }
   let(:language) { Language.find(2) }
   let(:language_id) { 3 }
@@ -75,6 +76,61 @@ describe FollowUp do
           expect(AdobeCampaign).to receive(:new).with(follow_up).and_return(service)
           expect(service).to receive(:subscribe!)
           follow_up.send_to_api
+        end
+      end
+
+      context "for service_type salesforce" do
+        let(:destination) { salesforce_destination }
+
+        before do
+          allow(SalesforceService).to receive(:send_campaign_subscription).and_return(true)
+        end
+
+        it "calls SalesforceService with correct parameters" do
+          expected_data = {
+            email_address: email,
+            first_name: first_name,
+            last_name: last_name,
+            language_code: language.code
+          }
+
+          follow_up.send_to_api
+
+          expect(SalesforceService).to have_received(:send_campaign_subscription).with(
+            email,
+            destination.service_name,
+            expected_data
+          )
+        end
+
+        it "raises error when SalesforceService fails" do
+          allow(SalesforceService).to receive(:send_campaign_subscription).and_return(false)
+
+          expect { follow_up.send_to_api }.to raise_error(
+            Error::BadRequestError,
+            "Failed to send campaign subscription to Salesforce for email: #{email}"
+          )
+        end
+
+        it "handles follow_up without name" do
+          follow_up_without_name = described_class.create(
+            email: email,
+            language_id: language.id,
+            destination_id: destination.id,
+            name: nil
+          )
+          expected_data = {
+            email_address: email,
+            language_code: language.code
+          }
+
+          follow_up_without_name.send_to_api
+
+          expect(SalesforceService).to have_received(:send_campaign_subscription).with(
+            email,
+            destination.service_name,
+            expected_data
+          )
         end
       end
     end
