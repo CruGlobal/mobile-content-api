@@ -8,14 +8,6 @@ describe SalesforceService do
   let(:data) { {first_name: "John", last_name: "Doe"} }
   let(:access_token) { "fake_access_token" }
 
-  before do
-    allow(ENV).to receive(:fetch).with("SALESFORCE_AUTH_URI").and_return("https://auth.salesforce.com")
-    allow(ENV).to receive(:fetch).with("SALESFORCE_CLIENT_ID").and_return("client_id")
-    allow(ENV).to receive(:fetch).with("SALESFORCE_CLIENT_SECRET").and_return("client_secret")
-    allow(ENV).to receive(:fetch).with("SALESFORCE_REST_URI").and_return("https://api.salesforce.com")
-    allow(ENV).to receive(:fetch).with("SALESFORCE_SFMC_DE_EXTERNAL_KEY").and_return("external_key")
-  end
-
   describe ".get_access_token" do
     context "when successful" do
       it "returns access token" do

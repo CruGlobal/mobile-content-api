@@ -68,7 +68,7 @@ describe FollowUp do
         end
       end
 
-      context "for service_type adobe_campaigns" do
+      context "for service_type growth_spaces" do
         let(:destination) { adobe_campaigns_destination }
         let(:service) { instance_double("AdobeCampaign") }
 
