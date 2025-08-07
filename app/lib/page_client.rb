@@ -9,8 +9,6 @@ class PageClient
     @language_code = language_code
   end
 
-  # Upload functionality has been removed as we only download translations from Crowdin
-
   def self.delete_temp_pages
     temp_dir = Dir.glob("pages/*")
     temp_dir.each { |file| File.delete(file) }
@@ -19,8 +17,4 @@ class PageClient
   def self.delete_temp_dir(directory)
     FileUtils.remove_dir(directory)
   end
-
-  private
-
-  # All upload/push methods have been removed as we only download from Crowdin
 end
