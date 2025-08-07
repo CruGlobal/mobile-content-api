@@ -12,18 +12,10 @@ describe CrowdinService do
       mock_client = double("Crowdin::Client")
       allow(CrowdinService).to receive(:client).and_return(mock_client)
 
-      # Mock the language lookup
-      language = double("Language", name: "English")
-      allow(Language).to receive(:find_by).with(code: language_code).and_return(language)
-
-      # Mock all_crowdin_languages_by_name
-      languages_response = {
-        "data" => [
-          {"data" => {"name" => "English", "id" => "en"}}
-        ]
-      }
-      allow(mock_client).to receive(:list_languages).with(limit: 100, offset: 0).and_return(languages_response)
-      allow(mock_client).to receive(:list_languages).with(limit: 100, offset: 100).and_return({"data" => []})
+      # Use the seeded language
+      language = Language.find_by!(code: language_code)
+      # Ensure crowdin_code is set for the test
+      language.update!(crowdin_code: "en")
 
       # Mock the export call
       export_response = {
@@ -48,7 +40,13 @@ describe CrowdinService do
     it "handles errors gracefully" do
       mock_client = double("Crowdin::Client")
       allow(CrowdinService).to receive(:client).and_return(mock_client)
-      allow(mock_client).to receive(:list_languages).and_raise(StandardError.new("API Error"))
+
+      # Use the seeded language
+      language = Language.find_by!(code: language_code)
+      # Ensure crowdin_code is set for the test
+      language.update!(crowdin_code: "en")
+
+      allow(mock_client).to receive(:export_project_translation).and_raise(StandardError.new("API Error"))
 
       result = CrowdinService.download_translated_phrases(project_id: project_id, language_code: language_code)
 

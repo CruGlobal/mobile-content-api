@@ -14,13 +14,13 @@ class CrowdinService
     begin
       client
 
-      # the best way I've found to get all translations for a language from crowdin is using the export endpoint -AR
-      crowdin_languages_by_name = all_crowdin_languages_by_name
+      # Find the language and use its crowdin_code
       language = Language.find_by(code: language_code)
-      raise("Can't find language #{language_code} in crowdin") unless language && crowdin_languages_by_name.key?(language.name)
+      raise("Can't find language #{language_code}") unless language
+      raise("Language #{language_code} has no crowdin_code") unless language.crowdin_code
 
-      # grab dump url
-      r = client.export_project_translation({targetLanguageId: crowdin_languages_by_name[language.name], format: "android"}, nil, project_id)
+      # Grab export url - this is the best way I've found to get all translations for a language -AR
+      r = client.export_project_translation({targetLanguageId: language.crowdin_code, format: "android"}, nil, project_id)
 
       # grab dump data and convert it to a hash of key => values
       response = Net::HTTP.get_response(URI.parse(r["data"]["url"]))
@@ -45,28 +45,6 @@ class CrowdinService
     @client ||= ::Crowdin::Client.new do |config|
       config.api_token = ENV.fetch("CROWDIN_API_TOKEN")
     end
-  end
-
-  # getting the list of languages each time will hopefully mean custom languages get seamlessly picked up (not tested yet)
-  def self.all_crowdin_languages_by_name
-    languages_by_name = {}
-    limit = 100
-    offset = 0
-
-    loop do
-      response = client.list_languages(limit: limit, offset: offset)
-      data = response["data"]
-      break if data.empty?
-
-      data.each do |lang_entry|
-        lang = lang_entry["data"]
-        languages_by_name[lang["name"]] = lang["id"]
-      end
-
-      offset += limit
-    end
-
-    languages_by_name
   end
 
   private
