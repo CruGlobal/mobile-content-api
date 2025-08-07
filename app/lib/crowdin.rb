@@ -33,7 +33,6 @@ module Crowdin
   def self.client
     @client ||= ::Crowdin::Client.new do |config|
       config.api_token = ENV["CROWDIN_API_TOKEN"]
-      config.project_id = ENV["CROWDIN_PROJECT_ID"] if ENV["CROWDIN_PROJECT_ID"]
     end
   end
 

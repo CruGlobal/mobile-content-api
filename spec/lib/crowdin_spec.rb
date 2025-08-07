@@ -10,7 +10,6 @@ describe Crowdin do
 
     before do
       allow(ENV).to receive(:[]).with("CROWDIN_API_TOKEN").and_return("test_token")
-      allow(ENV).to receive(:[]).with("CROWDIN_PROJECT_ID").and_return("123")
     end
 
     it "downloads translated phrases from Crowdin" do
