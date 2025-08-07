@@ -39,9 +39,10 @@ describe CrowdinService do
         .with({targetLanguageId: "en", format: "android"}, nil, project_id)
         .and_return(export_response)
 
-      # Mock URI.open and XML parsing
+      # Mock the HTTP request to the export URL
       xml_content = '<?xml version="1.0" encoding="UTF-8"?><resources><string name="test_key">translated_text</string></resources>'
-      allow(URI).to receive(:open).with("http://example.com/export.xml").and_return(StringIO.new(xml_content))
+      stub_request(:get, "http://example.com/export.xml")
+        .to_return(status: 200, body: xml_content, headers: {})
 
       result = CrowdinService.download_translated_phrases(project_id: project_id, language_code: language_code)
 
