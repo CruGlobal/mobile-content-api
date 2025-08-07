@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2025_08_07_010924) do
+ActiveRecord::Schema[7.0].define(version: 2025_08_07_144120) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
   enable_extension "pg_stat_statements"
@@ -169,6 +169,7 @@ ActiveRecord::Schema[7.0].define(version: 2025_08_07_010924) do
     t.string "code", null: false
     t.string "direction", default: "ltr"
     t.boolean "force_language_name", default: false
+    t.string "crowdin_code"
     t.index ["code"], name: "index_languages_on_code", unique: true
   end
 
