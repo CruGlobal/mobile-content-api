@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require "json"
+require "net/http"
 require "crowdin-api"
 
 class CrowdinService
@@ -11,29 +12,29 @@ class CrowdinService
     logger.info "Downloading translated phrases for: project id #{project_id} with language: #{language_code}"
 
     begin
-      crowdin_client = client
+      client
 
       # the best way I've found to get all translations for a language from crowdin is using the export endpoint -AR
-			crowdin_languages_by_name = all_crowdin_languages_by_name
+      crowdin_languages_by_name = all_crowdin_languages_by_name
       language = Language.find_by(code: language_code)
-      raise("Can't find language #{language_code} in crowdin") unless language && crowdin_languages_by_name.keys.include?(language.name)  
+      raise("Can't find language #{language_code} in crowdin") unless language && crowdin_languages_by_name.key?(language.name)
 
       # grab dump url
-      r = client.export_project_translation({ targetLanguageId: crowdin_languages_by_name[language.name], format: "android" }, nil, project_id)
+      r = client.export_project_translation({targetLanguageId: crowdin_languages_by_name[language.name], format: "android"}, nil, project_id)
 
       # grab dump data and convert it to a hash of key => values
-      android_format_export = URI.open(r["data"]["url"]).read
+      response = Net::HTTP.get_response(URI.parse(r["data"]["url"]))
+      android_format_export = response.body
       doc = Nokogiri::XML(android_format_export)
 
       translations = {}
-      doc.xpath('//resources/string').each do |node|
-        key = node['name']
+      doc.xpath("//resources/string").each do |node|
+        key = node["name"]
         value = node.text
         translations[key] = value
       end
 
       translations
-
     rescue => e
       logger.error "Error downloading translated phrases from Crowdin: #{e.message}"
       {}
@@ -46,27 +47,27 @@ class CrowdinService
     end
   end
 
-	# getting the list of languages each time will hopefully mean custom languages get seamlessly picked up (not tested yet)
+  # getting the list of languages each time will hopefully mean custom languages get seamlessly picked up (not tested yet)
   def self.all_crowdin_languages_by_name
-		languages_by_name = {}
-		limit = 100
-		offset = 0
+    languages_by_name = {}
+    limit = 100
+    offset = 0
 
-		loop do
-			response = client.list_languages(limit: limit, offset: offset)
-			data = response['data']
-			break if data.empty?
+    loop do
+      response = client.list_languages(limit: limit, offset: offset)
+      data = response["data"]
+      break if data.empty?
 
-			data.each do |lang_entry|
-				lang = lang_entry['data']
-				languages_by_name[lang['name']] = lang['id']
-			end
+      data.each do |lang_entry|
+        lang = lang_entry["data"]
+        languages_by_name[lang["name"]] = lang["id"]
+      end
 
-			offset += limit
-		end
+      offset += limit
+    end
 
-		languages_by_name
-	end
+    languages_by_name
+  end
 
   private
 
