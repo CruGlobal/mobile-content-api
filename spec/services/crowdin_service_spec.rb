@@ -8,10 +8,6 @@ describe CrowdinService do
     let(:language_code) { "en" }
     let(:filename) { "sample.xml" }
 
-    before do
-      allow(ENV).to receive(:[]).with("CROWDIN_API_TOKEN").and_return("test_token")
-    end
-
     it "downloads translated phrases from Crowdin" do
       mock_client = double("Crowdin::Client")
       allow(CrowdinService).to receive(:client).and_return(mock_client)
@@ -57,6 +53,10 @@ describe CrowdinService do
       result = CrowdinService.download_translated_phrases(project_id: project_id, language_code: language_code)
 
       expect(result).to eq({})
+    end
+
+    it "builds the client" do
+      expect(CrowdinService.client).to_not be_nil
     end
   end
 end

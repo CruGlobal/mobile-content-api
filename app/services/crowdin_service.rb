@@ -43,7 +43,7 @@ class CrowdinService
 
   def self.client
     @client ||= ::Crowdin::Client.new do |config|
-      config.api_token = ENV["CROWDIN_API_TOKEN"]
+      config.api_token = ENV.fetch("CROWDIN_API_TOKEN")
     end
   end
 
