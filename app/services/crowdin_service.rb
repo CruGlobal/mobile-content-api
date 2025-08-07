@@ -20,21 +20,12 @@ class CrowdinService
       raise("Language #{language_code} has no crowdin_code") unless language.crowdin_code
 
       # Grab export url - this is the best way I've found to get all translations for a language -AR
-      r = client.export_project_translation({targetLanguageId: language.crowdin_code, format: "android"}, nil, project_id)
+      r = client.export_project_translation({targetLanguageId: language.crowdin_code, format: "crowdin-json"}, nil, project_id)
 
-      # grab dump data and convert it to a hash of key => values
+      # grab dump data - crowdin-json format returns a direct hash
       response = Net::HTTP.get_response(URI.parse(r["data"]["url"]))
-      android_format_export = response.body
-      doc = Nokogiri::XML(android_format_export)
-
-      translations = {}
-      doc.xpath("//resources/string").each do |node|
-        key = node["name"]
-        value = node.text
-        translations[key] = value
-      end
-
-      translations
+      crowdin_json_export = response.body
+      JSON.parse(crowdin_json_export)
     rescue => e
       logger.error "Error downloading translated phrases from Crowdin: #{e.message}"
       {}
