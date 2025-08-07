@@ -25,9 +25,7 @@ class CrowdinService
       # grab dump data - crowdin-json format returns a direct hash
       response = Net::HTTP.get_response(URI.parse(r["data"]["url"]))
       crowdin_json_export = response.body
-      translations = JSON.parse(crowdin_json_export)
-
-      translations
+      JSON.parse(crowdin_json_export)
     rescue => e
       logger.error "Error downloading translated phrases from Crowdin: #{e.message}"
       {}
