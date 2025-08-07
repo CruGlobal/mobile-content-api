@@ -165,17 +165,17 @@ resource "UserCounters" do
       expect(status).to eq(200)
       today = Date.today.to_s
       json_response = JSON.parse(response_body)
-      
+
       expect(json_response["data"]).to be_an(Array)
       expect(json_response["data"].length).to eq(2)
-      
+
       # Check first counter
       first_counter = json_response["data"].find { |c| c["id"] == "tool_opens.kgp" }
       expect(first_counter["type"]).to eq("user-counter")
       expect(first_counter["attributes"]["count"]).to eq(50)
       expect(first_counter["attributes"]["decayed-count"]).to be_within(1.0).of(25.0)
       expect(first_counter["attributes"]["last-decay"]).to eq(today)
-      
+
       # Check second counter
       second_counter = json_response["data"].find { |c| c["id"] == "other.kgp" }
       expect(second_counter["type"]).to eq("user-counter")

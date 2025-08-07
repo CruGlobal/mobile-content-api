@@ -131,7 +131,7 @@ class Translation < ActiveRecord::Base
   end
 
   def download_translated_phrases(filename)
-    Crowdin.download_translated_phrases(filename, language_code: language.code, project_id: resource.crowdin_project_id)
+    CrowdinService.download_translated_phrases(language_code: language.code, project_id: resource.crowdin_project_id)
   end
 
   def set_defaults

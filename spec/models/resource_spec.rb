@@ -10,7 +10,6 @@ describe Resource do
     let(:language) { Language.find(3) }
 
     context "new resource/language combination" do
-
       it "adds a new draft" do
         allow(Translation).to receive(:create!)
 

@@ -660,7 +660,6 @@ resource "Resources" do
         end
       end
     end
-
   end
 
   post "resources/:resource_id/translations/publish" do
@@ -704,7 +703,6 @@ resource "Resources" do
   end
 
   private
-
 
   def delete_all_rules
     RuleCountry.delete_all

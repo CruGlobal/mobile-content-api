@@ -263,10 +263,10 @@ describe Translation do
   end
 
   def mock_crowdin(filename, body, code = 200)
-    # Mock the Crowdin module's download method
+    # Mock the CrowdinService's download method
     parsed_body = body.is_a?(String) ? JSON.parse(body) : body
-    allow(Crowdin).to receive(:download_translated_phrases)
-      .with(filename, hash_including(:language_code, :project_id))
+    allow(CrowdinService).to receive(:download_translated_phrases)
+      .with(hash_including(:language_code, :project_id))
       .and_return(parsed_body || {})
   end
 

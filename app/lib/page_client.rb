@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 require "xml_util"
-require "crowdin"
 
 class PageClient
   def initialize(resource, language_code)

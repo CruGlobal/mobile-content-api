@@ -135,7 +135,8 @@ RSpec.configure do |config|
     def mock_crowdin(project_id = nil)
       ENV["CROWDIN_API_TOKEN"] ||= "test_token"
       project_id ||= Resource.find(1).crowdin_project_id
-      allow(Crowdin).to receive(:download_translated_phrases)
+      allow(CrowdinService).to receive(:download_translated_phrases)
+        .with(hash_including(project_id: project_id))
         .and_return({"1" => "value"})
     end
   })
