@@ -39,8 +39,8 @@ class TranslatedAttributesController < SecureController
       render(json: {errors: {"code" => "key_already_exists"}}, status: 400)
     elsif a.errors[:key] == ["can't be blank"]
       render(json: {errors: {"code" => "invalid_key"}}, status: 400)
-    elsif a.errors[:onesky_phrase_id] == ["can't be blank"]
-      render(json: {errors: {"code" => "invalid_onesky_phrase_id"}}, status: 400)
+    elsif a.errors[:crowdin_phrase_id] == ["can't be blank"]
+      render(json: {errors: {"code" => "invalid_crowdin_phrase_id"}}, status: 400)
     elsif a.errors.any?
       raise("error creating translated attr")
     end
@@ -56,8 +56,8 @@ class TranslatedAttributesController < SecureController
   end
 
   def permitted_params
-    data_attrs[:onesky_phrase_id] = data_attrs.delete(:"onesky-phrase-id") if data_attrs[:"onesky-phrase-id"]
-    permit_params(:key, :onesky_phrase_id, :required)
+    data_attrs[:crowdin_phrase_id] = data_attrs.delete(:"crowdin-phrase-id") if data_attrs[:"crowdin-phrase-id"]
+    permit_params(:key, :crowdin_phrase_id, :required)
   end
 
   def load_resource

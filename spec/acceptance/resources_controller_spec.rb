@@ -661,21 +661,6 @@ resource "Resources" do
       end
     end
 
-    put "resources/:id/onesky" do
-      parameter "keep-existing-phrases",
-        "Query string parameter.  If false, deprecate phrases not pushed to OneSky in this update."
-
-      requires_authorization
-
-      it "update resource in OneSky" do
-        mock_page_client(id)
-
-        do_request "keep-existing-phrases": false
-
-        expect(status).to be(204)
-        expect(response_body).to be_empty
-      end
-    end
   end
 
   post "resources/:resource_id/translations/publish" do
@@ -720,11 +705,6 @@ resource "Resources" do
 
   private
 
-  def mock_page_client(resource_id)
-    page_client = double
-    allow(page_client).to receive(:push_new_onesky_translation).with(false)
-    allow(PageClient).to receive(:new).with(resource_id(resource_id), "en").and_return(page_client)
-  end
 
   def delete_all_rules
     RuleCountry.delete_all

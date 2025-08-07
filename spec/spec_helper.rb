@@ -132,14 +132,11 @@ RSpec.configure do |config|
     end
     # rubocop:enable Metrics/AbcSize
 
-    def mock_onesky(project_id = nil)
-      ENV["ONESKY_API_SECRET"] ||= ""
-      project_id ||= Resource.find(1).onesky_project_id
-      response = RestClient::Response.new('{ "1":"value" }')
-      response.instance_variable_set :@code, 200
-      allow(RestClient).to receive(:get)
-        .with("https://platform.api.onesky.io/1/projects/#{project_id}/translations", any_args)
-        .and_return(response)
+    def mock_crowdin(project_id = nil)
+      ENV["CROWDIN_API_TOKEN"] ||= "test_token"
+      project_id ||= Resource.find(1).crowdin_project_id
+      allow(Crowdin).to receive(:download_translated_phrases)
+        .and_return({"1" => "value"})
     end
   })
 end

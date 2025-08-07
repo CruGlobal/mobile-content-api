@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_05_14_204657) do
+ActiveRecord::Schema[7.0].define(version: 2025_08_07_010924) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
   enable_extension "plpgsql"
@@ -201,7 +201,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_05_14_204657) do
   create_table "resources", id: :serial, force: :cascade do |t|
     t.string "name", null: false
     t.string "abbreviation", null: false
-    t.integer "onesky_project_id"
+    t.integer "crowdin_project_id"
     t.integer "system_id", null: false
     t.string "description"
     t.integer "resource_type_id", null: false
@@ -270,7 +270,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_05_14_204657) do
   create_table "translated_attributes", force: :cascade do |t|
     t.integer "resource_id"
     t.string "key"
-    t.string "onesky_phrase_id"
+    t.string "crowdin_phrase_id"
     t.boolean "required", default: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -343,8 +343,8 @@ ActiveRecord::Schema[7.0].define(version: 2024_05_14_204657) do
     t.bigint "language_id", null: false
     t.string "tip_id"
     t.boolean "is_completed"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.index ["language_id"], name: "index_user_training_tips_on_language_id"
     t.index ["tool_id"], name: "index_user_training_tips_on_tool_id"
     t.index ["user_id", "tool_id", "language_id", "tip_id"], name: "training-tips-unique-index", unique: true
