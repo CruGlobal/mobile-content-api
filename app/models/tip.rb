@@ -4,5 +4,5 @@ class Tip < ApplicationRecord
 
   validates :name, presence: true, uniqueness: {scope: :resource}
   validates :structure, presence: true, xml: {if: :structure_changed?}
-  validates_with UsesOneskyValidator
+  validates_with UsesCrowdinValidator
 end

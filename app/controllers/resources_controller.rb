@@ -3,7 +3,7 @@
 require "page_client"
 
 class ResourcesController < ApplicationController
-  before_action :authorize!, only: [:create, :update, :push_to_onesky, :publish_translation]
+  before_action :authorize!, only: [:create, :update, :publish_translation]
 
   def index
     render json: cached_index_json, status: :ok
@@ -25,13 +25,6 @@ class ResourcesController < ApplicationController
     end
 
     render json: resource, status: :ok
-  end
-
-  def push_to_onesky
-    # TODO: this could be done for individual pages when their structure is updated
-    PageClient.new(load_resource, "en").push_new_onesky_translation param?("keep-existing-phrases")
-
-    head :no_content
   end
 
   def suggestions
@@ -112,6 +105,6 @@ class ResourcesController < ApplicationController
   end
 
   def permitted_params
-    permit_params(:name, :abbreviation, :manifest, :onesky_project_id, :system_id, :description, :resource_type_id, :metatool_id, :default_variant_id)
+    permit_params(:name, :abbreviation, :manifest, :crowdin_project_id, :system_id, :description, :resource_type_id, :metatool_id, :default_variant_id)
   end
 end

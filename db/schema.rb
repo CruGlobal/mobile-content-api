@@ -10,9 +10,10 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_05_14_204657) do
+ActiveRecord::Schema[7.0].define(version: 2025_08_07_010924) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
+  enable_extension "pg_stat_statements"
   enable_extension "plpgsql"
   enable_extension "uuid-ossp"
 
@@ -159,8 +160,6 @@ ActiveRecord::Schema[7.0].define(version: 2024_05_14_204657) do
     t.string "key", null: false
     t.string "value", null: false
     t.boolean "is_translatable", default: false
-    t.datetime "created_at", precision: nil, null: false
-    t.datetime "updated_at", precision: nil, null: false
     t.index ["key", "resource_id", "language_id"], name: "index_language_attributes_unique", unique: true
     t.index ["resource_id"], name: "index_language_attributes_on_resource_id"
   end
@@ -201,7 +200,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_05_14_204657) do
   create_table "resources", id: :serial, force: :cascade do |t|
     t.string "name", null: false
     t.string "abbreviation", null: false
-    t.integer "onesky_project_id"
+    t.integer "crowdin_project_id"
     t.integer "system_id", null: false
     t.string "description"
     t.integer "resource_type_id", null: false
@@ -270,7 +269,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_05_14_204657) do
   create_table "translated_attributes", force: :cascade do |t|
     t.integer "resource_id"
     t.string "key"
-    t.string "onesky_phrase_id"
+    t.string "crowdin_phrase_id"
     t.boolean "required", default: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -306,17 +305,6 @@ ActiveRecord::Schema[7.0].define(version: 2024_05_14_204657) do
     t.index ["resource_id"], name: "index_translations_on_resource_id"
   end
 
-  create_table "translations_bkup", id: false, force: :cascade do |t|
-    t.integer "id"
-    t.boolean "is_published"
-    t.integer "version"
-    t.integer "resource_id"
-    t.integer "language_id"
-    t.string "translated_name"
-    t.string "translated_description"
-    t.string "manifest_name"
-  end
-
   create_table "user_attributes", force: :cascade do |t|
     t.integer "user_id", null: false
     t.string "key"
@@ -334,7 +322,9 @@ ActiveRecord::Schema[7.0].define(version: 2024_05_14_204657) do
     t.date "last_decay", default: -> { "now()" }
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "values", default: [], array: true
     t.index ["user_id", "counter_name"], name: "index_user_counters_on_user_id_and_counter_name", unique: true
+    t.index ["values"], name: "index_user_counters_on_values", using: :gin
   end
 
   create_table "user_training_tips", force: :cascade do |t|
@@ -343,8 +333,8 @@ ActiveRecord::Schema[7.0].define(version: 2024_05_14_204657) do
     t.bigint "language_id", null: false
     t.string "tip_id"
     t.boolean "is_completed"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.index ["language_id"], name: "index_user_training_tips_on_language_id"
     t.index ["tool_id"], name: "index_user_training_tips_on_tool_id"
     t.index ["user_id", "tool_id", "language_id", "tip_id"], name: "training-tips-unique-index", unique: true

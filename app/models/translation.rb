@@ -13,7 +13,7 @@ class Translation < ActiveRecord::Base
   validates :language, presence: true
   validates :is_published, inclusion: {in: [true, false]}
   validates_with DraftCreationValidator, on: :create
-  validates_with UsesOneskyValidator
+  validates_with UsesCrowdinValidator
 
   before_destroy :prevent_destroy_published, if: :is_published
   before_validation :set_defaults, on: :create
@@ -77,10 +77,10 @@ class Translation < ActiveRecord::Base
   def push_published_to_s3
     return if is_published
 
-    if resource.uses_onesky?
+    if resource.uses_crowdin?
       ActiveRecord::Base.transaction do
         phrases = manifest_translated_phrases
-        name_desc_onesky(phrases)
+        name_desc_crowdin(phrases)
         create_translated_attributes(phrases)
       end
     end
@@ -105,7 +105,7 @@ class Translation < ActiveRecord::Base
     raise Error::TranslationError, "Cannot delete published draft: #{id}"
   end
 
-  def name_desc_onesky(phrases)
+  def name_desc_crowdin(phrases)
     logger.info "Updating translated name and description for translation with id: #{id}"
 
     self.translated_name = phrases["name"]
@@ -116,14 +116,14 @@ class Translation < ActiveRecord::Base
   def create_translated_attributes(phrases)
     translation_attribute_ids = []
     resource.translated_attributes.each do |translated_attribute|
-      translation = phrases[translated_attribute.onesky_phrase_id]
+      translation = phrases[translated_attribute.crowdin_phrase_id]
 
       if translation.present?
         translation_attribute = translation_attributes.where(key: translated_attribute.key).first_or_initialize
         translation_attribute.update(value: translation)
         translation_attribute_ids << translation_attribute.id
       elsif translated_attribute.required
-        raise Error::TextNotFoundError, "Translated phrase not found: ID: #{translated_attribute.onesky_phrase_id}"
+        raise Error::TextNotFoundError, "Translated phrase not found: ID: #{translated_attribute.crowdin_phrase_id}"
       end
     end
 
@@ -131,7 +131,7 @@ class Translation < ActiveRecord::Base
   end
 
   def download_translated_phrases(filename)
-    OneSky.download_translated_phrases(filename, language_code: language.code, project_id: resource.onesky_project_id)
+    CrowdinService.download_translated_phrases(language_code: language.code, project_id: resource.crowdin_project_id)
   end
 
   def set_defaults

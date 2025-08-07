@@ -51,8 +51,8 @@ class Resource < ActiveRecord::Base
     end
   end
 
-  def uses_onesky?
-    onesky_project_id.present?
+  def uses_crowdin?
+    crowdin_project_id.present?
   end
 
   def create_draft(language_id)
@@ -82,9 +82,7 @@ class Resource < ActiveRecord::Base
   def create_first_draft(language_id)
     language = Language.find(language_id)
 
-    # TODO: disable this to prevent the API from overwriting existing translations within OneSky.
-    # TODO: This will probably need to be revisited -DF
-    # PageClient.new(self, language.code).push_new_onesky_translation
+    # Upload functionality removed - we only download translations from Crowdin
     Translation.create!(resource: self, language: language)
   end
 
