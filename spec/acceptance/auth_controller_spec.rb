@@ -402,6 +402,35 @@ resource "Auth" do
           expect(response["errors"][0]["code"]).to eq("invalid_token")
           expect(response["errors"][0]["detail"]).to include("Failed to decode ID token")
         end
+
+        it "handles missing required token fields" do
+          # Override the successful mock to return a token missing required fields
+          facebook_jwt_options = {
+            algorithms: ["RS256"],
+            jwks: {"keys" => [{"kty" => "RSA", "kid" => "test"}]},
+            verify_aud: true,
+            aud: ENV.fetch("FACEBOOK_APP_ID", "facebook_app_id"),
+            verify_iss: true,
+            iss: "https://www.facebook.com"
+          }
+          # Return a token missing the 'aud' field to trigger validation failure
+          allow(JWT).to receive(:decode).with(facebook_id_token, nil, true, facebook_jwt_options)
+            .and_return([{
+              "sub" => "10158730817232041",
+              "iss" => "https://www.facebook.com",
+              "exp" => Time.now.to_i + 3600,
+              "email" => "daniel.frett@gmail.com",
+              "name" => "Daniel Frett"
+              # Missing 'aud' field
+            }])
+
+          do_request data: {type: type, attributes: {facebook_id_token: facebook_id_token, create_user: true}}
+
+          expect(status).to be(400)
+          response = JSON.parse(response_body)
+          expect(response["errors"][0]["code"]).to eq("invalid_token")
+          expect(response["errors"][0]["detail"]).to include("token is not valid")
+        end
       end
     end
     context "google" do
