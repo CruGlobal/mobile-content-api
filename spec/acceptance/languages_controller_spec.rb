@@ -46,11 +46,12 @@ resource "Languages" do
     requires_authorization
 
     it "create a language" do
-      do_request data: {type: :language, attributes: {name: "Elvish", code: "ev"}}
+      do_request data: {type: :language, attributes: {name: "Elvish", code: "ev", crowdin_code: "elv"}}
 
       expect(status).to be(201)
       expect(JSON.parse(response_body)["data"]).not_to be_nil
       expect(JSON.parse(response_body)["data"]["attributes"]["force-language-name"]).to be false
+      expect(JSON.parse(response_body)["data"]["attributes"]["crowdin-code"]).to eq("elv")
     end
 
     it "sets force language name" do
@@ -102,11 +103,12 @@ resource "Languages" do
     let(:language) { Language.find(id) }
 
     it "updates a language" do
-      do_request data: {type: :language, attributes: {name: "Dwarvish", "force-language-name": true, direction: "rtl"}}
+      do_request data: {type: :language, attributes: {name: "Dwarvish", "force-language-name": true, direction: "rtl", crowdin_code: "dwa"}}
 
       expect(status).to be(202)
       expect(JSON.parse(response_body)["data"]).not_to be_nil
       expect(JSON.parse(response_body)["data"]["attributes"]["force-language-name"]).to be true
+      expect(JSON.parse(response_body)["data"]["attributes"]["crowdin-code"]).to eq("dwa")
       expect(response_headers["Location"]).to match(%r{languages/\d+})
     end
 
