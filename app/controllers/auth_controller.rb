@@ -28,7 +28,7 @@ class AuthController < ApplicationController
       if data_attrs[:facebook_access_token]
         user = FacebookAuthService.find_user_by_token(data_attrs[:facebook_access_token], data_attrs[:create_user])
       elsif data_attrs[:facebook_id_token]
-        user = FacebookAuthService.find_user_by_id_token(data_attrs[:facebook_id_token], data_attrs[:create_user])
+        user = FacebookOidcAuthService.find_user_by_token(data_attrs[:facebook_id_token], data_attrs[:create_user])
       end
       AuthToken.new(user: user)
     else
