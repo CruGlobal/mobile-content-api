@@ -10,12 +10,58 @@ class FacebookAuthService < BaseAuthService
   class << self
     # New method specifically for OIDC ID tokens
     def find_user_by_id_token(id_token, create_user)
-      decoded_token = decode_id_token(id_token)
-      validate_id_token!(id_token, decoded_token)
-      validate_expected_oidc_fields!(decoded_token)
+      # Decode and validate the JWT token
+      jwks = fetch_facebook_jwks
+      jwt_payload = JWT.decode(id_token, nil, true, {
+        algorithms: ["RS256"],
+        jwks: jwks,
+        verify_aud: true,
+        aud: ENV.fetch("FACEBOOK_APP_ID"),
+        verify_iss: true,
+        iss: "https://www.facebook.com"
+      })[0]
 
-      user_atts = extract_oidc_user_atts(decoded_token)
-      setup_user(remote_user_id_from_oidc(decoded_token), user_atts, create_user)
+      # Map OIDC claims to expected format for consistency
+      decoded_token = {
+        "user_id" => jwt_payload["sub"], # sub is the App-Scoped ID (same as existing facebook_user_id)
+        "aud" => jwt_payload["aud"],
+        "iss" => jwt_payload["iss"],
+        "exp" => jwt_payload["exp"],
+        "email" => jwt_payload["email"],
+        "name" => jwt_payload["name"],
+        "given_name" => jwt_payload["given_name"],
+        "family_name" => jwt_payload["family_name"],
+        "picture" => jwt_payload["picture"]
+      }
+
+      # Validate token fields
+      raise FailedAuthentication, "Error validating ID token with Facebook: token is not valid" unless
+        decoded_token["user_id"] && decoded_token["aud"] && decoded_token["iss"]
+
+      # Validate expected fields
+      oidc_required_fields = %w[user_id aud iss]
+      unless decoded_token.present? && decoded_token.is_a?(Hash) && decoded_token.keys.to_set.superset?(oidc_required_fields.to_set)
+        raise FailedAuthentication, "Error validating #{service_name} ID token: Missing some or all required fields (got #{decoded_token.keys.join(", ")}, expected #{oidc_required_fields.join(", ")})"
+      end
+
+      # Extract user attributes
+      user_attributes = {}
+      user_attributes[:email] = decoded_token["email"] if decoded_token["email"]
+      user_attributes[:name] = decoded_token["name"] if decoded_token["name"]
+      user_attributes[:first_name] = decoded_token["given_name"] if decoded_token["given_name"]
+      user_attributes[:last_name] = decoded_token["family_name"] if decoded_token["family_name"]
+      user_attributes[:facebook_user_id] = decoded_token["user_id"]
+      user_atts = user_attributes.with_indifferent_access
+
+      # Setup user with remote user ID
+      remote_user_id = decoded_token["user_id"]
+      setup_user(remote_user_id, user_atts, create_user)
+    rescue JWT::ExpiredSignature
+      raise FailedAuthentication, "ID token has expired"
+    rescue JWT::InvalidIssuerError
+      raise FailedAuthentication, "Invalid issuer in ID token"
+    rescue JWT::DecodeError => e
+      raise FailedAuthentication, "Failed to decode ID token: #{e.message}"
     rescue JSON::ParserError, JWT::DecodeError => e
       raise FailedAuthentication, "#{e.class.name}: #{e.message}"
     end
@@ -30,9 +76,6 @@ class FacebookAuthService < BaseAuthService
       %w[id email]
     end
 
-    def expected_oidc_fields
-      %w[sub aud iss]
-    end
 
     # Existing access token validation (unchanged)
     def decode_token(input_token)
@@ -92,37 +135,6 @@ class FacebookAuthService < BaseAuthService
       end
     end
 
-    def validate_expected_oidc_fields!(decoded_token)
-      # Check for the mapped user_id field instead of original sub
-      oidc_required_fields = %w[user_id aud iss]
-      unless decoded_token.present? && decoded_token.is_a?(Hash) && decoded_token.keys.to_set.superset?(oidc_required_fields.to_set)
-        raise FailedAuthentication, "Error validating #{service_name} ID token: Missing some or all required fields (got #{decoded_token.keys.join(", ")}, expected #{oidc_required_fields.join(", ")})"
-      end
-    end
-
-    def validate_id_token!(_id_token, decoded_token)
-      raise FailedAuthentication, "Error validating ID token with Facebook: token is not valid" unless
-        decoded_token["user_id"] && decoded_token["aud"] && decoded_token["iss"]
-    end
-
-    def remote_user_id_from_oidc(decoded_token, _user_atts = {})
-      decoded_token["user_id"]
-    end
-
-    def extract_oidc_user_atts(decoded_token)
-      user_attributes = {}
-
-      # Only set attributes if they exist in the token
-      user_attributes[:email] = decoded_token["email"] if decoded_token["email"]
-      user_attributes[:name] = decoded_token["name"] if decoded_token["name"]
-      user_attributes[:first_name] = decoded_token["given_name"] if decoded_token["given_name"]
-      user_attributes[:last_name] = decoded_token["family_name"] if decoded_token["family_name"]
-
-      # Set facebook_user_id to maintain consistency with existing users
-      user_attributes[:facebook_user_id] = decoded_token["user_id"]
-
-      user_attributes.with_indifferent_access
-    end
 
     def remote_user_id(decoded_token, user_atts = {})
       decoded_token["user_id"]
