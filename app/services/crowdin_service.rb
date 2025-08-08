@@ -11,25 +11,18 @@ class CrowdinService
   def self.download_translated_phrases(project_id:, language_code:)
     logger.info "Downloading translated phrases for: project id #{project_id} with language: #{language_code}"
 
-    begin
-      client
+    # Find the language and use its crowdin_code
+    language = Language.find_by(code: language_code)
+    raise("Can't find language #{language_code}") unless language
+    raise("Language #{language_code} has no crowdin_code") unless language.crowdin_code
 
-      # Find the language and use its crowdin_code
-      language = Language.find_by(code: language_code)
-      raise("Can't find language #{language_code}") unless language
-      raise("Language #{language_code} has no crowdin_code") unless language.crowdin_code
+    # Grab export url - this is the best way I've found to get all translations for a language -AR
+    r = client.export_project_translation({targetLanguageId: language.crowdin_code, format: "crowdin-json"}, nil, project_id)
 
-      # Grab export url - this is the best way I've found to get all translations for a language -AR
-      r = client.export_project_translation({targetLanguageId: language.crowdin_code, format: "crowdin-json"}, nil, project_id)
-
-      # grab dump data - crowdin-json format returns a direct hash
-      response = Net::HTTP.get_response(URI.parse(r["data"]["url"]))
-      crowdin_json_export = response.body
-      JSON.parse(crowdin_json_export)
-    rescue => e
-      logger.error "Error downloading translated phrases from Crowdin: #{e.message}"
-      {}
-    end
+    # grab dump data - crowdin-json format returns a direct hash
+    response = Net::HTTP.get_response(URI.parse(r["data"]["url"]))
+    crowdin_json_export = response.body
+    JSON.parse(crowdin_json_export)
   end
 
   def self.client
