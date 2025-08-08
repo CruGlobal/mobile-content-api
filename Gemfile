@@ -100,11 +100,13 @@ gem "raddocs", github: "CruGlobal/raddocs"
 # relevant issue: https://github.com/redis/redis-rb/issues/1142
 gem "redis", "< 5"
 gem "rest-client", "~> 2.1.0"
+gem "crowdin-api", "~> 1.12.0"
 gem "rollbar"
 gem "rubyzip", ">= 1.2.2"
 gem "sidekiq-failures"
 gem "sidekiq-unique-jobs"
 gem "validates_email_format_of"
+gem "CFPropertyList"
 
 group :development, :test do
   gem "action-cable-testing"

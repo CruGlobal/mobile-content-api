@@ -23,7 +23,7 @@ describe Translation do
     expect(t.errors["version"]).to include("has already been taken")
   end
 
-  context "builds a translated page from base page and OneSky phrases" do
+  context "builds a translated page from base page and Crowdin phrases" do
     let(:result) do
       translated_page(1)
     end
@@ -41,7 +41,7 @@ describe Translation do
     end
   end
 
-  context "builds a translated page from custom page and OneSky phrases" do
+  context "builds a translated page from custom page and Crowdin phrases" do
     let(:result) do
       translated_page(3)
     end
@@ -62,22 +62,22 @@ describe Translation do
     end
   end
 
-  it "error is raised if there is no phrases returned from OneSky" do
-    mock_onesky(page_name, nil, 204)
+  it "error is raised if there is no phrases returned from Crowdin" do
+    mock_crowdin(page_name, nil, 204)
     translation = described_class.find(2)
 
     expect { translation.translated_page(1, true) }.to raise_error(Error::TextNotFoundError)
   end
 
   it "no error raised if there is no phrases returned for non-strict mode" do
-    mock_onesky(page_name, nil, 204)
+    mock_crowdin(page_name, nil, 204)
     translation = described_class.find(2)
 
     expect(translation.translated_page(1, false)).not_to be_empty
   end
 
   it "error is raised if strict mode and translated phrase not found" do
-    mock_onesky(page_name, [[element_one_id, phrase_one]].to_h.to_json)
+    mock_crowdin(page_name, [[element_one_id, phrase_one]].to_h.to_json)
     translation = described_class.find(1)
 
     expect { translation.translated_page(1, true) }
@@ -85,7 +85,7 @@ describe Translation do
   end
 
   it "error is raised if strict mode and translated phrase for attribute not found" do
-    mock_onesky(page_name, [[element_one_id, phrase_one], [element_two_id, phrase_two]].to_h.to_json)
+    mock_crowdin(page_name, [[element_one_id, phrase_one], [element_two_id, phrase_two]].to_h.to_json)
     translation = described_class.find(1)
 
     expect { translation.translated_page(1, true) }
@@ -93,7 +93,7 @@ describe Translation do
   end
 
   it "error not raised raised if not strict mode and translated phrase not found" do
-    mock_onesky("13_FinalPage.xml", '{ "1":"This is a German phrase" }')
+    mock_crowdin("13_FinalPage.xml", '{ "1":"This is a German phrase" }')
     translation = described_class.find(3)
 
     translation.translated_page(1, false)
@@ -154,7 +154,7 @@ describe Translation do
     let(:translation) { described_class.find(3) }
 
     before do
-      mock_onesky("name_description.xml",
+      mock_crowdin("name_description.xml",
         '{ "name":"kgp german", "description":"german description", "tagline": "german tagline",' \
         '"onesky_required": "onesky_required_value", "onesky_not_required": "onesky_not_required_value" }')
     end
@@ -172,7 +172,7 @@ describe Translation do
         allow(Package).to receive(:new).and_return(package)
       end
 
-      it "updates from OneSky" do
+      it "updates from Crowdin" do
         translation.push_published_to_s3
 
         expect(translation.translated_name).to eq("kgp german")
@@ -218,11 +218,11 @@ describe Translation do
       let(:resource) { translation.resource }
       let!(:required_translated_attribute) {
         FactoryBot.create(:translated_attribute, resource_id: resource.id, key: "required",
-          onesky_phrase_id: "onesky_required", required: true)
+          crowdin_phrase_id: "onesky_required", required: true)
       }
       let!(:not_required_translated_attribute) {
         FactoryBot.create(:translated_attribute, resource_id: resource.id, key: "not_required",
-          onesky_phrase_id: "onesky_not_required", required: false)
+          crowdin_phrase_id: "onesky_not_required", required: false)
       }
 
       before do
@@ -241,7 +241,7 @@ describe Translation do
       context "required translation attribute is not present" do
         let!(:required_translated_attribute_2) {
           FactoryBot.create(:translated_attribute, resource_id: resource.id, key: "required_2",
-            onesky_phrase_id: "onesky_required_2", required: true)
+            crowdin_phrase_id: "onesky_required_2", required: true)
         }
         it "raises an error and doesn't create any translation attributes" do
           expect do
@@ -257,16 +257,17 @@ describe Translation do
   private
 
   def translated_page(translation_id)
-    mock_onesky(page_name, phrases)
+    mock_crowdin(page_name, phrases)
     translation = described_class.find(translation_id)
     translation.translated_page(1, true)
   end
 
-  def mock_onesky(filename, body, code = 200)
-    allow(RestClient).to(
-      receive(:get).with(any_args, hash_including(params: hash_including(source_file_name: filename)))
-          .and_return(instance_double(RestClient::Response, body: body, code: code))
-    )
+  def mock_crowdin(filename, body, code = 200)
+    # Mock the CrowdinService's download method
+    parsed_body = body.is_a?(String) ? JSON.parse(body) : body
+    allow(CrowdinService).to receive(:download_translated_phrases)
+      .with(hash_including(:language_code, :project_id))
+      .and_return(parsed_body || {})
   end
 
   def includes_translated_phrases

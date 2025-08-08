@@ -13,7 +13,7 @@ class LanguagesController < ApplicationController
   end
 
   def create
-    language = Language.create!(permit_params(:name, :code, :direction, :force_language_name))
+    language = Language.create!(permit_params(:name, :code, :direction, :force_language_name, :crowdin_code))
     response.headers["Location"] = "languages/#{language.id}"
     render json: language, status: :created
   rescue ActiveRecord::RecordNotUnique
@@ -22,7 +22,7 @@ class LanguagesController < ApplicationController
 
   def update
     language = load_language
-    language.update!(permit_params(:name, :direction, :force_language_name))
+    language.update!(permit_params(:name, :direction, :force_language_name, :crowdin_code))
     response.headers["Location"] = "languages/#{language.id}"
     render json: language, status: :accepted
   rescue ActiveRecord::RecordInvalid => e

@@ -2,7 +2,7 @@
 
 class TranslatedAttributeSerializer < ActiveModel::Serializer
   type "translated-attribute"
-  attributes :key, :onesky_phrase_id, :required
+  attributes :key, :crowdin_phrase_id, :required
 
   belongs_to :resource
 end
