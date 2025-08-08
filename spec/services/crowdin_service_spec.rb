@@ -24,20 +24,20 @@ describe CrowdinService do
         }
       }
       allow(mock_client).to receive(:export_project_translation)
-        .with({targetLanguageId: "en", format: "android"}, nil, project_id)
+        .with({targetLanguageId: "en", format: "crowdin-json"}, nil, project_id)
         .and_return(export_response)
 
-      # Mock the HTTP request to the export URL
-      xml_content = '<?xml version="1.0" encoding="UTF-8"?><resources><string name="test_key">translated_text</string></resources>'
+      # Mock the HTTP request to the export URL - crowdin-json format returns direct JSON
+      json_content = '{"test_key":"translated_text"}'
       stub_request(:get, "http://example.com/export.xml")
-        .to_return(status: 200, body: xml_content, headers: {})
+        .to_return(status: 200, body: json_content, headers: {})
 
       result = CrowdinService.download_translated_phrases(project_id: project_id, language_code: language_code)
 
       expect(result).to eq("test_key" => "translated_text")
     end
 
-    it "handles errors gracefully" do
+    it "raises errors instead of handling them" do
       mock_client = double("Crowdin::Client")
       allow(CrowdinService).to receive(:client).and_return(mock_client)
 
@@ -48,9 +48,9 @@ describe CrowdinService do
 
       allow(mock_client).to receive(:export_project_translation).and_raise(StandardError.new("API Error"))
 
-      result = CrowdinService.download_translated_phrases(project_id: project_id, language_code: language_code)
-
-      expect(result).to eq({})
+      expect {
+        CrowdinService.download_translated_phrases(project_id: project_id, language_code: language_code)
+      }.to raise_error(StandardError, "API Error")
     end
 
     it "builds the client" do
