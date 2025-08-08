@@ -265,6 +265,144 @@ resource "Auth" do
 
         expect(response_body).to include("invalid_token")
       end
+
+      context "facebook ID token (OIDC)" do
+        let(:facebook_id_token) { "facebook_oidc_test_token" }
+
+        before do
+          # Set up default JWT mock to avoid conflicts with other JWT usage in the app
+          allow(JWT).to receive(:decode).and_call_original
+
+          # Mock the JWKS fetching
+          allow(Net::HTTP).to receive(:get_response).with(URI("https://www.facebook.com/.well-known/oauth/openid-configuration"))
+            .and_return(double("response", is_a?: Net::HTTPSuccess, body: '{"jwks_uri": "https://www.facebook.com/.well-known/oauth/jwks"}'))
+
+          allow(Net::HTTP).to receive(:get_response).with(URI("https://www.facebook.com/.well-known/oauth/jwks"))
+            .and_return(double("response", is_a?: Net::HTTPSuccess, body: '{"keys": [{"kty": "RSA", "kid": "test"}]}'))
+
+          # Now create a specific mock for our Facebook OIDC token
+          facebook_jwt_options = {
+            algorithms: ["RS256"],
+            jwks: {"keys" => [{"kty" => "RSA", "kid" => "test"}]},
+            verify_aud: true,
+            aud: ENV.fetch("FACEBOOK_APP_ID", "facebook_app_id"),
+            verify_iss: true,
+            iss: "https://www.facebook.com"
+          }
+
+          allow(JWT).to receive(:decode).with(facebook_id_token, nil, true, facebook_jwt_options)
+            .and_return([{
+              "sub" => "10158730817232041",
+              "aud" => ENV.fetch("FACEBOOK_APP_ID", "facebook_app_id"),
+              "iss" => "https://www.facebook.com",
+              "exp" => Time.now.to_i + 3600,
+              "email" => "daniel.frett@gmail.com",
+              "name" => "Daniel Frett",
+              "given_name" => "Daniel",
+              "family_name" => "Frett"
+            }])
+        end
+
+        it "creates a facebook user with ID token when it does not exist" do
+          expect do
+            do_request data: {type: type, attributes: {facebook_id_token: facebook_id_token, create_user: true}}
+          end.to change(User, :count).by(1)
+
+          user = User.last
+          expect(user.email).to eq("daniel.frett@gmail.com")
+          expect(user.first_name).to eq("Daniel")
+          expect(user.last_name).to eq("Frett")
+          expect(user.name).to eq("Daniel Frett")
+          expect(user.facebook_user_id).to eq("10158730817232041")
+
+          expect(status).to be(201)
+          data = JSON.parse(response_body)["data"]
+          expect(data["attributes"]["user-id"]).to eq(user.id)
+        end
+
+        context "when user already exists from access token" do
+          let!(:user) { FactoryBot.create(:user, facebook_user_id: "10158730817232041", email: "old@example.com", first_name: "Old", last_name: "Name", sso_guid: "12345") }
+
+          it "matches existing user by facebook_user_id and updates attributes" do
+            expect do
+              do_request data: {type: type, attributes: {facebook_id_token: facebook_id_token, create_user: nil}}
+            end.to_not change(User, :count)
+
+            user.reload
+            expect(user.email).to eq("daniel.frett@gmail.com")
+            expect(user.first_name).to eq("Daniel")
+            expect(user.last_name).to eq("Frett")
+            expect(user.name).to eq("Daniel Frett")
+
+            expect(status).to be(201)
+            data = JSON.parse(response_body)["data"]
+            expect(data["attributes"]["user-id"]).to eq(user.id)
+          end
+        end
+
+        it "handles expired ID token" do
+          # Override the successful mock to test error handling
+          facebook_jwt_options = {
+            algorithms: ["RS256"],
+            jwks: {"keys" => [{"kty" => "RSA", "kid" => "test"}]},
+            verify_aud: true,
+            aud: ENV.fetch("FACEBOOK_APP_ID", "facebook_app_id"),
+            verify_iss: true,
+            iss: "https://www.facebook.com"
+          }
+          allow(JWT).to receive(:decode).with(facebook_id_token, nil, true, facebook_jwt_options)
+            .and_raise(JWT::ExpiredSignature, "Token has expired")
+
+          do_request data: {type: type, attributes: {facebook_id_token: facebook_id_token, create_user: true}}
+
+          expect(status).to be(400)
+          response = JSON.parse(response_body)
+          expect(response["errors"][0]["code"]).to eq("invalid_token")
+          expect(response["errors"][0]["detail"]).to include("ID token has expired")
+        end
+
+        it "handles invalid issuer" do
+          # Override the successful mock to test error handling
+          facebook_jwt_options = {
+            algorithms: ["RS256"],
+            jwks: {"keys" => [{"kty" => "RSA", "kid" => "test"}]},
+            verify_aud: true,
+            aud: ENV.fetch("FACEBOOK_APP_ID", "facebook_app_id"),
+            verify_iss: true,
+            iss: "https://www.facebook.com"
+          }
+          allow(JWT).to receive(:decode).with(facebook_id_token, nil, true, facebook_jwt_options)
+            .and_raise(JWT::InvalidIssuerError, "Invalid issuer")
+
+          do_request data: {type: type, attributes: {facebook_id_token: facebook_id_token, create_user: true}}
+
+          expect(status).to be(400)
+          response = JSON.parse(response_body)
+          expect(response["errors"][0]["code"]).to eq("invalid_token")
+          expect(response["errors"][0]["detail"]).to include("Invalid issuer")
+        end
+
+        it "handles JWT decode error" do
+          # Override the successful mock to test error handling
+          facebook_jwt_options = {
+            algorithms: ["RS256"],
+            jwks: {"keys" => [{"kty" => "RSA", "kid" => "test"}]},
+            verify_aud: true,
+            aud: ENV.fetch("FACEBOOK_APP_ID", "facebook_app_id"),
+            verify_iss: true,
+            iss: "https://www.facebook.com"
+          }
+          allow(JWT).to receive(:decode).with(facebook_id_token, nil, true, facebook_jwt_options)
+            .and_raise(JWT::DecodeError, "Invalid token format")
+
+          do_request data: {type: type, attributes: {facebook_id_token: facebook_id_token, create_user: true}}
+
+          expect(status).to be(400)
+          response = JSON.parse(response_body)
+          expect(response["errors"][0]["code"]).to eq("invalid_token")
+          expect(response["errors"][0]["detail"]).to include("Failed to decode ID token")
+        end
+      end
     end
     context "google" do
       let(:type) { "auth-token-request" }

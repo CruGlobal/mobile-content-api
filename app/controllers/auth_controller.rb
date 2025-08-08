@@ -20,8 +20,16 @@ class AuthController < ApplicationController
     when :google
       user = GoogleAuthService.find_user_by_token(data_attrs[:google_id_token], data_attrs[:create_user])
       AuthToken.new(user: user)
-    when :okta, :facebook
-      user = "::#{method.to_s.capitalize}AuthService".constantize.find_user_by_token(data_attrs[:"#{method}_access_token"], data_attrs[:create_user])
+    when :okta
+      user = OktaAuthService.find_user_by_token(data_attrs[:okta_access_token], data_attrs[:create_user])
+      AuthToken.new(user: user)
+    when :facebook
+      # Handle both access tokens and ID tokens for Facebook
+      if data_attrs[:facebook_access_token]
+        user = FacebookAuthService.find_user_by_token(data_attrs[:facebook_access_token], data_attrs[:create_user])
+      elsif data_attrs[:facebook_id_token]
+        user = FacebookAuthService.find_user_by_id_token(data_attrs[:facebook_id_token], data_attrs[:create_user])
+      end
       AuthToken.new(user: user)
     else
       AccessCode.validate(data_attrs[:code])
