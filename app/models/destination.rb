@@ -6,5 +6,5 @@ class Destination < ActiveRecord::Base
   validates :url, :service_type, presence: true
   validates :access_key_id, :access_key_secret, presence: true, unless: :salesforce? # salesforce uses env vars for secrets
   validates :route_id, presence: true, if: :growth_spaces?
-  validates :service_name, presence: true, if: ->(destination) { destination.adobe_campaigns? || destination.salesforce? }
+  validates :service_name, presence: true, unless: :growth_spaces?
 end
