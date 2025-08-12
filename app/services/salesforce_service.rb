@@ -1,6 +1,24 @@
 # frozen_string_literal: true
 
 class SalesforceService
+  attr_accessor :follow_up
+
+  def initialize(follow_up)
+    @follow_up = follow_up
+  end
+
+  def subscribe!
+    data = {
+      email_address: follow_up.email,
+      first_name: follow_up.name_params&.dig(:first_name),
+      last_name: follow_up.name_params&.dig(:last_name),
+      language_code: follow_up.language.code
+    }.compact
+
+    success = self.class.send_campaign_subscription(follow_up.email, follow_up.destination.service_name, data)
+    raise Error::BadRequestError, "Failed to send campaign subscription to Salesforce for email: #{follow_up.email}" unless success
+  end
+
   def self.get_access_token
     Rails.cache.fetch("salesforce_access_token", expires_in: 20.minutes) do
       auth_url = "#{ENV.fetch("SALESFORCE_AUTH_URI")}/v2/token"

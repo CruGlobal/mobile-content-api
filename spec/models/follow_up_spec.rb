@@ -81,30 +81,24 @@ describe FollowUp do
 
       context "for service_type salesforce" do
         let(:destination) { salesforce_destination }
+        let(:service) { instance_double(SalesforceService) }
 
         before do
-          allow(SalesforceService).to receive(:send_campaign_subscription).and_return(true)
+          allow(SalesforceService).to receive(:new).with(follow_up).and_return(service)
+          allow(service).to receive(:subscribe!)
         end
 
-        it "calls SalesforceService with correct parameters" do
-          expected_data = {
-            email_address: email,
-            first_name: first_name,
-            last_name: last_name,
-            language_code: language.code
-          }
-
+        it "creates SalesforceService instance and calls subscribe!" do
           follow_up.send_to_api
 
-          expect(SalesforceService).to have_received(:send_campaign_subscription).with(
-            email,
-            destination.service_name,
-            expected_data
-          )
+          expect(SalesforceService).to have_received(:new).with(follow_up)
+          expect(service).to have_received(:subscribe!)
         end
 
         it "raises error when SalesforceService fails" do
-          allow(SalesforceService).to receive(:send_campaign_subscription).and_return(false)
+          allow(service).to receive(:subscribe!).and_raise(
+            Error::BadRequestError, "Failed to send campaign subscription to Salesforce for email: #{email}"
+          )
 
           expect { follow_up.send_to_api }.to raise_error(
             Error::BadRequestError,
@@ -119,18 +113,13 @@ describe FollowUp do
             destination_id: destination.id,
             name: nil
           )
-          expected_data = {
-            email_address: email,
-            language_code: language.code
-          }
+
+          allow(SalesforceService).to receive(:new).with(follow_up_without_name).and_return(service)
 
           follow_up_without_name.send_to_api
 
-          expect(SalesforceService).to have_received(:send_campaign_subscription).with(
-            email,
-            destination.service_name,
-            expected_data
-          )
+          expect(SalesforceService).to have_received(:new).with(follow_up_without_name)
+          expect(service).to have_received(:subscribe!)
         end
       end
     end

@@ -65,14 +65,6 @@ class FollowUp < ActiveRecord::Base
   end
 
   def salesforce_perform_request
-    data = {
-      email_address: email,
-      first_name: name_params&.dig(:first_name),
-      last_name: name_params&.dig(:last_name),
-      language_code: language.code
-    }.compact
-
-    success = SalesforceService.send_campaign_subscription(email, destination.service_name, data)
-    raise Error::BadRequestError, "Failed to send campaign subscription to Salesforce for email: #{email}" unless success
+    SalesforceService.new(self).subscribe!
   end
 end

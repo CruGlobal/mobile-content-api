@@ -7,6 +7,16 @@ describe SalesforceService do
   let(:campaign_name) { "Test Campaign" }
   let(:data) { {first_name: "John", last_name: "Doe"} }
   let(:access_token) { "fake_access_token" }
+  let(:language) { Language.find(2) }
+  let(:salesforce_destination) { Destination.salesforce.first! }
+  let(:follow_up) do
+    FollowUp.create!(
+      email: email,
+      name: "John Doe",
+      language: language,
+      destination: salesforce_destination
+    )
+  end
 
   describe ".get_access_token" do
     context "when successful" do
@@ -114,6 +124,85 @@ describe SalesforceService do
         expect {
           described_class.send_campaign_subscription(email, campaign_name, data)
         }.to raise_error(RestClient::Exception)
+      end
+    end
+  end
+
+  describe "#initialize" do
+    it "sets follow_up attribute" do
+      service = described_class.new(follow_up)
+
+      expect(service.follow_up).to eq(follow_up)
+    end
+  end
+
+  describe "#subscribe!" do
+    let(:service) { described_class.new(follow_up) }
+
+    context "when SalesforceService.send_campaign_subscription succeeds" do
+      before do
+        allow(described_class).to receive(:send_campaign_subscription).and_return(true)
+      end
+
+      it "calls send_campaign_subscription with correct parameters" do
+        expected_data = {
+          email_address: email,
+          first_name: "John",
+          last_name: "Doe",
+          language_code: language.code
+        }
+
+        service.subscribe!
+
+        expect(described_class).to have_received(:send_campaign_subscription).with(
+          email,
+          salesforce_destination.service_name,
+          expected_data
+        )
+      end
+    end
+
+    context "when SalesforceService.send_campaign_subscription fails" do
+      before do
+        allow(described_class).to receive(:send_campaign_subscription).and_return(false)
+      end
+
+      it "raises Error::BadRequestError" do
+        expect { service.subscribe! }.to raise_error(
+          Error::BadRequestError,
+          "Failed to send campaign subscription to Salesforce for email: #{email}"
+        )
+      end
+    end
+
+    context "when follow_up has no name" do
+      let(:follow_up_without_name) do
+        FollowUp.create!(
+          email: email,
+          name: nil,
+          language: language,
+          destination: salesforce_destination
+        )
+      end
+      let(:service) { described_class.new(follow_up_without_name) }
+
+      before do
+        allow(described_class).to receive(:send_campaign_subscription).and_return(true)
+      end
+
+      it "calls send_campaign_subscription with compact data" do
+        expected_data = {
+          email_address: email,
+          language_code: language.code
+        }
+
+        service.subscribe!
+
+        expect(described_class).to have_received(:send_campaign_subscription).with(
+          email,
+          salesforce_destination.service_name,
+          expected_data
+        )
       end
     end
   end
