@@ -48,7 +48,6 @@ describe SalesforceService do
     end
   end
 
-
   describe "#initialize" do
     it "sets follow_up attribute" do
       service = described_class.new(follow_up)
