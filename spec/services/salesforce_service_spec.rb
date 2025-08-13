@@ -48,21 +48,29 @@ describe SalesforceService do
     end
   end
 
-  describe ".send_campaign_subscription" do
+  describe "#initialize" do
+    it "sets follow_up attribute" do
+      service = described_class.new(follow_up)
+
+      expect(service.follow_up).to eq(follow_up)
+    end
+  end
+
+  describe "#subscribe!" do
+    let(:service) { described_class.new(follow_up) }
+
     context "when successful" do
       before do
         allow(described_class).to receive(:get_access_token).and_return(access_token)
       end
 
-      it "sends campaign subscription and returns true" do
+      it "sends campaign subscription and completes successfully" do
         response = instance_double(RestClient::Response, code: 200, body: "", headers: {})
 
         expect(RestClient).to receive(:post).and_return(response)
         allow(Rails.logger).to receive(:info)
 
-        result = described_class.send_campaign_subscription(email, campaign_name, data)
-
-        expect(result).to be true
+        expect { service.subscribe! }.not_to raise_error
       end
 
       it "sends correct payload to Salesforce" do
@@ -71,14 +79,15 @@ describe SalesforceService do
           {
             keys: {
               subscriberkey: email,
-              campaign: campaign_name
+              campaign: salesforce_destination.service_name
             },
             values: {
               subscriberkey: email,
-              campaign: campaign_name,
+              campaign: salesforce_destination.service_name,
               email_address: email,
               first_name: "John",
-              last_name: "Doe"
+              last_name: "Doe",
+              language_code: language.code
             }
           }
         ]
@@ -86,7 +95,7 @@ describe SalesforceService do
           "Authorization" => "Bearer #{access_token}",
           "Content-Type" => "application/json"
         }
-        expected_url = "https://api.salesforce.com/hub/v1/dataevents/key:external_key/rowset"
+        expected_url = "#{ENV.fetch("SALESFORCE_REST_URI")}/hub/v1/dataevents/key:#{ENV.fetch("SALESFORCE_SFMC_DE_EXTERNAL_KEY")}/rowset"
 
         expect(RestClient).to receive(:post).with(
           expected_url,
@@ -95,15 +104,15 @@ describe SalesforceService do
         ).and_return(response)
         allow(Rails.logger).to receive(:info)
 
-        described_class.send_campaign_subscription(email, campaign_name, data)
+        service.subscribe!
       end
     end
 
     context "when access token is nil" do
-      it "returns false" do
+      it "returns false without making request" do
         allow(described_class).to receive(:get_access_token).and_return(nil)
 
-        result = described_class.send_campaign_subscription(email, campaign_name, data)
+        result = service.subscribe!
 
         expect(result).to be false
       end
@@ -122,52 +131,22 @@ describe SalesforceService do
         expect(Rails.logger).to receive(:error).with(/Failed to send campaign data to Salesforce/)
 
         expect {
-          described_class.send_campaign_subscription(email, campaign_name, data)
+          service.subscribe!
         }.to raise_error(RestClient::Exception)
       end
     end
-  end
 
-  describe "#initialize" do
-    it "sets follow_up attribute" do
-      service = described_class.new(follow_up)
-
-      expect(service.follow_up).to eq(follow_up)
-    end
-  end
-
-  describe "#subscribe!" do
-    let(:service) { described_class.new(follow_up) }
-
-    context "when SalesforceService.send_campaign_subscription succeeds" do
+    context "when response code is not 200" do
       before do
-        allow(described_class).to receive(:send_campaign_subscription).and_return(true)
-      end
-
-      it "calls send_campaign_subscription with correct parameters" do
-        expected_data = {
-          email_address: email,
-          first_name: "John",
-          last_name: "Doe",
-          language_code: language.code
-        }
-
-        service.subscribe!
-
-        expect(described_class).to have_received(:send_campaign_subscription).with(
-          email,
-          salesforce_destination.service_name,
-          expected_data
-        )
-      end
-    end
-
-    context "when SalesforceService.send_campaign_subscription fails" do
-      before do
-        allow(described_class).to receive(:send_campaign_subscription).and_return(false)
+        allow(described_class).to receive(:get_access_token).and_return(access_token)
       end
 
       it "raises Error::BadRequestError" do
+        response = instance_double(RestClient::Response, code: 400, body: "", headers: {})
+
+        expect(RestClient).to receive(:post).and_return(response)
+        allow(Rails.logger).to receive(:info)
+
         expect { service.subscribe! }.to raise_error(
           Error::BadRequestError,
           "Failed to send campaign subscription to Salesforce for email: #{email}"
@@ -187,22 +166,39 @@ describe SalesforceService do
       let(:service) { described_class.new(follow_up_without_name) }
 
       before do
-        allow(described_class).to receive(:send_campaign_subscription).and_return(true)
+        allow(described_class).to receive(:get_access_token).and_return(access_token)
       end
 
-      it "calls send_campaign_subscription with compact data" do
-        expected_data = {
-          email_address: email,
-          language_code: language.code
+      it "sends compact data without name fields" do
+        response = instance_double(RestClient::Response, code: 200, body: "", headers: {})
+        expected_payload = [
+          {
+            keys: {
+              subscriberkey: email,
+              campaign: salesforce_destination.service_name
+            },
+            values: {
+              subscriberkey: email,
+              campaign: salesforce_destination.service_name,
+              email_address: email,
+              language_code: language.code
+            }
+          }
+        ]
+        expected_headers = {
+          "Authorization" => "Bearer #{access_token}",
+          "Content-Type" => "application/json"
         }
+        expected_url = "#{ENV.fetch("SALESFORCE_REST_URI")}/hub/v1/dataevents/key:#{ENV.fetch("SALESFORCE_SFMC_DE_EXTERNAL_KEY")}/rowset"
+
+        expect(RestClient).to receive(:post).with(
+          expected_url,
+          expected_payload.to_json,
+          expected_headers
+        ).and_return(response)
+        allow(Rails.logger).to receive(:info)
 
         service.subscribe!
-
-        expect(described_class).to have_received(:send_campaign_subscription).with(
-          email,
-          salesforce_destination.service_name,
-          expected_data
-        )
       end
     end
   end
