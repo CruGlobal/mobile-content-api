@@ -106,7 +106,6 @@ gem "rubyzip", ">= 1.2.2"
 gem "sidekiq-failures"
 gem "sidekiq-unique-jobs"
 gem "validates_email_format_of"
-gem "CFPropertyList"
 
 group :development, :test do
   gem "action-cable-testing"

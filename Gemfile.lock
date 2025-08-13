@@ -16,10 +16,6 @@ GEM
 GEM
   remote: https://rubygems.org/
   specs:
-    CFPropertyList (3.0.7)
-      base64
-      nkf
-      rexml
     action-cable-testing (0.6.1)
       actioncable (>= 5.0)
     actioncable (7.0.8.7)
@@ -336,7 +332,6 @@ GEM
       net-protocol
     netrc (0.11.0)
     nio4r (2.7.4)
-    nkf (0.2.0)
     nokogiri (1.18.9)
       mini_portile2 (~> 2.8.2)
       racc (~> 1.4)
@@ -604,10 +599,10 @@ GEM
     zeitwerk (2.7.3)
 
 PLATFORMS
+  ruby
   x86_64-linux-musl
 
 DEPENDENCIES
-  CFPropertyList
   action-cable-testing
   active_model_serializers (= 0.10.15)
   active_storage_validations
@@ -664,7 +659,6 @@ DEPENDENCIES
   webmock
 
 CHECKSUMS
-  CFPropertyList (3.0.7) sha256=c45721614aca8d5eb6fa216f2ec28ec38de1a94505e9766a20e98745492c3c4c
   action-cable-testing (0.6.1) sha256=2be297ea547b2d033507f0f8d18f382362ea2c1cc1505ef4cea6565440f2445a
   actioncable (7.0.8.7) sha256=4034513841df2fd09dbbf38f37c1a00fc6c841122a8714e5d6916b8d6ce2f162
   actionmailbox (7.0.8.7) sha256=940eeaa3d8e85dcd9fc6069e39571e13c5a4bdb0db52c7ab96d14da81d6ac1c2
@@ -790,7 +784,6 @@ CHECKSUMS
   net-smtp (0.5.0) sha256=5fc0415e6ea1cc0b3dfea7270438ec22b278ca8d524986a3ae4e5ae8d087b42a
   netrc (0.11.0) sha256=de1ce33da8c99ab1d97871726cba75151113f117146becbe45aa85cb3dabee3f
   nio4r (2.7.4) sha256=d95dee68e0bb251b8ff90ac3423a511e3b784124e5db7ff5f4813a220ae73ca9
-  nkf (0.2.0) sha256=fbc151bda025451f627fafdfcb3f4f13d0b22ae11f58c6d3a2939c76c5f5f126
   nokogiri (1.18.9) sha256=ac5a7d93fd0e3cef388800b037407890882413feccca79eb0272a2715a82fa33
   nokogiri (1.18.9-x86_64-linux-musl) sha256=e69359d6240c17e64cc9f43970d54f13bfc7b8cc516b819228f687e953425e69
   notiffany (0.1.3) sha256=d37669605b7f8dcb04e004e6373e2a780b98c776f8eb503ac9578557d7808738
