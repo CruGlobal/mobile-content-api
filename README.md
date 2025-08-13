@@ -11,8 +11,7 @@ Master push status: [![master push status](https://github.com/CruGlobal/mobile-c
 * You will need to set the following environment variables:
     * MOBILE_CONTENT_API_BUCKET
     * AWS_REGION
-    * ONESKY_API_KEY
-    * ONESKY_API_SECRET
+    * CROWDIN_API_TOKEN
     * ADOBE_ANALYTICS_REPORT_URL
     * ADOBE_ANALYTICS_COMPANY_ID
     * ADOBE_ANALYTICS_CLIENT_ID

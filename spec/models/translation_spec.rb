@@ -156,7 +156,7 @@ describe Translation do
     before do
       mock_crowdin("name_description.xml",
         '{ "name":"kgp german", "description":"german description", "tagline": "german tagline",' \
-        '"onesky_required": "onesky_required_value", "onesky_not_required": "onesky_not_required_value" }')
+        '"crowdin_required": "crowdin_required_value", "crowdin_not_required": "crowdin_not_required_value" }')
     end
 
     it "uploads the translation to S3" do
@@ -218,11 +218,11 @@ describe Translation do
       let(:resource) { translation.resource }
       let!(:required_translated_attribute) {
         FactoryBot.create(:translated_attribute, resource_id: resource.id, key: "required",
-          crowdin_phrase_id: "onesky_required", required: true)
+          crowdin_phrase_id: "crowdin_required", required: true)
       }
       let!(:not_required_translated_attribute) {
         FactoryBot.create(:translated_attribute, resource_id: resource.id, key: "not_required",
-          crowdin_phrase_id: "onesky_not_required", required: false)
+          crowdin_phrase_id: "crowdin_not_required", required: false)
       }
 
       before do
@@ -235,13 +235,13 @@ describe Translation do
         end.to change(TranslationAttribute, :count).by(2)
         translation.reload
         expect(translation.translation_attributes.pluck(:key, :value).sort)
-          .to eq([["not_required", "onesky_not_required_value"], ["required", "onesky_required_value"]])
+          .to eq([["not_required", "crowdin_not_required_value"], ["required", "crowdin_required_value"]])
       end
 
       context "required translation attribute is not present" do
         let!(:required_translated_attribute_2) {
           FactoryBot.create(:translated_attribute, resource_id: resource.id, key: "required_2",
-            crowdin_phrase_id: "onesky_required_2", required: true)
+            crowdin_phrase_id: "crowdin_required_2", required: true)
         }
         it "raises an error and doesn't create any translation attributes" do
           expect do
