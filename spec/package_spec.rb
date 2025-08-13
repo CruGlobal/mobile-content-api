@@ -143,8 +143,8 @@ describe Package do
 
   after do
     if Dir.exist?(directory)
-      allow(PageClient).to receive(:delete_temp_dir).and_call_original
-      PageClient.delete_temp_dir(directory)
+      allow(FileUtils).to receive(:remove_dir).and_call_original
+      FileUtils.remove_dir(directory)
     end
   end
 
@@ -373,7 +373,8 @@ describe Package do
   end
 
   def mock_dir_deletion
-    allow(PageClient).to receive(:delete_temp_dir)
+    #allow(PageClient).to receive(:delete_temp_dir)
+    allow(FileUtils).to receive(:remove_dir)
   end
 
   def push

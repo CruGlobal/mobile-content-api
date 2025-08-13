@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 require "rails_helper"
-require "page_client"
 
 describe Resource do
   let(:resource) { described_class.find(2) }
