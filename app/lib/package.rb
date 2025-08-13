@@ -160,7 +160,7 @@ class Package
   end
 
   def upload
-    Rails.logger.info("Uploading zip to OneSky for translation with id: #{@translation.id}")
+    Rails.logger.info("Uploading zip for translation with id: #{@translation.id}")
 
     obj = self.class.s3_object(@translation)
     obj.upload_file("#{@directory}/#{@translation.zip_name}", acl: "public-read")

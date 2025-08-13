@@ -6,7 +6,7 @@
     navbar-color="rgba(0,0,0,0.3)"
     navbar-control-color="rgba(255,255,255,1)">
     <title>
-        <!-- the name variable is from the name_description file in OneSky and needs to be .xml -->
+        <!-- the name variable is from the name_description file in Crowdin and needs to be .xml -->
         <content:text i18n-id="name">Satisfied?</content:text>
     </title>
 </manifest>
