@@ -72,7 +72,7 @@ class FacebookOidcAuthService < BaseAuthService
 
     def fetch_facebook_jwks
       @facebook_jwks ||= begin
-        uri = URI("https://www.facebook.com/.well-known/oauth/openid-configuration")
+        uri = URI("https://limited.facebook.com/.well-known/openid-configuration/")
         response = Net::HTTP.get_response(uri)
         raise FailedAuthentication, "Failed to fetch Facebook OpenID configuration" unless response.is_a?(Net::HTTPSuccess)
 
