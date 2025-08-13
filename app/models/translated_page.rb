@@ -8,6 +8,6 @@ class TranslatedPage < ActiveRecord::Base
   validates :resource, presence: true
   validates :language, presence: true
   validate do
-    errors.add("resource", "Uses OneSky.") if resource.uses_onesky?
+    errors.add("resource", "Uses Crowdin.") if resource.uses_crowdin?
   end
 end

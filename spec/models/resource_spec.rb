@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 require "rails_helper"
-require "page_client"
 
 describe Resource do
   let(:resource) { described_class.find(2) }
@@ -10,16 +9,8 @@ describe Resource do
     let(:language) { Language.find(3) }
 
     context "new resource/language combination" do
-      it "pushes to OneSky" do
-        allow(PageClient).to(receive(:new).with(resource, language.code)
-                                 .and_return(instance_double(PageClient, push_new_onesky_translation: :created)))
-
-        resource.create_draft(language.id)
-      end
-
       it "adds a new draft" do
         allow(Translation).to receive(:create!)
-        allow(PageClient).to receive(:new).with(resource, language.code).and_return(double.as_null_object)
 
         resource.create_draft(language.id)
 

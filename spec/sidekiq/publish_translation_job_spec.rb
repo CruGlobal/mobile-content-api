@@ -8,7 +8,7 @@ RSpec.describe PublishTranslationJob, type: :job do
   end
 
   it "captures errors into publishing_errors" do
-    mock_onesky
+    mock_crowdin
     allow(Package).to receive(:new).and_return(package)
     PublishTranslationJob.new.perform(translation.id)
     expect(translation.reload.is_published).to be false
@@ -21,7 +21,7 @@ RSpec.describe PublishTranslationJob, type: :job do
     allow(package).to receive(:build_zip)
     allow(package).to receive(:upload)
     allow(translation).to receive(:manifest_translated_phrases).and_return(nil)
-    allow(translation).to receive(:name_desc_onesky).with(nil)
+    allow(translation).to receive(:name_desc_crowdin).with(nil)
     allow(translation).to receive(:create_translated_attributes).with(nil)
 
     PublishTranslationJob.new.perform(translation.id)

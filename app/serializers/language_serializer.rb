@@ -2,7 +2,7 @@
 
 class LanguageSerializer < ActiveModel::Serializer
   type "language"
-  attributes :id, :code, :name, :direction
+  attributes :id, :code, :name, :direction, :crowdin_code
   attribute :force_language_name, key: :"force-language-name"
 
   has_many :translations

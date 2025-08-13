@@ -9,8 +9,8 @@ resource "TranslatedAttributes" do
   let(:raw_post) { params.to_json }
   let(:authorization) { AuthToken.generic_token }
   let(:resource_id) { Resource.first.id }
-  let(:attrs) { {key: "key", "onesky-phrase-id": "phrase", required: true} }
-  let(:attrs_underscored) { {key: "key", onesky_phrase_id: "phrase", required: true} }
+  let(:attrs) { {key: "key", "crowdin-phrase-id": "phrase", required: true} }
+  let(:attrs_underscored) { {key: "key", crowdin_phrase_id: "phrase", required: true} }
 
   post "/resources/:resource_id/translated-attributes" do
     let(:id) { 100 }
@@ -24,13 +24,13 @@ resource "TranslatedAttributes" do
 
       expect(status).to be(201)
       expect(response_body).to eq(ActiveModelSerializers::SerializableResource.new(TranslatedAttribute.last).to_json)
-      expect(TranslatedAttribute.last.attributes.symbolize_keys.slice(:key, :onesky_phrase_id, :required, :resource_id)).to eq(attrs_underscored.merge(resource_id: resource_id))
+      expect(TranslatedAttribute.last.attributes.symbolize_keys.slice(:key, :crowdin_phrase_id, :required, :resource_id)).to eq(attrs_underscored.merge(resource_id: resource_id))
       expect(response_headers["Location"]).to eq("/resources/#{resource_id}/translated-attributes/#{TranslatedAttribute.last.id}")
     end
 
     it "defaults required to false" do
       expect do
-        do_request data: {type: type, attributes: {key: "key", "onesky-phrase-id": "info.outline"}}
+        do_request data: {type: type, attributes: {key: "key", "crowdin-phrase-id": "info.outline"}}
       end.to change { TranslatedAttribute.count }.by(1)
 
       expect(status).to be(201)
@@ -41,20 +41,20 @@ resource "TranslatedAttributes" do
 
     it "requires key present" do
       expect do
-        do_request data: {type: type, attributes: {"onesky-phrase-id": "phrase"}}
+        do_request data: {type: type, attributes: {"crowdin-phrase-id": "phrase"}}
       end.to_not change { TranslatedAttribute.count }
 
       expect(status).to be(400)
       expect(JSON.parse(response_body)["errors"]).to eq({"code" => "invalid_key"})
     end
 
-    it "requires onesky present" do
+    it "requires crowdin present" do
       expect do
         do_request data: {type: type, attributes: {key: "key"}}
       end.to_not change { TranslatedAttribute.count }
 
       expect(status).to be(400)
-      expect(JSON.parse(response_body)["errors"]).to eq({"code" => "invalid_onesky_phrase_id"})
+      expect(JSON.parse(response_body)["errors"]).to eq({"code" => "invalid_crowdin_phrase_id"})
     end
 
     context "translated_attribute already created" do
@@ -76,8 +76,8 @@ resource "TranslatedAttributes" do
     let!(:id) { translated_attribute.id }
 
     put "/resources/:resource_id/translated-attributes/:id" do
-      let(:new_attrs) { {key: "updated key", "onesky-phrase-id": "phrase", required: true} }
-      let(:new_attrs_underscored) { {key: "updated key", onesky_phrase_id: "phrase", required: true} }
+      let(:new_attrs) { {key: "updated key", "crowdin-phrase-id": "phrase", required: true} }
+      let(:new_attrs_underscored) { {key: "updated key", crowdin_phrase_id: "phrase", required: true} }
 
       requires_authorization
 
@@ -86,25 +86,25 @@ resource "TranslatedAttributes" do
 
         expect(status).to be(200)
         expect(response_body).to eq(ActiveModelSerializers::SerializableResource.new(translated_attribute.reload).to_json)
-        expect(translated_attribute.attributes.symbolize_keys.slice(:key, :onesky_phrase_id, :required, :resource_id)).to eq(new_attrs_underscored.merge(resource_id: resource_id))
+        expect(translated_attribute.attributes.symbolize_keys.slice(:key, :crowdin_phrase_id, :required, :resource_id)).to eq(new_attrs_underscored.merge(resource_id: resource_id))
       end
 
       it "requires key present" do
         expect do
-          do_request data: {type: type, attributes: {onesky_phrase_id: "phrase", key: nil}}
+          do_request data: {type: type, attributes: {crowdin_phrase_id: "phrase", key: nil}}
         end.to_not change { TranslatedAttribute.count }
 
         expect(status).to be(400)
         expect(JSON.parse(response_body)["errors"]).to eq({"code" => "invalid_key"})
       end
 
-      it "requires onesky present" do
+      it "requires crowdin present" do
         expect do
-          do_request data: {type: type, attributes: {onesky_phrase_id: nil, key: "key"}}
+          do_request data: {type: type, attributes: {crowdin_phrase_id: nil, key: "key"}}
         end.to_not change { TranslatedAttribute.count }
 
         expect(status).to be(400)
-        expect(JSON.parse(response_body)["errors"]).to eq({"code" => "invalid_onesky_phrase_id"})
+        expect(JSON.parse(response_body)["errors"]).to eq({"code" => "invalid_crowdin_phrase_id"})
       end
 
       context "translated_attribute already created" do
