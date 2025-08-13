@@ -43,11 +43,8 @@ class Package
 
     build_zip
     upload
-
-    PageClient.delete_temp_dir(@directory)
-  rescue => e
-    PageClient.delete_temp_dir(@directory)
-    raise e
+  ensure
+    FileUtils.remove_dir(@directory)
   end
 
   private

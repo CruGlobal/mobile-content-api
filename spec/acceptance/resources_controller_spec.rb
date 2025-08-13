@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 require "acceptance_helper"
-require "page_client"
 require "sidekiq/testing"
 
 resource "Resources" do
