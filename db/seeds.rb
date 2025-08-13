@@ -139,6 +139,7 @@ end
 
 Destination.find_or_create_by!(service_type: :growth_spaces, url: "myapi.org", route_id: "100", access_key_id: "12345", access_key_secret: "hello, world!!")
 Destination.find_or_create_by!(service_type: :adobe_campaigns, url: "https://mc.adobe.io/", service_name: "GodTools New Growth Series", access_key_id: "67890", access_key_secret: "this is a secret")
+Destination.find_or_create_by!(service_type: :salesforce, url: "https://salesforce.com/", service_name: "GodTools New Growth Series, Salesforce", access_key_id: "67891", access_key_secret: "this is another secret")
 
 # add metatool at the end because some tests depend upon resource ids
 metatool_resource = Resource.find_or_create_by!(name: "metatool", resource_type: metatool, abbreviation: "meta", system: godtools)
