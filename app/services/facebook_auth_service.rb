@@ -7,6 +7,10 @@ class FacebookAuthService < BaseAuthService
   class << self
     private
 
+    def generate_appsecret_proof(access_token)
+      OpenSSL::HMAC.hexdigest(OpenSSL::Digest.new("sha256"), ENV.fetch("FACEBOOK_APP_SECRET"), access_token)
+    end
+
     def expected_fields
       %w[user_id]
     end
@@ -16,7 +20,12 @@ class FacebookAuthService < BaseAuthService
     end
 
     def decode_token(input_token)
-      response = get("/debug_token", query: {input_token: input_token, access_token: "#{ENV.fetch("FACEBOOK_APP_ID")}|#{ENV.fetch("FACEBOOK_APP_SECRET")}"}).body
+      app_access_token = "#{ENV.fetch("FACEBOOK_APP_ID")}|#{ENV.fetch("FACEBOOK_APP_SECRET")}"
+      response = get("/debug_token", query: {
+        input_token: input_token,
+        access_token: app_access_token,
+        appsecret_proof: generate_appsecret_proof(app_access_token)
+      }).body
       decoded_token = JSON.parse(response)
       raise FailedAuthentication, "Error validating access_token with Facebook: #{decoded_token.dig("data", "error")}" if decoded_token.dig("data", "error")
       raise FailedAuthentication, "Error decoding access_token with Facebook (raw response is #{response.inspect})" unless decoded_token.is_a?(Hash) && decoded_token["data"]
@@ -33,7 +42,11 @@ class FacebookAuthService < BaseAuthService
     end
 
     def extract_user_atts(access_token, decoded_token)
-      fields_data = JSON.parse(get("/#{remote_user_id(decoded_token)}", query: {fields: "email,id,first_name,last_name,short_name,name", access_token: access_token}).body)
+      fields_data = JSON.parse(get("/#{remote_user_id(decoded_token)}", query: {
+        fields: "email,id,first_name,last_name,short_name,name",
+        access_token: access_token,
+        appsecret_proof: generate_appsecret_proof(access_token)
+      }).body)
       raise FailedAuthentication, "Error validating access_token with Facebook: #{fields_data.dig("data", "error")}" if
         fields_data.dig("data", "error")
 
