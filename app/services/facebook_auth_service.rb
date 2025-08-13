@@ -16,11 +16,10 @@ class FacebookAuthService < BaseAuthService
     end
 
     def decode_token(input_token)
-      decoded_token = JSON.parse(get("/debug_token", query: {input_token: input_token, access_token: "#{ENV.fetch("FACEBOOK_APP_ID")}|#{ENV.fetch("FACEBOOK_APP_SECRET")}"}).body)
-      raise FailedAuthentication, "Error validating access_token with Facebook: #{decoded_token.dig("data", "error")}" if
-        decoded_token.dig("data", "error")
-      raise FailedAuthentication, "Error decoding access_token with Facebook" unless
-        decoded_token.is_a?(Hash) && decoded_token["data"]
+      response = get("/debug_token", query: {input_token: input_token, access_token: "#{ENV.fetch("FACEBOOK_APP_ID")}|#{ENV.fetch("FACEBOOK_APP_SECRET")}"}).body
+      decoded_token = JSON.parse(response)
+      raise FailedAuthentication, "Error validating access_token with Facebook: #{decoded_token.dig("data", "error")}" if decoded_token.dig("data", "error")
+      raise FailedAuthentication, "Error decoding access_token with Facebook (raw response is #{response.inspect})" unless decoded_token.is_a?(Hash) && decoded_token["data"]
       decoded_token["data"]
     end
 
