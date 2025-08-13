@@ -274,7 +274,7 @@ resource "Auth" do
           allow(JWT).to receive(:decode).and_call_original
 
           # Mock the JWKS fetching
-          allow(Net::HTTP).to receive(:get_response).with(URI("https://www.facebook.com/.well-known/oauth/openid-configuration"))
+          allow(Net::HTTP).to receive(:get_response).with(URI("https://limited.facebook.com/.well-known/openid-configuration/"))
             .and_return(double("response", is_a?: Net::HTTPSuccess, body: '{"jwks_uri": "https://www.facebook.com/.well-known/oauth/jwks"}'))
 
           allow(Net::HTTP).to receive(:get_response).with(URI("https://www.facebook.com/.well-known/oauth/jwks"))
