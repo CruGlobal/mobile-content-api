@@ -63,21 +63,21 @@ describe Translation do
   end
 
   it "error is raised if there is no phrases returned from Crowdin" do
-    mock_crowdin(page_name, nil, 204)
+    mock_crowdin(nil, 204)
     translation = described_class.find(2)
 
     expect { translation.translated_page(1, true) }.to raise_error(Error::TextNotFoundError)
   end
 
   it "no error raised if there is no phrases returned for non-strict mode" do
-    mock_crowdin(page_name, nil, 204)
+    mock_crowdin(nil, 204)
     translation = described_class.find(2)
 
     expect(translation.translated_page(1, false)).not_to be_empty
   end
 
   it "error is raised if strict mode and translated phrase not found" do
-    mock_crowdin(page_name, [[element_one_id, phrase_one]].to_h.to_json)
+    mock_crowdin([[element_one_id, phrase_one]].to_h.to_json)
     translation = described_class.find(1)
 
     expect { translation.translated_page(1, true) }
@@ -85,7 +85,7 @@ describe Translation do
   end
 
   it "error is raised if strict mode and translated phrase for attribute not found" do
-    mock_crowdin(page_name, [[element_one_id, phrase_one], [element_two_id, phrase_two]].to_h.to_json)
+    mock_crowdin([[element_one_id, phrase_one], [element_two_id, phrase_two]].to_h.to_json)
     translation = described_class.find(1)
 
     expect { translation.translated_page(1, true) }
@@ -93,7 +93,7 @@ describe Translation do
   end
 
   it "error not raised raised if not strict mode and translated phrase not found" do
-    mock_crowdin("13_FinalPage.xml", '{ "1":"This is a German phrase" }')
+    mock_crowdin('{ "1":"This is a German phrase" }')
     translation = described_class.find(3)
 
     translation.translated_page(1, false)
@@ -154,9 +154,10 @@ describe Translation do
     let(:translation) { described_class.find(3) }
 
     before do
-      mock_crowdin("name_description.xml",
+      mock_crowdin(
         '{ "name":"kgp german", "description":"german description", "tagline": "german tagline",' \
-        '"crowdin_required": "crowdin_required_value", "crowdin_not_required": "crowdin_not_required_value" }')
+        '"crowdin_required": "crowdin_required_value", "crowdin_not_required": "crowdin_not_required_value" }'
+      )
     end
 
     it "uploads the translation to S3" do
@@ -257,12 +258,12 @@ describe Translation do
   private
 
   def translated_page(translation_id)
-    mock_crowdin(page_name, phrases)
+    mock_crowdin(phrases)
     translation = described_class.find(translation_id)
     translation.translated_page(1, true)
   end
 
-  def mock_crowdin(filename, body, code = 200)
+  def mock_crowdin(body, code = 200)
     # Mock the CrowdinService's download method
     parsed_body = body.is_a?(String) ? JSON.parse(body) : body
     allow(CrowdinService).to receive(:download_translated_phrases)

@@ -373,7 +373,6 @@ describe Package do
   end
 
   def mock_dir_deletion
-    #allow(PageClient).to receive(:delete_temp_dir)
     allow(FileUtils).to receive(:remove_dir)
   end
 
