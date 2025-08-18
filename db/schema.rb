@@ -323,9 +323,7 @@ ActiveRecord::Schema[7.0].define(version: 2025_08_07_144120) do
     t.date "last_decay", default: -> { "now()" }
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.string "values", default: [], array: true
     t.index ["user_id", "counter_name"], name: "index_user_counters_on_user_id_and_counter_name", unique: true
-    t.index ["values"], name: "index_user_counters_on_values", using: :gin
   end
 
   create_table "user_training_tips", force: :cascade do |t|
