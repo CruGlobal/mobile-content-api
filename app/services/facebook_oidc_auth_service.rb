@@ -71,7 +71,7 @@ class FacebookOidcAuthService < BaseAuthService
     end
 
     def fetch_facebook_jwks
-      @facebook_jwks ||= begin
+      Rails.cache.fetch("facebook_oidc_jwks", expires_in: 10.minutes) do
         uri = URI("https://limited.facebook.com/.well-known/openid-configuration/")
         response = Net::HTTP.get_response(uri)
         raise FailedAuthentication, "Failed to fetch Facebook OpenID configuration" unless response.is_a?(Net::HTTPSuccess)
