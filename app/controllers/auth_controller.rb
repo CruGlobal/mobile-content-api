@@ -1,40 +1,29 @@
 # frozen_string_literal: true
 
 class AuthController < ApplicationController
-  THIRD_PARTY_AUTH_METHODS = [:okta, :facebook, :google, :apple_auth, :apple_refresh]
-
   def create
-    method = THIRD_PARTY_AUTH_METHODS.detect { |method|
-      data_attrs[:"#{method}_access_token"] || data_attrs[:"#{method}_id_token"] ||
-        data_attrs["#{method}_code"] || data_attrs["#{method}_token"]
-    }
-    token = case method
-    when :apple_auth
+    if data_attrs[:apple_auth_code].present?
       # special case for apple, which has given and family name passed in
       user, apple_refresh_token = AppleAuthService.find_user_by_auth_code(data_attrs[:apple_auth_code], data_attrs[:apple_given_name], data_attrs[:apple_family_name],
         data_attrs[:apple_name], data_attrs[:create_user])
-      AuthToken.new(user: user, apple_refresh_token: apple_refresh_token)
-    when :apple_refresh
+      # make the token here since it's a special case
+      token = AuthToken.new(user: user, apple_refresh_token: apple_refresh_token)
+    elsif data_attrs[:apple_refresh_token].present?
       user = AppleAuthService.find_user_by_refresh_token(data_attrs[:apple_refresh_token], data_attrs[:create_user])
-      AuthToken.new(user: user)
-    when :google
+    elsif data_attrs[:google_id_token].present?
       user = GoogleAuthService.find_user_by_token(data_attrs[:google_id_token], data_attrs[:create_user])
-      AuthToken.new(user: user)
-    when :okta
+    elsif data_attrs[:okta_access_token].present?
       user = OktaAuthService.find_user_by_token(data_attrs[:okta_access_token], data_attrs[:create_user])
-      AuthToken.new(user: user)
-    when :facebook
-      # Handle both access tokens and ID tokens for Facebook
-      if data_attrs[:facebook_access_token]
-        user = FacebookAuthService.find_user_by_token(data_attrs[:facebook_access_token], data_attrs[:create_user])
-      elsif data_attrs[:facebook_id_token]
-        user = FacebookOidcAuthService.find_user_by_token(data_attrs[:facebook_id_token], data_attrs[:create_user])
-      end
-      AuthToken.new(user: user)
+    elsif data_attrs[:facebook_access_token].present?
+      user = FacebookAuthService.find_user_by_token(data_attrs[:facebook_access_token], data_attrs[:create_user])
+    elsif data_attrs[:facebook_id_token].present?
+      user = FacebookOidcAuthService.find_user_by_token(data_attrs[:facebook_id_token], data_attrs[:create_user])
     else
       AccessCode.validate(data_attrs[:code])
-      AuthToken.new
+      user = nil
     end
+
+    token ||= AuthToken.new(user: user)
 
     render json: token, status: :created if token
   rescue UserAlreadyExist::Error => e
