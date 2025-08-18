@@ -25,7 +25,6 @@ class Translation < ActiveRecord::Base
   end
 
   def translated_page(page_id, strict)
-    Page.find(page_id)
     phrases = download_translated_phrases
     xml = Nokogiri::XML(page_structure(page_id))
 
@@ -37,7 +36,6 @@ class Translation < ActiveRecord::Base
   end
 
   def translated_tip(tip_id, strict)
-    Tip.find(tip_id)
     phrases = download_translated_phrases
     xml = Nokogiri::XML(tip_structure(tip_id))
 
