@@ -14,10 +14,10 @@ class AuthController < ApplicationController
       user = GoogleAuthService.find_user_by_token(data_attrs[:google_id_token], data_attrs[:create_user])
     elsif data_attrs[:okta_access_token].present?
       user = OktaAuthService.find_user_by_token(data_attrs[:okta_access_token], data_attrs[:create_user])
-    elsif data_attrs[:facebook_access_token].present?
-      user = FacebookAuthService.find_user_by_token(data_attrs[:facebook_access_token], data_attrs[:create_user])
     elsif data_attrs[:facebook_id_token].present?
       user = FacebookOidcAuthService.find_user_by_token(data_attrs[:facebook_id_token], data_attrs[:create_user])
+    elsif data_attrs[:facebook_access_token].present?
+      user = FacebookAuthService.find_user_by_token(data_attrs[:facebook_access_token], data_attrs[:create_user])
     else
       AccessCode.validate(data_attrs[:code])
       user = nil
