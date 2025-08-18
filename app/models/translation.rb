@@ -25,8 +25,8 @@ class Translation < ActiveRecord::Base
   end
 
   def translated_page(page_id, strict)
-    page = Page.find(page_id)
-    phrases = download_translated_phrases(page.filename)
+    Page.find(page_id)
+    phrases = download_translated_phrases
     xml = Nokogiri::XML(page_structure(page_id))
 
     xml = filter_node_content(xml, self)
@@ -37,8 +37,8 @@ class Translation < ActiveRecord::Base
   end
 
   def translated_tip(tip_id, strict)
-    tip = Tip.find(tip_id)
-    phrases = download_translated_phrases("tip_#{tip.name}.json")
+    Tip.find(tip_id)
+    phrases = download_translated_phrases
     xml = Nokogiri::XML(tip_structure(tip_id))
 
     xml = filter_node_content(xml, self)
@@ -71,7 +71,7 @@ class Translation < ActiveRecord::Base
   end
 
   def manifest_translated_phrases
-    @manifest_translated_phrases ||= download_translated_phrases("name_description.xml")
+    @manifest_translated_phrases ||= download_translated_phrases
   end
 
   def push_published_to_s3
@@ -130,7 +130,7 @@ class Translation < ActiveRecord::Base
     translation_attributes.where.not(id: translation_attribute_ids).delete_all
   end
 
-  def download_translated_phrases(filename)
+  def download_translated_phrases
     CrowdinService.download_translated_phrases(language_code: language.code, project_id: resource.crowdin_project_id)
   end
 
