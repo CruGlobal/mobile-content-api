@@ -8,7 +8,7 @@ describe Xml::Manifest do
   let(:translation) do
     t = Translation.find(1)
     allow(t).to(receive(:translated_name).and_return(title))
-    allow(t).to(receive(:manifest_translated_phrases).and_return("name" => "Knowing God Personally",
+    allow(t).to(receive(:download_translated_phrases).and_return("name" => "Knowing God Personally",
       "description" => ""))
     t
   end
@@ -141,7 +141,7 @@ describe Xml::Manifest do
           "not-french" => "Not French",
           "everything" => "Všetko Ostatné"
         }
-        allow(t).to(receive(:manifest_translated_phrases).and_return(phrases))
+        allow(t).to(receive(:download_translated_phrases).and_return(phrases))
 
         t
       end
@@ -210,7 +210,7 @@ describe Xml::Manifest do
     context "resource does not have a manifest file" do
       let(:translation) do
         t = Translation.find(8)
-        allow(t).to(receive(:manifest_translated_phrases).and_return({}))
+        allow(t).to(receive(:download_translated_phrases).and_return({}))
         t
       end
 
@@ -235,7 +235,7 @@ describe Xml::Manifest do
     <title><content:text i18n-id="name">Questions about God</content:text></title>
 </manifest>'
         allow(t).to(receive(:translated_name).and_return("*Questions about God*"))
-        allow(t).to(receive(:manifest_translated_phrases).and_return({}))
+        allow(t).to(receive(:download_translated_phrases).and_return({}))
 
         t
       end

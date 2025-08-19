@@ -3,5 +3,5 @@ class TranslatedAttribute < ApplicationRecord
 
   validates :key, uniqueness: {scope: :resource_id}
   validates :key, presence: true
-  validates :onesky_phrase_id, presence: true
+  validates :crowdin_phrase_id, presence: true
 end

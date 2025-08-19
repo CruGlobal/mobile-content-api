@@ -49,7 +49,7 @@ module Xml
     end
 
     def manifest_translated_phrases(manifest_node)
-      phrases = @translation.manifest_translated_phrases
+      phrases = @translation.download_translated_phrases
       # backwards compatibility with manifest name translation:
       if (i18n_id = title_i18n_id(manifest_node))
         phrases = phrases.dup
