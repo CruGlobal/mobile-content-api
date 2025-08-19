@@ -130,7 +130,7 @@ describe Package do
   let!(:tip2) { FactoryBot.create(:tip, name: "tip2", resource: resource, structure: tip_structure2) }
 
   before do
-    mock_onesky
+    mock_crowdin
 
     mock_s3(instance_double(Aws::S3::Object, upload_file: true), translation)
 
@@ -143,8 +143,8 @@ describe Package do
 
   after do
     if Dir.exist?(directory)
-      allow(PageClient).to receive(:delete_temp_dir).and_call_original
-      PageClient.delete_temp_dir(directory)
+      allow(FileUtils).to receive(:remove_dir).and_call_original
+      FileUtils.remove_dir(directory)
     end
   end
 
@@ -280,7 +280,7 @@ describe Package do
       end
 
       it "creates manifest node" do
-        mock_onesky translation.resource.onesky_project_id
+        mock_crowdin translation.resource.crowdin_project_id
 
         push
 
@@ -373,11 +373,11 @@ describe Package do
   end
 
   def mock_dir_deletion
-    allow(PageClient).to receive(:delete_temp_dir)
+    allow(FileUtils).to receive(:remove_dir)
   end
 
   def push
-    mock_onesky
+    mock_crowdin
     package = Package.new(translation)
     package.push_to_s3
   end

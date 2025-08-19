@@ -407,7 +407,7 @@
         </xs:attribute>
         <xs:attribute name="url-i18n-id" type="xs:string">
             <xs:annotation>
-                <xs:documentation>This attribute defines a OneSky phrase id that contains the url for this
+                <xs:documentation>This attribute defines a Crowdin phrase id that contains the url for this
                     element.
                 </xs:documentation>
             </xs:annotation>
@@ -629,7 +629,7 @@
             <xs:extension base="xs:string">
                 <xs:attribute name="i18n-id" type="xs:string">
                     <xs:annotation>
-                        <xs:documentation>Defines the OneSky translation id for this text.</xs:documentation>
+                        <xs:documentation>Defines the Crowdin translation id for this text.</xs:documentation>
                     </xs:annotation>
                 </xs:attribute>
                 <xs:attribute name="font-weight" type="content:fontWeight">
