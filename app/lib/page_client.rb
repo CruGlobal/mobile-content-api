@@ -1,8 +1,5 @@
 # frozen_string_literal: true
 
-require "xml_util"
-require "one_sky"
-
 class PageClient
   def initialize(resource, language_code)
     @resource = resource

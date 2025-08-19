@@ -2,7 +2,6 @@
 
 require "json"
 require "rest-client"
-require "auth_util"
 require "digest/md5"
 
 module OneSky

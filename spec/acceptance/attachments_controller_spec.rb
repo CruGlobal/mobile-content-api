@@ -3,7 +3,7 @@
 require "acceptance_helper"
 
 resource "Attachments" do
-  let(:test_file) { Rack::Test::UploadedFile.new("#{fixture_path}/wall.jpg", "image/png") }
+  let(:test_file) { Rack::Test::UploadedFile.new("#{fixture_paths.first}/wall.jpg", "image/png") }
   let(:authorization) { AuthToken.generic_token }
 
   before do

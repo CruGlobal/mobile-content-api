@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "page_client"
-
 class ResourcesController < ApplicationController
   before_action :authorize!, only: [:create, :update, :push_to_onesky, :publish_translation]
 
