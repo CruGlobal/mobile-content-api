@@ -500,7 +500,7 @@ GEM
       rubocop (~> 1.72, >= 1.72.1)
     ruby-progressbar (1.13.0)
     ruby2_keywords (0.0.5)
-    rubyzip (2.4.1)
+    rubyzip (3.0.2)
     shellany (0.0.1)
     sidekiq (6.5.12)
       connection_pool (>= 2.2.5, < 3)
@@ -843,7 +843,7 @@ CHECKSUMS
   rubocop-rspec (3.6.0) sha256=c0e4205871776727e54dee9cc91af5fd74578001551ba40e1fe1a1ab4b404479
   ruby-progressbar (1.13.0) sha256=80fc9c47a9b640d6834e0dc7b3c94c9df37f08cb072b7761e4a71e22cff29b33
   ruby2_keywords (0.0.5) sha256=ffd13740c573b7301cf7a2e61fc857b2a8e3d3aff32545d6f8300d8bae10e3ef
-  rubyzip (2.4.1) sha256=8577c88edc1fde8935eb91064c5cb1aef9ad5494b940cf19c775ee833e075615
+  rubyzip (3.0.2) sha256=30f75c0b631e23c0891453acbcc019bc1496cd44f4a3ade4ff76bc09a595cfa6
   shellany (0.0.1) sha256=0e127a9132698766d7e752e82cdac8250b6adbd09e6c0a7fbbb6f61964fedee7
   sidekiq (6.5.12) sha256=b4f93b2204c42220d0b526a7b8e0c49b5f9da82c1ce1a05d2baf1e8f744c197f
   sidekiq-failures (1.0.4) sha256=a2322ebd998d3a17fb5fe680347c0909e53426ed259b126116ac51adaa435fa1
