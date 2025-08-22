@@ -147,7 +147,7 @@ GEM
       activesupport
     coderay (1.1.3)
     concurrent-ruby (1.3.4)
-    connection_pool (2.4.1)
+    connection_pool (2.5.3)
     crack (0.4.6)
       bigdecimal
       rexml
@@ -506,7 +506,7 @@ GEM
       connection_pool (>= 2.2.5, < 3)
       rack (~> 2.0)
       redis (>= 4.5.0, < 5)
-    sidekiq-failures (1.0.4)
+    sidekiq-failures (1.1.0)
       sidekiq (>= 4.0.0)
     sidekiq-unique-jobs (7.1.33)
       brpoplpush-redis_script (> 0.1.1, <= 2.0.0)
@@ -699,7 +699,7 @@ CHECKSUMS
   case_transform (0.2) sha256=e2ad4418dceeb227cf474cc332cd5004c95c136c04186c1cceaad8ab8de6fe3b
   coderay (1.1.3) sha256=dc530018a4684512f8f38143cd2a096c9f02a1fc2459edcfe534787a7fc77d4b
   concurrent-ruby (1.3.4) sha256=d4aa926339b0a86b5b5054a0a8c580163e6f5dcbdfd0f4bb916b1a2570731c32
-  connection_pool (2.4.1) sha256=0f40cf997091f1f04ff66da67eabd61a9fe0d4928b9a3645228532512fab62f4
+  connection_pool (2.5.3) sha256=cfd74a82b9b094d1ce30c4f1a346da23ee19dc8a062a16a85f58eab1ced4305b
   crack (0.4.6) sha256=ee251d0aab36ab196946b851fd129870d66bdde4855cfdb3078d86a619c28864
   crass (1.0.6) sha256=dc516022a56e7b3b156099abc81b6d2b08ea1ed12676ac7a5657617f012bd45d
   crowdin-api (1.12.0) sha256=7463551c429acaf465b8fc58aaf977f548e254e883753f85bdd330b0b61dc35b
@@ -846,7 +846,7 @@ CHECKSUMS
   rubyzip (2.4.1) sha256=8577c88edc1fde8935eb91064c5cb1aef9ad5494b940cf19c775ee833e075615
   shellany (0.0.1) sha256=0e127a9132698766d7e752e82cdac8250b6adbd09e6c0a7fbbb6f61964fedee7
   sidekiq (6.5.12) sha256=b4f93b2204c42220d0b526a7b8e0c49b5f9da82c1ce1a05d2baf1e8f744c197f
-  sidekiq-failures (1.0.4) sha256=a2322ebd998d3a17fb5fe680347c0909e53426ed259b126116ac51adaa435fa1
+  sidekiq-failures (1.1.0) sha256=c874e10cee8be2db23d22c29887273e0f93d42f345075ed413ca2b2fac40a2f1
   sidekiq-pro (5.5.8) sha256=4a0cfa532f1f9a0002a749d6b26a934a4be2105743e7521651a8dd976aa09468
   sidekiq-unique-jobs (7.1.33) sha256=20054bf240a78ee0583585c45ad2e2acb2aca46720e1ae530f7f08d01d3fa1aa
   signet (0.20.0) sha256=bc660e2a6062311348cd35ec1ffafde1c5e2231213e1ca124f57aa4f59ec47a3
