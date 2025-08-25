@@ -2,7 +2,6 @@
 
 require "equivalent-xml"
 require "rails_helper"
-require "xml_util"
 
 describe Xml::Manifest do
   let(:title) { "this is the kgp" }
