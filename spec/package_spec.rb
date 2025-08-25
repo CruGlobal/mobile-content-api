@@ -2,8 +2,6 @@
 
 require "equivalent-xml"
 require "rails_helper"
-require "package"
-require "xml_util"
 
 describe Package do
   let(:translated_page_one) do
@@ -135,7 +133,7 @@ describe Package do
     mock_s3(instance_double(Aws::S3::Object, upload_file: true), translation)
 
     allow_any_instance_of(Attachment).to receive(:url) do |attachment|
-      "#{fixture_path}/#{attachment.filename}"
+      "#{fixture_paths.first}/#{attachment.filename}"
     end
 
     allow(SecureRandom).to receive(:uuid).and_return(guid)
