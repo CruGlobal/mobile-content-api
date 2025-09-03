@@ -2,7 +2,7 @@
 
 source "https://rubygems.org"
 source "https://gems.contribsys.com/" do
-  gem "sidekiq-pro", "< 7.2.1"
+  gem "sidekiq-pro"
 end
 
 ruby file: ".ruby-version"
@@ -97,6 +97,7 @@ gem "rest-client", "~> 2.1.0"
 gem "crowdin-api", "~> 1.12.0"
 gem "rollbar"
 gem "rubyzip", ">= 1.2.2"
+gem "sidekiq", "~> 6.5"
 gem "sidekiq-failures"
 gem "sidekiq-unique-jobs"
 gem "validates_email_format_of"
