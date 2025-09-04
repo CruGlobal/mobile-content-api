@@ -6,7 +6,7 @@ class MonitorsController < ActionController::Base
 
   def lb
     unless Rails.env.staging?
-      ActiveRecord::Migration.check_pending!
+      ActiveRecord::Migration.check_all_pending!
       ActiveRecord::Base.connection.select_values("select id from systems limit 1")
     end
     render plain: File.read(Rails.public_path.join("lb.txt"))
