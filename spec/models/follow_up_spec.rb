@@ -6,6 +6,7 @@ require "validates_email_format_of/rspec_matcher"
 describe FollowUp do
   let(:growth_space_destination) { Destination.growth_spaces.first! }
   let(:adobe_campaigns_destination) { Destination.adobe_campaigns.first! }
+  let(:salesforce_destination) { Destination.salesforce.first! }
   let(:email) { "bob@test.org" }
   let(:language) { Language.find(2) }
   let(:language_id) { 3 }
@@ -75,6 +76,50 @@ describe FollowUp do
           expect(AdobeCampaign).to receive(:new).with(follow_up).and_return(service)
           expect(service).to receive(:subscribe!)
           follow_up.send_to_api
+        end
+      end
+
+      context "for service_type salesforce" do
+        let(:destination) { salesforce_destination }
+        let(:service) { instance_double(SalesforceService) }
+
+        before do
+          allow(SalesforceService).to receive(:new).with(follow_up).and_return(service)
+          allow(service).to receive(:subscribe!)
+        end
+
+        it "creates SalesforceService instance and calls subscribe!" do
+          follow_up.send_to_api
+
+          expect(SalesforceService).to have_received(:new).with(follow_up)
+          expect(service).to have_received(:subscribe!)
+        end
+
+        it "raises error when SalesforceService fails" do
+          allow(service).to receive(:subscribe!).and_raise(
+            Error::BadRequestError, "Failed to send campaign subscription to Salesforce for email: #{email}"
+          )
+
+          expect { follow_up.send_to_api }.to raise_error(
+            Error::BadRequestError,
+            "Failed to send campaign subscription to Salesforce for email: #{email}"
+          )
+        end
+
+        it "handles follow_up without name" do
+          follow_up_without_name = described_class.create(
+            email: email,
+            language_id: language.id,
+            destination_id: destination.id,
+            name: nil
+          )
+
+          allow(SalesforceService).to receive(:new).with(follow_up_without_name).and_return(service)
+
+          follow_up_without_name.send_to_api
+
+          expect(SalesforceService).to have_received(:new).with(follow_up_without_name)
+          expect(service).to have_received(:subscribe!)
         end
       end
     end

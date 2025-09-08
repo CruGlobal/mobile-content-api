@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "xml_util"
-
 class Attachment < ActiveRecord::Base
   validates :file, attached: true
   validates :is_zipped, inclusion: {in: [true, false]}

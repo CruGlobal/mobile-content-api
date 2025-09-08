@@ -49,6 +49,8 @@ class FollowUp < ActiveRecord::Base
       growth_spaces_perform_request
     when "adobe_campaigns"
       adobe_campaigns_perform_request
+    when "salesforce"
+      salesforce_perform_request
     end
   end
 
@@ -60,5 +62,9 @@ class FollowUp < ActiveRecord::Base
 
   def adobe_campaigns_perform_request
     AdobeCampaign.new(self).subscribe!
+  end
+
+  def salesforce_perform_request
+    SalesforceService.new(self).subscribe!
   end
 end
