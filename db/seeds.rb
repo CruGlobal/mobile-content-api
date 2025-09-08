@@ -1,12 +1,14 @@
 # frozen_string_literal: true
 
-# This file should contain all the record creation needed to seed the database with its default values.
+# This file should ensure the existence of records required to run the application in every environment (production,
+# development, test). The code here should be idempotent so that it can be executed at any point in every environment.
 # The data can then be loaded with the bin/rails db:seed command (or created alongside the database with db:setup).
 #
-# Examples:
+# Example:
 #
-#   movies = Movie.create([{ name: "Star Wars" }, { name: "Lord of the Rings" }])
-#   Character.create(name: "Luke", movie: movies.first)
+#   ["Action", "Comedy", "Drama", "Horror"].each do |genre_name|
+#     MovieGenre.find_or_create_by!(name: genre_name)
+#   end
 
 page_13_structure = '<?xml version="1.0" encoding="UTF-8" ?>
 <page xmlns="https://mobile-content-api.cru.org/xmlns/tract"
@@ -79,10 +81,10 @@ metatool = ResourceType.find_or_create_by!(name: "metatool", dtd_file: "meta.xsd
 godtools = System.find_or_create_by!(name: "GodTools")
 
 kgp = Resource.find_or_create_by!(name: "Knowing God Personally", resource_type: tract,
-  abbreviation: "kgp", onesky_project_id: 148_314,
+  abbreviation: "kgp", crowdin_project_id: 148_314,
   system: godtools, total_views: 1268,
   manifest: '<?xml version="1.0"?><manifest xmlns="https://mobile-content-api.cru.org/xmlns/manifest" xmlns:content="https://mobile-content-api.cru.org/xmlns/content"><title><content:text i18n-id="89a09d72-114f-4d89-a72c-ca204c796fd9">Knowing God Personally</content:text></title></manifest>')
-satisfied = Resource.find_or_create_by!(name: "Satisfied?", resource_type: tract, abbreviation: "sat", system: godtools, onesky_project_id: 999_999)
+satisfied = Resource.find_or_create_by!(name: "Satisfied?", resource_type: tract, abbreviation: "sat", system: godtools, crowdin_project_id: 999_999)
 every_student = Resource.find_or_create_by!(name: "Questions About God", resource_type: article, abbreviation: "es", system: godtools)
 
 page_13 = Page.find_or_create_by!(filename: "13_FinalPage.xml", resource: kgp, structure: page_13_structure, position: 1)
@@ -139,13 +141,14 @@ end
 
 Destination.find_or_create_by!(service_type: :growth_spaces, url: "myapi.org", route_id: "100", access_key_id: "12345", access_key_secret: "hello, world!!")
 Destination.find_or_create_by!(service_type: :adobe_campaigns, url: "https://mc.adobe.io/", service_name: "GodTools New Growth Series", access_key_id: "67890", access_key_secret: "this is a secret")
+Destination.find_or_create_by!(service_type: :salesforce, url: "https://salesforce.com/", service_name: "GodTools New Growth Series, Salesforce", access_key_id: "67891", access_key_secret: "this is another secret")
 
 # add metatool at the end because some tests depend upon resource ids
 metatool_resource = Resource.find_or_create_by!(name: "metatool", resource_type: metatool, abbreviation: "meta", system: godtools)
 kgp.update(metatool_id: metatool_resource.id)
 metatool_resource.update(default_variant_id: kgp.id)
 Resource.find_or_create_by!(name: "Knowing God Personally Variant", resource_type: tract,
-  abbreviation: "kgp2", onesky_project_id: 148_314,
+  abbreviation: "kgp2", crowdin_project_id: 148_314,
   system: godtools, total_views: 1268,
   manifest: '<?xml version="1.0"?><manifest xmlns="https://mobile-content-api.cru.org/xmlns/manifest" xmlns:content="https://mobile-content-api.cru.org/xmlns/content"><title><content:text i18n-id="89a09d72-114f-4d89-a72c-ca204c796fd9">Knowing God Personally</content:text></title></manifest>',
   metatool_id: metatool_resource.id)

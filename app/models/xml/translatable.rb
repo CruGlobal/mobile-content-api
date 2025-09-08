@@ -5,7 +5,7 @@ module Xml
     # Translates content in XML nodes.
     #
     # @param xml [Nokorigi::XML] document
-    # @param phrases [Hash] translation phrases (from OneSky)
+    # @param phrases [Hash] translation phrases (from Crowdin)
     # @param strict
     # @return [Nokorigi::XML]
     # @raise [Error::TextNotFoundError]
@@ -27,7 +27,7 @@ module Xml
     # Translates attribute (names and) values in a XML document.
     #
     # @param xml [Nokorigi::XML] document
-    # @param phrases [Hash] translation phrases (from OneSky)
+    # @param phrases [Hash] translation phrases (from Crowdin)
     # @param strict
     # @return [Nokorigi::XML]
     # @raise [Error::TextNotFoundError]
