@@ -528,7 +528,7 @@ GEM
       connection_pool (>= 2.2.5, < 3)
       rack (~> 2.0)
       redis (>= 4.5.0, < 5)
-    sidekiq-failures (1.0.4)
+    sidekiq-failures (1.1.0)
       sidekiq (>= 4.0.0)
     sidekiq-unique-jobs (7.1.33)
       brpoplpush-redis_script (> 0.1.1, <= 2.0.0)
@@ -876,7 +876,7 @@ CHECKSUMS
   securerandom (0.4.1) sha256=cc5193d414a4341b6e225f0cb4446aceca8e50d5e1888743fac16987638ea0b1
   shellany (0.0.1) sha256=0e127a9132698766d7e752e82cdac8250b6adbd09e6c0a7fbbb6f61964fedee7
   sidekiq (6.5.12) sha256=b4f93b2204c42220d0b526a7b8e0c49b5f9da82c1ce1a05d2baf1e8f744c197f
-  sidekiq-failures (1.0.4) sha256=a2322ebd998d3a17fb5fe680347c0909e53426ed259b126116ac51adaa435fa1
+  sidekiq-failures (1.1.0) sha256=c874e10cee8be2db23d22c29887273e0f93d42f345075ed413ca2b2fac40a2f1
   sidekiq-pro (5.5.8) sha256=4a0cfa532f1f9a0002a749d6b26a934a4be2105743e7521651a8dd976aa09468
   sidekiq-unique-jobs (7.1.33) sha256=20054bf240a78ee0583585c45ad2e2acb2aca46720e1ae530f7f08d01d3fa1aa
   signet (0.20.0) sha256=bc660e2a6062311348cd35ec1ffafde1c5e2231213e1ca124f57aa4f59ec47a3
