@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2025_08_07_144120) do
+ActiveRecord::Schema[7.0].define(version: 2025_09_24_222936) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
   enable_extension "pg_stat_statements"
@@ -180,6 +180,21 @@ ActiveRecord::Schema[7.0].define(version: 2025_08_07_144120) do
     t.integer "position", null: false
     t.index ["position", "resource_id"], name: "index_pages_on_position_and_resource_id", unique: true
     t.index ["resource_id"], name: "index_pages_on_resource_id"
+  end
+
+  create_table "resource_scores", force: :cascade do |t|
+    t.integer "resource_id"
+    t.boolean "featured"
+    t.string "country"
+    t.string "lang"
+    t.integer "score"
+    t.float "user_score_average"
+    t.integer "user_score_count"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.integer "featured_order"
+    t.index ["lang", "country"], name: "index_resource_scores_on_lang_and_country"
+    t.index ["resource_id"], name: "index_resource_scores_on_resource_id"
   end
 
   create_table "resource_tool_groups", force: :cascade do |t|
