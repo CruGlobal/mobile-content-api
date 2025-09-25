@@ -26,14 +26,14 @@ class LanguagesController < ApplicationController
     response.headers["Location"] = "languages/#{language.id}"
     render json: language, status: :accepted
   rescue ActiveRecord::RecordInvalid => e
-    render json: {errors: formatted_errors("record_invalid", e)}, status: :unprocessable_entity
+    render json: {errors: formatted_errors("record_invalid", e)}, status: :unprocessable_content
   end
 
   def destroy
     load_language.destroy!
     head :no_content
   rescue ActiveRecord::RecordNotDestroyed => e
-    render json: {errors: formatted_errors("record_invalid", e)}, status: :unprocessable_entity
+    render json: {errors: formatted_errors("record_invalid", e)}, status: :unprocessable_content
   end
 
   private
