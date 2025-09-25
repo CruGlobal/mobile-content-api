@@ -26,7 +26,7 @@ Sidekiq.configure_server do |config|
   config.super_fetch!
   config.reliable_scheduler!
   config.redis = redis_settings
-  config.failures_default_mode = :exhausted
+  Sidekiq.failures_default_mode = :exhausted
 
   config.client_middleware do |chain|
     chain.add SidekiqUniqueJobs::Middleware::Client

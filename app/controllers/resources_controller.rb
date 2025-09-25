@@ -33,7 +33,7 @@ class ResourcesController < ApplicationController
     if valid_publish_params?
       render json: publish_translations, status: :ok
     else
-      render json: {errors: {"errors" => [{source: {pointer: "/data/attributes/id"}, detail: "Record not found."}]}}, status: :unprocessable_entity
+      render json: {errors: {"errors" => [{source: {pointer: "/data/attributes/id"}, detail: "Record not found."}]}}, status: :unprocessable_content
     end
   end
 
