@@ -32,7 +32,7 @@ gem "puma", ">= 5.0"
 gem "jbuilder"
 
 # Use Redis adapter to run Action Cable in production
-# gem "redis", ">= 4.0.1"
+gem "redis", ">= 4.0.1"
 
 # Use Kredis to get higher-level data types in Redis [https://github.com/rails/kredis]
 # gem "kredis"
@@ -77,6 +77,7 @@ gem "active_storage_validations"
 gem "adobe-campaign", "~> 0.4"
 gem "apple_id"
 gem "aws-sdk-s3"
+gem "crowdin-api", "~> 1.12.0"
 gem "datadog"
 gem "dogstatsd-ruby", "~> 5.3"
 gem "file_validators"
@@ -90,14 +91,10 @@ gem "oj", "~> 3.16.0"
 gem "ougai", "~> 2.0"
 gem "rack-cors", require: "rack/cors"
 gem "raddocs", github: "CruGlobal/raddocs"
-# action cable currently requires redis < 5. This should be fixed in rails >= 7.0.4
-# relevant issue: https://github.com/redis/redis-rb/issues/1142
-gem "redis", "< 5"
 gem "rest-client", "~> 2.1.0"
-gem "crowdin-api", "~> 1.12.0"
 gem "rollbar"
 gem "rubyzip", ">= 1.2.2"
-gem "sidekiq", "~> 6.5"
+gem "sidekiq", "~> 7.3"
 gem "sidekiq-failures"
 gem "sidekiq-unique-jobs"
 gem "validates_email_format_of"
@@ -114,7 +111,7 @@ group :development, :test do
   gem "pry-byebug"
   gem "rspec"
   gem "rspec-rails", "~> 7.0"
-  gem "rspec_api_documentation"
+  gem "rspec_api_documentation", github: "zipmark/rspec_api_documentation"
   gem "rubocop-rspec", require: false
   gem "simplecov-cobertura", require: false
   gem "spring-commands-rspec"
