@@ -26,7 +26,6 @@ Sidekiq.configure_server do |config|
   config.super_fetch!
   config.reliable_scheduler!
   config.redis = redis_settings
-  config.failures_default_mode = :exhausted
 
   config.client_middleware do |chain|
     chain.add SidekiqUniqueJobs::Middleware::Client
@@ -38,6 +37,8 @@ Sidekiq.configure_server do |config|
 
   SidekiqUniqueJobs::Server.configure(config)
 end
+
+Sidekiq.failures_default_mode = :exhausted
 
 if ENV["AWS_EXECUTION_ENV"].present?
   Sidekiq::Pro.dogstatsd = -> { Datadog::Statsd.new socket_path: "/var/run/datadog/dsd.socket" }
