@@ -6,12 +6,11 @@ class Resources::FeaturedController < ApplicationController
     country = params[:country]
     json = featured_resources_json(lang:, country:)
 
-    render json: json, status: :ok
+    render json: json, include: ['resource_scores'], status: :ok
   end
 
   def create
     @resource_score = ResourceScore.new(create_params)
-    @resource_score.featured = true
     @resource_score.save!
     render json: @resource_score, status: :created
   rescue ActiveRecord::RecordInvalid => e
@@ -21,7 +20,7 @@ class Resources::FeaturedController < ApplicationController
   def destroy
     @resource_score = ResourceScore.find_by_id!(params[:id])
     @resource_score.destroy!
-    render head: :no_content
+    render json: {}, status: :ok
   rescue ActiveRecord::RecordNotFound => e
     render json: {errors: [{source: {pointer: "/data/attributes/id"}, detail: "Couldn't find ResourceScore with ID=#{params[:id]}"}]}, status: :not_found
   rescue StandardError => e
@@ -31,7 +30,7 @@ class Resources::FeaturedController < ApplicationController
   private
 
   def featured_resources_json(lang:, country:)
-    scope = Resource.left_joins(:resource_scores).where(resource_scores: { featured: true })
+    scope = Resource.includes(:resource_scores).left_joins(:resource_scores).where(resource_scores: { featured: true })
 
     if lang.present?
       # Query for resources at a given language if param is present
@@ -43,12 +42,10 @@ class Resources::FeaturedController < ApplicationController
       scope = scope.where("resource_scores.country = LOWER(:country)", country:)
     end
 
-    ActiveModelSerializers::SerializableResource.new(
-      scope.order("resource_scores.featured_order ASC, resource_scores.featured DESC NULLS LAST, resource_scores.score DESC NULLS LAST, resources.created_at DESC"),
-    ).to_json
+    scope.order("resource_scores.featured_order ASC, resource_scores.featured DESC NULLS LAST, resource_scores.score DESC NULLS LAST, resources.created_at DESC")
   end
 
   def create_params
-    params.require(:data).require(:attributes).permit(:resource_id, :lang, :country, :score, :featured_order)
+    params.require(:data).require(:attributes).permit(:resource_id, :lang, :country, :score, :featured_order, :featured)
   end
 end
