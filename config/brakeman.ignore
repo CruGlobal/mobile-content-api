@@ -1,29 +1,6 @@
 {
   "ignored_warnings": [
     {
-      "warning_type": "Weak Hash",
-      "warning_code": 90,
-      "fingerprint": "003c2db09fbe3434813e3efd45799f8072a7cca7139f85d57deb4d287d8639e8",
-      "check_name": "WeakHash",
-      "message": "Weak hashing algorithm used: MD5",
-      "file": "app/lib/one_sky.rb",
-      "line": 54,
-      "link": "https://brakemanscanner.org/docs/warning_types/weak_hash/",
-      "code": "Digest::MD5.hexdigest((AuthUtil.epoch_time_seconds + ENV[\"ONESKY_API_SECRET\"]))",
-      "render_path": null,
-      "location": {
-        "type": "method",
-        "class": "OneSky",
-        "method": "s(:self).headers"
-      },
-      "user_input": null,
-      "confidence": "Medium",
-      "cwe_id": [
-        328
-      ],
-      "note": ""
-    },
-    {
       "warning_type": "Unscoped Find",
       "warning_code": 82,
       "fingerprint": "27ee4f6d0ad789327918244724d7f3559ef10e9583c65b1a54f929ecdcbdfc9b",
@@ -214,7 +191,7 @@
       "check_name": "EOLRails",
       "message": "Support for Rails 7.0.8.7 ended on 2025-04-01",
       "file": "Gemfile.lock",
-      "line": 795,
+      "line": 815,
       "link": "https://brakemanscanner.org/docs/warning_types/unmaintained_dependency/",
       "code": null,
       "render_path": null,
@@ -248,7 +225,30 @@
         285
       ],
       "note": ""
+    },
+    {
+      "warning_type": "Unscoped Find",
+      "warning_code": 82,
+      "fingerprint": "fefed2e595dbe4832adc275de94477f4fc19a6421498f07a68c7a3c39e22cd14",
+      "check_name": "UnscopedFind",
+      "message": "Unscoped call to `ResourceScore#find`",
+      "file": "app/controllers/resources/featured_controller.rb",
+      "line": 21,
+      "link": "https://brakemanscanner.org/docs/warning_types/unscoped_find/",
+      "code": "ResourceScore.find(params[:id])",
+      "render_path": null,
+      "location": {
+        "type": "method",
+        "class": "Resources::FeaturedController",
+        "method": "destroy"
+      },
+      "user_input": "params[:id]",
+      "confidence": "Weak",
+      "cwe_id": [
+        285
+      ],
+      "note": ""
     }
   ],
-  "brakeman_version": "7.0.2"
+  "brakeman_version": "7.1.0"
 }
