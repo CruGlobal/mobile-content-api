@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "xml_util"
-
 class Attachment < ActiveRecord::Base
   validates :file, attached: true
   validates :is_zipped, inclusion: {in: [true, false]}
@@ -32,7 +30,7 @@ class Attachment < ActiveRecord::Base
 
   def generate_sha256
     XmlUtil.filename_sha(URI.parse(url).open.read)
-  rescue NoMethodError, OpenURI::HTTPError, Errno::ECONNREFUSED
+  rescue NoMethodError, OpenURI::HTTPError, Errno::ECONNREFUSED, ArgumentError
     file = attachment_changes["file"].attachable
     file ||= url
     XmlUtil.filename_sha(File.read(file))
