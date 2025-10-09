@@ -18,7 +18,7 @@ class Resources::FeaturedController < ApplicationController
   end
 
   def destroy
-    @resource_score = ResourceScore.find_by_id!(params[:id])
+    @resource_score = ResourceScore.find(params[:id])
     @resource_score.destroy!
     render json: {}, status: :ok
   rescue ActiveRecord::RecordNotFound => e
