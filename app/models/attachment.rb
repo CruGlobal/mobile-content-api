@@ -30,7 +30,7 @@ class Attachment < ActiveRecord::Base
 
   def generate_sha256
     XmlUtil.filename_sha(URI.parse(url).open.read)
-  rescue NoMethodError, OpenURI::HTTPError, Errno::ECONNREFUSED
+  rescue NoMethodError, OpenURI::HTTPError, Errno::ECONNREFUSED, ArgumentError
     file = attachment_changes["file"].attachable
     file ||= url
     XmlUtil.filename_sha(File.read(file))
