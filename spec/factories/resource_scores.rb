@@ -1,8 +1,9 @@
 FactoryBot.define do
   factory :resource_score do
-    resource_id { 1 }
+    resource
     featured { false }
-    country { "USA" }
+    featured_order { 1 }
+    country { "us" }
     lang { "en" }
     score { 1 }
     user_score_average { 1.5 }
