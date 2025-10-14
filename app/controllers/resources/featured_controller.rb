@@ -47,10 +47,14 @@ class Resources::FeaturedController < ApplicationController
       scope = scope.where('resource_scores.country = LOWER(:country)', country:)
     end
 
-    scope.order('resource_scores.featured_order ASC, resource_scores.featured DESC NULLS LAST, resource_scores.score DESC NULLS LAST, resources.created_at DESC')
+    scope.order("resource_scores.featured_order ASC, resource_scores.featured DESC NULLS LAST, \
+      resource_scores.score DESC NULLS LAST, resource_scores.default_order ASC NULLS LAST, \
+      resources.created_at DESC")
   end
 
   def create_params
-    params.require(:data).require(:attributes).permit(:resource_id, :lang, :country, :score, :featured_order, :featured)
+    params.require(:data).require(:attributes).permit(
+      :resource_id, :lang, :country, :score, :featured_order, :featured, :default_order
+    )
   end
 end

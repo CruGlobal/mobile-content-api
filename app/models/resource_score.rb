@@ -7,6 +7,7 @@ class ResourceScore < ApplicationRecord
                     allow_nil: true
   validates :featured_order, numericality: { only_integer: true, greater_than_or_equal_to: 1, less_than_or_equal_to: 10 },
                              allow_nil: true
+  validates :default_order, numericality: { only_integer: true, greater_than_or_equal_to: 1 }, allow_nil: true
   validates :resource_id, uniqueness: {
     scope: %i[country lang], message: 'should have only one score per country and language'
   }
