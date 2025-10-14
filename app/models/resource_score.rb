@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class ResourceScore < ApplicationRecord
   belongs_to :resource
 
@@ -5,7 +7,9 @@ class ResourceScore < ApplicationRecord
                     allow_nil: true
   validates :featured_order, numericality: { only_integer: true, greater_than_or_equal_to: 1, less_than_or_equal_to: 10 },
                              allow_nil: true
-  validates :resource_id, uniqueness: { scope: [:country, :lang], message: "should have only one score per country and language" }
+  validates :resource_id, uniqueness: {
+    scope: %i[country lang], message: 'should have only one score per country and language'
+  }
   validates :country, presence: true
   validates :lang, presence: true
   validate :featured_has_order_assigned
@@ -21,16 +25,16 @@ class ResourceScore < ApplicationRecord
   end
 
   def featured_has_order_assigned
-    if featured && featured_order.nil?
-      errors.add(:featured_order, "must be present if resource is featured")
-    end
+    return unless featured && featured_order.nil?
+
+    errors.add(:featured_order, 'must be present if resource is featured')
   end
 
   def featured_order_is_available
     existing = ResourceScore.where(country: country, lang: lang, featured_order: featured_order)
                             .where.not(id:)
-    if existing.exists?
-      errors.add(:featured_order, "is already taken for this country and language")
-    end
+    return unless existing.exists?
+
+    errors.add(:featured_order, 'is already taken for this country and language')
   end
 end
