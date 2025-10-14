@@ -9,7 +9,7 @@ class ToolGroupsController < ApplicationController
   def create
     create_tool_group
   rescue ActiveRecord::RecordInvalid => e
-    render json: {errors: formatted_errors("record_invalid", e)}, status: :unprocessable_entity
+    render json: {errors: formatted_errors("record_invalid", e)}, status: :unprocessable_content
   end
 
   def create_tool
@@ -26,7 +26,7 @@ class ToolGroupsController < ApplicationController
     response.headers["Location"] = "tool-groups/#{resource_tool_group.id}"
     render json: resource_tool_group, status: :created
   rescue ActiveRecord::RecordInvalid => e
-    render json: {errors: formatted_errors("record_invalid", e)}, status: :unprocessable_entity
+    render json: {errors: formatted_errors("record_invalid", e)}, status: :unprocessable_content
   end
 
   def update_tool
