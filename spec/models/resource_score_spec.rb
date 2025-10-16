@@ -55,7 +55,7 @@ RSpec.describe ResourceScore, type: :model do
       it "allows same featured_order for different country" do
         resource1 = FactoryBot.create(:resource, name: "Resource Country Test 1")
         FactoryBot.create(:resource_score, resource: resource1, featured: true, featured_order: 1, country: "US", lang: "en")
-        
+
         resource2 = FactoryBot.create(:resource, name: "Resource Country Test 2")
         different_country = FactoryBot.build(:resource_score, resource: resource2, featured: true, featured_order: 1, country: "CA", lang: "en")
         expect(different_country).to be_valid
@@ -64,7 +64,7 @@ RSpec.describe ResourceScore, type: :model do
       it "allows same featured_order for different language" do
         resource1 = FactoryBot.create(:resource, name: "Resource Language Test 1")
         FactoryBot.create(:resource_score, resource: resource1, featured: true, featured_order: 1, country: "US", lang: "en")
-        
+
         resource2 = FactoryBot.create(:resource, name: "Resource Language Test 2")
         different_lang = FactoryBot.build(:resource_score, resource: resource2, featured: true, featured_order: 1, country: "US", lang: "es")
         expect(different_lang).to be_valid
@@ -73,7 +73,7 @@ RSpec.describe ResourceScore, type: :model do
       it "allows same featured_order for different resources" do
         first_resource = FactoryBot.create(:resource, name: "Resource Featured Order Test 1")
         second_resource = FactoryBot.create(:resource, name: "Resource Featured Order Test 2")
-        
+
         FactoryBot.create(:resource_score, resource: first_resource, featured: true, featured_order: 1, country: "US", lang: "en")
         different_resource = FactoryBot.build(:resource_score, resource: second_resource, featured: true, featured_order: 1, country: "US", lang: "en")
         expect(different_resource).to be_valid
