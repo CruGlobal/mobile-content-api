@@ -13,13 +13,13 @@ resource "Resources::Featured" do
 
   let!(:resource) { Resource.first }
   let!(:unfeatured_resource) { Resource.last }
-  let!(:resource_score) { FactoryBot.create(:resource_score, resource: resource, featured: true, featured_order: 1, lang: 'en', country: 'us') }
-  let!(:unfeatured_resource_score) { FactoryBot.create(:resource_score, resource: unfeatured_resource, featured: false, featured_order: 1, lang: 'en', country: 'us') }
+  let!(:resource_score) { FactoryBot.create(:resource_score, resource: resource, featured: true, featured_order: 1, lang: "en", country: "us") }
+  let!(:unfeatured_resource_score) { FactoryBot.create(:resource_score, resource: unfeatured_resource, featured: false, featured_order: 1, lang: "en", country: "us") }
 
   get "resources/featured" do
     context "without filters" do
       it "returns featured resources" do
-        do_request include: 'resource-score'
+        do_request include: "resource-score"
 
         expect(status).to be(200)
         json = JSON.parse(response_body)
@@ -50,8 +50,8 @@ resource "Resources::Featured" do
     end
 
     context "with resource_type filter" do
-      let!(:tool_resource_type) { ResourceType.find_by_name('metatool') }
-      let!(:tool_resource) { Resource.joins(:resource_type).where(resource_types: {name: 'metatool'}).first }
+      let!(:tool_resource_type) { ResourceType.find_by_name("metatool") }
+      let!(:tool_resource) { Resource.joins(:resource_type).where(resource_types: {name: "metatool"}).first }
       let!(:tool_score) { FactoryBot.create(:resource_score, resource: tool_resource, featured: true, featured_order: 2) }
 
       it "returns featured resources for specified resource type" do
