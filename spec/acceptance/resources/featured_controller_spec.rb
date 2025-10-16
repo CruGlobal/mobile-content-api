@@ -99,7 +99,7 @@ resource "Resources::Featured" do
 
     context "with invalid parameters" do
       it "returns unprocessable entity" do
-        do_request(data: { type: "resource_score", attributes: { featured: true } })
+        do_request(data: {type: "resource_score", attributes: {featured: true}})
 
         expect(status).to be(422)
         json = JSON.parse(response_body)

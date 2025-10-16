@@ -29,7 +29,7 @@ RSpec.describe ResourceScore, type: :model do
 
     context "uniqueness validation" do
       before { FactoryBot.create(:resource_score, resource: resource, country: "US", lang: "en") }
-      
+
       it "validates uniqueness of resource_id scoped to country and lang" do
         duplicate = FactoryBot.build(:resource_score, resource: resource, country: "US", lang: "en")
         expect(duplicate).not_to be_valid
@@ -46,7 +46,7 @@ RSpec.describe ResourceScore, type: :model do
       end
 
       it "validates uniqueness of featured_order within country and language" do
-        existing = FactoryBot.create(:resource_score, featured: true, featured_order: 1, country: "US", lang: "en")
+        FactoryBot.create(:resource_score, featured: true, featured_order: 1, country: "US", lang: "en")
         duplicate = FactoryBot.build(:resource_score, featured: true, featured_order: 1, country: "US", lang: "en")
         expect(duplicate).not_to be_valid
         expect(duplicate.errors[:featured_order]).to include("is already taken for this country and language")
