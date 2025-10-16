@@ -11,7 +11,8 @@ resource "Resources::Featured" do
   let(:raw_post) { params.to_json }
   let(:authorization) { AuthToken.generic_token }
 
-  let!(:resource) { FactoryBot.create(:resource) }
+  let(:base_resource_name) { "Base Featured Resource" }
+  let!(:resource) { FactoryBot.create(:resource, name: base_resource_name) }
   let!(:resource_score) { FactoryBot.create(:resource_score, resource: resource, featured: true, featured_order: 1) }
   let!(:unfeatured_resource_score) { FactoryBot.create(:resource_score, featured: false) }
 
@@ -28,7 +29,8 @@ resource "Resources::Featured" do
     end
 
     context "with language filter" do
-      let!(:resource_score_fr) { FactoryBot.create(:resource_score, lang: "fr", featured: true) }
+      let!(:resource_fr) { FactoryBot.create(:resource, name: "French Featured Resource") }
+      let!(:resource_score_fr) { FactoryBot.create(:resource_score, resource: resource_fr, lang: "fr", featured: true) }
 
       it "returns featured resources for specified language" do
         do_request "filter[lang]": "fr"
@@ -41,7 +43,8 @@ resource "Resources::Featured" do
     end
 
     context "with country filter" do
-      let!(:resource_score_us) { FactoryBot.create(:resource_score, country: "US", featured: true) }
+      let!(:resource_us) { FactoryBot.create(:resource, name: "US Featured Resource") }
+      let!(:resource_score_us) { FactoryBot.create(:resource_score, resource: resource_us, country: "US", featured: true) }
 
       it "returns featured resources for specified country" do
         do_request "filter[country]": "US"
@@ -54,7 +57,7 @@ resource "Resources::Featured" do
     end
 
     context "with resource_type filter" do
-      let!(:tool_resource) { FactoryBot.create(:resource, resource_type: FactoryBot.create(:resource_type, name: "tool")) }
+      let!(:tool_resource) { FactoryBot.create(:resource, name: "Tool Featured Resource", resource_type: FactoryBot.create(:resource_type, name: "tool")) }
       let!(:tool_score) { FactoryBot.create(:resource_score, resource: tool_resource, featured: true) }
 
       it "returns featured resources for specified resource type" do
@@ -70,6 +73,9 @@ resource "Resources::Featured" do
 
   post "resources/featured" do
     requires_authorization
+
+    let(:post_resource_name) { "New Featured Resource" }
+    let!(:resource) { FactoryBot.create(:resource, name: post_resource_name) }
 
     let(:valid_params) do
       {
