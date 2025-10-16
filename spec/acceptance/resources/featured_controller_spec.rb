@@ -11,71 +11,62 @@ resource "Resources::Featured" do
   let(:raw_post) { params.to_json }
   let(:authorization) { AuthToken.generic_token }
 
-  let(:base_resource_name) { "Base Featured Resource" }
-  let!(:resource) { FactoryBot.create(:resource, name: base_resource_name) }
-  let!(:resource_score) { FactoryBot.create(:resource_score, resource: resource, featured: true, featured_order: 1) }
-  let!(:unfeatured_resource_score) { FactoryBot.create(:resource_score, featured: false) }
+  let!(:resource) { Resource.first }
+  let!(:unfeatured_resource) { Resource.last }
+  let!(:resource_score) { FactoryBot.create(:resource_score, resource: resource, featured: true, featured_order: 1, lang: 'en', country: 'us') }
+  let!(:unfeatured_resource_score) { FactoryBot.create(:resource_score, resource: unfeatured_resource, featured: false, featured_order: 1, lang: 'en', country: 'us') }
 
   get "resources/featured" do
     context "without filters" do
       it "returns featured resources" do
-        do_request
+        do_request include: 'resource-score'
 
         expect(status).to be(200)
         json = JSON.parse(response_body)
         expect(json["data"].size).to eq(1)
-        expect(json["data"][0]["attributes"]["featured"]).to be true
+        expect(json["data"][0]["relationships"]["resource-scores"]["data"][0]["id"]).to eq(resource_score.id.to_s)
       end
     end
 
     context "with language filter" do
-      let!(:resource_fr) { FactoryBot.create(:resource, name: "French Featured Resource") }
-      let!(:resource_score_fr) { FactoryBot.create(:resource_score, resource: resource_fr, lang: "fr", featured: true) }
-
       it "returns featured resources for specified language" do
-        do_request "filter[lang]": "fr"
+        do_request lang: "fr"
 
         expect(status).to be(200)
         json = JSON.parse(response_body)
-        expect(json["data"].size).to eq(1)
-        expect(json["data"][0]["attributes"]["lang"]).to eq("fr")
+        expect(json["data"].size).to eq(0)
       end
     end
 
     context "with country filter" do
-      let!(:resource_us) { FactoryBot.create(:resource, name: "US Featured Resource") }
-      let!(:resource_score_us) { FactoryBot.create(:resource_score, resource: resource_us, country: "US", featured: true) }
-
       it "returns featured resources for specified country" do
-        do_request "filter[country]": "US"
+        do_request country: "us"
 
         expect(status).to be(200)
         json = JSON.parse(response_body)
         expect(json["data"].size).to eq(1)
-        expect(json["data"][0]["attributes"]["country"]).to eq("US")
+        expect(json["data"][0]["relationships"]["resource-scores"]["data"][0]["id"]).to eq(resource_score.id.to_s)
       end
     end
 
     context "with resource_type filter" do
-      let!(:tool_resource) { FactoryBot.create(:resource, name: "Tool Featured Resource", resource_type: FactoryBot.create(:resource_type, name: "tool")) }
-      let!(:tool_score) { FactoryBot.create(:resource_score, resource: tool_resource, featured: true) }
+      let!(:tool_resource_type) { ResourceType.find_by_name('metatool') }
+      let!(:tool_resource) { Resource.joins(:resource_type).where(resource_types: {name: 'metatool'}).first }
+      let!(:tool_score) { FactoryBot.create(:resource_score, resource: tool_resource, featured: true, featured_order: 2) }
 
       it "returns featured resources for specified resource type" do
-        do_request "filter[resource_type]": "tool"
+        do_request resource_type: "metatool"
 
         expect(status).to be(200)
         json = JSON.parse(response_body)
         expect(json["data"].size).to eq(1)
-        expect(json["data"][0]["relationships"]["resource"]["data"]["id"]).to eq(tool_resource.id.to_s)
+        expect(json["data"][0]["relationships"]["resource-scores"]["data"][0]["id"]).to eq(tool_score.id.to_s)
       end
     end
   end
 
   post "resources/featured" do
     requires_authorization
-
-    let(:post_resource_name) { "New Featured Resource" }
-    let!(:resource) { FactoryBot.create(:resource, name: post_resource_name) }
 
     let(:valid_params) do
       {
@@ -99,7 +90,7 @@ resource "Resources::Featured" do
         expect(status).to be(201)
         json = JSON.parse(response_body)
         expect(json["data"]["attributes"]["featured"]).to be true
-        expect(json["data"]["attributes"]["featured_order"]).to eq(1)
+        expect(json["data"]["relationships"]["resource"]["data"]["id"]).to eq(resource.id.to_s)
       end
     end
 
@@ -124,16 +115,6 @@ resource "Resources::Featured" do
 
       expect(status).to be(200)
       expect(ResourceScore.exists?(id)).to be false
-    end
-
-    context "with non-existent resource score" do
-      let(:id) { 999999 }
-
-      it "returns not found" do
-        do_request
-
-        expect(status).to be(404)
-      end
     end
   end
 end

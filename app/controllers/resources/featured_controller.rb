@@ -6,11 +6,11 @@ module Resources
     before_action :authorize!, only: %i[create destroy]
 
     def index
-      json = featured_resources_json(
+      featured_resources = all_featured_resources(
         lang: params[:lang], country: params[:country], resource_type: params[:resource_type]
       )
 
-      render json: json, include: params[:include], status: :ok
+      render json: featured_resources, include: params[:include], status: :ok
     end
 
     def create
@@ -33,7 +33,7 @@ module Resources
 
     private
 
-    def featured_resources_json(lang:, country:, resource_type: nil)
+    def all_featured_resources(lang:, country:, resource_type: nil)
       scope = Resource.includes(:resource_scores).left_joins(:resource_scores).where(resource_scores: {featured: true})
 
       scope = filter_by_lang(scope, lang)
