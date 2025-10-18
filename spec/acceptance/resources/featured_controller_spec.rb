@@ -117,12 +117,12 @@ resource "Resources::Featured" do
       expect(ResourceScore.exists?(id)).to be false
     end
 
-    context 'when an incorrect ID is sent' do
-      let(:id) { 'unknownId' }
+    context "when an incorrect ID is sent" do
+      let(:id) { "unknownId" }
 
       it "returns a not found error" do
         do_request
-  
+
         expect(status).to be(404)
       end
     end
