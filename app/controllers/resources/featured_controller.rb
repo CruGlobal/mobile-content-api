@@ -25,8 +25,6 @@ module Resources
       @resource_score = ResourceScore.find(params[:id])
       @resource_score.destroy!
       render json: {}, status: :ok
-    rescue ActiveRecord::RecordNotFound => e
-      formatted_errors("record_not_found", e)
     rescue
       render json: {errors: [{source: {pointer: "/data/attributes/id"}, detail: e.message}]}, status: :unprocessable_entity
     end
