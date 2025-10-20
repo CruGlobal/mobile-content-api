@@ -36,6 +36,16 @@ resource "Resources::Featured" do
         json = JSON.parse(response_body)
         expect(json["data"].size).to eq(0)
       end
+
+      context 'inside filter param' do
+        it "returns featured resources for specified language" do
+          do_request filter: {lang: "fr"}
+  
+          expect(status).to be(200)
+          json = JSON.parse(response_body)
+          expect(json["data"].size).to eq(0)
+        end
+      end
     end
 
     context "with country filter" do
@@ -46,6 +56,17 @@ resource "Resources::Featured" do
         json = JSON.parse(response_body)
         expect(json["data"].size).to eq(1)
         expect(json["data"][0]["relationships"]["resource-scores"]["data"][0]["id"]).to eq(resource_score.id.to_s)
+      end
+
+      context 'inside filter param' do
+        it "returns featured resources for specified country" do
+          do_request filter: {country: "us"}
+  
+          expect(status).to be(200)
+          json = JSON.parse(response_body)
+          expect(json["data"].size).to eq(1)
+          expect(json["data"][0]["relationships"]["resource-scores"]["data"][0]["id"]).to eq(resource_score.id.to_s)
+        end
       end
     end
 
@@ -61,6 +82,17 @@ resource "Resources::Featured" do
         json = JSON.parse(response_body)
         expect(json["data"].size).to eq(1)
         expect(json["data"][0]["relationships"]["resource-scores"]["data"][0]["id"]).to eq(tool_score.id.to_s)
+      end
+
+      context 'inside filter param' do
+        it "returns featured resources for specified resource type" do
+          do_request filter: {resource_type: "metatool"}
+  
+          expect(status).to be(200)
+          json = JSON.parse(response_body)
+          expect(json["data"].size).to eq(1)
+          expect(json["data"][0]["relationships"]["resource-scores"]["data"][0]["id"]).to eq(tool_score.id.to_s)
+        end
       end
     end
   end

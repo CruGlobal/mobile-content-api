@@ -7,7 +7,9 @@ module Resources
 
     def index
       featured_resources = all_featured_resources(
-        lang: params[:lang], country: params[:country], resource_type: params[:resource_type]
+        lang: params.dig(:filter, :lang) || params[:lang],
+        country: params.dig(:filter, :country) || params[:country],
+        resource_type: params.dig(:filter, :resource_type) || params[:resource_type]
       )
 
       render json: featured_resources, include: params[:include], status: :ok
