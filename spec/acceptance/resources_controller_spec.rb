@@ -487,6 +487,25 @@ resource "Resources" do
       expect(resources_matched(data)).to eql resources_result
     end
 
+    it "get resources filtered by resource_type" do
+      do_request "filter[resource_type]": Resource.first.resource_type.name
+
+      expect(status).to be(200)
+      data = JSON.parse(response_body)["data"]
+      expect(data.count).to be > 0
+      data.each do |resource|
+        expect(resource["attributes"]["resource-type"]).to eq(Resource.first.resource_type.name)
+      end
+    end
+
+    it "returns empty array when filtering by non-existent resource_type" do
+      do_request "filter[resource_type]": "non-existent-type"
+
+      expect(status).to be(200)
+      data = JSON.parse(response_body)["data"]
+      expect(data.count).to eq(0)
+    end
+
     it "get all resources, include variations" do
       do_request "filter[system]" => "GodTools", :include => :variants
 
