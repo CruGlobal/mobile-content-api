@@ -1,4 +1,4 @@
-require 'rails_helper'
+require "rails_helper"
 
 RSpec.describe ResourceDefaultOrder, type: :model do
   let(:resource) { Resource.first || FactoryBot.create(:resource) }

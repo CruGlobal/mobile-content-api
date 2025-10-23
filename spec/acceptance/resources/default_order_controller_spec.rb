@@ -107,7 +107,7 @@ resource "Resources::DefaultOrder" do
 
     context "with invalid parameters" do
       it "returns unprocessable entity" do
-        do_request(data: { attributes: { type: "resource_default_order" } })
+        do_request(data: {attributes: {type: "resource_default_order"}})
 
         expect(status).to be(422)
         json = JSON.parse(response_body)
@@ -159,7 +159,7 @@ resource "Resources::DefaultOrder" do
     context "with valid parameters" do
       it "updates the default order resource" do
         do_request(valid_update_params)
-        
+
         expect(status).to be(200)
         json = JSON.parse(response_body)
         expect(json["data"]["attributes"]["lang"]).to eq("fr")
@@ -169,7 +169,7 @@ resource "Resources::DefaultOrder" do
 
     context "with invalid parameters" do
       it "returns unprocessable entity" do
-        do_request(data: { type: "resource_default_order", attributes: { position: "invalid" } })
+        do_request(data: {type: "resource_default_order", attributes: {position: "invalid"}})
 
         expect(status).to be(422)
         json = JSON.parse(response_body)

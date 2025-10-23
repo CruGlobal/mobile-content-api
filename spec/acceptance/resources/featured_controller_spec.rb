@@ -179,7 +179,7 @@ resource "Resources::Featured" do
     context "with valid parameters" do
       it "updates the featured resource score" do
         do_request(valid_update_params)
-        
+
         expect(status).to be(200)
         json = JSON.parse(response_body)
         expect(json["data"]["attributes"]["featured-order"]).to eq(2)
@@ -190,7 +190,7 @@ resource "Resources::Featured" do
 
     context "with invalid parameters" do
       it "returns unprocessable entity" do
-        do_request(data: { type: "resource_score", attributes: { featured_order: "invalid" } })
+        do_request(data: {type: "resource_score", attributes: {featured_order: "invalid"}})
 
         expect(status).to be(422)
         json = JSON.parse(response_body)
