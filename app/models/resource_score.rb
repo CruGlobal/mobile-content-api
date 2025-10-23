@@ -12,6 +12,7 @@ class ResourceScore < ApplicationRecord
   validate :featured_order_is_available_for_country_lang_and_resource_type, if: -> { featured && featured_order.present? }
 
   before_save :downcase_country_and_lang
+  after_commit :clear_resource_cache
 
   private
 
@@ -34,5 +35,10 @@ class ResourceScore < ApplicationRecord
     return unless existing.exists?
 
     errors.add(:featured_order, "is already taken for this country, language and resource type")
+  end
+
+  def clear_resource_cache
+    Rails.cache.delete_matched("cache::resources/*")
+    Rails.cache.delete_matched("resources/*")
   end
 end

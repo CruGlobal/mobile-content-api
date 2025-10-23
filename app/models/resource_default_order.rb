@@ -6,10 +6,16 @@ class ResourceDefaultOrder < ApplicationRecord
   validates :lang, presence: true
 
   before_save :downcase_lang
+  after_commit :clear_resource_cache
 
   private
 
   def downcase_lang
     self.lang = lang.downcase if lang.present?
+  end
+
+  def clear_resource_cache
+    Rails.cache.delete_matched("cache::resources/*")
+    Rails.cache.delete_matched("resources/*")
   end
 end
