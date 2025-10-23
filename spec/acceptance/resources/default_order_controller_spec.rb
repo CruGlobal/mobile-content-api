@@ -3,7 +3,7 @@
 require "acceptance_helper"
 require "sidekiq/testing"
 
-resource "Resources::Featured" do
+resource "Resources::DefaultOrder" do
   include ActiveJob::TestHelper
 
   header "Accept", "application/vnd.api+json"
@@ -12,24 +12,30 @@ resource "Resources::Featured" do
   let(:authorization) { AuthToken.generic_token }
 
   let!(:resource) { Resource.first }
-  let!(:unfeatured_resource) { Resource.last }
-  let!(:resource_score) { FactoryBot.create(:resource_score, resource: resource, featured: true, featured_order: 1, lang: "en", country: "us") }
-  let!(:unfeatured_resource_score) { FactoryBot.create(:resource_score, resource: unfeatured_resource, featured: false, featured_order: 1, lang: "en", country: "us") }
+  let!(:other_resource) { Resource.last }
 
-  get "resources/featured" do
+  before(:each) do
+    ResourceDefaultOrder.delete_all
+  end
+
+  get "resources/default_order" do
+    before do
+      FactoryBot.create(:resource_default_order, resource: resource, lang: "en")
+      FactoryBot.create(:resource_default_order, resource: other_resource, lang: "en")
+    end
+
     context "without filters" do
-      it "returns featured resources" do
-        do_request include: "resource-score"
+      it "returns default order resources" do
+        do_request include: "resource-default-orders"
 
         expect(status).to be(200)
         json = JSON.parse(response_body)
-        expect(json["data"].size).to eq(1)
-        expect(json["data"][0]["relationships"]["resource-scores"]["data"][0]["id"]).to eq(resource_score.id.to_s)
+        expect(json["data"].size).to eq(2)
       end
     end
 
     context "with language filter" do
-      it "returns featured resources for specified language" do
+      it "returns default order resources for specified language" do
         do_request lang: "fr"
 
         expect(status).to be(200)
@@ -38,7 +44,7 @@ resource "Resources::Featured" do
       end
 
       context "inside filter param" do
-        it "returns featured resources for specified language" do
+        it "returns default order resources for specified language" do
           do_request filter: {lang: "fr"}
 
           expect(status).to be(200)
@@ -48,87 +54,60 @@ resource "Resources::Featured" do
       end
     end
 
-    context "with country filter" do
-      it "returns featured resources for specified country" do
-        do_request country: "us"
-
-        expect(status).to be(200)
-        json = JSON.parse(response_body)
-        expect(json["data"].size).to eq(1)
-        expect(json["data"][0]["relationships"]["resource-scores"]["data"][0]["id"]).to eq(resource_score.id.to_s)
-      end
-
-      context "inside filter param" do
-        it "returns featured resources for specified country" do
-          do_request filter: {country: "us"}
-
-          expect(status).to be(200)
-          json = JSON.parse(response_body)
-          expect(json["data"].size).to eq(1)
-          expect(json["data"][0]["relationships"]["resource-scores"]["data"][0]["id"]).to eq(resource_score.id.to_s)
-        end
-      end
-    end
-
     context "with resource_type filter" do
       let!(:tool_resource_type) { ResourceType.find_by_name("metatool") }
       let!(:tool_resource) { Resource.joins(:resource_type).where(resource_types: {name: "metatool"}).first }
-      let!(:tool_score) { FactoryBot.create(:resource_score, resource: tool_resource, featured: true, featured_order: 2) }
+      let!(:tool_order) { FactoryBot.create(:resource_default_order, resource: tool_resource, lang: "en") }
 
-      it "returns featured resources for specified resource type" do
+      it "returns default order resources for specified resource type" do
         do_request resource_type: "metatool"
 
         expect(status).to be(200)
         json = JSON.parse(response_body)
         expect(json["data"].size).to eq(1)
-        expect(json["data"][0]["relationships"]["resource-scores"]["data"][0]["id"]).to eq(tool_score.id.to_s)
       end
 
       context "inside filter param" do
-        it "returns featured resources for specified resource type" do
+        it "returns default order resources for specified resource type" do
           do_request filter: {resource_type: "metatool"}
 
           expect(status).to be(200)
           json = JSON.parse(response_body)
           expect(json["data"].size).to eq(1)
-          expect(json["data"][0]["relationships"]["resource-scores"]["data"][0]["id"]).to eq(tool_score.id.to_s)
         end
       end
     end
   end
 
-  post "resources/featured" do
+  post "resources/default_order" do
     requires_authorization
 
     let(:valid_params) do
       {
         data: {
-          type: "resource_score",
+          type: "resource_default_order",
           attributes: {
             resource_id: resource.id,
             lang: "en",
-            country: "US",
-            featured: true,
-            featured_order: 1
+            position: 2
           }
         }
       }
     end
 
     context "with valid parameters" do
-      it "creates a new featured resource score" do
+      it "creates a new default order resource" do
         do_request(valid_params)
 
         expect(status).to be(201)
         json = JSON.parse(response_body)
-        expect(json["data"]["attributes"]["featured"]).to be true
         expect(json["data"]["relationships"]["resource"]["data"]["id"]).to eq(resource.id.to_s)
       end
     end
 
     context "with invalid parameters" do
       it "returns unprocessable entity" do
-        do_request(data: {type: "resource_score", attributes: {featured: true}})
+        do_request(data: {attributes: {type: "resource_default_order"}})
 
         expect(status).to be(422)
         json = JSON.parse(response_body)
@@ -137,22 +116,23 @@ resource "Resources::Featured" do
     end
   end
 
-  delete "resources/featured/:id" do
+  delete "resources/default_order/:id" do
     requires_authorization
 
-    let(:id) { resource_score.id }
+    let!(:resource_default_order) { FactoryBot.create(:resource_default_order, resource: resource, lang: "en") }
+    let(:id) { resource_default_order.id }
 
-    it "deletes the featured resource score" do
+    it "deletes the default order resource" do
       do_request
 
       expect(status).to be(200)
-      expect(ResourceScore.exists?(id)).to be false
+      expect(ResourceDefaultOrder.exists?(id)).to be false
     end
 
     context "when an incorrect ID is sent" do
       let(:id) { "unknownId" }
 
-      it "returns a not found error" do
+      it "returns unprocessable entity" do
         do_request
 
         expect(status).to be(404)
@@ -160,37 +140,36 @@ resource "Resources::Featured" do
     end
   end
 
-  patch "resources/featured/:id" do
+  patch "resources/default_order/:id" do
     requires_authorization
 
-    let(:id) { resource_score.id }
+    let!(:resource_default_order) { FactoryBot.create(:resource_default_order, resource: resource, lang: "en") }
+    let(:id) { resource_default_order.id }
     let(:valid_update_params) do
       {
         data: {
-          type: "resource_score",
+          type: "resource_default_order",
           attributes: {
-            featured_order: 2,
-            country: "CA"
+            lang: "fr"
           }
         }
       }
     end
 
     context "with valid parameters" do
-      it "updates the featured resource score" do
+      it "updates the default order resource" do
         do_request(valid_update_params)
 
         expect(status).to be(200)
         json = JSON.parse(response_body)
-        expect(json["data"]["attributes"]["featured-order"]).to eq(2)
-        expect(json["data"]["attributes"]["country"]).to eq("CA".downcase)
+        expect(json["data"]["attributes"]["lang"]).to eq("fr")
         expect(json["data"]["relationships"]["resource"]["data"]["id"]).to eq(resource.id.to_s)
       end
     end
 
     context "with invalid parameters" do
       it "returns unprocessable entity" do
-        do_request(data: {type: "resource_score", attributes: {featured_order: "invalid"}})
+        do_request(data: {type: "resource_default_order", attributes: {position: "invalid"}})
 
         expect(status).to be(422)
         json = JSON.parse(response_body)
@@ -201,7 +180,7 @@ resource "Resources::Featured" do
     context "when an incorrect ID is sent" do
       let(:id) { "unknownId" }
 
-      it "returns a not found error" do
+      it "returns unprocessable entity" do
         do_request(valid_update_params)
 
         expect(status).to be(404)
