@@ -704,6 +704,7 @@
 
             <xs:attributeGroup ref="content:baseAttributes" />
             <xs:attributeGroup ref="content:clickableElement" />
+            <xs:attributeGroup ref="web:contentImageType" />
         </xs:complexType>
     </xs:element>
 
