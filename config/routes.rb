@@ -101,6 +101,8 @@ Rails.application.routes.draw do
     end
   end
 
+  get 'content_status', to: 'content_status#index'
+
   if Rails.env.production? || Rails.env.staging?
     Sidekiq::Web.use Rack::Auth::Basic do |username, password|
       username == ENV.fetch("SIDEKIQ_USERNAME") && password == ENV.fetch("SIDEKIQ_PASSWORD")
