@@ -1,0 +1,25 @@
+<page xmlns="https://mobile-content-api.cru.org/xmlns/page"
+    xmlns:analytics="https://mobile-content-api.cru.org/xmlns/analytics"
+    xmlns:content="https://mobile-content-api.cru.org/xmlns/content"
+    xmlns:publish="https://mobile-content-api.cru.org/xmlns/publish"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="cardcollection">
+    <analytics:events>
+        <analytics:event action="test" system="firebase" />
+    </analytics:events>
+    <cards>
+        <card publish:if-locale="en">
+            <content>
+                <content:spacer />
+                <content:paragraph>
+                    <content:text>Text</content:text>
+                </content:paragraph>
+            </content>
+        </card>
+        <card publish:if-locale-not="en">
+            <analytics:events>
+                <analytics:event action="test" system="facebook" />
+            </analytics:events>
+            <content />
+        </card>
+    </cards>
+</page>
