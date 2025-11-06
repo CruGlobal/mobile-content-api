@@ -39,31 +39,13 @@ module Resources
     def all_featured_resources(lang:, country:, resource_type: nil)
       scope = Resource.includes(:resource_scores).left_joins(:resource_scores).where(resource_scores: {featured: true})
 
-      scope = filter_by_lang(scope, lang)
-      scope = filter_by_country(scope, country)
-      scope = filter_by_resource_type(scope, resource_type)
+      scope = scope.where("resource_scores.lang = LOWER(:lang)", lang:) if lang.present?
+      scope = scope.where("resource_scores.country = LOWER(:country)", country:) if country.present?
+      scope = scope.joins(:resource_type).where(resource_types: {name: resource_type.downcase}) if resource_type.present?
 
       scope.order("resource_scores.featured_order ASC, resource_scores.featured DESC NULLS LAST, \
       resource_scores.score DESC NULLS LAST, resource_scores.default_order ASC NULLS LAST, \
       resources.created_at DESC")
-    end
-
-    def filter_by_lang(scope, lang)
-      return scope unless lang.present?
-
-      scope.where("resource_scores.lang = LOWER(:lang)", lang:)
-    end
-
-    def filter_by_country(scope, country)
-      return scope unless country.present?
-
-      scope.where("resource_scores.country = LOWER(:country)", country:)
-    end
-
-    def filter_by_resource_type(scope, resource_type)
-      return scope unless resource_type.present?
-
-      scope.joins(:resource_type).where(resource_types: {name: resource_type.downcase})
     end
   end
 end
