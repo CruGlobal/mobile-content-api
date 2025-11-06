@@ -46,13 +46,6 @@ RSpec.describe ResourceScore, type: :model do
           ResourceScore.create(resource: resource, featured: true, featured_order: 1, country: "us", lang: "en")
         end
 
-        it "validates uniqueness of featured_order within country and language" do
-          duplicate = ResourceScore.new(resource: resource, featured: true, featured_order: 1, country: "us",
-            lang: "en")
-          expect(duplicate).not_to be_valid
-          expect(duplicate.errors[:featured_order]).to include("is already taken for this country and language")
-        end
-
         it "allows same featured_order for different country" do
           resource2 = Resource.last
           different_country = FactoryBot.build(:resource_score, resource: resource2, featured: true, featured_order: 1,

@@ -15,9 +15,6 @@ module Resources
     end
 
     def create
-      create_params = params.require(:data).require(:attributes).permit(
-        :resource_id, :lang, :country, :score, :featured_order, :featured, :default_order
-      )
       @resource_score = ResourceScore.new(create_params)
       @resource_score.save!
       render json: @resource_score, status: :created
@@ -42,6 +39,12 @@ module Resources
     end
 
     private
+
+    def create_params
+      params.require(:data).require(:attributes).permit(
+        :resource_id, :lang, :country, :score, :featured_order, :featured, :default_order
+      )
+    end
 
     def all_featured_resources(lang:, country:, resource_type: nil)
       scope = Resource.includes(:resource_scores).left_joins(:resource_scores).where(resource_scores: {featured: true})
