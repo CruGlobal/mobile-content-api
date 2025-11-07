@@ -19,8 +19,8 @@ class ResourceScore < ApplicationRecord
 
   def resource_uniquness_per_country_lang_and_resource_type
     existing = ResourceScore.joins(:resource)
-                            .where(country: country, lang: lang, resources: {resource_type_id: resource.resource_type_id})
-                            .where.not(id:)
+      .where(country: country, lang: lang, resources: {resource_type_id: resource.resource_type_id})
+      .where.not(id:)
     return unless existing.exists?
 
     errors.add(:resource_id, "should have only one score per country, language and resource type")
