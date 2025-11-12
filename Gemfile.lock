@@ -483,7 +483,7 @@ GEM
       netrc (~> 0.8)
     retriable (3.1.2)
     rexml (3.4.4)
-    rollbar (3.6.2)
+    rollbar (3.7.0)
     rspec (3.13.2)
       rspec-core (~> 3.13.0)
       rspec-expectations (~> 3.13.0)
@@ -866,7 +866,7 @@ CHECKSUMS
   rest-client (2.1.0) sha256=35a6400bdb14fae28596618e312776c158f7ebbb0ccad752ff4fa142bf2747e3
   retriable (3.1.2) sha256=0a5a5d0ca4ba61a76fb31a17ab8f7f80281beb040c329d34dfc137a1398688e0
   rexml (3.4.4) sha256=19e0a2c3425dfbf2d4fc1189747bdb2f849b6c5e74180401b15734bc97b5d142
-  rollbar (3.6.2) sha256=f74de2cb146bfadfc7ae76ce3516f9b08a56e818684232b8b38552b50ee51a63
+  rollbar (3.7.0) sha256=915853168dd61e41621b482d5f3c38e32a0b3ce57e72252a4bf9eae906571d86
   rspec (3.13.2) sha256=206284a08ad798e61f86d7ca3e376718d52c0bc944626b2349266f239f820587
   rspec-core (3.13.6) sha256=a8823c6411667b60a8bca135364351dda34cd55e44ff94c4be4633b37d828b2d
   rspec-expectations (3.13.5) sha256=33a4d3a1d95060aea4c94e9f237030a8f9eae5615e9bd85718fe3a09e4b58836
