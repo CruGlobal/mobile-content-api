@@ -5,9 +5,11 @@ class ResourceScore < ApplicationRecord
 
   validates :score, numericality: {only_integer: true, greater_than_or_equal_to: 1, less_than_or_equal_to: 20}, allow_nil: true
   validates :featured_order, numericality: {only_integer: true, greater_than_or_equal_to: 1, less_than_or_equal_to: 10}, allow_nil: true
-  validates :resource_id, uniqueness: {scope: %i[country lang], message: "should have only one score per country and language"}
+  validates :default_order, numericality: {only_integer: true, greater_than_or_equal_to: 1}, allow_nil: true
+  validates :resource_id, presence: true
   validates :country, presence: true
   validates :lang, presence: true
+  validate :resource_uniquness_per_country_lang_and_resource_type
   validate :featured_has_order_assigned
   validate :featured_order_is_available_for_country_lang_and_resource_type, if: -> { featured && featured_order.present? }
 
@@ -15,6 +17,15 @@ class ResourceScore < ApplicationRecord
   after_commit :clear_resource_cache
 
   private
+
+  def resource_uniquness_per_country_lang_and_resource_type
+    existing = ResourceScore.joins(:resource)
+      .where(country: country, lang: lang, resources: {resource_type_id: resource.resource_type_id})
+      .where.not(id:)
+    return unless existing.exists?
+
+    errors.add(:resource_id, "should have only one score per country, language and resource type")
+  end
 
   def downcase_country_and_lang
     self.country = country.downcase if country.present?
