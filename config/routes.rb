@@ -22,7 +22,12 @@ Rails.application.routes.draw do
     resources :translated_attributes, path: "translated-attributes", only: [:create, :update, :destroy]
     post "translations/publish", to: "resources#publish_translation"
     collection do
-      resources :featured, only: [:index, :create, :update, :destroy], module: :resources
+      resources :featured, only: [:index, :create, :update, :destroy], module: :resources do
+        collection do
+          put :mass_update
+          patch :mass_update
+        end
+      end
       resources :default_order, only: [:index, :create, :update, :destroy], module: :resources
     end
   end

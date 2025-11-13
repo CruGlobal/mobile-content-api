@@ -13,14 +13,15 @@ resource "Resources::Featured" do
 
   let!(:resource) { Resource.first }
   let!(:unfeatured_resource) { Resource.last }
-  let!(:resource_score) {
-    ResourceScore.find_or_create_by!(resource: resource, country: "us", lang: "en") do |rs|
-      rs.featured = true
-      rs.featured_order = 1
-    end
-  }
 
   get "resources/featured" do
+    let!(:resource_score) {
+      ResourceScore.find_or_create_by!(resource: resource, country: "us", lang: "en") do |rs|
+        rs.featured = true
+        rs.featured_order = 1
+      end
+    }
+
     context "without filters" do
       it "returns featured resources" do
         do_request include: "resource-score"
@@ -104,6 +105,12 @@ resource "Resources::Featured" do
   post "resources/featured" do
     requires_authorization
 
+    let!(:resource_score) {
+      ResourceScore.find_or_create_by!(resource: resource, country: "us", lang: "en") do |rs|
+        rs.featured = true
+        rs.featured_order = 1
+      end
+    }
     let(:valid_params) do
       {
         data: {
@@ -145,6 +152,12 @@ resource "Resources::Featured" do
     requires_authorization
 
     let(:id) { resource_score.id }
+    let!(:resource_score) {
+      ResourceScore.find_or_create_by!(resource: resource, country: "us", lang: "en") do |rs|
+        rs.featured = true
+        rs.featured_order = 1
+      end
+    }
 
     it "deletes the featured resource score" do
       do_request
@@ -167,6 +180,12 @@ resource "Resources::Featured" do
   patch "resources/featured/:id" do
     requires_authorization
 
+    let!(:resource_score) {
+      ResourceScore.find_or_create_by!(resource: resource, country: "us", lang: "en") do |rs|
+        rs.featured = true
+        rs.featured_order = 1
+      end
+    }
     let(:id) { resource_score.id }
     let(:valid_update_params) do
       {
@@ -209,6 +228,134 @@ resource "Resources::Featured" do
         do_request(valid_update_params)
 
         expect(status).to be(404)
+      end
+    end
+  end
+
+  patch "resources/featured/mass_update" do
+    requires_authorization
+
+    let(:country) { 'us' }
+    let(:lang) { 'en' }
+    let(:resource_ids) { [] }
+    let(:params) { { country: country, lang: lang, resource_ids: resource_ids } }
+
+    context "with no country and lang params" do
+      let(:country) { nil }
+      let(:lang) { nil }
+
+      context "when sending an empty array" do
+        it "returns an empty array" do
+          do_request(params)
+
+          expect(status).to be(200)
+          json = JSON.parse(response_body)
+          expect(json["data"].count).to eq(0)
+        end
+      end
+
+      context "when sending 1 resource score" do
+        let(:resource_ids) { [resource.id] }
+
+        it "returns an error" do
+          do_request(params)
+
+          expect(status).to be(422)
+        end
+      end
+    end
+
+    context "with country and lang params" do
+      context "with no previous resource score" do
+        context "when sending an empty array" do
+          it "returns an empty array" do
+            do_request(params)
+  
+            expect(status).to be(200)
+            json = JSON.parse(response_body)
+            expect(json["data"].count).to eq(0)
+          end
+        end
+  
+        context "when sending 1 resource score" do
+          let(:resource_ids) { [resource.id] }
+  
+          it "returns an array with 1 resource score" do
+            do_request(params)
+  
+            expect(status).to be(200)
+            json = JSON.parse(response_body)
+            expect(json["data"].count).to eq(1)
+            expect(json["data"][0]['relationships']['resource']['data']['id']).to eq(resource.id.to_s)
+          end
+        end
+  
+        context "when sending more than 1 resource score" do
+          let!(:resource2) { Resource.joins(:resource_type).where("resource_types.name != ? AND resources.id NOT IN (?)", resource.resource_type.name, resource.id).first }
+          let(:resource_ids) { [resource.id, resource2.id] }
+
+          it "returns an array with more than 1 resource score" do
+            do_request(params)
+  
+            expect(status).to be(200)
+            json = JSON.parse(response_body)
+            expect(json["data"].count).to eq(2)
+            expect(json["data"][0]['relationships']['resource']['data']['id']).to eq(resource.id.to_s)
+            expect(json["data"][1]['relationships']['resource']['data']['id']).to eq(resource2.id.to_s)
+          end
+        end
+      end
+  
+      context "with previous resource scores" do
+        let!(:resource2) { Resource.joins(:resource_type).where("resource_types.name != ? AND resources.id NOT IN (?)", resource.resource_type.name, resource.id).first }
+        let!(:resource3) { Resource.joins(:resource_type).where("resource_types.name != ? AND resources.id NOT IN (?)", resource.resource_type.name, [resource.id, resource2.id]).first }
+        let!(:resource_score) do
+          ResourceScore.create!(resource: resource, country: country, lang: lang, featured: true, featured_order: 1)
+        end
+        let!(:resource_score2) do
+          ResourceScore.create!(resource: resource2, country: country, lang: lang, featured: true, featured_order: 2)
+        end
+  
+        context "when sending an empty array" do
+          it "returns an array with previous resource scores" do
+            do_request(params)
+  
+            expect(status).to be(200)
+            json = JSON.parse(response_body)
+            expect(json["data"].count).to eq(2)
+            expect(json["data"][0]['relationships']['resource']['data']['id']).to eq(resource_score.resource_id.to_s)
+            expect(json["data"][1]['relationships']['resource']['data']['id']).to eq(resource2.id.to_s)
+          end
+        end
+  
+        context "when sending 1 resource to replace" do
+          let(:resource_ids) { [resource3.id, resource2.id] }
+
+          it "returns an array with the replaced resource score" do
+            do_request(params)
+  
+            expect(status).to be(200)
+            json = JSON.parse(response_body)
+            expect(json["data"].count).to eq(2)
+            expect(json["data"][0]['relationships']['resource']['data']['id']).to eq(resource3.id.to_s)
+            expect(json["data"][1]['relationships']['resource']['data']['id']).to eq(resource2.id.to_s)
+          end
+        end
+  
+        context "when sending more than 1 resource to replace" do
+          let(:resource_ids) { [resource2.id, resource3.id, resource.id] }
+
+          it "returns an array with the replaced resource scores" do
+            do_request(params)
+
+            expect(status).to be(200)
+            json = JSON.parse(response_body)
+            expect(json["data"].count).to eq(3)
+            expect(json["data"][0]['relationships']['resource']['data']['id']).to eq(resource2.id.to_s)
+            expect(json["data"][1]['relationships']['resource']['data']['id']).to eq(resource3.id.to_s)
+            expect(json["data"][2]['relationships']['resource']['data']['id']).to eq(resource.id.to_s)
+          end
+        end
       end
     end
   end
