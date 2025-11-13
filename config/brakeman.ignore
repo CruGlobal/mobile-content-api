@@ -225,6 +225,29 @@
         285
       ],
       "note": ""
+    },
+    {
+      "warning_type": "Unscoped Find",
+      "warning_code": 82,
+      "fingerprint": "fefed2e595dbe4832adc275de94477f4fc19a6421498f07a68c7a3c39e22cd14",
+      "check_name": "UnscopedFind",
+      "message": "Unscoped call to `ResourceScore#find`",
+      "file": "app/controllers/resources/featured_controller.rb",
+      "line": 21,
+      "link": "https://brakemanscanner.org/docs/warning_types/unscoped_find/",
+      "code": "ResourceScore.find(params[:id])",
+      "render_path": null,
+      "location": {
+        "type": "method",
+        "class": "Resources::FeaturedController",
+        "method": "destroy"
+      },
+      "user_input": "params[:id]",
+      "confidence": "Weak",
+      "cwe_id": [
+        285
+      ],
+      "note": ""
     }
   ],
   "brakeman_version": "7.1.0"
