@@ -13,8 +13,12 @@ resource "Resources::Featured" do
 
   let!(:resource) { Resource.first }
   let!(:unfeatured_resource) { Resource.last }
-  let!(:resource_score) { FactoryBot.create(:resource_score, resource: resource, featured: true, featured_order: 1, lang: "en", country: "us") }
-  let!(:unfeatured_resource_score) { FactoryBot.create(:resource_score, resource: unfeatured_resource, featured: false, featured_order: 1, lang: "en", country: "us") }
+  let!(:resource_score) {
+    ResourceScore.find_or_create_by!(resource: resource, country: "us", lang: "en") do |rs|
+      rs.featured = true
+      rs.featured_order = 1
+    end
+  }
 
   get "resources/featured" do
     context "without filters" do
@@ -128,7 +132,7 @@ resource "Resources::Featured" do
 
     context "with invalid parameters" do
       it "returns unprocessable entity" do
-        do_request(data: {type: "resource_score", attributes: {featured: true}})
+        do_request(data: {type: "resource_score", attributes: {featured: true, resource_id: resource.id}})
 
         expect(status).to be(422)
         json = JSON.parse(response_body)
