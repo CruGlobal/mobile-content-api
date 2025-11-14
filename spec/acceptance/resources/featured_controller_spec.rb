@@ -238,7 +238,7 @@ resource "Resources::Featured" do
     let(:country) { "us" }
     let(:lang) { "en" }
     let(:resource_ids) { [] }
-    let(:params) { {country: country, lang: lang, resource_ids: resource_ids} }
+    let(:params) { {data: {attributes: {country: country, lang: lang, resource_ids: resource_ids}}} }
 
     context "with no country and lang params" do
       let(:country) { nil }

@@ -39,9 +39,11 @@ module Resources
     end
 
     def mass_update
-      current_scores = ResourceScore.where(country: params[:country], lang: params[:lang], featured: true).order(featured_order: :asc).to_a
+      country = params.dig(:data, :attributes, :country)
+      lang = params.dig(:data, :attributes, :lang)
+      current_scores = ResourceScore.where(country: country, lang: lang, featured: true).order(featured_order: :asc).to_a
 
-      incoming_resources = params[:resource_ids] || []
+      incoming_resources = params.dig(:data, :attributes, :resource_ids) || []
       resulting_resource_scores = []
 
       return render json: current_scores, status: :ok if incoming_resources.empty?
@@ -86,8 +88,8 @@ module Resources
             # No ResourceScore at this position, create a new one
             resulting_resource_scores << ResourceScore.create!(
               resource_id: resource_id,
-              lang: params[:lang],
-              country: params[:country],
+              lang: lang,
+              country: country,
               featured: true,
               featured_order: current_featured_order
             )
