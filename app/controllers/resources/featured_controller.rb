@@ -54,7 +54,7 @@ module Resources
           if resource_id.nil?
             # Remove any existing resource score at this position
             resource_score_to_remove = current_scores.find { |rs| rs.featured_order == current_featured_order }
-            resource_score_to_remove.destroy! if resource_score_to_remove
+            resource_score_to_remove&.destroy!
             next
           end
 
