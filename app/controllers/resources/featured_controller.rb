@@ -97,8 +97,6 @@ module Resources
       render json: resulting_resource_scores, status: :ok
     rescue ActiveRecord::RecordInvalid => e
       render json: {errors: formatted_errors("record_invalid", e)}, status: :unprocessable_content
-    rescue => e
-      render json: {errors: e.message}, status: :unprocessable_content
     end
 
     private
@@ -107,10 +105,6 @@ module Resources
       params.require(:data).require(:attributes).permit(
         :resource_id, :lang, :country, :score, :featured_order, :featured
       )
-    end
-
-    def mass_update_params(resource_score_data)
-      resource_score_data.permit(:resource_id, :lang, :country, :score, :featured_order, :featured)
     end
 
     def all_featured_resources(lang:, country:, resource_type: nil)
