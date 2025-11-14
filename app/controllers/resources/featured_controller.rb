@@ -43,7 +43,7 @@ module Resources
 
       incoming_resources = params[:resource_ids] || []
       resulting_resource_scores = []
-      
+
       return render json: current_scores, status: :ok if incoming_resources.empty?
 
       ResourceScore.transaction do
@@ -62,7 +62,7 @@ module Resources
           current_resource_score_at_position = current_scores.find { |rs| rs.featured_order == current_featured_order }
 
           if incoming_resource_score
-            if incoming_resource_score.featured_order != current_featured_order  
+            if incoming_resource_score.featured_order != current_featured_order
               # Incoming ResourceScore exists but at a different position
               # Remove ResourceScore currently at this position, if any
               if current_resource_score_at_position
@@ -78,28 +78,26 @@ module Resources
               resulting_resource_scores << incoming_resource_score
               next
             end
+          elsif current_resource_score_at_position
+            current_resource_score_at_position.update!(resource_id: resource_id)
+            resulting_resource_scores << current_resource_score_at_position
+          # There is a ResourceScore at this position, update it to the new resource_id
           else
-            if current_resource_score_at_position  
-              # There is a ResourceScore at this position, update it to the new resource_id
-              current_resource_score_at_position.update!(resource_id: resource_id)
-              resulting_resource_scores << current_resource_score_at_position
-            else
-              # No ResourceScore at this position, create a new one
-              resulting_resource_scores << ResourceScore.create!(
-                resource_id: resource_id,
-                lang: params[:lang],
-                country: params[:country],
-                featured: true,
-                featured_order: current_featured_order
-              )
-            end
+            # No ResourceScore at this position, create a new one
+            resulting_resource_scores << ResourceScore.create!(
+              resource_id: resource_id,
+              lang: params[:lang],
+              country: params[:country],
+              featured: true,
+              featured_order: current_featured_order
+            )
           end
         end
       end
       render json: resulting_resource_scores, status: :ok
     rescue ActiveRecord::RecordInvalid => e
       render json: {errors: formatted_errors("record_invalid", e)}, status: :unprocessable_content
-    rescue StandardError => e
+    rescue => e
       render json: {errors: e.message}, status: :unprocessable_content
     end
 
