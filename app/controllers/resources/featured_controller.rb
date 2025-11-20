@@ -81,9 +81,9 @@ module Resources
               next
             end
           elsif current_resource_score_at_position
+            # There is a ResourceScore at this position, update it to the new resource_id
             current_resource_score_at_position.update!(resource_id: resource_id)
             resulting_resource_scores << current_resource_score_at_position
-          # There is a ResourceScore at this position, update it to the new resource_id
           else
             # No ResourceScore at this position, create a new one
             resulting_resource_scores << ResourceScore.create!(
