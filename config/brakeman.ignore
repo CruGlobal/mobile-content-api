@@ -49,6 +49,29 @@
     {
       "warning_type": "Unscoped Find",
       "warning_code": 82,
+      "fingerprint": "4ea8f626e9227588bf15a6e0e279c3691b3317e64c690f1177b049c48f489aff",
+      "check_name": "UnscopedFind",
+      "message": "Unscoped call to `ResourceScore#find`",
+      "file": "app/controllers/resources/featured_controller.rb",
+      "line": 35,
+      "link": "https://brakemanscanner.org/docs/warning_types/unscoped_find/",
+      "code": "ResourceScore.find(params[:id])",
+      "render_path": null,
+      "location": {
+        "type": "method",
+        "class": "Resources::FeaturedController",
+        "method": "update"
+      },
+      "user_input": "params[:id]",
+      "confidence": "Weak",
+      "cwe_id": [
+        285
+      ],
+      "note": ""
+    },
+    {
+      "warning_type": "Unscoped Find",
+      "warning_code": 82,
       "fingerprint": "52995e8314bd611d53e110c5e06e2ee57d06d5348c761e43dfc2a159e78c86fc",
       "check_name": "UnscopedFind",
       "message": "Unscoped call to `Translation#find`",
@@ -107,6 +130,29 @@
         "type": "method",
         "class": "PagesController",
         "method": "update"
+      },
+      "user_input": "params[:id]",
+      "confidence": "Weak",
+      "cwe_id": [
+        285
+      ],
+      "note": ""
+    },
+    {
+      "warning_type": "Unscoped Find",
+      "warning_code": 82,
+      "fingerprint": "9b3d70b933848eb2f93618484ed8d80dfc5f1629d90eb3832bf594c117d93106",
+      "check_name": "UnscopedFind",
+      "message": "Unscoped call to `ResourceDefaultOrder#find`",
+      "file": "app/controllers/resources/default_order_controller.rb",
+      "line": 25,
+      "link": "https://brakemanscanner.org/docs/warning_types/unscoped_find/",
+      "code": "ResourceDefaultOrder.find(params[:id])",
+      "render_path": null,
+      "location": {
+        "type": "method",
+        "class": "Resources::DefaultOrderController",
+        "method": "destroy"
       },
       "user_input": "params[:id]",
       "confidence": "Weak",
@@ -191,7 +237,7 @@
       "check_name": "EOLRails",
       "message": "Support for Rails 7.1.5.2 ended on 2025-10-01",
       "file": "Gemfile.lock",
-      "line": 845,
+      "line": 851,
       "link": "https://brakemanscanner.org/docs/warning_types/unmaintained_dependency/",
       "code": null,
       "render_path": null,
@@ -229,11 +275,34 @@
     {
       "warning_type": "Unscoped Find",
       "warning_code": 82,
+      "fingerprint": "fe49ae693aee294b9c9a624606afa2dc31c3b2b41a83479dbac9601d7f2f9f8b",
+      "check_name": "UnscopedFind",
+      "message": "Unscoped call to `ResourceDefaultOrder#find`",
+      "file": "app/controllers/resources/default_order_controller.rb",
+      "line": 33,
+      "link": "https://brakemanscanner.org/docs/warning_types/unscoped_find/",
+      "code": "ResourceDefaultOrder.find(params[:id])",
+      "render_path": null,
+      "location": {
+        "type": "method",
+        "class": "Resources::DefaultOrderController",
+        "method": "update"
+      },
+      "user_input": "params[:id]",
+      "confidence": "Weak",
+      "cwe_id": [
+        285
+      ],
+      "note": ""
+    },
+    {
+      "warning_type": "Unscoped Find",
+      "warning_code": 82,
       "fingerprint": "fefed2e595dbe4832adc275de94477f4fc19a6421498f07a68c7a3c39e22cd14",
       "check_name": "UnscopedFind",
       "message": "Unscoped call to `ResourceScore#find`",
       "file": "app/controllers/resources/featured_controller.rb",
-      "line": 21,
+      "line": 27,
       "link": "https://brakemanscanner.org/docs/warning_types/unscoped_find/",
       "code": "ResourceScore.find(params[:id])",
       "render_path": null,
