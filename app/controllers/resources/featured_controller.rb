@@ -117,8 +117,6 @@ module Resources
         end
       end
       render json: resulting_resource_scores, status: :ok
-    rescue ActiveRecord::RecordInvalid => e
-      render json: {errors: formatted_errors("record_invalid", e)}, status: :unprocessable_content
     rescue => e
       render json: {errors: [{detail: "Error: #{e.full_message}"}]}, status: :unprocessable_content
     end
