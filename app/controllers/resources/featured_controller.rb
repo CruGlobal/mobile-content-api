@@ -39,14 +39,34 @@ module Resources
     end
 
     def mass_update
-      country = params.dig(:data, :attributes, :country)
-      lang = params.dig(:data, :attributes, :lang)
-      current_scores = ResourceScore.where(country: country, lang: lang, featured: true).order(featured_order: :asc).to_a
-
+      country = params.dig(:data, :attributes, :country)&.downcase
+      lang = params.dig(:data, :attributes, :lang)&.downcase
+      resource_type = params.dig(:data, :attributes, :resource_type)
+      featured = params.dig(:data, :attributes, :featured) || true
       incoming_resources = params.dig(:data, :attributes, :resource_ids) || []
       resulting_resource_scores = []
 
-      return render json: current_scores, status: :ok if incoming_resources.empty?
+      current_scores = ResourceScore.where(
+        country: country, lang: lang, featured: featured
+      ).order(featured_order: :asc)
+
+      if resource_type.present?
+        current_scores = current_scores.joins(resource: :resource_type)
+          .where(resource_types: {name: resource_type.downcase})
+      end
+
+      raise 'Country and/or Lang should be provided' unless country.present? && lang.present?
+
+      current_scores = current_scores.to_a
+
+      if incoming_resources.empty?
+        current_scores.each do |rs|
+          soft_delete_resource_score(rs)
+        end
+        current_scores.reject! { |rs| !rs.persisted? }
+
+        return render json: current_scores, status: :ok
+      end
 
       ResourceScore.transaction do
         ResourceScore::MAX_FEATURED_ORDER_POSITION.times do |index|
@@ -56,7 +76,7 @@ module Resources
           if resource_id.nil?
             # Remove any existing resource score at this position
             resource_score_to_remove = current_scores.find { |rs| rs.featured_order == current_featured_order }
-            resource_score_to_remove&.destroy!
+            soft_delete_resource_score(resource_score_to_remove)
             next
           end
 
@@ -68,7 +88,7 @@ module Resources
               # Incoming ResourceScore exists but at a different position
               # Remove ResourceScore currently at this position, if any
               if current_resource_score_at_position
-                current_resource_score_at_position.destroy!
+                soft_delete_resource_score(current_resource_score_at_position)
                 current_scores.reject! { |rs| rs.id == current_resource_score_at_position.id }
               end
 
@@ -90,7 +110,7 @@ module Resources
               resource_id: resource_id,
               lang: lang,
               country: country,
-              featured: true,
+              featured: featured,
               featured_order: current_featured_order
             )
           end
@@ -99,6 +119,8 @@ module Resources
       render json: resulting_resource_scores, status: :ok
     rescue ActiveRecord::RecordInvalid => e
       render json: {errors: formatted_errors("record_invalid", e)}, status: :unprocessable_content
+    rescue => e
+      render json: {errors: [{detail: "Error: #{e.full_message}"}]}, status: :unprocessable_content
     end
 
     private
@@ -119,6 +141,16 @@ module Resources
       scope.order("resource_scores.featured_order ASC, resource_scores.featured DESC NULLS LAST, \
       resource_scores.score DESC NULLS LAST, \
       resources.created_at DESC")
+    end
+
+    def soft_delete_resource_score(resource_score)
+      return if resource_score.nil?
+
+      if resource_score.score.present?
+        resource_score.update!(featured: false, featured_order: nil)
+      else
+        resource_score.destroy!
+      end
     end
   end
 end
