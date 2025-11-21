@@ -55,7 +55,7 @@ module Resources
           .where(resource_types: {name: resource_type.downcase})
       end
 
-      raise 'Country and/or Lang should be provided' unless country.present? && lang.present?
+      raise "Country and/or Lang should be provided" unless country.present? && lang.present?
 
       current_scores = current_scores.to_a
 

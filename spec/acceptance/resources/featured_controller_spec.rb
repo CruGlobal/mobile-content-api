@@ -336,12 +336,12 @@ resource "Resources::Featured" do
 
             it "removes featured status but keeps the score" do
               do_request(params)
-  
+
               expect(status).to be(200)
               json = JSON.parse(response_body)
               expect(json["data"].count).to eq(1)
               expect(json["data"][0]["relationships"]["resource"]["data"]["id"]).to eq(resource.id.to_s)
-  
+
               resource_score.reload
               expect(resource_score.featured).to be false
               expect(resource_score.featured_order).to be_nil
