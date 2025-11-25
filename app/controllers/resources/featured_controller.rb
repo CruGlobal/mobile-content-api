@@ -93,7 +93,7 @@ module Resources
               end
 
               # Move incoming ResourceScore to the new position
-              incoming_resource_score.update!(featured_order: current_featured_order)
+              incoming_resource_score.update!(featured_order: current_featured_order, featured: true)
               resulting_resource_scores << incoming_resource_score
             else
               # Incoming ResourceScore exists and is already at the correct position
@@ -102,7 +102,7 @@ module Resources
             end
           elsif current_resource_score_at_position
             # There is a ResourceScore at this position, update it to the new resource_id
-            current_resource_score_at_position.update!(resource_id: resource_id)
+            current_resource_score_at_position.update!(resource_id: resource_id, featured: true)
             resulting_resource_scores << current_resource_score_at_position
           else
             # No ResourceScore at this position, create a new one
@@ -110,7 +110,7 @@ module Resources
               resource_id: resource_id,
               lang: lang,
               country: country,
-              featured: featured,
+              featured: true,
               featured_order: current_featured_order
             )
           end
