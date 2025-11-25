@@ -15,7 +15,6 @@
     <xs:attribute name="row-gravity" type="content:horizontalGravity" />
     <xs:attribute name="width" type="content:dimension" />
 
-
     <xs:attributeGroup name="contentFlowElement">
         <xs:attribute ref="web:item-width" />
         <xs:attribute ref="web:row-gravity" />
@@ -24,6 +23,16 @@
         <xs:attribute ref="web:width" />
     </xs:attributeGroup>
     <!-- endregion: content:flow attributes -->
+
+    <!-- region: content:image attributes -->
+<!--    <xs:attribute name="width" type="content:dimension" />-->
+    <xs:attribute name="gravity" type="content:horizontalGravity" />
+
+    <xs:attributeGroup name="contentImageType">
+        <xs:attribute ref="web:gravity" />
+        <xs:attribute ref="web:width" />
+    </xs:attributeGroup>
+    <!-- endregion: content:image attributes -->
 
     <!-- region: content:text attributes -->
     <xs:attribute name="font-weight" type="content:fontWeight" />

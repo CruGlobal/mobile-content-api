@@ -1,0 +1,4 @@
+<content:image xmlns:content="https://mobile-content-api.cru.org/xmlns/content"
+    xmlns:web="https://mobile-content-api.cru.org/xmlns/web" resource="image.png"
+    gravity="start" web:gravity="center"
+    width="100" web:width="50" />
