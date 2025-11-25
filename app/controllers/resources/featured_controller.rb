@@ -80,7 +80,7 @@ module Resources
           end
 
           incoming_resource_score = current_scores.find { |rs| rs.resource_id == resource_id }
-          current_resource_score_at_position = current_scores.find { |rs| rs.featured_order == current_featured_order }
+          current_resource_score_at_position = current_scores.find { |rs| rs.featured_order == current_featured_order && rs.featured == true }
 
           if incoming_resource_score
             if incoming_resource_score.featured_order != current_featured_order
@@ -96,6 +96,7 @@ module Resources
               resulting_resource_scores << incoming_resource_score
             else
               # Incoming ResourceScore exists and is already at the correct position
+              incoming_resource_score.update!(featured: true)
               resulting_resource_scores << incoming_resource_score
               next
             end
