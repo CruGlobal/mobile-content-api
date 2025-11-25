@@ -52,7 +52,6 @@ module Resources
       country = params.dig(:data, :attributes, :country)&.downcase
       lang_code = params.dig(:data, :attributes, :lang)&.downcase
       resource_type = params.dig(:data, :attributes, :resource_type)
-      featured = params.dig(:data, :attributes, :featured) || true
       incoming_resources = params.dig(:data, :attributes, :resource_ids) || []
       resulting_resource_scores = []
 
@@ -62,7 +61,7 @@ module Resources
       raise "Language not found for code: #{lang_code}" unless language.present?
 
       current_scores = ResourceScore.where(
-        country: country, language_id: language.id, featured: featured
+        country: country, language_id: language.id
       ).order(featured_order: :asc)
 
       if resource_type.present?
@@ -94,7 +93,7 @@ module Resources
           end
 
           incoming_resource_score = current_scores.find { |rs| rs.resource_id == resource_id }
-          current_resource_score_at_position = current_scores.find { |rs| rs.featured_order == current_featured_order }
+          current_resource_score_at_position = current_scores.find { |rs| rs.featured_order == current_featured_order && rs.featured == true }
 
           if incoming_resource_score
             if incoming_resource_score.featured_order != current_featured_order
@@ -106,16 +105,17 @@ module Resources
               end
 
               # Move incoming ResourceScore to the new position
-              incoming_resource_score.update!(featured_order: current_featured_order)
+              incoming_resource_score.update!(featured_order: current_featured_order, featured: true)
               resulting_resource_scores << incoming_resource_score
             else
               # Incoming ResourceScore exists and is already at the correct position
+              incoming_resource_score.update!(featured: true)
               resulting_resource_scores << incoming_resource_score
               next
             end
           elsif current_resource_score_at_position
             # There is a ResourceScore at this position, update it to the new resource_id
-            current_resource_score_at_position.update!(resource_id: resource_id)
+            current_resource_score_at_position.update!(resource_id: resource_id, featured: true)
             resulting_resource_scores << current_resource_score_at_position
           else
             # No ResourceScore at this position, create a new one
@@ -123,7 +123,7 @@ module Resources
               resource_id: resource_id,
               language_id: language.id,
               country: country,
-              featured: featured,
+              featured: true,
               featured_order: current_featured_order
             )
           end
@@ -131,7 +131,7 @@ module Resources
       end
       render json: resulting_resource_scores, status: :ok
     rescue => e
-      render json: {errors: [{detail: "Error: #{e.full_message}"}]}, status: :unprocessable_content
+      render json: {errors: [{detail: "Error: #{e.message}"}]}, status: :unprocessable_content
     end
 
     private

@@ -315,7 +315,7 @@ resource "Resources::Featured" do
           ResourceScore.create!(resource: resource, country: country, language: language_en, featured: true, featured_order: 1)
         end
         let!(:resource_score2) do
-          ResourceScore.create!(resource: resource2, country: country, language: language_en, featured: true, featured_order: 2)
+          ResourceScore.create!(resource: resource2, country: country, language: language_en, featured: false, featured_order: nil)
         end
 
         context "when sending an empty array" do
@@ -376,6 +376,7 @@ resource "Resources::Featured" do
             json = JSON.parse(response_body)
             expect(json["data"].count).to eq(3)
             expect(json["data"][0]["relationships"]["resource"]["data"]["id"]).to eq(resource2.id.to_s)
+            expect(json["data"][0]["attributes"]["featured"]).to eq(true)
             expect(json["data"][1]["relationships"]["resource"]["data"]["id"]).to eq(resource3.id.to_s)
             expect(json["data"][2]["relationships"]["resource"]["data"]["id"]).to eq(resource.id.to_s)
           end
