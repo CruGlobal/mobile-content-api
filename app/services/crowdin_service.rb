@@ -19,10 +19,21 @@ class CrowdinService
     # Grab export url - this is the best way I've found to get all translations for a language -AR
     r = client.export_project_translation({targetLanguageId: language.crowdin_code, format: "crowdin-json"}, nil, project_id)
 
-    # grab dump data - crowdin-json format returns a direct hash
+    # grab dump data - crowdin-json format returns data in different structures
     response = Net::HTTP.get_response(URI.parse(r["data"]["url"]))
     crowdin_json_export = response.body
-    JSON.parse(crowdin_json_export)
+    phrases_data = JSON.parse(crowdin_json_export)
+
+    # Handle both hash and array formats from Crowdin API
+    if phrases_data.is_a?(Array)
+      # New array format: convert to hash with identifier as key and translation as value
+      phrases_data.each_with_object({}) do |phrase_obj, hash|
+        hash[phrase_obj["identifier"]] = phrase_obj["translation"]
+      end
+    else
+      # Old hash format: return as-is
+      phrases_data
+    end
   end
 
   def self.client
