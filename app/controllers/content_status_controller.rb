@@ -3,33 +3,33 @@ class ContentStatusController < ApplicationController
     metrics = {
       tools: {
         default: Resource.left_joins(:resource_scores).joins(:resource_type).where(
-          resource_types: { name: 'tract' },
-          resource_scores: { id: nil }
+          resource_types: {name: "tract"},
+          resource_scores: {id: nil}
         ).count,
         featured: Resource.joins(:resource_type, :resource_scores).where(
-          resource_types: { name: 'tract' },
-          resource_scores: { featured: true }
+          resource_types: {name: "tract"},
+          resource_scores: {featured: true}
         ).count,
         ranked: Resource.joins(:resource_type, :resource_scores).where(
-          resource_types: { name: 'tract' },
-          resource_scores: { featured: true }
-        ).where.not(resource_scores: { score: nil }).count,
-        total: Resource.joins(:resource_type).where(resource_types: { name: 'tract' }).count
+          resource_types: {name: "tract"},
+          resource_scores: {featured: true}
+        ).where.not(resource_scores: {score: nil}).count,
+        total: Resource.joins(:resource_type).where(resource_types: {name: "tract"}).count
       },
       lessons: {
         default: Resource.left_joins(:resource_scores).joins(:resource_type).where(
-          resource_types: { name: 'lesson' },
-          resource_scores: { id: nil }
+          resource_types: {name: "lesson"},
+          resource_scores: {id: nil}
         ).count,
         featured: Resource.joins(:resource_type, :resource_scores).where(
-          resource_types: { name: 'lesson' },
-          resource_scores: { featured: true }
+          resource_types: {name: "lesson"},
+          resource_scores: {featured: true}
         ).count,
         ranked: Resource.joins(:resource_type, :resource_scores).where(
-          resource_types: { name: 'lesson' },
-          resource_scores: { featured: true }
-        ).where.not(resource_scores: { score: nil }).count,
-        total: Resource.joins(:resource_type).where(resource_types: { name: 'lesson' }).count
+          resource_types: {name: "lesson"},
+          resource_scores: {featured: true}
+        ).where.not(resource_scores: {score: nil}).count,
+        total: Resource.joins(:resource_type).where(resource_types: {name: "lesson"}).count
       },
       countries: retrieve_countries_data
     }
@@ -48,8 +48,8 @@ class ContentStatusController < ApplicationController
   def retrieve_lessons_data(country, language)
     {
       featured: Resource.joins(:resource_type, resource_scores: :language).where(
-        resource_types: { name: 'lesson' }, resource_scores: { featured: true, country: country }
-      ).where(resource_scores: { language: language }).count,
+        resource_types: {name: "lesson"}, resource_scores: {featured: true, country: country}
+      ).where(resource_scores: {language: language}).count,
       ranked: 0
     }
   end
@@ -57,8 +57,8 @@ class ContentStatusController < ApplicationController
   def retrieve_tools_data(country, language)
     {
       featured: Resource.joins(:resource_type, resource_scores: :language).where(
-        resource_types: { name: 'tract' }, resource_scores: { featured: true, country: country }
-      ).where(resource_scores: { language: language }).count,
+        resource_types: {name: "tract"}, resource_scores: {featured: true, country: country}
+      ).where(resource_scores: {language: language}).count,
       ranked: 0
     }
   end
@@ -70,8 +70,8 @@ class ContentStatusController < ApplicationController
       lessons: retrieve_lessons_data(country, language),
       tools: retrieve_tools_data(country, language),
       last_updated: Resource.joins(:resource_scores).where(
-        resource_scores: { country: country, language: language }
-      ).maximum(:updated_at)&.strftime('%d-%m-%y') || 'N/A'
+        resource_scores: {country: country, language: language}
+      ).maximum(:updated_at)&.strftime("%d-%m-%y") || "N/A"
     }
   end
 
@@ -79,7 +79,7 @@ class ContentStatusController < ApplicationController
     uniq_countries.map do |country|
       {
         country_code: country,
-        languages: Language.joins(:resource_scores).where(resource_scores: { country: country }).distinct.map do |language|
+        languages: Language.joins(:resource_scores).where(resource_scores: {country: country}).distinct.map do |language|
           retrieve_language_data(country, language)
         end
       }

@@ -7,11 +7,16 @@ class ResourceDefaultOrder < ApplicationRecord
   validates :language, presence: true
 
   after_commit :clear_resource_cache
+  after_commit :touch_resource, on: [:create, :update]
 
   private
 
   def clear_resource_cache
     Rails.cache.delete_matched("cache::resources/*")
     Rails.cache.delete_matched("resources/*")
+  end
+
+  def touch_resource
+    resource&.touch(:updated_at)
   end
 end
