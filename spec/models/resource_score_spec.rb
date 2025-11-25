@@ -19,10 +19,10 @@ RSpec.describe ResourceScore, type: :model do
         FactoryBot.create(:resource_score, resource: resource, country: "us", lang: "en")
       end
 
-      it "validates uniqueness of resource_id scoped to country and lang" do
+      it "validates uniqueness of resource_id scoped to country, lang and resource_type" do
         duplicate = FactoryBot.build(:resource_score, resource: resource, country: "us", lang: "en")
         expect(duplicate).not_to be_valid
-        expect(duplicate.errors[:resource_id]).to include("should have only one score per country and language")
+        expect(duplicate.errors[:resource_id]).to include("should have only one score per country, language and resource type")
       end
     end
 
@@ -34,16 +34,16 @@ RSpec.describe ResourceScore, type: :model do
         expect(resource_score.errors[:featured_order]).to include("must be present if resource is featured")
       end
 
+      it "validates uniqueness of featured_order within country, language and resource type" do
+        resource_score_with_resource
+        duplicate = ResourceScore.new(resource: resource, featured: true, featured_order: 1, country: "us", lang: "en")
+        expect(duplicate).not_to be_valid
+        expect(duplicate.errors[:featured_order]).to include("is already taken for this country, language and resource type")
+      end
+
       context "having a resource score created previously" do
         let!(:previous_resource_score) do
           ResourceScore.create(resource: resource, featured: true, featured_order: 1, country: "us", lang: "en")
-        end
-
-        it "validates uniqueness of featured_order within country and language" do
-          duplicate = ResourceScore.new(resource: resource, featured: true, featured_order: 1, country: "us",
-            lang: "en")
-          expect(duplicate).not_to be_valid
-          expect(duplicate.errors[:featured_order]).to include("is already taken for this country and language")
         end
 
         it "allows same featured_order for different country" do
