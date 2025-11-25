@@ -47,7 +47,7 @@ module Resources
       resulting_resource_scores = []
 
       current_scores = ResourceScore.where(
-        country: country, lang: lang, featured: featured
+        country: country, lang: lang
       ).order(featured_order: :asc)
 
       if resource_type.present?
@@ -118,7 +118,7 @@ module Resources
       end
       render json: resulting_resource_scores, status: :ok
     rescue => e
-      render json: {errors: [{detail: "Error: #{e.full_message}"}]}, status: :unprocessable_content
+      render json: {errors: [{detail: "Error: #{e.message}"}]}, status: :unprocessable_content
     end
 
     private

@@ -313,7 +313,7 @@ resource "Resources::Featured" do
           ResourceScore.create!(resource: resource, country: country, lang: lang, featured: true, featured_order: 1)
         end
         let!(:resource_score2) do
-          ResourceScore.create!(resource: resource2, country: country, lang: lang, featured: true, featured_order: 2)
+          ResourceScore.create!(resource: resource2, country: country, lang: lang, featured: false, featured_order: nil)
         end
 
         context "when sending an empty array" do
