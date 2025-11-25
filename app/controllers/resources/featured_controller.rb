@@ -42,7 +42,6 @@ module Resources
       country = params.dig(:data, :attributes, :country)&.downcase
       lang = params.dig(:data, :attributes, :lang)&.downcase
       resource_type = params.dig(:data, :attributes, :resource_type)
-      featured = params.dig(:data, :attributes, :featured) || true
       incoming_resources = params.dig(:data, :attributes, :resource_ids) || []
       resulting_resource_scores = []
 
