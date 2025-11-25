@@ -13,10 +13,12 @@ resource "Resources::Featured" do
 
   let!(:resource) { Resource.first }
   let!(:unfeatured_resource) { Resource.last }
+  let!(:language_en) { Language.find_or_create_by!(code: "en", name: "English") }
+  let!(:language_fr) { Language.find_or_create_by!(code: "fr", name: "French") }
 
   get "resources/featured" do
     let!(:resource_score) {
-      ResourceScore.find_or_create_by!(resource: resource, country: "us", lang: "en") do |rs|
+      ResourceScore.find_or_create_by!(resource: resource, country: "us", language: language_en) do |rs|
         rs.featured = true
         rs.featured_order = 1
       end
@@ -78,7 +80,7 @@ resource "Resources::Featured" do
     context "with resource_type filter" do
       let!(:tool_resource_type) { ResourceType.find_by_name("metatool") }
       let!(:tool_resource) { Resource.joins(:resource_type).where(resource_types: {name: "metatool"}).first }
-      let!(:tool_score) { FactoryBot.create(:resource_score, resource: tool_resource, featured: true, featured_order: 2) }
+      let!(:tool_score) { FactoryBot.create(:resource_score, resource: tool_resource, featured: true, featured_order: 2, language: language_en) }
 
       it "returns featured resources for specified resource type" do
         do_request resource_type: "metatool"
@@ -106,7 +108,7 @@ resource "Resources::Featured" do
     requires_authorization
 
     let!(:resource_score) {
-      ResourceScore.find_or_create_by!(resource: resource, country: "us", lang: "en") do |rs|
+      ResourceScore.find_or_create_by!(resource: resource, country: "us", language: language_en) do |rs|
         rs.featured = true
         rs.featured_order = 1
       end
@@ -117,7 +119,7 @@ resource "Resources::Featured" do
           type: "resource_score",
           attributes: {
             resource_id: resource.id,
-            lang: "en",
+            lang: language_en.code,
             country: "US",
             featured: true,
             featured_order: 1
@@ -153,7 +155,7 @@ resource "Resources::Featured" do
 
     let(:id) { resource_score.id }
     let!(:resource_score) {
-      ResourceScore.find_or_create_by!(resource: resource, country: "us", lang: "en") do |rs|
+      ResourceScore.find_or_create_by!(resource: resource, country: "us", language: language_en) do |rs|
         rs.featured = true
         rs.featured_order = 1
       end
@@ -181,7 +183,7 @@ resource "Resources::Featured" do
     requires_authorization
 
     let!(:resource_score) {
-      ResourceScore.find_or_create_by!(resource: resource, country: "us", lang: "en") do |rs|
+      ResourceScore.find_or_create_by!(resource: resource, country: "us", language: language_en) do |rs|
         rs.featured = true
         rs.featured_order = 1
       end
@@ -310,10 +312,10 @@ resource "Resources::Featured" do
         let!(:resource2) { Resource.joins(:resource_type).where("resource_types.name = ? AND resources.id NOT IN (?)", resource.resource_type.name, resource.id).first }
         let!(:resource3) { Resource.joins(:resource_type).where("resource_types.name = ? AND resources.id NOT IN (?)", resource.resource_type.name, [resource.id, resource2.id]).first }
         let!(:resource_score) do
-          ResourceScore.create!(resource: resource, country: country, lang: lang, featured: true, featured_order: 1)
+          ResourceScore.create!(resource: resource, country: country, language: language_en, featured: true, featured_order: 1)
         end
         let!(:resource_score2) do
-          ResourceScore.create!(resource: resource2, country: country, lang: lang, featured: true, featured_order: 2)
+          ResourceScore.create!(resource: resource2, country: country, language: language_en, featured: true, featured_order: 2)
         end
 
         context "when sending an empty array" do

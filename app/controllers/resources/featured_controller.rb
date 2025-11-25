@@ -5,8 +5,9 @@ module Resources
     before_action :authorize!, only: %i[create destroy update mass_update]
 
     def index
+      lang_code = params.dig(:filter, :lang) || params[:lang]
       featured_resources = all_featured_resources(
-        lang: params.dig(:filter, :lang) || params[:lang],
+        lang_code: lang_code,
         country: params.dig(:filter, :country) || params[:country],
         resource_type: params.dig(:filter, :resource_type) || params[:resource_type]
       )
@@ -15,7 +16,11 @@ module Resources
     end
 
     def create
-      @resource_score = ResourceScore.new(create_params)
+      sanitized_params = create_params
+      language = Language.find_by!(code: create_params[:lang].downcase) if create_params[:lang].present?
+      sanitized_params.delete(:lang) if sanitized_params[:lang].present?
+      @resource_score = ResourceScore.new(sanitized_params)
+      @resource_score.language = language if language.present?
       @resource_score.save!
       render json: @resource_score, status: :created
     rescue => e
@@ -32,7 +37,12 @@ module Resources
 
     def update
       @resource_score = ResourceScore.find(params[:id])
-      @resource_score.update!(create_params)
+      sanitized_params = create_params
+      language = Language.find_by!(code: create_params[:lang].downcase) if create_params[:lang].present?
+      sanitized_params.delete(:lang) if sanitized_params[:lang].present?
+      @resource_score.language = language if language.present?
+      @resource_score.update!(sanitized_params)
+
       render json: @resource_score, status: :ok
     rescue ActiveRecord::RecordInvalid => e
       render json: {errors: formatted_errors("record_invalid", e)}, status: :unprocessable_content
@@ -40,22 +50,25 @@ module Resources
 
     def mass_update
       country = params.dig(:data, :attributes, :country)&.downcase
-      lang = params.dig(:data, :attributes, :lang)&.downcase
+      lang_code = params.dig(:data, :attributes, :lang)&.downcase
       resource_type = params.dig(:data, :attributes, :resource_type)
       featured = params.dig(:data, :attributes, :featured) || true
       incoming_resources = params.dig(:data, :attributes, :resource_ids) || []
       resulting_resource_scores = []
 
+      raise "Country and/or Lang should be provided" unless country.present? && lang_code.present?
+
+      language = Language.find_by(code: lang_code)
+      raise "Language not found for code: #{lang_code}" unless language.present?
+
       current_scores = ResourceScore.where(
-        country: country, lang: lang, featured: featured
+        country: country, language_id: language.id, featured: featured
       ).order(featured_order: :asc)
 
       if resource_type.present?
         current_scores = current_scores.joins(resource: :resource_type)
           .where(resource_types: {name: resource_type.downcase})
       end
-
-      raise "Country and/or Lang should be provided" unless country.present? && lang.present?
 
       current_scores = current_scores.to_a
 
@@ -108,7 +121,7 @@ module Resources
             # No ResourceScore at this position, create a new one
             resulting_resource_scores << ResourceScore.create!(
               resource_id: resource_id,
-              lang: lang,
+              language_id: language.id,
               country: country,
               featured: featured,
               featured_order: current_featured_order
@@ -129,10 +142,14 @@ module Resources
       )
     end
 
-    def all_featured_resources(lang:, country:, resource_type: nil)
+    def all_featured_resources(lang_code:, country:, resource_type: nil)
       scope = Resource.includes(:resource_scores).left_joins(:resource_scores).where(resource_scores: {featured: true})
 
-      scope = scope.where("resource_scores.lang = LOWER(:lang)", lang:) if lang.present?
+      if lang_code.present?
+        language = Language.find_by(code: lang_code.downcase)
+        scope = scope.left_joins(resource_scores: :language).where(languages: {id: language.id}) if language.present?
+      end
+
       scope = scope.where("resource_scores.country = LOWER(:country)", country:) if country.present?
       scope = scope.joins(:resource_type).where(resource_types: {name: resource_type.downcase}) if resource_type.present?
 

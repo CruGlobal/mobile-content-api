@@ -12,7 +12,9 @@ resource "Resources::DefaultOrder" do
   let(:authorization) { AuthToken.generic_token }
 
   let!(:resource) { Resource.first }
-  let!(:other_resource) { Resource.last }
+  let!(:other_resource) { Resource.second }
+  let!(:language_en) { Language.find_or_create_by!(code: "en", name: "English") }
+  let!(:language_fr) { Language.find_or_create_by!(code: "fr", name: "French") }
 
   before(:each) do
     ResourceDefaultOrder.delete_all
@@ -20,8 +22,8 @@ resource "Resources::DefaultOrder" do
 
   get "resources/default_order" do
     before do
-      FactoryBot.create(:resource_default_order, resource: resource, lang: "en")
-      FactoryBot.create(:resource_default_order, resource: other_resource, lang: "en")
+      FactoryBot.create(:resource_default_order, resource: resource, language: language_en)
+      FactoryBot.create(:resource_default_order, resource: other_resource, language: language_en)
     end
 
     context "without filters" do
@@ -55,25 +57,23 @@ resource "Resources::DefaultOrder" do
     end
 
     context "with resource_type filter" do
-      let!(:tool_resource_type) { ResourceType.find_by_name("metatool") }
-      let!(:tool_resource) { Resource.joins(:resource_type).where(resource_types: {name: "metatool"}).first }
-      let!(:tool_order) { FactoryBot.create(:resource_default_order, resource: tool_resource, lang: "en") }
+      let(:resource_type) { resource.resource_type }
 
       it "returns default order resources for specified resource type" do
-        do_request resource_type: "metatool"
+        do_request resource_type: resource_type.name.downcase
 
         expect(status).to be(200)
         json = JSON.parse(response_body)
-        expect(json["data"].size).to eq(1)
+        expect(json["data"].size).to eq(2)
       end
 
       context "inside filter param" do
         it "returns default order resources for specified resource type" do
-          do_request filter: {resource_type: "metatool"}
+          do_request filter: {resource_type: resource_type.name.downcase}
 
           expect(status).to be(200)
           json = JSON.parse(response_body)
-          expect(json["data"].size).to eq(1)
+          expect(json["data"].size).to eq(2)
         end
       end
     end
@@ -88,7 +88,7 @@ resource "Resources::DefaultOrder" do
           type: "resource_default_order",
           attributes: {
             resource_id: resource.id,
-            lang: "en",
+            lang: language_en.code,
             position: 2
           }
         }
@@ -119,7 +119,7 @@ resource "Resources::DefaultOrder" do
   delete "resources/default_order/:id" do
     requires_authorization
 
-    let!(:resource_default_order) { FactoryBot.create(:resource_default_order, resource: resource, lang: "en") }
+    let!(:resource_default_order) { FactoryBot.create(:resource_default_order, resource: resource, language: language_en) }
     let(:id) { resource_default_order.id }
 
     it "deletes the default order resource" do
@@ -143,14 +143,14 @@ resource "Resources::DefaultOrder" do
   patch "resources/default_order/:id" do
     requires_authorization
 
-    let!(:resource_default_order) { FactoryBot.create(:resource_default_order, resource: resource, lang: "en") }
+    let!(:resource_default_order) { FactoryBot.create(:resource_default_order, resource: resource, language: language_en) }
     let(:id) { resource_default_order.id }
     let(:valid_update_params) do
       {
         data: {
           type: "resource_default_order",
           attributes: {
-            lang: "fr"
+            lang: language_fr.code
           }
         }
       }
@@ -162,7 +162,7 @@ resource "Resources::DefaultOrder" do
 
         expect(status).to be(200)
         json = JSON.parse(response_body)
-        expect(json["data"]["attributes"]["lang"]).to eq("fr")
+        expect(json["data"]["relationships"]["language"]["data"]["id"]).to eq(language_fr.id.to_s)
         expect(json["data"]["relationships"]["resource"]["data"]["id"]).to eq(resource.id.to_s)
       end
     end
