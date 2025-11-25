@@ -52,10 +52,10 @@ module Resources
 
       if lang.present?
         language = Language.find_by(code: lang.downcase)
-        scope = scope.left_joins(resource_default_orders: :language).where(languages: {id: language.id}) if language.present?
+        scope = scope.joins(resource_default_orders: :language).where(languages: {id: language.id})
       end
 
-      scope.joins(:resource_type).where(resource_types: {name: resource_type.downcase}) if resource_type.present?
+      scope = scope.joins(:resource_type).where(resource_types: {name: resource_type.downcase}) if resource_type.present?
 
       scope.order("resource_default_orders.position ASC NULLS LAST, resources.created_at DESC")
     end
