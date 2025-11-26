@@ -2,7 +2,7 @@
 
 module Resources
   class FeaturedController < ApplicationController
-    before_action :authorize!, only: %i[create destroy update mass_update]
+    before_action :authorize!, only: %i[create destroy update mass_update mass_update_ranked]
 
     def index
       lang_code = params.dig(:filter, :lang) || params[:lang]
@@ -77,7 +77,7 @@ module Resources
         end
         current_scores.reject! { |rs| !rs.persisted? }
 
-        return render json: current_scores, status: :ok
+        return render json: current_scores, include: params[:include], status: :ok
       end
 
       ResourceScore.transaction do
@@ -129,7 +129,70 @@ module Resources
           end
         end
       end
-      render json: resulting_resource_scores, status: :ok
+      render json: resulting_resource_scores, include: params[:include], status: :ok
+    rescue => e
+      render json: {errors: [{detail: "Error: #{e.message}"}]}, status: :unprocessable_content
+    end
+
+    def mass_update_ranked
+      country = params.dig(:data, :attributes, :country)&.downcase
+      lang_code = params.dig(:data, :attributes, :lang)&.downcase
+      resource_type = params.dig(:data, :attributes, :resource_type)
+      incoming_resources = params.dig(:data, :attributes, :ranked_resources) || []
+      resulting_resource_scores = []
+
+      raise "Country and/or Lang should be provided" unless country.present? && lang_code.present?
+
+      language = Language.find_by(code: lang_code)
+      raise "Language not found for code: #{lang_code}" unless language.present?
+
+      current_scores = ResourceScore.where(
+        country: country, language_id: language.id
+      ).order(score: :desc)
+
+      if resource_type.present?
+        current_scores = current_scores.joins(resource: :resource_type)
+          .where(resource_types: {name: resource_type.downcase})
+      end
+
+      current_scores = current_scores.to_a
+
+      if incoming_resources.empty?
+        current_scores.each do |rs|
+          rs.update!(score: nil)
+        end
+
+        return render json: current_scores, include: params[:include], status: :ok
+      end
+
+      ResourceScore.transaction do
+        incoming_resources.each do |incoming_resource|
+          symbolized_incoming_resource = incoming_resource
+          resource_id = symbolized_incoming_resource[:resource_id]
+          score = symbolized_incoming_resource[:score]
+          incoming_resource_score = current_scores.find { |rs| rs.resource_id == resource_id }
+
+          if incoming_resource_score
+            # Update existing ResourceScore with new score
+            incoming_resource_score.update!(score: score)
+            resulting_resource_scores << incoming_resource_score
+          else
+            # Create new ResourceScore with the provided score
+            new_resource_score = ResourceScore.create!(
+              resource_id: resource_id,
+              language_id: language.id,
+              country: country,
+              score: score
+            )
+            resulting_resource_scores << new_resource_score
+          end
+        end
+      end
+
+      # Sort resulting_resource_scores by score descending before rendering
+      resulting_resource_scores.sort_by! { |rs| -rs.score.to_i }
+
+      render json: resulting_resource_scores, include: params[:include], status: :ok
     rescue => e
       render json: {errors: [{detail: "Error: #{e.message}"}]}, status: :unprocessable_content
     end
