@@ -335,6 +335,20 @@ resource "Resources::DefaultOrder" do
             expect(json["data"][1]["attributes"]["position"]).to eq(2)
           end
         end
+
+        context "when sending nil resource_id at a position" do
+          let(:resource_ids) { [resource.id, nil] }
+
+          it "removes the resource default order at that position" do
+            do_request(params)
+
+            expect(status).to be(200)
+            json = JSON.parse(response_body)
+            expect(json["data"].count).to eq(1)
+            expect(json["data"][0]["relationships"]["resource"]["data"]["id"]).to eq(resource.id.to_s)
+            expect(json["data"][0]["attributes"]["position"]).to eq(1)
+          end
+        end
       end
     end
   end
