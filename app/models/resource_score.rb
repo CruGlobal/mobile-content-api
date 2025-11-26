@@ -2,10 +2,11 @@
 
 class ResourceScore < ApplicationRecord
   MAX_FEATURED_ORDER_POSITION = 10
+  MAX_SCORE = 20
   belongs_to :resource
   belongs_to :language
 
-  validates :score, numericality: {only_integer: true, greater_than_or_equal_to: 1, less_than_or_equal_to: 20}, allow_nil: true
+  validates :score, numericality: {only_integer: true, greater_than_or_equal_to: 1, less_than_or_equal_to: MAX_SCORE}, allow_nil: true
   validates :featured_order, numericality: {
     only_integer: true, greater_than_or_equal_to: 1, less_than_or_equal_to: MAX_FEATURED_ORDER_POSITION
   }, allow_nil: true

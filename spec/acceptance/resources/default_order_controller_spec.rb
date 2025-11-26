@@ -187,4 +187,155 @@ resource "Resources::DefaultOrder" do
       end
     end
   end
+
+  patch "resources/default_order/mass_update" do
+    requires_authorization
+
+    let(:lang) { "en" }
+    let(:resource_ids) { [] }
+    let(:resource_type) { ResourceType.find(resource.resource_type_id) }
+    let(:params) { {data: {attributes: {lang: lang, resource_ids: resource_ids, resource_type: resource_type.name}}} }
+
+    context "with no lang param" do
+      let(:lang) { nil }
+
+      context "when sending an empty array" do
+        it "returns an error" do
+          do_request(params)
+
+          expect(status).to be(422)
+        end
+      end
+
+      context "when sending 1 resource default order" do
+        let(:resource_ids) { [resource.id] }
+
+        it "returns an error" do
+          do_request(params)
+
+          expect(status).to be(422)
+        end
+      end
+    end
+
+    context "with lang param" do
+      context "with no previous resource default order" do
+        context "when sending an empty array" do
+          it "returns an empty array" do
+            do_request(params)
+
+            expect(status).to be(200)
+            json = JSON.parse(response_body)
+            expect(json["data"].count).to eq(0)
+          end
+        end
+
+        context "when sending 1 resource default order" do
+          let(:resource_ids) { [resource.id] }
+
+          it "returns an array with 1 resource default order" do
+            do_request(params)
+
+            expect(status).to be(200)
+            json = JSON.parse(response_body)
+            expect(json["data"].count).to eq(1)
+            expect(json["data"][0]["relationships"]["resource"]["data"]["id"]).to eq(resource.id.to_s)
+            expect(json["data"][0]["attributes"]["position"]).to eq(1)
+          end
+        end
+
+        context "when sending more than 1 resource default order" do
+          let!(:resource2) { Resource.joins(:resource_type).where("resource_types.name != ? AND resources.id NOT IN (?)", resource.resource_type.name, resource.id).first }
+          let(:resource_ids) { [resource.id, resource2.id] }
+
+          it "returns an array with more than 1 resource default order" do
+            do_request(params)
+
+            expect(status).to be(200)
+            json = JSON.parse(response_body)
+            expect(json["data"].count).to eq(2)
+            expect(json["data"][0]["relationships"]["resource"]["data"]["id"]).to eq(resource.id.to_s)
+            expect(json["data"][0]["attributes"]["position"]).to eq(1)
+            expect(json["data"][1]["relationships"]["resource"]["data"]["id"]).to eq(resource2.id.to_s)
+            expect(json["data"][1]["attributes"]["position"]).to eq(2)
+          end
+        end
+      end
+
+      context "with previous resource default orders" do
+        let!(:resource2) { Resource.joins(:resource_type).where("resource_types.name = ? AND resources.id NOT IN (?)", resource.resource_type.name, resource.id).first }
+        let!(:resource3) { Resource.joins(:resource_type).where("resource_types.name = ? AND resources.id NOT IN (?)", resource.resource_type.name, [resource.id, resource2.id]).first }
+        let!(:resource_default_order) do
+          FactoryBot.create(:resource_default_order, resource: resource, language: language_en, position: 1)
+        end
+        let!(:resource_default_order2) do
+          FactoryBot.create(:resource_default_order, resource: resource2, language: language_en, position: 2)
+        end
+
+        context "when sending an empty array" do
+          let(:resource_ids) { [] }
+
+          it "deletes all matching resource default orders" do
+            do_request(params)
+
+            expect(status).to be(200)
+            json = JSON.parse(response_body)
+            expect(json["data"].count).to eq(0)
+            expect(ResourceDefaultOrder.exists?(resource_default_order.id)).to be false
+            expect(ResourceDefaultOrder.exists?(resource_default_order2.id)).to be false
+          end
+        end
+
+        context "when sending 1 resource to replace" do
+          let(:resource_ids) { [resource3.id, resource2.id] }
+
+          it "returns an array with the replaced resource default orders" do
+            do_request(params)
+
+            expect(status).to be(200)
+            json = JSON.parse(response_body)
+            expect(json["data"].count).to eq(2)
+            expect(json["data"][0]["relationships"]["resource"]["data"]["id"]).to eq(resource3.id.to_s)
+            expect(json["data"][0]["attributes"]["position"]).to eq(1)
+            expect(json["data"][1]["relationships"]["resource"]["data"]["id"]).to eq(resource2.id.to_s)
+            expect(json["data"][1]["attributes"]["position"]).to eq(2)
+          end
+        end
+
+        context "when sending more than 1 resource to replace" do
+          let(:resource_ids) { [resource2.id, resource3.id, resource.id] }
+
+          it "returns an array with the replaced resource default orders" do
+            do_request(params)
+
+            expect(status).to be(200)
+            json = JSON.parse(response_body)
+            expect(json["data"].count).to eq(3)
+            expect(json["data"][0]["relationships"]["resource"]["data"]["id"]).to eq(resource2.id.to_s)
+            expect(json["data"][0]["attributes"]["position"]).to eq(1)
+            expect(json["data"][1]["relationships"]["resource"]["data"]["id"]).to eq(resource3.id.to_s)
+            expect(json["data"][1]["attributes"]["position"]).to eq(2)
+            expect(json["data"][2]["relationships"]["resource"]["data"]["id"]).to eq(resource.id.to_s)
+            expect(json["data"][2]["attributes"]["position"]).to eq(3)
+          end
+        end
+
+        context "when sending the same resource to replace" do
+          let(:resource_ids) { [resource.id, resource2.id] }
+
+          it "returns an array with the resource default orders in new positions" do
+            do_request(params)
+
+            expect(status).to be(200)
+            json = JSON.parse(response_body)
+            expect(json["data"].count).to eq(2)
+            expect(json["data"][0]["relationships"]["resource"]["data"]["id"]).to eq(resource.id.to_s)
+            expect(json["data"][0]["attributes"]["position"]).to eq(1)
+            expect(json["data"][1]["relationships"]["resource"]["data"]["id"]).to eq(resource2.id.to_s)
+            expect(json["data"][1]["attributes"]["position"]).to eq(2)
+          end
+        end
+      end
+    end
+  end
 end
