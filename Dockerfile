@@ -15,7 +15,9 @@ WORKDIR /home/webapp/app
 RUN apk upgrade --no-cache
 
 # Install rails/app dependencies
-RUN apk --no-cache add libc6-compat git postgresql-libs tzdata
+RUN apk --no-cache add libc6-compat git postgresql-libs tzdata jemalloc
+
+ENV LD_PRELOAD=/usr/lib/libjemalloc.so.2
 
 # Copy dependency definitions and lock files
 COPY Gemfile Gemfile.lock .ruby-version ./
