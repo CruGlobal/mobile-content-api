@@ -22,7 +22,20 @@ Rails.application.routes.draw do
     resources :translated_attributes, path: "translated-attributes", only: [:create, :update, :destroy]
     post "translations/publish", to: "resources#publish_translation"
     collection do
-      resources :featured, only: [:index, :create, :destroy], module: :resources
+      resources :featured, only: [:index, :create, :update, :destroy], module: :resources do
+        collection do
+          put :mass_update
+          patch :mass_update
+          put :mass_update_ranked
+          patch :mass_update_ranked
+        end
+      end
+      resources :default_order, only: [:index, :create, :update, :destroy], module: :resources do
+        collection do
+          put :mass_update
+          patch :mass_update
+        end
+      end
     end
   end
   resources :drafts, only: [:index, :show, :create, :destroy]
@@ -100,6 +113,8 @@ Rails.application.routes.draw do
       end
     end
   end
+
+  get "content_status", to: "content_status#index"
 
   if Rails.env.production? || Rails.env.staging?
     Sidekiq::Web.use Rack::Auth::Basic do |username, password|
