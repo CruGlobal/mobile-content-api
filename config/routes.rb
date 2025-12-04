@@ -23,7 +23,7 @@ Rails.application.routes.draw do
     post "translations/publish", to: "resources#publish_translation"
     collection do
       get :featured
-      resources :featured, only: %i[index create update destroy], module: :resources do
+      resources :featured, only: %i[create update destroy], module: :resources do
         collection do
           put :mass_update
           patch :mass_update

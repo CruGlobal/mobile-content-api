@@ -4,17 +4,6 @@ module Resources
   class FeaturedController < ApplicationController
     before_action :authorize!, only: %i[create destroy update mass_update mass_update_ranked]
 
-    def index
-      lang_code = params.dig(:filter, :lang) || params[:lang]
-      featured_resources = all_featured_resources(
-        lang_code: lang_code,
-        country: params.dig(:filter, :country) || params[:country],
-        resource_type: params.dig(:filter, :resource_type) || params[:resource_type]
-      )
-
-      render json: featured_resources, include: params[:include], status: :ok
-    end
-
     def create
       sanitized_params = create_params
       language = Language.find_by!(code: create_params[:lang].downcase) if create_params[:lang].present?
