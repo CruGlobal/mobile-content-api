@@ -3,7 +3,7 @@
 require "acceptance_helper"
 require "sidekiq/testing"
 
-resource "Resources::Featured" do
+resource "ResourceScores" do
   include ActiveJob::TestHelper
 
   header "Accept", "application/vnd.api+json"
@@ -16,7 +16,98 @@ resource "Resources::Featured" do
   let!(:language_en) { Language.find_or_create_by!(code: "en", name: "English") }
   let!(:language_fr) { Language.find_or_create_by!(code: "fr", name: "French") }
 
-  post "resources/featured" do
+  get "resource_scores" do
+    let!(:resource_score) do
+      ResourceScore.find_or_create_by!(resource: resource, country: "us", language: language_en) do |rs|
+        rs.featured = true
+        rs.featured_order = 1
+      end
+    end
+
+    context "without filters" do
+      it "returns resource scores" do
+        do_request include: "resource"
+
+        expect(status).to be(200)
+        json = JSON.parse(response_body)
+        expect(json["data"].size).to eq(1)
+        expect(json["data"][0]["relationships"]["resource"]["data"]["id"]).to eq(resource.id.to_s)
+      end
+    end
+
+    context "with language filter" do
+      it "returns resource scores for specified language" do
+        do_request lang: "fr"
+
+        expect(status).to be(200)
+        json = JSON.parse(response_body)
+        expect(json["data"].size).to eq(0)
+      end
+
+      context "inside filter param" do
+        it "returns resource scores for specified language" do
+          do_request filter: {lang: "fr"}
+
+          expect(status).to be(200)
+          json = JSON.parse(response_body)
+          expect(json["data"].size).to eq(0)
+        end
+      end
+    end
+
+    context "with country filter" do
+      it "returns resource scores for specified country" do
+        do_request country: "us"
+
+        expect(status).to be(200)
+        json = JSON.parse(response_body)
+        expect(json["data"].size).to eq(1)
+        expect(json["data"][0]["relationships"]["resource"]["data"]["id"]).to eq(resource.id.to_s)
+      end
+
+      context "inside filter param" do
+        it "returns resource scores for specified country" do
+          do_request filter: {country: "us"}
+
+          expect(status).to be(200)
+          json = JSON.parse(response_body)
+          expect(json["data"].size).to eq(1)
+          expect(json["data"][0]["relationships"]["resource"]["data"]["id"]).to eq(resource.id.to_s)
+        end
+      end
+    end
+
+    context "with resource_type filter" do
+      let!(:tool_resource_type) { ResourceType.find_by_name("metatool") }
+      let!(:tool_resource) { Resource.joins(:resource_type).where(resource_types: {name: "metatool"}).first }
+      let!(:tool_score) do
+        FactoryBot.create(:resource_score, resource: tool_resource, featured: true, featured_order: 2,
+          language: language_en)
+      end
+
+      it "returns resource scores for specified resource type" do
+        do_request resource_type: "metatool"
+
+        expect(status).to be(200)
+        json = JSON.parse(response_body)
+        expect(json["data"].size).to eq(1)
+        expect(json["data"][0]["relationships"]["resource"]["data"]["id"]).to eq(tool_resource.id.to_s)
+      end
+
+      context "inside filter param" do
+        it "returns resource scores for specified resource type" do
+          do_request filter: {resource_type: "metatool"}
+
+          expect(status).to be(200)
+          json = JSON.parse(response_body)
+          expect(json["data"].size).to eq(1)
+          expect(json["data"][0]["relationships"]["resource"]["data"]["id"]).to eq(tool_resource.id.to_s)
+        end
+      end
+    end
+  end
+
+  post "resource_scores" do
     requires_authorization
 
     let!(:resource_score) do
@@ -41,7 +132,7 @@ resource "Resources::Featured" do
     end
 
     context "with valid parameters" do
-      it "creates a new featured resource score" do
+      it "creates a new resource score" do
         do_request(valid_params)
 
         expect(status).to be(201)
@@ -62,7 +153,7 @@ resource "Resources::Featured" do
     end
   end
 
-  delete "resources/featured/:id" do
+  delete "resource_scores/:id" do
     requires_authorization
 
     let(:id) { resource_score.id }
@@ -73,7 +164,7 @@ resource "Resources::Featured" do
       end
     end
 
-    it "deletes the featured resource score" do
+    it "deletes the resource score" do
       do_request
 
       expect(status).to be(200)
@@ -91,7 +182,7 @@ resource "Resources::Featured" do
     end
   end
 
-  patch "resources/featured/:id" do
+  patch "resource_scores/:id" do
     requires_authorization
 
     let!(:resource_score) do
@@ -114,7 +205,7 @@ resource "Resources::Featured" do
     end
 
     context "with valid parameters" do
-      it "updates the featured resource score" do
+      it "updates the resource score" do
         do_request(valid_update_params)
 
         expect(status).to be(200)
@@ -146,7 +237,7 @@ resource "Resources::Featured" do
     end
   end
 
-  patch "resources/featured/mass_update" do
+  patch "resource_scores/mass_update" do
     requires_authorization
 
     let(:country) { "US" }
@@ -325,7 +416,7 @@ resource "Resources::Featured" do
     end
   end
 
-  patch "resources/featured/mass_update_ranked" do
+  patch "resource_scores/mass_update_ranked" do
     requires_authorization
 
     let(:country) { "US" }
