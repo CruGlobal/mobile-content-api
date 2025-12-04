@@ -32,7 +32,8 @@ module Resources
       @resource_score.destroy!
       render json: {}, status: :ok
     rescue
-      render json: {errors: [{source: {pointer: "/data/attributes/id"}, detail: e.message}]}, status: :unprocessable_content
+      render json: {errors: [{source: {pointer: "/data/attributes/id"}, detail: e.message}]},
+        status: :unprocessable_content
     end
 
     def update
@@ -93,7 +94,9 @@ module Resources
           end
 
           incoming_resource_score = current_scores.find { |rs| rs.resource_id == resource_id }
-          current_resource_score_at_position = current_scores.find { |rs| rs.featured_order == current_featured_order && rs.featured == true }
+          current_resource_score_at_position = current_scores.find do |rs|
+            rs.featured_order == current_featured_order && rs.featured == true
+          end
 
           if incoming_resource_score
             if incoming_resource_score.featured_order != current_featured_order
@@ -214,7 +217,9 @@ module Resources
       end
 
       scope = scope.where("resource_scores.country = LOWER(:country)", country:) if country.present?
-      scope = scope.joins(:resource_type).where(resource_types: {name: resource_type.downcase}) if resource_type.present?
+      if resource_type.present?
+        scope = scope.joins(:resource_type).where(resource_types: {name: resource_type.downcase})
+      end
 
       scope.order("resource_scores.featured_order ASC, resource_scores.featured DESC NULLS LAST, \
       resource_scores.score DESC NULLS LAST, \
