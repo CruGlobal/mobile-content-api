@@ -197,24 +197,6 @@ module Resources
       )
     end
 
-    def all_featured_resources(lang_code:, country:, resource_type: nil)
-      scope = Resource.includes(:resource_scores).left_joins(:resource_scores).where(resource_scores: {featured: true})
-
-      if lang_code.present?
-        language = Language.find_by(code: lang_code.downcase)
-        scope = scope.left_joins(resource_scores: :language).where(languages: {id: language.id}) if language.present?
-      end
-
-      scope = scope.where("resource_scores.country = LOWER(:country)", country:) if country.present?
-      if resource_type.present?
-        scope = scope.joins(:resource_type).where(resource_types: {name: resource_type.downcase})
-      end
-
-      scope.order("resource_scores.featured_order ASC, resource_scores.featured DESC NULLS LAST, \
-      resource_scores.score DESC NULLS LAST, \
-      resources.created_at DESC")
-    end
-
     def soft_delete_resource_score(resource_score)
       return if resource_score.nil?
 
