@@ -19,10 +19,10 @@ RSpec.describe ResourceScore, type: :model do
         FactoryBot.create(:resource_score, resource: resource, country: "us", lang: "en")
       end
 
-      it "validates uniqueness of resource_id scoped to country and lang" do
+      it "validates uniqueness of resource_id scoped to country, lang and resource_type" do
         duplicate = FactoryBot.build(:resource_score, resource: resource, country: "us", lang: "en")
         expect(duplicate).not_to be_valid
-        expect(duplicate.errors[:resource_id]).to include("should have only one score per country and language")
+        expect(duplicate.errors[:resource_id]).to include("should have only one score per country, language and resource type")
       end
     end
 
