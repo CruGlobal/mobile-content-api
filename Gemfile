@@ -72,7 +72,7 @@ end
 
 gem "pg"
 
-gem "active_model_serializers", "0.10.15"
+gem "active_model_serializers", "0.10.16"
 gem "active_storage_validations"
 gem "adobe-campaign", "~> 0.4"
 gem "apple_id"
