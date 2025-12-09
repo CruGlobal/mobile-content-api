@@ -140,7 +140,9 @@ module Resources
     end
 
     def create_params
-      params.require(:data).require(:attributes).permit(:resource_id, :lang, :position)
+      params.require(:data).require(:attributes).permit(
+        :resource_id, :lang, :position
+      )
     end
   end
 end
