@@ -42,8 +42,15 @@ module Resources
     def all_default_order_resources(lang:, resource_type: nil)
       scope = Resource.joins(:resource_default_orders)
 
-      scope = filter_by_lang(scope, lang)
-      scope = filter_by_resource_type(scope, resource_type)
+      # Filter by language
+      if lang.present?
+        scope = scope.where("resource_default_orders.lang = LOWER(:lang)", lang:)
+      end
+
+      # Filter by resource type
+      if resource_type.present?
+        scope = scope.joins(:resource_type).where(resource_types: {name: resource_type.downcase})
+      end
 
       scope.order("resource_default_orders.position ASC NULLS LAST, resources.created_at DESC")
     end
@@ -52,18 +59,6 @@ module Resources
       params.require(:data).require(:attributes).permit(
         :resource_id, :lang, :position
       )
-    end
-
-    def filter_by_lang(scope, lang)
-      return scope unless lang.present?
-
-      scope.where("resource_default_orders.lang = LOWER(:lang)", lang:)
-    end
-
-    def filter_by_resource_type(scope, resource_type)
-      return scope unless resource_type.present?
-
-      scope.joins(:resource_type).where(resource_types: {name: resource_type.downcase})
     end
   end
 end
