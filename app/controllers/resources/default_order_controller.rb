@@ -21,17 +21,17 @@ module Resources
       @resource_default_order.language = language if language.present?
       @resource_default_order.save!
       render json: @resource_default_order, status: :created
-    rescue StandardError => e
-      render json: { errors: formatted_errors('record_invalid', e) }, status: :unprocessable_content
+    rescue => e
+      render json: {errors: formatted_errors("record_invalid", e)}, status: :unprocessable_content
     end
 
     def destroy
       @resource_default_order = ResourceDefaultOrder.find(params[:id])
       @resource_default_order.destroy!
       render json: {}, status: :ok
-    rescue StandardError
-      render json: { errors: [{ source: { pointer: '/data/attributes/id' }, detail: e.message }] },
-             status: :unprocessable_content
+    rescue
+      render json: {errors: [{source: {pointer: "/data/attributes/id"}, detail: e.message}]},
+        status: :unprocessable_content
     end
 
     def update
@@ -42,8 +42,8 @@ module Resources
       @resource_default_order.language = language if language.present?
       @resource_default_order.update!(sanitized_params)
       render json: @resource_default_order, status: :ok
-    rescue StandardError => e
-      render json: { errors: formatted_errors('record_invalid', e) }, status: :unprocessable_content
+    rescue => e
+      render json: {errors: formatted_errors("record_invalid", e)}, status: :unprocessable_content
     end
 
     def mass_update
@@ -52,7 +52,7 @@ module Resources
       incoming_resources = params.dig(:data, :attributes, :resource_ids) || []
       resulting_resource_default_orders = []
 
-      raise 'Lang should be provided' unless lang_code.present?
+      raise "Lang should be provided" unless lang_code.present?
 
       language = Language.find_by(code: lang_code)
       raise "Language not found for code: #{lang_code}" unless language.present?
@@ -61,7 +61,7 @@ module Resources
 
       if resource_type.present?
         current_orders = current_orders.joins(resource: :resource_type)
-                                       .where(resource_types: { name: resource_type.downcase })
+          .where(resource_types: {name: resource_type.downcase})
       end
 
       current_orders = current_orders.to_a
@@ -121,8 +121,8 @@ module Resources
         end
       end
       render json: resulting_resource_default_orders, status: :ok
-    rescue StandardError => e
-      render json: { errors: [{ detail: "Error: #{e.message}" }] }, status: :unprocessable_content
+    rescue => e
+      render json: {errors: [{detail: "Error: #{e.message}"}]}, status: :unprocessable_content
     end
 
     private
@@ -132,14 +132,14 @@ module Resources
 
       if lang.present?
         language = Language.find_by(code: lang.downcase)
-        scope = scope.joins(resource_default_orders: :language).where(languages: { id: language.id })
+        scope = scope.joins(resource_default_orders: :language).where(languages: {id: language.id})
       end
 
       if resource_type.present?
-        scope = scope.joins(:resource_type).where(resource_types: { name: resource_type.downcase })
+        scope = scope.joins(:resource_type).where(resource_types: {name: resource_type.downcase})
       end
 
-      scope.order('resource_default_orders.position ASC NULLS LAST, resources.created_at DESC')
+      scope.order("resource_default_orders.position ASC NULLS LAST, resources.created_at DESC")
     end
 
     def create_params
