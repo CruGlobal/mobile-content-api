@@ -23,20 +23,6 @@ Rails.application.routes.draw do
     post "translations/publish", to: "resources#publish_translation"
     collection do
       get :featured
-      resources :featured, only: %i[create update destroy], module: :resources do
-        collection do
-          put :mass_update
-          patch :mass_update
-          put :mass_update_ranked
-          patch :mass_update_ranked
-        end
-      end
-      resources :default_order, only: %i[index create update destroy], module: :resources do
-        collection do
-          put :mass_update
-          patch :mass_update
-        end
-      end
     end
   end
 
@@ -46,6 +32,13 @@ Rails.application.routes.draw do
       patch :mass_update
       put :mass_update_ranked
       patch :mass_update_ranked
+    end
+  end
+
+  resources :resource_default_orders, only: %i[index create update destroy] do
+    collection do
+      put :mass_update
+      patch :mass_update
     end
   end
 

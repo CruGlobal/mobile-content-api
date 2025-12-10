@@ -49,6 +49,29 @@
     {
       "warning_type": "Unscoped Find",
       "warning_code": 82,
+      "fingerprint": "2fb5ff2fd47e751a6ef49f6b4de92d55d80c2ec6d13da50c2c9f1f833b17e458",
+      "check_name": "UnscopedFind",
+      "message": "Unscoped call to `ResourceDefaultOrder#find`",
+      "file": "app/controllers/resource_default_orders_controller.rb",
+      "line": 37,
+      "link": "https://brakemanscanner.org/docs/warning_types/unscoped_find/",
+      "code": "ResourceDefaultOrder.find(params[:id])",
+      "render_path": null,
+      "location": {
+        "type": "method",
+        "class": "ResourceDefaultOrdersController",
+        "method": "update"
+      },
+      "user_input": "params[:id]",
+      "confidence": "Weak",
+      "cwe_id": [
+        285
+      ],
+      "note": ""
+    },
+    {
+      "warning_type": "Unscoped Find",
+      "warning_code": 82,
       "fingerprint": "2fcf6c61aca934c2bf52da730148abb448c3aa319353ae8f4bc1b76dc12bc46c",
       "check_name": "UnscopedFind",
       "message": "Unscoped call to `CustomPage#find`",
@@ -310,6 +333,29 @@
         "type": "method",
         "class": "AttachmentsController",
         "method": "load_attachment"
+      },
+      "user_input": "params[:id]",
+      "confidence": "Weak",
+      "cwe_id": [
+        285
+      ],
+      "note": ""
+    },
+    {
+      "warning_type": "Unscoped Find",
+      "warning_code": 82,
+      "fingerprint": "f25882ed7eaf7fb1151c8a23125c104191f95878112eb3c66a7bfd1cb2fa49ec",
+      "check_name": "UnscopedFind",
+      "message": "Unscoped call to `ResourceDefaultOrder#find`",
+      "file": "app/controllers/resource_default_orders_controller.rb",
+      "line": 28,
+      "link": "https://brakemanscanner.org/docs/warning_types/unscoped_find/",
+      "code": "ResourceDefaultOrder.find(params[:id])",
+      "render_path": null,
+      "location": {
+        "type": "method",
+        "class": "ResourceDefaultOrdersController",
+        "method": "destroy"
       },
       "user_input": "params[:id]",
       "confidence": "Weak",
