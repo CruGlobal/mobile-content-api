@@ -51,7 +51,7 @@ class ResourceDefaultOrdersController < ApplicationController
     incoming_resources = params.dig(:data, :attributes, :resource_ids) || []
     resulting_resource_default_orders = []
 
-    raise "Lang should be provided" unless lang_code.present?
+    raise "Lang and Resource Type should be provided" unless lang_code.present? && resource_type.present?
 
     language = Language.find_by(code: lang_code)
     raise "Language not found for code: #{lang_code}" unless language.present?

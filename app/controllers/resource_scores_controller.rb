@@ -55,7 +55,7 @@ class ResourceScoresController < ApplicationController
     incoming_resources = params.dig(:data, :attributes, :resource_ids) || []
     resulting_resource_scores = []
 
-    raise "Country and/or Lang should be provided" unless country.present? && lang_code.present?
+    raise "Country, Lang, and Resource Type should be provided" unless country.present? && lang_code.present? && resource_type.present?
 
     language = Language.find_by(code: lang_code)
     raise "Language not found for code: #{lang_code}" unless language.present?
@@ -143,7 +143,7 @@ class ResourceScoresController < ApplicationController
     incoming_resources = params.dig(:data, :attributes, :ranked_resources) || []
     resulting_resource_scores = []
 
-    raise "Country and/or Lang should be provided" unless country.present? && lang_code.present?
+    raise "Country, Lang, and Resource Type should be provided" unless country.present? && lang_code.present? && resource_type.present?
 
     language = Language.find_by(code: lang_code)
     raise "Language not found for code: #{lang_code}" unless language.present?

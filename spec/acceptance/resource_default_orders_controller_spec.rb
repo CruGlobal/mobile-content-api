@@ -199,7 +199,7 @@ resource "ResourceDefaultOrders" do
     let(:resource_ids) { [] }
     let(:resource_type) { ResourceType.find(resource.resource_type_id) }
     let(:params) do
-      {data: {attributes: {lang: lang, resource_ids: resource_ids, resource_type: resource_type.name}}}
+      {data: {attributes: {lang: lang, resource_ids: resource_ids, resource_type: resource_type&.name}}}
     end
 
     context "with no lang param" do
@@ -220,6 +220,33 @@ resource "ResourceDefaultOrders" do
           do_request(params)
 
           expect(status).to be(422)
+        end
+      end
+    end
+
+    context "with no resource_type param" do
+      let(:resource_type) { nil }
+
+      context "when sending an empty array" do
+        it "returns an error" do
+          do_request(params)
+
+          expect(status).to be(422)
+
+          json = JSON.parse(response_body)
+          expect(json["errors"][0]["detail"]).to include("Resource Type")
+        end
+      end
+
+      context "when sending 1 resource default order" do
+        let(:resource_ids) { [resource.id] }
+
+        it "returns an error" do
+          do_request(params)
+
+          expect(status).to be(422)
+          json = JSON.parse(response_body)
+          expect(json["errors"][0]["detail"]).to include("Resource Type")
         end
       end
     end
