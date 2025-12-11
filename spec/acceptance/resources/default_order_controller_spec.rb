@@ -54,6 +54,28 @@ resource "Resources::DefaultOrder" do
           expect(json["data"].size).to eq(0)
         end
       end
+
+      context "with non-existent language" do
+        it "returns an error" do
+          do_request lang: "non_existent_lang"
+
+          expect(status).to be(422)
+          json = JSON.parse(response_body)
+          expect(json).to have_key("errors")
+          expect(json["errors"][0]["detail"]).to include("Language not found")
+        end
+      end
+
+      context "with non-existent language inside filter param" do
+        it "returns an error" do
+          do_request filter: {lang: "non_existent_lang"}
+
+          expect(status).to be(422)
+          json = JSON.parse(response_body)
+          expect(json).to have_key("errors")
+          expect(json["errors"][0]["detail"]).to include("Language not found")
+        end
+      end
     end
 
     context "with resource_type filter" do

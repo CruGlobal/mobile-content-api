@@ -5,12 +5,21 @@ module Resources
     before_action :authorize!, only: %i[create destroy update mass_update]
 
     def index
+      lang = params.dig(:filter, :lang) || params[:lang]
+      
+      if lang.present?
+        language = Language.find_by(code: lang.downcase)
+        raise "Language not found for code: #{lang.downcase}" unless language.present?
+      end
+
       default_order_resources = all_default_order_resources(
-        lang: params.dig(:filter, :lang) || params[:lang],
+        lang: lang,
         resource_type: params.dig(:filter, :resource_type) || params[:resource_type]
       )
 
       render json: default_order_resources, include: params[:include], status: :ok
+    rescue => e
+      render json: {errors: [{detail: "Error: #{e.message}"}]}, status: :unprocessable_content
     end
 
     def create
