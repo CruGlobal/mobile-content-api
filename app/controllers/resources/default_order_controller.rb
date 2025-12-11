@@ -6,7 +6,7 @@ module Resources
 
     def index
       lang = params.dig(:filter, :lang) || params[:lang]
-      
+
       if lang.present?
         language = Language.find_by(code: lang.downcase)
         raise "Language not found for code: #{lang.downcase}" unless language.present?
