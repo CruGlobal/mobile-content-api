@@ -9,7 +9,7 @@ module Resources
 
       if lang.present?
         language = Language.where("code = :lang OR LOWER(code) = LOWER(:lang)", lang: lang).first
-        raise "Language not found for code: #{lang.downcase}" unless language.present?
+        raise "Language not found for code: #{lang}" unless language.present?
       end
 
       default_order_resources = all_default_order_resources(
