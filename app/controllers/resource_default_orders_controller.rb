@@ -4,12 +4,19 @@ class ResourceDefaultOrdersController < ApplicationController
   before_action :authorize!, only: %i[create destroy update mass_update]
 
   def index
-    default_order_resources = all_default_order_resources(
-      lang: params.dig(:filter, :lang) || params[:lang],
-      resource_type: params.dig(:filter, :resource_type) || params[:resource_type]
-    )
+    lang = params.dig(:filter, :lang) || params[:lang]
+    resource_type = params.dig(:filter, :resource_type) || params[:resource_type]
+
+    if lang.present?
+      language = Language.find_by(code: lang.downcase)
+      raise "Language not found for code: #{lang}" unless language.present?
+    end
+
+    default_order_resources = all_default_order_resources(lang: lang, resource_type: resource_type)
 
     render json: default_order_resources, include: params[:include], status: :ok
+  rescue => e
+    render json: {errors: [{detail: "Error: #{e.message}"}]}, status: :unprocessable_content
   end
 
   def create

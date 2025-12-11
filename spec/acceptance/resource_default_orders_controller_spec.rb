@@ -45,6 +45,17 @@ resource "ResourceDefaultOrders" do
         expect(json["data"].size).to eq(0)
       end
 
+      context "with language not found" do
+        it "returns an error" do
+          do_request lang: "invalid_lang"
+
+          expect(status).to be(422)
+          json = JSON.parse(response_body)
+          expect(json).to have_key("errors")
+          expect(json["errors"][0]["detail"]).to include("Language not found")
+        end
+      end
+
       context "inside filter param" do
         it "returns default order resources for specified language" do
           do_request filter: {lang: "fr"}
@@ -52,6 +63,17 @@ resource "ResourceDefaultOrders" do
           expect(status).to be(200)
           json = JSON.parse(response_body)
           expect(json["data"].size).to eq(0)
+        end
+
+        context "with language not found" do
+          it "returns an error" do
+            do_request filter: {lang: "invalid_lang"}
+
+            expect(status).to be(422)
+            json = JSON.parse(response_body)
+            expect(json).to have_key("errors")
+            expect(json["errors"][0]["detail"]).to include("Language not found")
+          end
         end
       end
     end
