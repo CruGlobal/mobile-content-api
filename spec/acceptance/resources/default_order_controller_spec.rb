@@ -15,6 +15,7 @@ resource "Resources::DefaultOrder" do
   let!(:other_resource) { Resource.second }
   let!(:language_en) { Language.find_or_create_by!(code: "en", name: "English") }
   let!(:language_fr) { Language.find_or_create_by!(code: "fr", name: "French") }
+  let!(:language_am) { Language.find_or_create_by!(code: "Am", name: "Amharic") }
 
   before(:each) do
     ResourceDefaultOrder.delete_all
@@ -48,6 +49,16 @@ resource "Resources::DefaultOrder" do
       context "inside filter param" do
         it "returns default order resources for specified language" do
           do_request filter: {lang: "fr"}
+
+          expect(status).to be(200)
+          json = JSON.parse(response_body)
+          expect(json["data"].size).to eq(0)
+        end
+      end
+
+      context "with a different capitalization" do
+        it "returns default order resources for specified language" do
+          do_request filter: {lang: "am"}
 
           expect(status).to be(200)
           json = JSON.parse(response_body)
