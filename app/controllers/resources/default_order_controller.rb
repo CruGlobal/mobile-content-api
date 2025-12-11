@@ -8,8 +8,8 @@ module Resources
       lang = params.dig(:filter, :lang) || params[:lang]
 
       if lang.present?
-        language = Language.find_by(code: lang.downcase)
-        raise "Language not found for code: #{lang.downcase}" unless language.present?
+        language = Language.where("code = :lang OR LOWER(code) = LOWER(:lang)", lang: lang).first
+        raise "Language not found for code: #{lang}" unless language.present?
       end
 
       default_order_resources = all_default_order_resources(
@@ -63,7 +63,7 @@ module Resources
 
       raise "Lang should be provided" unless lang_code.present?
 
-      language = Language.find_by(code: lang_code)
+      language = Language.where("code = :lang OR LOWER(code) = LOWER(:lang)", lang: lang_code).first
       raise "Language not found for code: #{lang_code}" unless language.present?
 
       current_orders = ResourceDefaultOrder.where(language_id: language.id).order(position: :asc)
@@ -140,7 +140,7 @@ module Resources
       scope = Resource.joins(:resource_default_orders)
 
       if lang.present?
-        language = Language.find_by(code: lang.downcase)
+        language = Language.where("code = :lang OR LOWER(code) = LOWER(:lang)", lang: lang).first
         scope = scope.joins(resource_default_orders: :language).where(languages: {id: language.id})
       end
 

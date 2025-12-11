@@ -57,7 +57,7 @@ module Resources
 
       raise "Country and/or Lang should be provided" unless country.present? && lang_code.present?
 
-      language = Language.find_by(code: lang_code)
+      language = Language.where("code = :lang OR LOWER(code) = LOWER(:lang)", lang: lang_code).first
       raise "Language not found for code: #{lang_code}" unless language.present?
 
       current_scores = ResourceScore.where(
@@ -143,7 +143,7 @@ module Resources
 
       raise "Country and/or Lang should be provided" unless country.present? && lang_code.present?
 
-      language = Language.find_by(code: lang_code)
+      language = Language.where("code = :lang OR LOWER(code) = LOWER(:lang)", lang: lang_code).first
       raise "Language not found for code: #{lang_code}" unless language.present?
 
       current_scores = ResourceScore.where(
@@ -209,7 +209,7 @@ module Resources
       scope = Resource.includes(:resource_scores).left_joins(:resource_scores).where(resource_scores: {featured: true})
 
       if lang_code.present?
-        language = Language.find_by(code: lang_code.downcase)
+        language = Language.where("code = :lang OR LOWER(code) = LOWER(:lang)", lang: lang_code).first
         scope = scope.left_joins(resource_scores: :language).where(languages: {id: language.id}) if language.present?
       end
 
