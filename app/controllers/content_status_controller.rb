@@ -69,9 +69,7 @@ class ContentStatusController < ApplicationController
       language_name: language.name,
       lessons: retrieve_lessons_data(country, language),
       tools: retrieve_tools_data(country, language),
-      last_updated: Resource.joins(:resource_scores).where(
-        resource_scores: {country: country, language: language}
-      ).maximum(:updated_at)&.strftime("%d-%m-%y") || "N/A"
+      last_updated: ResourceScore.where(country: country, language: language).maximum(:updated_at)&.strftime("%d-%m-%y") || "N/A"
     }
   end
 
