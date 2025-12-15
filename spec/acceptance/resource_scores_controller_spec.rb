@@ -3,7 +3,7 @@
 require "acceptance_helper"
 require "sidekiq/testing"
 
-resource "Resources::Featured" do
+resource "ResourceScores" do
   include ActiveJob::TestHelper
 
   header "Accept", "application/vnd.api+json"
@@ -17,27 +17,27 @@ resource "Resources::Featured" do
   let!(:language_fr) { Language.find_or_create_by!(code: "fr", name: "French") }
   let!(:language_am) { Language.find_or_create_by!(code: "Am", name: "Amharic") }
 
-  get "resources/featured" do
-    let!(:resource_score) {
+  get "resource_scores" do
+    let!(:resource_score) do
       ResourceScore.find_or_create_by!(resource: resource, country: "us", language: language_en) do |rs|
         rs.featured = true
         rs.featured_order = 1
       end
-    }
+    end
 
     context "without filters" do
-      it "returns featured resources" do
-        do_request include: "resource-score"
+      it "returns resource scores" do
+        do_request include: "resource"
 
         expect(status).to be(200)
         json = JSON.parse(response_body)
         expect(json["data"].size).to eq(1)
-        expect(json["data"][0]["relationships"]["resource-scores"]["data"][0]["id"]).to eq(resource_score.id.to_s)
+        expect(json["data"][0]["relationships"]["resource"]["data"]["id"]).to eq(resource.id.to_s)
       end
     end
 
     context "with language filter" do
-      it "returns featured resources for specified language" do
+      it "returns resource scores for specified language" do
         do_request lang: "fr"
 
         expect(status).to be(200)
@@ -46,7 +46,7 @@ resource "Resources::Featured" do
       end
 
       context "inside filter param" do
-        it "returns featured resources for specified language" do
+        it "returns resource scores for specified language" do
           do_request filter: {lang: "fr"}
 
           expect(status).to be(200)
@@ -67,23 +67,23 @@ resource "Resources::Featured" do
     end
 
     context "with country filter" do
-      it "returns featured resources for specified country" do
+      it "returns resource scores for specified country" do
         do_request country: "us"
 
         expect(status).to be(200)
         json = JSON.parse(response_body)
         expect(json["data"].size).to eq(1)
-        expect(json["data"][0]["relationships"]["resource-scores"]["data"][0]["id"]).to eq(resource_score.id.to_s)
+        expect(json["data"][0]["relationships"]["resource"]["data"]["id"]).to eq(resource.id.to_s)
       end
 
       context "inside filter param" do
-        it "returns featured resources for specified country" do
+        it "returns resource scores for specified country" do
           do_request filter: {country: "us"}
 
           expect(status).to be(200)
           json = JSON.parse(response_body)
           expect(json["data"].size).to eq(1)
-          expect(json["data"][0]["relationships"]["resource-scores"]["data"][0]["id"]).to eq(resource_score.id.to_s)
+          expect(json["data"][0]["relationships"]["resource"]["data"]["id"]).to eq(resource.id.to_s)
         end
       end
     end
@@ -91,39 +91,42 @@ resource "Resources::Featured" do
     context "with resource_type filter" do
       let!(:tool_resource_type) { ResourceType.find_by_name("metatool") }
       let!(:tool_resource) { Resource.joins(:resource_type).where(resource_types: {name: "metatool"}).first }
-      let!(:tool_score) { FactoryBot.create(:resource_score, resource: tool_resource, featured: true, featured_order: 2, language: language_en) }
+      let!(:tool_score) do
+        FactoryBot.create(:resource_score, resource: tool_resource, featured: true, featured_order: 2,
+          language: language_en)
+      end
 
-      it "returns featured resources for specified resource type" do
+      it "returns resource scores for specified resource type" do
         do_request resource_type: "metatool"
 
         expect(status).to be(200)
         json = JSON.parse(response_body)
         expect(json["data"].size).to eq(1)
-        expect(json["data"][0]["relationships"]["resource-scores"]["data"][0]["id"]).to eq(tool_score.id.to_s)
+        expect(json["data"][0]["relationships"]["resource"]["data"]["id"]).to eq(tool_resource.id.to_s)
       end
 
       context "inside filter param" do
-        it "returns featured resources for specified resource type" do
+        it "returns resource scores for specified resource type" do
           do_request filter: {resource_type: "metatool"}
 
           expect(status).to be(200)
           json = JSON.parse(response_body)
           expect(json["data"].size).to eq(1)
-          expect(json["data"][0]["relationships"]["resource-scores"]["data"][0]["id"]).to eq(tool_score.id.to_s)
+          expect(json["data"][0]["relationships"]["resource"]["data"]["id"]).to eq(tool_resource.id.to_s)
         end
       end
     end
   end
 
-  post "resources/featured" do
+  post "resource_scores" do
     requires_authorization
 
-    let!(:resource_score) {
+    let!(:resource_score) do
       ResourceScore.find_or_create_by!(resource: resource, country: "us", language: language_en) do |rs|
         rs.featured = true
         rs.featured_order = 1
       end
-    }
+    end
     let(:valid_params) do
       {
         data: {
@@ -140,7 +143,7 @@ resource "Resources::Featured" do
     end
 
     context "with valid parameters" do
-      it "creates a new featured resource score" do
+      it "creates a new resource score" do
         do_request(valid_params)
 
         expect(status).to be(201)
@@ -161,18 +164,18 @@ resource "Resources::Featured" do
     end
   end
 
-  delete "resources/featured/:id" do
+  delete "resource_scores/:id" do
     requires_authorization
 
     let(:id) { resource_score.id }
-    let!(:resource_score) {
+    let!(:resource_score) do
       ResourceScore.find_or_create_by!(resource: resource, country: "us", language: language_en) do |rs|
         rs.featured = true
         rs.featured_order = 1
       end
-    }
+    end
 
-    it "deletes the featured resource score" do
+    it "deletes the resource score" do
       do_request
 
       expect(status).to be(200)
@@ -190,15 +193,15 @@ resource "Resources::Featured" do
     end
   end
 
-  patch "resources/featured/:id" do
+  patch "resource_scores/:id" do
     requires_authorization
 
-    let!(:resource_score) {
+    let!(:resource_score) do
       ResourceScore.find_or_create_by!(resource: resource, country: "us", language: language_en) do |rs|
         rs.featured = true
         rs.featured_order = 1
       end
-    }
+    end
     let(:id) { resource_score.id }
     let(:valid_update_params) do
       {
@@ -213,7 +216,7 @@ resource "Resources::Featured" do
     end
 
     context "with valid parameters" do
-      it "updates the featured resource score" do
+      it "updates the resource score" do
         do_request(valid_update_params)
 
         expect(status).to be(200)
@@ -245,7 +248,7 @@ resource "Resources::Featured" do
     end
   end
 
-  patch "resources/featured/mass_update" do
+  patch "resource_scores/mass_update" do
     requires_authorization
 
     let(:country) { "US" }
@@ -253,7 +256,10 @@ resource "Resources::Featured" do
     let(:resource_ids) { [] }
     let(:resource_type) { ResourceType.find(resource.resource_type_id) }
     let(:featured) { true }
-    let(:params) { {data: {attributes: {country: country, lang: lang, resource_ids: resource_ids, resource_type: resource_type.name}}} }
+    let(:params) do
+      {data: {attributes: {country: country, lang: lang, resource_ids: resource_ids,
+                           resource_type: resource_type&.name}}}
+    end
 
     context "with no country and lang params" do
       let(:country) { nil }
@@ -274,6 +280,56 @@ resource "Resources::Featured" do
           do_request(params)
 
           expect(status).to be(422)
+        end
+      end
+    end
+
+    context "with no country, lang, and resource_type params" do
+      let(:country) { nil }
+      let(:lang) { nil }
+      let(:resource_type_attr) { nil }
+
+      context "when sending an empty array" do
+        it "returns an error" do
+          do_request(params)
+
+          expect(status).to be(422)
+        end
+      end
+
+      context "when sending 1 resource score" do
+        let(:resource_ids) { [resource.id] }
+
+        it "returns an error" do
+          do_request(params)
+
+          expect(status).to be(422)
+        end
+      end
+    end
+
+    context "with no resource_type param" do
+      let(:resource_type) { nil }
+
+      context "when sending an empty array" do
+        it "returns an error" do
+          do_request(params)
+
+          expect(status).to be(422)
+          json = JSON.parse(response_body)
+          expect(json["errors"][0]["detail"]).to include("Resource Type")
+        end
+      end
+
+      context "when sending 1 resource score" do
+        let(:resource_ids) { [resource.id] }
+
+        it "returns an error" do
+          do_request(params)
+
+          expect(status).to be(422)
+          json = JSON.parse(response_body)
+          expect(json["errors"][0]["detail"]).to include("Resource Type")
         end
       end
     end
@@ -304,7 +360,10 @@ resource "Resources::Featured" do
         end
 
         context "when sending more than 1 resource score" do
-          let!(:resource2) { Resource.joins(:resource_type).where("resource_types.name != ? AND resources.id NOT IN (?)", resource.resource_type.name, resource.id).first }
+          let!(:resource2) do
+            Resource.joins(:resource_type).where("resource_types.name != ? AND resources.id NOT IN (?)",
+              resource.resource_type.name, resource.id).first
+          end
           let(:resource_ids) { [resource.id, resource2.id] }
 
           it "returns an array with more than 1 resource score" do
@@ -320,13 +379,21 @@ resource "Resources::Featured" do
       end
 
       context "with previous resource scores" do
-        let!(:resource2) { Resource.joins(:resource_type).where("resource_types.name = ? AND resources.id NOT IN (?)", resource.resource_type.name, resource.id).first }
-        let!(:resource3) { Resource.joins(:resource_type).where("resource_types.name = ? AND resources.id NOT IN (?)", resource.resource_type.name, [resource.id, resource2.id]).first }
+        let!(:resource2) do
+          Resource.joins(:resource_type).where("resource_types.name = ? AND resources.id NOT IN (?)",
+            resource.resource_type.name, resource.id).first
+        end
+        let!(:resource3) do
+          Resource.joins(:resource_type).where("resource_types.name = ? AND resources.id NOT IN (?)",
+            resource.resource_type.name, [resource.id, resource2.id]).first
+        end
         let!(:resource_score) do
-          ResourceScore.create!(resource: resource, country: country, language: language_en, featured: true, featured_order: 1)
+          ResourceScore.create!(resource: resource, country: country, language: language_en, featured: true,
+            featured_order: 1)
         end
         let!(:resource_score2) do
-          ResourceScore.create!(resource: resource2, country: country, language: language_en, featured: false, featured_order: nil)
+          ResourceScore.create!(resource: resource2, country: country, language: language_en, featured: false,
+            featured_order: nil)
         end
 
         context "when sending an empty array" do
@@ -410,14 +477,17 @@ resource "Resources::Featured" do
     end
   end
 
-  patch "resources/featured/mass_update_ranked" do
+  patch "resource_scores/mass_update_ranked" do
     requires_authorization
 
     let(:country) { "US" }
     let(:lang) { "en" }
     let(:ranked_resources) { [] }
     let(:resource_type) { ResourceType.find(resource.resource_type_id) }
-    let(:params) { {data: {attributes: {country: country, lang: lang, ranked_resources: ranked_resources, resource_type: resource_type.name}}} }
+    let(:params) do
+      {data: {attributes: {country: country, lang: lang, ranked_resources: ranked_resources,
+                           resource_type: resource_type&.name}}}
+    end
 
     context "with no country and lang params" do
       let(:country) { nil }
@@ -438,6 +508,32 @@ resource "Resources::Featured" do
           do_request(params)
 
           expect(status).to be(422)
+        end
+      end
+    end
+
+    context "with no resource_type param" do
+      let(:resource_type) { nil }
+
+      context "when sending an empty array" do
+        it "returns an error" do
+          do_request(params)
+
+          expect(status).to be(422)
+          json = JSON.parse(response_body)
+          expect(json["errors"][0]["detail"]).to include("Resource Type")
+        end
+      end
+
+      context "when sending 1 ranked resource" do
+        let(:ranked_resources) { [{resource_id: resource.id, score: 10}] }
+
+        it "returns an error" do
+          do_request(params)
+
+          expect(status).to be(422)
+          json = JSON.parse(response_body)
+          expect(json["errors"][0]["detail"]).to include("Resource Type")
         end
       end
     end
@@ -469,7 +565,10 @@ resource "Resources::Featured" do
         end
 
         context "when sending more than 1 ranked resource" do
-          let!(:resource2) { Resource.joins(:resource_type).where("resource_types.name != ? AND resources.id NOT IN (?)", resource.resource_type.name, resource.id).first }
+          let!(:resource2) do
+            Resource.joins(:resource_type).where("resource_types.name != ? AND resources.id NOT IN (?)",
+              resource.resource_type.name, resource.id).first
+          end
           let(:ranked_resources) { [{resource_id: resource.id, score: 20}, {resource_id: resource2.id, score: 10}] }
 
           it "returns an array with more than 1 resource score" do
@@ -495,8 +594,14 @@ resource "Resources::Featured" do
       end
 
       context "with previous resource scores" do
-        let!(:resource2) { Resource.joins(:resource_type).where("resource_types.name = ? AND resources.id NOT IN (?)", resource.resource_type.name, resource.id).first }
-        let!(:resource3) { Resource.joins(:resource_type).where("resource_types.name = ? AND resources.id NOT IN (?)", resource.resource_type.name, [resource.id, resource2.id]).first }
+        let!(:resource2) do
+          Resource.joins(:resource_type).where("resource_types.name = ? AND resources.id NOT IN (?)",
+            resource.resource_type.name, resource.id).first
+        end
+        let!(:resource3) do
+          Resource.joins(:resource_type).where("resource_types.name = ? AND resources.id NOT IN (?)",
+            resource.resource_type.name, [resource.id, resource2.id]).first
+        end
         let!(:resource_score) do
           ResourceScore.create!(resource: resource, country: country, language: language_en, score: 15)
         end

@@ -3,7 +3,7 @@
 require "acceptance_helper"
 require "sidekiq/testing"
 
-resource "Resources::DefaultOrder" do
+resource "ResourceDefaultOrders" do
   include ActiveJob::TestHelper
 
   header "Accept", "application/vnd.api+json"
@@ -21,7 +21,7 @@ resource "Resources::DefaultOrder" do
     ResourceDefaultOrder.delete_all
   end
 
-  get "resources/default_order" do
+  get "resource_default_orders" do
     before do
       FactoryBot.create(:resource_default_order, resource: resource, language: language_en)
       FactoryBot.create(:resource_default_order, resource: other_resource, language: language_en)
@@ -46,6 +46,17 @@ resource "Resources::DefaultOrder" do
         expect(json["data"].size).to eq(0)
       end
 
+      context "with language not found" do
+        it "returns an error" do
+          do_request lang: "invalid_lang"
+
+          expect(status).to be(422)
+          json = JSON.parse(response_body)
+          expect(json).to have_key("errors")
+          expect(json["errors"][0]["detail"]).to include("Language not found")
+        end
+      end
+
       context "inside filter param" do
         it "returns default order resources for specified language" do
           do_request filter: {lang: "fr"}
@@ -53,6 +64,17 @@ resource "Resources::DefaultOrder" do
           expect(status).to be(200)
           json = JSON.parse(response_body)
           expect(json["data"].size).to eq(0)
+        end
+
+        context "with language not found" do
+          it "returns an error" do
+            do_request filter: {lang: "invalid_lang"}
+
+            expect(status).to be(422)
+            json = JSON.parse(response_body)
+            expect(json).to have_key("errors")
+            expect(json["errors"][0]["detail"]).to include("Language not found")
+          end
         end
       end
 
@@ -112,7 +134,7 @@ resource "Resources::DefaultOrder" do
     end
   end
 
-  post "resources/default_order" do
+  post "resource_default_orders" do
     requires_authorization
 
     let(:valid_params) do
@@ -149,10 +171,12 @@ resource "Resources::DefaultOrder" do
     end
   end
 
-  delete "resources/default_order/:id" do
+  delete "resource_default_orders/:id" do
     requires_authorization
 
-    let!(:resource_default_order) { FactoryBot.create(:resource_default_order, resource: resource, language: language_en) }
+    let!(:resource_default_order) do
+      FactoryBot.create(:resource_default_order, resource: resource, language: language_en)
+    end
     let(:id) { resource_default_order.id }
 
     it "deletes the default order resource" do
@@ -165,7 +189,7 @@ resource "Resources::DefaultOrder" do
     context "when an incorrect ID is sent" do
       let(:id) { "unknownId" }
 
-      it "returns unprocessable entity" do
+      it "returns not found" do
         do_request
 
         expect(status).to be(404)
@@ -173,10 +197,12 @@ resource "Resources::DefaultOrder" do
     end
   end
 
-  patch "resources/default_order/:id" do
+  patch "resource_default_orders/:id" do
     requires_authorization
 
-    let!(:resource_default_order) { FactoryBot.create(:resource_default_order, resource: resource, language: language_en) }
+    let!(:resource_default_order) do
+      FactoryBot.create(:resource_default_order, resource: resource, language: language_en)
+    end
     let(:id) { resource_default_order.id }
     let(:valid_update_params) do
       {
@@ -213,7 +239,7 @@ resource "Resources::DefaultOrder" do
     context "when an incorrect ID is sent" do
       let(:id) { "unknownId" }
 
-      it "returns unprocessable entity" do
+      it "returns not found" do
         do_request(valid_update_params)
 
         expect(status).to be(404)
@@ -221,13 +247,15 @@ resource "Resources::DefaultOrder" do
     end
   end
 
-  patch "resources/default_order/mass_update" do
+  patch "resource_default_orders/mass_update" do
     requires_authorization
 
     let(:lang) { "en" }
     let(:resource_ids) { [] }
     let(:resource_type) { ResourceType.find(resource.resource_type_id) }
-    let(:params) { {data: {attributes: {lang: lang, resource_ids: resource_ids, resource_type: resource_type.name}}} }
+    let(:params) do
+      {data: {attributes: {lang: lang, resource_ids: resource_ids, resource_type: resource_type&.name}}}
+    end
 
     context "with no lang param" do
       let(:lang) { nil }
@@ -247,6 +275,33 @@ resource "Resources::DefaultOrder" do
           do_request(params)
 
           expect(status).to be(422)
+        end
+      end
+    end
+
+    context "with no resource_type param" do
+      let(:resource_type) { nil }
+
+      context "when sending an empty array" do
+        it "returns an error" do
+          do_request(params)
+
+          expect(status).to be(422)
+
+          json = JSON.parse(response_body)
+          expect(json["errors"][0]["detail"]).to include("Resource Type")
+        end
+      end
+
+      context "when sending 1 resource default order" do
+        let(:resource_ids) { [resource.id] }
+
+        it "returns an error" do
+          do_request(params)
+
+          expect(status).to be(422)
+          json = JSON.parse(response_body)
+          expect(json["errors"][0]["detail"]).to include("Resource Type")
         end
       end
     end
@@ -278,7 +333,10 @@ resource "Resources::DefaultOrder" do
         end
 
         context "when sending more than 1 resource default order" do
-          let!(:resource2) { Resource.joins(:resource_type).where("resource_types.name != ? AND resources.id NOT IN (?)", resource.resource_type.name, resource.id).first }
+          let!(:resource2) do
+            Resource.joins(:resource_type).where("resource_types.name != ? AND resources.id NOT IN (?)",
+              resource.resource_type.name, resource.id).first
+          end
           let(:resource_ids) { [resource.id, resource2.id] }
 
           it "returns an array with more than 1 resource default order" do
@@ -296,8 +354,14 @@ resource "Resources::DefaultOrder" do
       end
 
       context "with previous resource default orders" do
-        let!(:resource2) { Resource.joins(:resource_type).where("resource_types.name = ? AND resources.id NOT IN (?)", resource.resource_type.name, resource.id).first }
-        let!(:resource3) { Resource.joins(:resource_type).where("resource_types.name = ? AND resources.id NOT IN (?)", resource.resource_type.name, [resource.id, resource2.id]).first }
+        let!(:resource2) do
+          Resource.joins(:resource_type).where("resource_types.name = ? AND resources.id NOT IN (?)",
+            resource.resource_type.name, resource.id).first
+        end
+        let!(:resource3) do
+          Resource.joins(:resource_type).where("resource_types.name = ? AND resources.id NOT IN (?)",
+            resource.resource_type.name, [resource.id, resource2.id]).first
+        end
         let!(:resource_default_order) do
           FactoryBot.create(:resource_default_order, resource: resource, language: language_en, position: 1)
         end
