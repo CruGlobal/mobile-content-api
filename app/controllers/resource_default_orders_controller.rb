@@ -8,7 +8,7 @@ class ResourceDefaultOrdersController < ApplicationController
     resource_type = params.dig(:filter, :resource_type) || params[:resource_type]
 
     if lang.present?
-      language = Language.find_by(code: lang.downcase)
+      language = Language.where("code = :lang OR LOWER(code) = LOWER(:lang)", lang: lang).first
       raise "Language not found for code: #{lang}" unless language.present?
     end
 
@@ -21,7 +21,7 @@ class ResourceDefaultOrdersController < ApplicationController
 
   def create
     sanitized_params = create_params
-    language = Language.find_by!(code: create_params[:lang].downcase) if create_params[:lang].present?
+    language = Language.where("code = :lang OR LOWER(code) = LOWER(:lang)", lang: create_params[:lang]).first if create_params[:lang].present?
     sanitized_params.delete(:lang) if sanitized_params[:lang].present?
     @resource_default_order = ResourceDefaultOrder.new(sanitized_params)
     @resource_default_order.language = language if language.present?
@@ -43,7 +43,7 @@ class ResourceDefaultOrdersController < ApplicationController
   def update
     @resource_default_order = ResourceDefaultOrder.find(params[:id])
     sanitized_params = create_params
-    language = Language.find_by!(code: create_params[:lang].downcase) if create_params[:lang].present?
+    language = Language.where("code = :lang OR LOWER(code) = LOWER(:lang)", lang: create_params[:lang]).first if create_params[:lang].present?
     sanitized_params.delete(:lang) if sanitized_params[:lang].present?
     @resource_default_order.language = language if language.present?
     @resource_default_order.update!(sanitized_params)
@@ -137,7 +137,7 @@ class ResourceDefaultOrdersController < ApplicationController
     scope = Resource.joins(:resource_default_orders)
 
     if lang.present?
-      language = Language.find_by(code: lang.downcase)
+      language = Language.where("code = :lang OR LOWER(code) = LOWER(:lang)", lang: lang).first
       scope = scope.joins(resource_default_orders: :language).where(languages: {id: language.id})
     end
 

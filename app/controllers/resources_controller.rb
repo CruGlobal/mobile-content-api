@@ -38,6 +38,24 @@ class ResourcesController < ApplicationController
     render json: featured_resources, include: params[:include], status: :ok
   end
 
+  def default_order
+    lang = params.dig(:filter, :lang) || params[:lang]
+
+    if lang.present?
+      language = Language.where("code = :lang OR LOWER(code) = LOWER(:lang)", lang: lang).first
+      raise "Language not found for code: #{lang}" unless language.present?
+    end
+
+    default_order_resources = all_default_order_resources(
+      lang: lang,
+      resource_type: params.dig(:filter, :resource_type) || params[:resource_type]
+    )
+
+    render json: default_order_resources, include: params[:include], status: :ok
+  rescue => e
+    render json: {errors: [{detail: "Error: #{e.message}"}]}, status: :unprocessable_content
+  end
+
   def publish_translation
     if valid_publish_params?
       render json: publish_translations, status: :ok
@@ -126,6 +144,20 @@ class ResourcesController < ApplicationController
     scope.order("resource_scores.featured_order ASC, resource_scores.featured DESC NULLS LAST, \
     resource_scores.score DESC NULLS LAST, \
     resources.created_at DESC")
+  end
+
+  def all_default_order_resources(lang:, resource_type: nil)
+    scope = Resource.joins(:resource_default_orders)
+
+    if lang.present?
+      language = Language.where("code = :lang OR LOWER(code) = LOWER(:lang)", lang: lang).first
+      scope = scope.joins(resource_default_orders: :language).where(languages: {id: language.id})
+    end
+
+    if resource_type.present?
+      scope = scope.joins(:resource_type).where(resource_types: {name: resource_type.downcase})
+    end
+    scope.order("resource_default_orders.position ASC NULLS LAST, resources.created_at DESC")
   end
 
   def load_resource

@@ -38,7 +38,7 @@ class ResourceScoresController < ApplicationController
   def update
     @resource_score = ResourceScore.find(params[:id])
     sanitized_params = create_params
-    language = Language.find_by!(code: create_params[:lang].downcase) if create_params[:lang].present?
+    language = Language.where("code = :lang OR LOWER(code) = LOWER(:lang)", lang: create_params[:lang]).first if create_params[:lang].present?
     sanitized_params.delete(:lang) if sanitized_params[:lang].present?
     @resource_score.language = language if language.present?
     @resource_score.update!(sanitized_params)
@@ -57,7 +57,7 @@ class ResourceScoresController < ApplicationController
 
     raise "Country, Lang, and Resource Type should be provided" unless country.present? && lang_code.present? && resource_type.present?
 
-    language = Language.find_by(code: lang_code)
+    language = Language.where("code = :lang OR LOWER(code) = LOWER(:lang)", lang: lang_code).first
     raise "Language not found for code: #{lang_code}" unless language.present?
 
     current_scores = ResourceScore.where(
@@ -145,7 +145,7 @@ class ResourceScoresController < ApplicationController
 
     raise "Country, Lang, and Resource Type should be provided" unless country.present? && lang_code.present? && resource_type.present?
 
-    language = Language.find_by(code: lang_code)
+    language = Language.where("code = :lang OR LOWER(code) = LOWER(:lang)", lang: lang_code).first
     raise "Language not found for code: #{lang_code}" unless language.present?
 
     current_scores = ResourceScore.where(
@@ -211,8 +211,8 @@ class ResourceScoresController < ApplicationController
     scope = ResourceScore.all
 
     if lang_code.present?
-      language = Language.find_by(code: lang_code.downcase)
-      scope = scope.where(language_id: language.id) if language.present?
+      language = Language.where("code = :lang OR LOWER(code) = LOWER(:lang)", lang: lang_code).first
+      scope = scope.left_joins(:language).where(languages: {id: language.id}) if language.present?
     end
 
     scope = scope.where("LOWER(country) = LOWER(?)", country) if country.present?

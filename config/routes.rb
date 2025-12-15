@@ -23,6 +23,7 @@ Rails.application.routes.draw do
     post "translations/publish", to: "resources#publish_translation"
     collection do
       get :featured
+      get :default_order
     end
   end
 
