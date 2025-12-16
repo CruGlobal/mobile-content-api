@@ -60,7 +60,7 @@ class ResourceDefaultOrdersController < ApplicationController
 
     raise "Lang and Resource Type should be provided" unless lang_code.present? && resource_type.present?
 
-    language = Language.find_by(code: lang_code)
+    language = Language.where("code = :lang OR LOWER(code) = LOWER(:lang)", lang: lang_code).first
     raise "Language not found for code: #{lang_code}" unless language.present?
 
     current_orders = ResourceDefaultOrder.where(language_id: language.id).order(position: :asc)
