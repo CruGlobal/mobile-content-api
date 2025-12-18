@@ -179,13 +179,14 @@ GEM
       open-uri (>= 0.1.0, < 0.2.0)
       rest-client (>= 2.0.0, < 2.2.0)
     csv (3.3.5)
-    datadog (2.22.0)
-      datadog-ruby_core_source (~> 3.4, >= 3.4.1)
-      libdatadog (~> 22.0.1.1.0)
-      libddwaf (~> 1.25.1.1.0)
+    datadog (2.23.0)
+      cgi
+      datadog-ruby_core_source (~> 3.4, >= 3.4.2)
+      libdatadog (~> 24.0.1.1.0)
+      libddwaf (~> 1.30.0.0.0)
       logger
       msgpack
-    datadog-ruby_core_source (3.4.1)
+    datadog-ruby_core_source (3.4.3)
     date (3.4.1)
     debug (1.11.0)
       irb (~> 1.10)
@@ -300,11 +301,11 @@ GEM
     jwt (2.10.2)
       base64
     language_server-protocol (3.17.0.5)
-    libdatadog (22.0.1.1.0)
-    libdatadog (22.0.1.1.0-x86_64-linux)
-    libddwaf (1.25.1.1.0)
+    libdatadog (24.0.1.1.0)
+    libdatadog (24.0.1.1.0-x86_64-linux)
+    libddwaf (1.30.0.0.0)
       ffi (~> 1.0)
-    libddwaf (1.25.1.1.0-x86_64-linux)
+    libddwaf (1.30.0.0.0-x86_64-linux)
       ffi (~> 1.0)
     lint_roller (1.1.0)
     listen (3.9.0)
@@ -743,8 +744,8 @@ CHECKSUMS
   crass (1.0.6) sha256=dc516022a56e7b3b156099abc81b6d2b08ea1ed12676ac7a5657617f012bd45d
   crowdin-api (1.13.0) sha256=89437e113ec6d16bd15358bb4fa585e003d9a2fa6bde3af9fc683dbc454b9939
   csv (3.3.5) sha256=6e5134ac3383ef728b7f02725d9872934f523cb40b961479f69cf3afa6c8e73f
-  datadog (2.22.0) sha256=ca35af33be9bdfe5595f93b38f69f89ec04e0b27d4cb59bb814a47e1b421c885
-  datadog-ruby_core_source (3.4.1) sha256=fa40f1c3c8f764b6651a6443382b57d39aeb3c9f94b5af98f499bcfc678a2fb9
+  datadog (2.23.0) sha256=1fa8a59ea1aea6bd911095840101add44ae9029ea9e72e317c353da45ab71bd0
+  datadog-ruby_core_source (3.4.3) sha256=ad9f6f51fb92a39b1f39acf9a3fefd837ccace764e954d55d7c151ffa400e8c0
   date (3.4.1) sha256=bf268e14ef7158009bfeaec40b5fa3c7271906e88b196d958a89d4b408abe64f
   debug (1.11.0) sha256=1425db64cfa0130c952684e3dc974985be201dd62899bf4bbe3f8b5d6cf1aef2
   declarative (0.0.20) sha256=8021dd6cb17ab2b61233c56903d3f5a259c5cf43c80ff332d447d395b17d9ff9
@@ -793,10 +794,10 @@ CHECKSUMS
   jsonapi-renderer (0.2.2) sha256=b5c44b033d61b4abdb6500fa4ab84807ca0b36ea0e59e47a2c3ca7095a6e447b
   jwt (2.10.2) sha256=31e1ee46f7359883d5e622446969fe9c118c3da87a0b1dca765ce269c3a0c4f4
   language_server-protocol (3.17.0.5) sha256=fd1e39a51a28bf3eec959379985a72e296e9f9acfce46f6a79d31ca8760803cc
-  libdatadog (22.0.1.1.0) sha256=65e98a8ebe337ec8fcb5a9e507349cf14e82da9e571ba9c03942e2620ae5675f
-  libdatadog (22.0.1.1.0-x86_64-linux) sha256=3f727cc5c8c3a40ae48aabee5c230af4842c145ccc495e60955405f84cd9c05a
-  libddwaf (1.25.1.1.0) sha256=49fa30bb6ff0078ccd79991b52e5cd51662eb8f45156bc58e026bc7824b66b83
-  libddwaf (1.25.1.1.0-x86_64-linux) sha256=f7d7eba613b8603e2c8669d89584d5d13d95f335fa7b0a8da925fb126ac3ce06
+  libdatadog (24.0.1.1.0) sha256=5f911a5598deb11f8c4179077a46e50a57b778b87a152bf23859ae6e557b1751
+  libdatadog (24.0.1.1.0-x86_64-linux) sha256=d15aea8b2be3e45ecfd9dec4ebc53b4c178e8540dee59c40cf2500bed67aacde
+  libddwaf (1.30.0.0.0) sha256=d5c350555ec5bdfb99534b37ad578163c83642ca03cecb3bae30fd29dc47d4fc
+  libddwaf (1.30.0.0.0-x86_64-linux) sha256=c8d7e1e097ed12bcdf5d4bcb716edcb98e72733c80dd884e0ee83a7cc43d6ae0
   lint_roller (1.1.0) sha256=2c0c845b632a7d172cb849cc90c1bce937a28c5c8ccccb50dfd46a485003cc87
   listen (3.9.0) sha256=db9e4424e0e5834480385197c139cb6b0ae0ef28cc13310cfd1ca78377d59c67
   logger (1.7.0) sha256=196edec7cc44b66cfb40f9755ce11b392f21f7967696af15d274dde7edff0203
