@@ -41,6 +41,12 @@ ARG TEST_DB_USER=postgres
 ARG TEST_DB_PASSWORD
 ARG TEST_DB_HOST=localhost
 ARG TEST_DB_PORT=5432
+ARG SESSION_REDIS_DB_INDEX=1
+ARG SESSION_REDIS_HOST=localhost
+ARG SESSION_REDIS_PORT=6379
+ARG STORAGE_REDIS_DB_INDEX=1
+ARG STORAGE_REDIS_HOST=localhost
+ARG STORAGE_REDIS_PORT=6379
 
 # Compile assets and fix permissions
 # just like in Actions, we need to copy the fake cred json so that our tests can function
