@@ -47,6 +47,8 @@ ARG SESSION_REDIS_PORT=6379
 ARG STORAGE_REDIS_DB_INDEX=1
 ARG STORAGE_REDIS_HOST=localhost
 ARG STORAGE_REDIS_PORT=6379
+ARG MOBILE_CONTENT_API_BUCKET=fake
+ARG AWS_REGION=fake
 
 # Compile assets and fix permissions
 # just like in Actions, we need to copy the fake cred json so that our tests can function
