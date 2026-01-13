@@ -69,7 +69,8 @@ ARG GOOGLE_APP_ID=fake
 # Compile assets and fix permissions
 # just like in Actions, we need to copy the fake cred json so that our tests can function
 RUN cp spec/fixtures/service_account_cred.json.actions config/secure/service_account_cred.json \
-    && RAILS_ENV=test bundle exec rails db:create db:schema:load docs:generate \
+    && RAILS_ENV=test bundle exec rails db:create db:schema:load \
+    && RAILS_ENV=test bundle exec rake docs:generate \
     && rm config/secure/service_account_cred.json \
     && chown -R webapp:webapp /home/webapp/
 
