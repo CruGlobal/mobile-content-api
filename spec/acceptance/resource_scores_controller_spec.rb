@@ -225,6 +225,28 @@ resource "ResourceScores" do
         expect(json["data"]["attributes"]["country"]).to eq("CA".downcase)
         expect(json["data"]["relationships"]["resource"]["data"]["id"]).to eq(resource.id.to_s)
       end
+
+      context "when updating the language" do
+        let(:lang_update_params) do
+          {
+            data: {
+              type: "resource_score",
+              attributes: {
+                lang: language_fr.code
+              }
+            }
+          }
+        end
+
+        it "updates the resource score language" do
+          do_request(lang_update_params)
+
+          expect(status).to be(200)
+          json = JSON.parse(response_body)
+          expect(json["data"]["relationships"]["language"]["data"]["id"]).to eq(language_fr.id.to_s)
+          expect(json["data"]["relationships"]["resource"]["data"]["id"]).to eq(resource.id.to_s)
+        end
+      end
     end
 
     context "with invalid parameters" do
@@ -471,6 +493,61 @@ resource "ResourceScores" do
             expect(json["data"].count).to eq(2)
             expect(json["data"][0]["relationships"]["resource"]["data"]["id"]).to eq(resource.id.to_s)
             expect(json["data"][1]["relationships"]["resource"]["data"]["id"]).to eq(resource2.id.to_s)
+          end
+        end
+
+        context "when omitting a resource from the incoming list" do
+          let(:resource_ids) { [resource.id] }
+
+          it "soft-deletes the omitted resource score" do
+            do_request(params)
+
+            expect(status).to be(200)
+            json = JSON.parse(response_body)
+            expect(json["data"].count).to eq(1)
+            expect(json["data"][0]["relationships"]["resource"]["data"]["id"]).to eq(resource.id.to_s)
+            expect(ResourceScore.exists?(resource_score2.id)).to be false
+          end
+        end
+
+        context "when omitting a resource with a score from the incoming list" do
+          let(:resource_ids) { [resource2.id] }
+
+          before do
+            resource_score.update!(score: 10)
+          end
+
+          it "removes featured status but keeps the score" do
+            do_request(params)
+
+            expect(status).to be(200)
+            json = JSON.parse(response_body)
+            expect(json["data"].count).to eq(1)
+            expect(json["data"][0]["relationships"]["resource"]["data"]["id"]).to eq(resource2.id.to_s)
+
+            resource_score.reload
+            expect(resource_score.featured).to be false
+            expect(resource_score.featured_order).to be_nil
+            expect(resource_score.score).to eq(10)
+          end
+        end
+
+        context "when omitting multiple resources from the incoming list" do
+          let!(:resource_score3) do
+            ResourceScore.create!(resource: resource3, country: country, language: language_en, featured: true,
+              featured_order: 3)
+          end
+          let(:resource_ids) { [resource2.id] }
+
+          it "soft-deletes all omitted resource scores" do
+            do_request(params)
+
+            expect(status).to be(200)
+            json = JSON.parse(response_body)
+            expect(json["data"].count).to eq(1)
+            expect(json["data"][0]["relationships"]["resource"]["data"]["id"]).to eq(resource2.id.to_s)
+            expect(ResourceScore.exists?(resource_score.id)).to be false
+            expect(ResourceScore.exists?(resource_score3.id)).to be false
           end
         end
       end
