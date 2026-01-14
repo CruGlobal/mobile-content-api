@@ -225,6 +225,28 @@ resource "ResourceScores" do
         expect(json["data"]["attributes"]["country"]).to eq("CA".downcase)
         expect(json["data"]["relationships"]["resource"]["data"]["id"]).to eq(resource.id.to_s)
       end
+
+      context "when updating the language" do
+        let(:lang_update_params) do
+          {
+            data: {
+              type: "resource_score",
+              attributes: {
+                lang: language_fr.code
+              }
+            }
+          }
+        end
+
+        it "updates the resource score language" do
+          do_request(lang_update_params)
+
+          expect(status).to be(200)
+          json = JSON.parse(response_body)
+          expect(json["data"]["relationships"]["language"]["data"]["id"]).to eq(language_fr.id.to_s)
+          expect(json["data"]["relationships"]["resource"]["data"]["id"]).to eq(resource.id.to_s)
+        end
+      end
     end
 
     context "with invalid parameters" do
