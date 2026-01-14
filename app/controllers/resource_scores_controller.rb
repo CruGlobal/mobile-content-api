@@ -38,7 +38,10 @@ class ResourceScoresController < ApplicationController
   def update
     @resource_score = ResourceScore.find(params[:id])
     sanitized_params = create_params
-    language = Language.where("code = :lang OR LOWER(code) = LOWER(:lang)", lang: create_params[:lang]).first if create_params[:lang].present?
+    if create_params[:lang].present?
+      language = Language.where("code = :lang OR LOWER(code) = LOWER(:lang)",
+        lang: create_params[:lang]).first
+    end
     sanitized_params.delete(:lang) if sanitized_params[:lang].present?
     @resource_score.language = language if language.present?
     @resource_score.update!(sanitized_params)
@@ -55,7 +58,9 @@ class ResourceScoresController < ApplicationController
     incoming_resources = params.dig(:data, :attributes, :resource_ids) || []
     resulting_resource_scores = []
 
-    raise "Country, Lang, and Resource Type should be provided" unless country.present? && lang_code.present? && resource_type.present?
+    unless country.present? && lang_code.present? && resource_type.present?
+      raise "Country, Lang, and Resource Type should be provided"
+    end
 
     language = Language.where("code = :lang OR LOWER(code) = LOWER(:lang)", lang: lang_code).first
     raise "Language not found for code: #{lang_code}" unless language.present?
@@ -130,6 +135,11 @@ class ResourceScoresController < ApplicationController
           )
         end
       end
+
+      # Soft-delete any current scores that are not in the incoming resources list
+      current_scores.each do |rs|
+        soft_delete_resource_score(rs) unless incoming_resources.include?(rs.resource_id)
+      end
     end
     render json: resulting_resource_scores, include: params[:include], status: :ok
   rescue => e
@@ -143,7 +153,9 @@ class ResourceScoresController < ApplicationController
     incoming_resources = params.dig(:data, :attributes, :ranked_resources) || []
     resulting_resource_scores = []
 
-    raise "Country, Lang, and Resource Type should be provided" unless country.present? && lang_code.present? && resource_type.present?
+    unless country.present? && lang_code.present? && resource_type.present?
+      raise "Country, Lang, and Resource Type should be provided"
+    end
 
     language = Language.where("code = :lang OR LOWER(code) = LOWER(:lang)", lang: lang_code).first
     raise "Language not found for code: #{lang_code}" unless language.present?
