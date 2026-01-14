@@ -411,7 +411,7 @@ resource "ResourceDefaultOrders" do
             expect(json["data"][0]["relationships"]["resource"]["data"]["id"]).to eq(resource2.id.to_s)
             expect(json["data"][0]["attributes"]["position"]).to eq(1)
             expect(json["data"][1]["relationships"]["resource"]["data"]["id"]).to eq(resource3.id.to_s)
-            expect(json["data"][1]["attributes"]["position"]). to eq(2)
+            expect(json["data"][1]["attributes"]["position"]).to eq(2)
             expect(json["data"][2]["relationships"]["resource"]["data"]["id"]).to eq(resource.id.to_s)
             expect(json["data"][2]["attributes"]["position"]).to eq(3)
           end
@@ -457,7 +457,7 @@ resource "ResourceDefaultOrders" do
             json = JSON.parse(response_body)
             expect(json["data"].count).to eq(1)
             expect(json["data"][0]["relationships"]["resource"]["data"]["id"]).to eq(resource.id.to_s)
-            expect(json["data"][0]["attributes"]["position"]). to eq(1)
+            expect(json["data"][0]["attributes"]["position"]).to eq(1)
             expect(ResourceDefaultOrder.exists?(resource_default_order2.id)).to be false
           end
         end
@@ -475,9 +475,9 @@ resource "ResourceDefaultOrders" do
             json = JSON.parse(response_body)
             expect(json["data"].count).to eq(1)
             expect(json["data"][0]["relationships"]["resource"]["data"]["id"]).to eq(resource2.id.to_s)
-            expect(json["data"][0]["attributes"]["position"]). to eq(1)
+            expect(json["data"][0]["attributes"]["position"]).to eq(1)
             expect(ResourceDefaultOrder.exists?(resource_default_order.id)).to be false
-            expect(ResourceDefaultOrder.exists?(resource_default_order3.id)). to be false
+            expect(ResourceDefaultOrder.exists?(resource_default_order3.id)).to be false
           end
         end
       end
