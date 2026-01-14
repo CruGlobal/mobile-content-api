@@ -21,7 +21,10 @@ class ResourceDefaultOrdersController < ApplicationController
 
   def create
     sanitized_params = create_params
-    language = Language.where("code = :lang OR LOWER(code) = LOWER(:lang)", lang: create_params[:lang]).first if create_params[:lang].present?
+    if create_params[:lang].present?
+      language = Language.where("code = :lang OR LOWER(code) = LOWER(:lang)",
+        lang: create_params[:lang]).first
+    end
     sanitized_params.delete(:lang) if sanitized_params[:lang].present?
     @resource_default_order = ResourceDefaultOrder.new(sanitized_params)
     @resource_default_order.language = language if language.present?
@@ -43,7 +46,10 @@ class ResourceDefaultOrdersController < ApplicationController
   def update
     @resource_default_order = ResourceDefaultOrder.find(params[:id])
     sanitized_params = create_params
-    language = Language.where("code = :lang OR LOWER(code) = LOWER(:lang)", lang: create_params[:lang]).first if create_params[:lang].present?
+    if create_params[:lang].present?
+      language = Language.where("code = :lang OR LOWER(code) = LOWER(:lang)",
+        lang: create_params[:lang]).first
+    end
     sanitized_params.delete(:lang) if sanitized_params[:lang].present?
     @resource_default_order.language = language if language.present?
     @resource_default_order.update!(sanitized_params)
@@ -124,6 +130,11 @@ class ResourceDefaultOrdersController < ApplicationController
             position: current_position
           )
         end
+      end
+
+      # Destroy any current orders that are not in the incoming resources list
+      current_orders.each do |ro|
+        ro.destroy! unless incoming_resources.include?(ro.resource_id)
       end
     end
     render json: resulting_resource_default_orders, status: :ok
