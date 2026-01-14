@@ -411,7 +411,7 @@ resource "ResourceDefaultOrders" do
             expect(json["data"][0]["relationships"]["resource"]["data"]["id"]).to eq(resource2.id.to_s)
             expect(json["data"][0]["attributes"]["position"]).to eq(1)
             expect(json["data"][1]["relationships"]["resource"]["data"]["id"]).to eq(resource3.id.to_s)
-            expect(json["data"][1]["attributes"]["position"]).to eq(2)
+            expect(json["data"][1]["attributes"]["position"]). to eq(2)
             expect(json["data"][2]["relationships"]["resource"]["data"]["id"]).to eq(resource.id.to_s)
             expect(json["data"][2]["attributes"]["position"]).to eq(3)
           end
@@ -444,6 +444,40 @@ resource "ResourceDefaultOrders" do
             expect(json["data"].count).to eq(1)
             expect(json["data"][0]["relationships"]["resource"]["data"]["id"]).to eq(resource.id.to_s)
             expect(json["data"][0]["attributes"]["position"]).to eq(1)
+          end
+        end
+
+        context "when omitting a resource from the incoming list" do
+          let(:resource_ids) { [resource.id] }
+
+          it "removes the omitted resource default order" do
+            do_request(params)
+
+            expect(status).to be(200)
+            json = JSON.parse(response_body)
+            expect(json["data"].count).to eq(1)
+            expect(json["data"][0]["relationships"]["resource"]["data"]["id"]).to eq(resource.id.to_s)
+            expect(json["data"][0]["attributes"]["position"]). to eq(1)
+            expect(ResourceDefaultOrder.exists?(resource_default_order2.id)).to be false
+          end
+        end
+
+        context "when omitting multiple resources from the incoming list" do
+          let!(:resource_default_order3) do
+            FactoryBot.create(:resource_default_order, resource: resource3, language: language_en, position: 3)
+          end
+          let(:resource_ids) { [resource2.id] }
+
+          it "removes all omitted resource default orders" do
+            do_request(params)
+
+            expect(status).to be(200)
+            json = JSON.parse(response_body)
+            expect(json["data"].count).to eq(1)
+            expect(json["data"][0]["relationships"]["resource"]["data"]["id"]).to eq(resource2.id.to_s)
+            expect(json["data"][0]["attributes"]["position"]). to eq(1)
+            expect(ResourceDefaultOrder.exists?(resource_default_order.id)).to be false
+            expect(ResourceDefaultOrder.exists?(resource_default_order3.id)). to be false
           end
         end
       end
