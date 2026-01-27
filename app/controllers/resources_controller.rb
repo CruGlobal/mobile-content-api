@@ -35,14 +35,14 @@ class ResourcesController < ApplicationController
       resource_type: params.dig(:filter, :resource_type) || params[:resource_type]
     )
 
-    render json: featured_resources, include: params[:include], status: :ok
+    render json: featured_resources, include: params[:include], fields: field_params, status: :ok
   end
 
   def default_order
     lang = params.dig(:filter, :lang) || params[:lang]
 
     if lang.present?
-      language = Language.where("code = :lang OR LOWER(code) = LOWER(:lang)", lang: lang).first
+      language = Language.where('code = :lang OR LOWER(code) = LOWER(:lang)', lang: lang).first
       raise "Language not found for code: #{lang}" unless language.present?
     end
 
@@ -51,29 +51,29 @@ class ResourcesController < ApplicationController
       resource_type: params.dig(:filter, :resource_type) || params[:resource_type]
     )
 
-    render json: default_order_resources, include: params[:include], status: :ok
-  rescue => e
-    render json: {errors: [{detail: "Error: #{e.message}"}]}, status: :unprocessable_content
+    render json: default_order_resources, include: params[:include], fields: field_params, status: :ok
+  rescue StandardError => e
+    render json: { errors: [{ detail: "Error: #{e.message}" }] }, status: :unprocessable_content
   end
 
   def publish_translation
     if valid_publish_params?
       render json: publish_translations, status: :ok
     else
-      render json: {errors: {"errors" => [{source: {pointer: "/data/attributes/id"}, detail: "Record not found."}]}},
-        status: :unprocessable_content
+      render json: { errors: { 'errors' => [{ source: { pointer: '/data/attributes/id' }, detail: 'Record not found.' }] } },
+             status: :unprocessable_content
     end
   end
 
   private
 
   def valid_publish_params?
-    params.dig("data", "relationships", "languages", "data") && params["resource_id"]
+    params.dig('data', 'relationships', 'languages', 'data') && params['resource_id']
   end
 
   def publish_translations
     draft_translations = []
-    languages = params["data"]["relationships"]["languages"]["data"]
+    languages = params['data']['relationships']['languages']['data']
 
     languages.each do |lang|
       draft_translations << publish_translation_for_language(lang)
@@ -82,7 +82,7 @@ class ResourcesController < ApplicationController
   end
 
   def publish_translation_for_language(language_data)
-    draft_translation = find_or_create_draft_translation(language_data["id"])
+    draft_translation = find_or_create_draft_translation(language_data['id'])
     return unless draft_translation
 
     draft_translation.update(publishing_errors: nil)
@@ -91,7 +91,7 @@ class ResourcesController < ApplicationController
   end
 
   def find_or_create_draft_translation(language_id)
-    resource = Resource.find(params["resource_id"])
+    resource = Resource.find(params['resource_id'])
 
     draft = resource.create_draft(language_id) if resource
     draft
@@ -99,8 +99,8 @@ class ResourcesController < ApplicationController
 
   def cached_index_json
     cache_key = Resource.index_cache_key(all_resources,
-      include_param: params[:include],
-      fields_param: field_params)
+                                         include_param: params[:include],
+                                         fields_param: field_params)
     Rails.cache.fetch(cache_key, expires_in: 1.hour) { index_json }
   end
 
@@ -114,31 +114,31 @@ class ResourcesController < ApplicationController
 
   def all_resources
     resources = if params.dig(:filter, :system)
-      Resource.system_name(params[:filter][:system])
-    else
-      Resource.all
-    end
+                  Resource.system_name(params[:filter][:system])
+                else
+                  Resource.all
+                end
 
     resources = resources.where(abbreviation: params[:filter][:abbreviation]) if params.dig(:filter, :abbreviation)
 
     if params.dig(:filter, :resource_type)
-      resources = resources.joins(:resource_type).where(resource_types: {name: params[:filter][:resource_type].downcase})
+      resources = resources.joins(:resource_type).where(resource_types: { name: params[:filter][:resource_type].downcase })
     end
 
     resources
   end
 
   def all_featured_resources(lang_code:, country:, resource_type: nil)
-    scope = Resource.includes(:resource_scores).left_joins(:resource_scores).where(resource_scores: {featured: true})
+    scope = Resource.includes(:resource_scores).left_joins(:resource_scores).where(resource_scores: { featured: true })
 
     if lang_code.present?
       language = Language.find_by(code: lang_code.downcase)
-      scope = scope.joins(resource_scores: :language).where(languages: {id: language.id}) if language.present?
+      scope = scope.joins(resource_scores: :language).where(languages: { id: language.id }) if language.present?
     end
 
-    scope = scope.where("resource_scores.country = LOWER(:country)", country:) if country.present?
+    scope = scope.where('resource_scores.country = LOWER(:country)', country:) if country.present?
     if resource_type.present?
-      scope = scope.joins(:resource_type).where(resource_types: {name: resource_type.downcase})
+      scope = scope.joins(:resource_type).where(resource_types: { name: resource_type.downcase })
     end
 
     scope.order("resource_scores.featured_order ASC, resource_scores.featured DESC NULLS LAST, \
@@ -150,14 +150,14 @@ class ResourcesController < ApplicationController
     scope = Resource.joins(:resource_default_orders)
 
     if lang.present?
-      language = Language.where("code = :lang OR LOWER(code) = LOWER(:lang)", lang: lang).first
-      scope = scope.joins(resource_default_orders: :language).where(languages: {id: language.id})
+      language = Language.where('code = :lang OR LOWER(code) = LOWER(:lang)', lang: lang).first
+      scope = scope.joins(resource_default_orders: :language).where(languages: { id: language.id })
     end
 
     if resource_type.present?
-      scope = scope.joins(:resource_type).where(resource_types: {name: resource_type.downcase})
+      scope = scope.joins(:resource_type).where(resource_types: { name: resource_type.downcase })
     end
-    scope.order("resource_default_orders.position ASC NULLS LAST, resources.created_at DESC")
+    scope.order('resource_default_orders.position ASC NULLS LAST, resources.created_at DESC')
   end
 
   def load_resource
@@ -166,6 +166,6 @@ class ResourcesController < ApplicationController
 
   def permitted_params
     permit_params(:name, :abbreviation, :manifest, :crowdin_project_id, :system_id, :description, :resource_type_id,
-      :metatool_id, :default_variant_id)
+                  :metatool_id, :default_variant_id)
   end
 end

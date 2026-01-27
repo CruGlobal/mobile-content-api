@@ -22,25 +22,25 @@ class ResourceScoresController < ApplicationController
     @resource_score.language = language if language.present?
     @resource_score.save!
     render json: @resource_score, status: :created
-  rescue => e
-    render json: {errors: formatted_errors("record_invalid", e)}, status: :unprocessable_content
+  rescue StandardError => e
+    render json: { errors: formatted_errors('record_invalid', e) }, status: :unprocessable_content
   end
 
   def destroy
     @resource_score = ResourceScore.find(params[:id])
     @resource_score.destroy!
     render json: {}, status: :ok
-  rescue
-    render json: {errors: [{source: {pointer: "/data/attributes/id"}, detail: e.message}]},
-      status: :unprocessable_content
+  rescue StandardError
+    render json: { errors: [{ source: { pointer: '/data/attributes/id' }, detail: e.message }] },
+           status: :unprocessable_content
   end
 
   def update
     @resource_score = ResourceScore.find(params[:id])
     sanitized_params = create_params
     if create_params[:lang].present?
-      language = Language.where("code = :lang OR LOWER(code) = LOWER(:lang)",
-        lang: create_params[:lang]).first
+      language = Language.where('code = :lang OR LOWER(code) = LOWER(:lang)',
+                                lang: create_params[:lang]).first
     end
     sanitized_params.delete(:lang) if sanitized_params[:lang].present?
     @resource_score.language = language if language.present?
@@ -48,167 +48,201 @@ class ResourceScoresController < ApplicationController
 
     render json: @resource_score, status: :ok
   rescue ActiveRecord::RecordInvalid => e
-    render json: {errors: formatted_errors("record_invalid", e)}, status: :unprocessable_content
+    render json: { errors: formatted_errors('record_invalid', e) }, status: :unprocessable_content
+  end
+
+  # TODO: remove logs
+  def mu_log(msg)
+    Rails.logger.debug("[mass_update] #{msg}")
   end
 
   def mass_update
     country = params.dig(:data, :attributes, :country)&.downcase
     lang_code = params.dig(:data, :attributes, :lang)&.downcase
-    resource_type = params.dig(:data, :attributes, :resource_type)
+    resource_type_name = params.dig(:data, :attributes, :resource_type)&.downcase
     incoming_resources = params.dig(:data, :attributes, :resource_ids) || []
-    resulting_resource_scores = []
 
-    unless country.present? && lang_code.present? && resource_type.present?
-      raise "Country, Lang, and Resource Type should be provided"
+    mu_log("BEGIN mass update, requested resource IDs: #{incoming_resources}")
+
+    unless country.present? && lang_code.present? && resource_type_name.present?
+      raise 'Country, Language, and Resource Type should be provided'
     end
 
-    language = Language.where("code = :lang OR LOWER(code) = LOWER(:lang)", lang: lang_code).first
+    language = Language.find_by('code = :lang OR LOWER(code) = LOWER(:lang)', lang: lang_code)
     raise "Language not found for code: #{lang_code}" unless language.present?
 
-    current_scores = ResourceScore.where(
-      country: country, language_id: language.id
-    ).order(featured_order: :asc)
+    resource_type = ResourceType.find_by(name: resource_type_name)
+    raise "ResourceType '#{resource_type_name}' not found" unless resource_type.present?
 
-    if resource_type.present?
-      current_scores = current_scores.joins(resource: :resource_type)
-        .where(resource_types: {name: resource_type.downcase})
+    unless %w[lesson tract].include?(resource_type.name.downcase)
+      raise "ResourceType '#{resource_type_name}' is not supported"
     end
 
-    current_scores = current_scores.to_a
+    current_scores = ResourceScore
+                     .joins(:resource)
+                     .where(country: country, language_id: language.id)
+                     .where(resources: { resource_type_id: resource_type.id })
+                     .order(:featured_order)
+                     .lock
+                     .to_a
 
-    if incoming_resources.empty?
-      current_scores.each do |rs|
-        soft_delete_resource_score(rs)
-      end
-      current_scores.reject! { |rs| !rs.persisted? }
-
-      return render json: current_scores, include: params[:include], status: :ok
-    end
+    mu_log(
+      "Got current scores for country='#{country}', " \
+      "lang='#{lang_code}', " \
+      "resource_type='#{resource_type_name}': " \
+      "#{current_scores.map do |rs|
+        { id: rs.id, resource_id: rs.resource_id, featured_order: rs.featured_order, score: rs.score }
+      end}"
+    )
 
     ResourceScore.transaction do
-      ResourceScore::MAX_FEATURED_ORDER_POSITION.times do |index|
-        resource_id = incoming_resources[index]
-        current_featured_order = index + 1
+      mu_log('Setting featured=false and featured_order=nil for all current scores')
+      current_scores.each do |rs|
+        rs.update!(featured: false, featured_order: nil)
+      end
 
-        if resource_id.nil?
-          # Remove any existing resource score at this position
-          resource_score_to_remove = current_scores.find { |rs| rs.featured_order == current_featured_order }
-          soft_delete_resource_score(resource_score_to_remove)
-          next
-        end
-
-        incoming_resource_score = current_scores.find { |rs| rs.resource_id == resource_id }
-        current_resource_score_at_position = current_scores.find do |rs|
-          rs.featured_order == current_featured_order && rs.featured == true
-        end
-
-        if incoming_resource_score
-          if incoming_resource_score.featured_order != current_featured_order
-            # Incoming ResourceScore exists but at a different position
-            # Remove ResourceScore currently at this position, if any
-            if current_resource_score_at_position
-              soft_delete_resource_score(current_resource_score_at_position)
-              current_scores.reject! { |rs| rs.id == current_resource_score_at_position.id }
-            end
-
-            # Move incoming ResourceScore to the new position
-            incoming_resource_score.update!(featured_order: current_featured_order, featured: true)
-            resulting_resource_scores << incoming_resource_score
-          else
-            # Incoming ResourceScore exists and is already at the correct position
-            incoming_resource_score.update!(featured: true)
-            resulting_resource_scores << incoming_resource_score
-            next
-          end
-        elsif current_resource_score_at_position
-          # There is a ResourceScore at this position, update it to the new resource_id
-          current_resource_score_at_position.update!(resource_id: resource_id, featured: true)
-          resulting_resource_scores << current_resource_score_at_position
+      scores_by_resource_id = current_scores.index_by(&:resource_id)
+      incoming_resources.each_with_index do |resource_id, index|
+        relevant_score = scores_by_resource_id[resource_id]
+        if relevant_score
+          mu_log("found relevant score for resourceID=#{resource_id}, updating featured and featured_order. Initial state: #{relevant_score.attributes}")
+          relevant_score.update!(featured: true, featured_order: index + 1)
         else
-          # No ResourceScore at this position, create a new one
-          resulting_resource_scores << ResourceScore.create!(
+          mu_log("no relevant score for resourceID=#{resource_id}, creating new score")
+          ResourceScore.create!(
             resource_id: resource_id,
-            language_id: language.id,
             country: country,
-            featured: true,
-            featured_order: current_featured_order
+            language_id: language.id,
+            featured_order: index + 1,
+            featured: true
           )
         end
       end
-
-      # Soft-delete any current scores that are not in the incoming resources list
       current_scores.each do |rs|
-        soft_delete_resource_score(rs) unless incoming_resources.include?(rs.resource_id)
+        soft_delete_featured_score(rs) unless incoming_resources.include?(rs.resource_id)
       end
     end
+
+    resulting_resource_scores = ResourceScore
+                                .joins(:resource)
+                                .where(country: country, language_id: language.id, featured: true)
+                                .where(resources: { resource_type_id: resource_type.id })
+                                .order(:featured_order)
+
+    mu_log(
+      'Resulting resource scores: ' \
+      "#{resulting_resource_scores.map do |rs|
+        {
+          id: rs.id,
+          resource_id: rs.resource_id,
+          resource_name: rs.resource.name,
+          featured_order: rs.featured_order,
+          score: rs.score
+        }
+      end}"
+    )
+
     render json: resulting_resource_scores, include: params[:include], status: :ok
-  rescue => e
-    render json: {errors: [{detail: "Error: #{e.message}"}]}, status: :unprocessable_content
+  rescue StandardError => e
+    # TODO: remove error log
+    Rails.logger.error("[mass_update] ERROR #{e.class}: #{e.message}")
+    render json: { errors: [{ detail: "Error: #{e.message}" }] }, status: :unprocessable_content
   end
 
   def mass_update_ranked
     country = params.dig(:data, :attributes, :country)&.downcase
     lang_code = params.dig(:data, :attributes, :lang)&.downcase
-    resource_type = params.dig(:data, :attributes, :resource_type)
+    resource_type_name = params.dig(:data, :attributes, :resource_type)&.downcase
     incoming_resources = params.dig(:data, :attributes, :ranked_resources) || []
-    resulting_resource_scores = []
 
-    unless country.present? && lang_code.present? && resource_type.present?
-      raise "Country, Lang, and Resource Type should be provided"
+    mu_log("BEGIN mass update RANKED, requested rankings: #{incoming_resources}")
+
+    unless country.present? && lang_code.present? && resource_type_name.present?
+      raise 'Country, Language, and Resource Type should be provided'
     end
 
-    language = Language.where("code = :lang OR LOWER(code) = LOWER(:lang)", lang: lang_code).first
+    language = Language.find_by('code = :lang OR LOWER(code) = LOWER(:lang)', lang: lang_code)
     raise "Language not found for code: #{lang_code}" unless language.present?
 
-    current_scores = ResourceScore.where(
-      country: country, language_id: language.id
-    ).order(score: :desc)
+    resource_type = ResourceType.find_by(name: resource_type_name)
+    raise "ResourceType '#{resource_type_name}' not found" unless resource_type.present?
 
-    if resource_type.present?
-      current_scores = current_scores.joins(resource: :resource_type)
-        .where(resource_types: {name: resource_type.downcase})
+    unless %w[lesson tract].include?(resource_type.name.downcase)
+      raise "ResourceType '#{resource_type_name}' is not supported"
     end
 
-    current_scores = current_scores.to_a
+    current_scores = ResourceScore
+                     .joins(:resource)
+                     .where(country: country, language_id: language.id)
+                     .where(resources: { resource_type_id: resource_type.id })
+                     .order(score: :desc)
+                     .lock
+                     .to_a
 
-    if incoming_resources.empty?
-      current_scores.each do |rs|
-        rs.update!(score: nil)
-      end
+    mu_log(
+      "Got current scores for country='#{country}', " \
+      "lang='#{lang_code}', " \
+      "resource_type='#{resource_type_name}': " \
+      "#{current_scores.map do |rs|
+        { id: rs.id, resource_id: rs.resource_id, featured_order: rs.featured_order, score: rs.score }
+      end}"
+    )
 
-      return render json: current_scores, include: params[:include], status: :ok
-    end
+    symbolized_incoming_resources = incoming_resources.map { |r| r.to_unsafe_h.deep_symbolize_keys }
 
     ResourceScore.transaction do
-      incoming_resources.each do |incoming_resource|
-        symbolized_incoming_resource = incoming_resource
-        resource_id = symbolized_incoming_resource[:resource_id]
-        score = symbolized_incoming_resource[:score]
-        incoming_resource_score = current_scores.find { |rs| rs.resource_id == resource_id }
+      scores_by_resource_id = current_scores.index_by(&:resource_id)
 
-        if incoming_resource_score
-          # Update existing ResourceScore with new score
-          incoming_resource_score.update!(score: score)
-          resulting_resource_scores << incoming_resource_score
+      symbolized_incoming_resources.each do |incoming_resource|
+        resource_id = incoming_resource[:resource_id]
+        score = incoming_resource[:score]
+
+        relevant_score = scores_by_resource_id[resource_id]
+
+        if relevant_score
+          mu_log("found relevant score for resourceID=#{resource_id}, updating score to #{score}. Initial state: #{relevant_score.attributes}")
+          relevant_score.update!(score: score)
         else
-          # Create new ResourceScore with the provided score
-          new_resource_score = ResourceScore.create!(
+          mu_log("no relevant score for resourceID=#{resource_id}, creating new score")
+          ResourceScore.create!(
             resource_id: resource_id,
-            language_id: language.id,
             country: country,
+            language_id: language.id,
             score: score
           )
-          resulting_resource_scores << new_resource_score
         end
+      end
+      preserved_resource_ids = symbolized_incoming_resources
+                               .filter_map { |r| r[:resource_id] if r[:score].present? }
+                               .to_set
+
+      current_scores.each do |rs|
+        soft_delete_ranked_score(rs) unless preserved_resource_ids.include?(rs.resource_id)
       end
     end
 
-    # Sort resulting_resource_scores by score descending before rendering
-    resulting_resource_scores.sort_by! { |rs| -rs.score.to_i }
+    resulting_resource_scores = ResourceScore
+                                .joins(:resource)
+                                .where(country: country, language_id: language.id)
+                                .where(resources: { resource_type_id: resource_type.id })
+                                .where.not(score: nil)
+                                .order(score: :desc)
+
+    mu_log(
+      'Resulting resource scores: ' \
+      "#{resulting_resource_scores.map do |rs|
+        {
+          id: rs.id,
+          resource_id: rs.resource_id,
+          featured_order: rs.featured_order,
+          score: rs.score
+        }
+      end}"
+    )
 
     render json: resulting_resource_scores, include: params[:include], status: :ok
-  rescue => e
-    render json: {errors: [{detail: "Error: #{e.message}"}]}, status: :unprocessable_content
+  rescue StandardError => e
+    render json: { errors: [{ detail: "Error: #{e.message}" }] }, status: :unprocessable_content
   end
 
   private
@@ -223,26 +257,40 @@ class ResourceScoresController < ApplicationController
     scope = ResourceScore.all
 
     if lang_code.present?
-      language = Language.where("code = :lang OR LOWER(code) = LOWER(:lang)", lang: lang_code).first
-      scope = scope.left_joins(:language).where(languages: {id: language.id}) if language.present?
+      language = Language.where('code = :lang OR LOWER(code) = LOWER(:lang)', lang: lang_code).first
+      scope = scope.left_joins(:language).where(languages: { id: language.id }) if language.present?
     end
 
-    scope = scope.where("LOWER(country) = LOWER(?)", country) if country.present?
+    scope = scope.where('LOWER(country) = LOWER(?)', country) if country.present?
 
     if resource_type.present?
       scope = scope.joins(resource: :resource_type)
-        .where(resource_types: {name: resource_type.downcase})
+                   .where(resource_types: { name: resource_type.downcase })
     end
 
-    scope.order("featured_order ASC, featured DESC NULLS LAST, score DESC NULLS LAST, created_at DESC")
+    scope.order('featured_order ASC, featured DESC NULLS LAST, score DESC NULLS LAST, created_at DESC')
   end
 
-  def soft_delete_resource_score(resource_score)
+  def soft_delete_featured_score(resource_score)
     return if resource_score.nil?
 
     if resource_score.score.present?
+      mu_log("Detected 'score' for resourceID=#{resource_score.resource_id}, unfeaturing ResourceScore")
       resource_score.update!(featured: false, featured_order: nil)
     else
+      mu_log("No 'score' detected for resourceID=#{resource_score.resource_id}, deleting ResourceScore")
+      resource_score.destroy!
+    end
+  end
+
+  def soft_delete_ranked_score(resource_score)
+    return if resource_score.nil?
+
+    if resource_score.featured_order.present?
+      mu_log("Detected featured resource for resourceID=#{resource_score.resource_id}, updating score to nil")
+      resource_score.update!(score: nil)
+    else
+      mu_log("Featured resource NOT detected for resourceID=#{resource_score.resource_id}, deleting ResourceScore")
       resource_score.destroy!
     end
   end
