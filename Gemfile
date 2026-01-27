@@ -101,7 +101,7 @@ group :development, :test do
   gem "guard-rubocop"
   gem "pry-byebug"
   gem "rspec"
-  gem "rspec-rails", "~> 7.0"
+  gem "rspec-rails", "~> 8.0"
   gem "rspec_api_documentation", github: "zipmark/rspec_api_documentation"
   gem "rubocop-rspec", require: false
   gem "simplecov-cobertura", require: false
