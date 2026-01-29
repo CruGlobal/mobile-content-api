@@ -10,10 +10,9 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_10_22_202102) do
+ActiveRecord::Schema[7.2].define(version: 2025_10_22_202102) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
-  enable_extension "pg_stat_statements"
   enable_extension "plpgsql"
   enable_extension "uuid-ossp"
 
@@ -160,6 +159,8 @@ ActiveRecord::Schema[7.1].define(version: 2025_10_22_202102) do
     t.string "key", null: false
     t.string "value", null: false
     t.boolean "is_translatable", default: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.index ["key", "resource_id", "language_id"], name: "index_language_attributes_unique", unique: true
     t.index ["resource_id"], name: "index_language_attributes_on_resource_id"
   end
@@ -329,6 +330,17 @@ ActiveRecord::Schema[7.1].define(version: 2025_10_22_202102) do
     t.index ["language_id"], name: "index_translations_on_language_id"
     t.index ["resource_id", "language_id", "version"], name: "index_translations_on_resource_id_and_language_id_and_version", unique: true
     t.index ["resource_id"], name: "index_translations_on_resource_id"
+  end
+
+  create_table "translations_bkup", id: false, force: :cascade do |t|
+    t.integer "id"
+    t.boolean "is_published"
+    t.integer "version"
+    t.integer "resource_id"
+    t.integer "language_id"
+    t.string "translated_name"
+    t.string "translated_description"
+    t.string "manifest_name"
   end
 
   create_table "user_attributes", force: :cascade do |t|
