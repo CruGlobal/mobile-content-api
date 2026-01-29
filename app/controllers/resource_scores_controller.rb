@@ -60,9 +60,9 @@ class ResourceScoresController < ApplicationController
     country = params.dig(:data, :attributes, :country)&.downcase
     lang_code = params.dig(:data, :attributes, :lang)&.downcase
     resource_type_name = params.dig(:data, :attributes, :resource_type)&.downcase
-    incoming_resources = params.dig(:data, :attributes, :resource_ids) || []
+    incoming_resource_ids = params.dig(:data, :attributes, :resource_ids) || []
 
-    mu_log("BEGIN mass update, requested resource IDs: #{incoming_resources}")
+    mu_log("BEGIN mass update, requested resource IDs: #{incoming_resource_ids}")
 
     unless country.present? && lang_code.present? && resource_type_name.present?
       raise 'Country, Language, and Resource Type should be provided'
@@ -76,6 +76,23 @@ class ResourceScoresController < ApplicationController
 
     unless %w[lesson tract].include?(resource_type.name.downcase)
       raise "ResourceType '#{resource_type_name}' is not supported"
+    end
+
+    unless incoming_resource_ids.is_a?(Array) && incoming_resource_ids.all?(Integer)
+      raise 'resource_ids is expected to be an array of integers'
+    end
+
+    raise 'resource_ids is expected to include a maximum of 9 ids' if incoming_resource_ids.length > 9
+
+    if incoming_resource_ids.uniq.length != incoming_resource_ids.length
+      raise 'resource_ids cannot contain duplicate ids'
+    end
+
+    valid_resource_ids = Resource.where(id: incoming_resource_ids, resource_type_id: resource_type.id).pluck(:id)
+    invalid_resource_ids = incoming_resource_ids - valid_resource_ids
+    if invalid_resource_ids.any?
+      raise %(Resources not found or do not match the provided resource type.
+         Invalid IDs: #{invalid_resource_ids.join(', ')})
     end
 
     current_scores = ResourceScore
@@ -102,7 +119,7 @@ class ResourceScoresController < ApplicationController
       end
 
       scores_by_resource_id = current_scores.index_by(&:resource_id)
-      incoming_resources.each_with_index do |resource_id, index|
+      incoming_resource_ids.each_with_index do |resource_id, index|
         relevant_score = scores_by_resource_id[resource_id]
         if relevant_score
           mu_log("found relevant score for resourceID=#{resource_id}, updating featured and featured_order. Initial state: #{relevant_score.attributes}")
@@ -119,7 +136,7 @@ class ResourceScoresController < ApplicationController
         end
       end
       current_scores.each do |rs|
-        soft_delete_featured_score(rs) unless incoming_resources.include?(rs.resource_id)
+        soft_delete_featured_score(rs) unless incoming_resource_ids.include?(rs.resource_id)
       end
     end
 
@@ -153,9 +170,10 @@ class ResourceScoresController < ApplicationController
     country = params.dig(:data, :attributes, :country)&.downcase
     lang_code = params.dig(:data, :attributes, :lang)&.downcase
     resource_type_name = params.dig(:data, :attributes, :resource_type)&.downcase
-    incoming_resources = params.dig(:data, :attributes, :ranked_resources) || []
+    incoming_resource_array = params.dig(:data, :attributes, :ranked_resources) || []
+    symbolized_incoming_resource_array = incoming_resource_array.map { |r| r.to_unsafe_h.deep_symbolize_keys }
 
-    mu_log("BEGIN mass update RANKED, requested rankings: #{incoming_resources}")
+    mu_log("BEGIN mass update RANKED, requested rankings: #{incoming_resource_array}")
 
     unless country.present? && lang_code.present? && resource_type_name.present?
       raise 'Country, Language, and Resource Type should be provided'
@@ -169,6 +187,18 @@ class ResourceScoresController < ApplicationController
 
     unless %w[lesson tract].include?(resource_type.name.downcase)
       raise "ResourceType '#{resource_type_name}' is not supported"
+    end
+
+    incoming_resource_ids = symbolized_incoming_resource_array.map { |r| r[:resource_id] }
+    if incoming_resource_ids.uniq.length != incoming_resource_ids.length
+      raise 'resource_ids cannot contain duplicate ids'
+    end
+
+    valid_resource_ids = Resource.where(id: incoming_resource_ids, resource_type_id: resource_type.id).pluck(:id)
+    invalid_resource_ids = incoming_resource_ids - valid_resource_ids
+    if invalid_resource_ids.any?
+      raise "Resources not found or do not match the provided resource type.
+         Invalid resource ids: #{invalid_resource_ids.join(', ')}"
     end
 
     current_scores = ResourceScore
@@ -188,12 +218,10 @@ class ResourceScoresController < ApplicationController
       end}"
     )
 
-    symbolized_incoming_resources = incoming_resources.map { |r| r.to_unsafe_h.deep_symbolize_keys }
-
     ResourceScore.transaction do
       scores_by_resource_id = current_scores.index_by(&:resource_id)
 
-      symbolized_incoming_resources.each do |incoming_resource|
+      symbolized_incoming_resource_array.each do |incoming_resource|
         resource_id = incoming_resource[:resource_id]
         score = incoming_resource[:score]
 
@@ -212,7 +240,7 @@ class ResourceScoresController < ApplicationController
           )
         end
       end
-      preserved_resource_ids = symbolized_incoming_resources
+      preserved_resource_ids = symbolized_incoming_resource_array
                                .filter_map { |r| r[:resource_id] if r[:score].present? }
                                .to_set
 
