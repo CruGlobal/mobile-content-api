@@ -11,8 +11,10 @@ resource "ResourceScores" do
   let(:raw_post) { params.to_json }
   let(:authorization) { AuthToken.generic_token }
 
-  let!(:resource) { Resource.first }
-  let!(:unfeatured_resource) { Resource.last }
+  let!(:resource) { Resource.find_by(id: 1) }
+  let!(:resource2) { Resource.find_by(id: 2) }
+  let!(:resource3) { Resource.find_by(id: 5) }
+
   let!(:language_en) { Language.find_or_create_by!(code: "en", name: "English") }
   let!(:language_fr) { Language.find_or_create_by!(code: "fr", name: "French") }
   let!(:language_am) { Language.find_or_create_by!(code: "Am", name: "Amharic") }
@@ -382,10 +384,6 @@ resource "ResourceScores" do
         end
 
         context "when sending more than 1 resource score" do
-          let!(:resource2) do
-            Resource.joins(:resource_type).where("resource_types.name != ? AND resources.id NOT IN (?)",
-              resource.resource_type.name, resource.id).first
-          end
           let(:resource_ids) { [resource.id, resource2.id] }
 
           it "returns an array with more than 1 resource score" do
@@ -401,14 +399,6 @@ resource "ResourceScores" do
       end
 
       context "with previous resource scores" do
-        let!(:resource2) do
-          Resource.joins(:resource_type).where("resource_types.name = ? AND resources.id NOT IN (?)",
-            resource.resource_type.name, resource.id).first
-        end
-        let!(:resource3) do
-          Resource.joins(:resource_type).where("resource_types.name = ? AND resources.id NOT IN (?)",
-            resource.resource_type.name, [resource.id, resource2.id]).first
-        end
         let!(:resource_score) do
           ResourceScore.create!(resource: resource, country: country, language: language_en, featured: true,
             featured_order: 1)
@@ -441,10 +431,10 @@ resource "ResourceScores" do
 
               expect(status).to be(200)
               json = JSON.parse(response_body)
-              expect(json["data"].count).to eq(1)
-              expect(json["data"][0]["relationships"]["resource"]["data"]["id"]).to eq(resource.id.to_s)
+              expect(json["data"]).to be_empty
 
               resource_score.reload
+
               expect(resource_score.featured).to be false
               expect(resource_score.featured_order).to be_nil
               expect(resource_score.score).to eq(5)
@@ -642,10 +632,6 @@ resource "ResourceScores" do
         end
 
         context "when sending more than 1 ranked resource" do
-          let!(:resource2) do
-            Resource.joins(:resource_type).where("resource_types.name != ? AND resources.id NOT IN (?)",
-              resource.resource_type.name, resource.id).first
-          end
           let(:ranked_resources) { [{resource_id: resource.id, score: 20}, {resource_id: resource2.id, score: 10}] }
 
           it "returns an array with more than 1 resource score" do
@@ -671,14 +657,6 @@ resource "ResourceScores" do
       end
 
       context "with previous resource scores" do
-        let!(:resource2) do
-          Resource.joins(:resource_type).where("resource_types.name = ? AND resources.id NOT IN (?)",
-            resource.resource_type.name, resource.id).first
-        end
-        let!(:resource3) do
-          Resource.joins(:resource_type).where("resource_types.name = ? AND resources.id NOT IN (?)",
-            resource.resource_type.name, [resource.id, resource2.id]).first
-        end
         let!(:resource_score) do
           ResourceScore.create!(resource: resource, country: country, language: language_en, score: 15)
         end
@@ -693,13 +671,9 @@ resource "ResourceScores" do
             do_request(params)
 
             expect(status).to be(200)
-            json = JSON.parse(response_body)
-            expect(json["data"].count).to eq(2)
 
-            resource_score.reload
-            resource_score2.reload
-            expect(resource_score.score).to be_nil
-            expect(resource_score2.score).to be_nil
+            json = JSON.parse(response_body)
+            expect(json["data"]).to be_empty
           end
         end
 

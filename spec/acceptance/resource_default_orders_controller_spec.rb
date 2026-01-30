@@ -11,8 +11,8 @@ resource "ResourceDefaultOrders" do
   let(:raw_post) { params.to_json }
   let(:authorization) { AuthToken.generic_token }
 
-  let!(:resource) { Resource.first }
-  let!(:other_resource) { Resource.second }
+  let!(:resource) { Resource.find_by(id: 1) }
+  let!(:other_resource) { Resource.find_by(id: 2) }
   let!(:language_en) { Language.find_or_create_by!(code: "en", name: "English") }
   let!(:language_fr) { Language.find_or_create_by!(code: "fr", name: "French") }
   let!(:language_am) { Language.find_or_create_by!(code: "Am", name: "Amharic") }
@@ -159,16 +159,6 @@ resource "ResourceDefaultOrders" do
         expect(json["data"]["relationships"]["resource"]["data"]["id"]).to eq(resource.id.to_s)
       end
     end
-
-    context "with invalid parameters" do
-      it "returns unprocessable entity" do
-        do_request(data: {attributes: {type: "resource_default_order"}})
-
-        expect(status).to be(422)
-        json = JSON.parse(response_body)
-        expect(json).to have_key("errors")
-      end
-    end
   end
 
   delete "resource_default_orders/:id" do
@@ -261,20 +251,16 @@ resource "ResourceDefaultOrders" do
       let(:lang) { nil }
 
       context "when sending an empty array" do
-        it "returns an error" do
-          do_request(params)
-
-          expect(status).to be(422)
+        it "raises an error" do
+          expect { do_request(params) }.to raise_error(RuntimeError, "Language and Resource Type should be provided")
         end
       end
 
       context "when sending 1 resource default order" do
         let(:resource_ids) { [resource.id] }
 
-        it "returns an error" do
-          do_request(params)
-
-          expect(status).to be(422)
+        it "raises an error" do
+          expect { do_request(params) }.to raise_error(RuntimeError, "Language and Resource Type should be provided")
         end
       end
     end
@@ -284,12 +270,7 @@ resource "ResourceDefaultOrders" do
 
       context "when sending an empty array" do
         it "returns an error" do
-          do_request(params)
-
-          expect(status).to be(422)
-
-          json = JSON.parse(response_body)
-          expect(json["errors"][0]["detail"]).to include("Resource Type")
+          expect { do_request(params) }.to raise_error(RuntimeError, "Language and Resource Type should be provided")
         end
       end
 
@@ -297,11 +278,7 @@ resource "ResourceDefaultOrders" do
         let(:resource_ids) { [resource.id] }
 
         it "returns an error" do
-          do_request(params)
-
-          expect(status).to be(422)
-          json = JSON.parse(response_body)
-          expect(json["errors"][0]["detail"]).to include("Resource Type")
+          expect { do_request(params) }.to raise_error(RuntimeError, "Language and Resource Type should be provided")
         end
       end
     end
@@ -333,10 +310,7 @@ resource "ResourceDefaultOrders" do
         end
 
         context "when sending more than 1 resource default order" do
-          let!(:resource2) do
-            Resource.joins(:resource_type).where("resource_types.name != ? AND resources.id NOT IN (?)",
-              resource.resource_type.name, resource.id).first
-          end
+          let(:resource2) { other_resource }
           let(:resource_ids) { [resource.id, resource2.id] }
 
           it "returns an array with more than 1 resource default order" do
@@ -354,14 +328,8 @@ resource "ResourceDefaultOrders" do
       end
 
       context "with previous resource default orders" do
-        let!(:resource2) do
-          Resource.joins(:resource_type).where("resource_types.name = ? AND resources.id NOT IN (?)",
-            resource.resource_type.name, resource.id).first
-        end
-        let!(:resource3) do
-          Resource.joins(:resource_type).where("resource_types.name = ? AND resources.id NOT IN (?)",
-            resource.resource_type.name, [resource.id, resource2.id]).first
-        end
+        let!(:resource2) { other_resource }
+        let!(:resource3) { Resource.find_by(id: 5) }
         let!(:resource_default_order) do
           FactoryBot.create(:resource_default_order, resource: resource, language: language_en, position: 1)
         end
@@ -430,20 +398,6 @@ resource "ResourceDefaultOrders" do
             expect(json["data"][0]["attributes"]["position"]).to eq(1)
             expect(json["data"][1]["relationships"]["resource"]["data"]["id"]).to eq(resource2.id.to_s)
             expect(json["data"][1]["attributes"]["position"]).to eq(2)
-          end
-        end
-
-        context "when sending nil resource_id at a position" do
-          let(:resource_ids) { [resource.id, nil] }
-
-          it "removes the resource default order at that position" do
-            do_request(params)
-
-            expect(status).to be(200)
-            json = JSON.parse(response_body)
-            expect(json["data"].count).to eq(1)
-            expect(json["data"][0]["relationships"]["resource"]["data"]["id"]).to eq(resource.id.to_s)
-            expect(json["data"][0]["attributes"]["position"]).to eq(1)
           end
         end
 

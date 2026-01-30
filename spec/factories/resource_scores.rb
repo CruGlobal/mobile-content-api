@@ -4,7 +4,7 @@ FactoryBot.define do
   factory :resource_score do
     resource
     language { association :language, code: "en" }
-    featured { false }
+    featured { true }
     featured_order { 1 }
     country { "us" }
     score { 1 }
