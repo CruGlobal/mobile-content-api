@@ -11,9 +11,10 @@ resource "ResourceScores" do
   let(:raw_post) { params.to_json }
   let(:authorization) { AuthToken.generic_token }
 
-  let!(:resource) { Resource.find_by(id: 1) }
-  let!(:resource2) { Resource.find_by(id: 2) }
-  let!(:resource3) { Resource.find_by(id: 5) }
+  # Seeded 'tract' resources
+  let!(:resource) { Resource.find_by!(name: "Knowing God Personally") }
+  let!(:resource2) { Resource.find_by!(name: "Knowing God Personally Variant") }
+  let!(:resource3) { Resource.find_by!(name: "Satisfied?") }
 
   let!(:language_en) { Language.find_or_create_by!(code: "en", name: "English") }
   let!(:language_fr) { Language.find_or_create_by!(code: "fr", name: "French") }

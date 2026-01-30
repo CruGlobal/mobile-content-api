@@ -11,8 +11,11 @@ resource "ResourceDefaultOrders" do
   let(:raw_post) { params.to_json }
   let(:authorization) { AuthToken.generic_token }
 
-  let!(:resource) { Resource.find_by(id: 1) }
-  let!(:other_resource) { Resource.find_by(id: 2) }
+  # Seeded 'tract' resources
+  let!(:resource) { Resource.find_by!(name: "Knowing God Personally") }
+  let!(:resource2) { Resource.find_by!(name: "Knowing God Personally Variant") }
+  let!(:resource3) { Resource.find_by!(name: "Satisfied?") }
+
   let!(:language_en) { Language.find_or_create_by!(code: "en", name: "English") }
   let!(:language_fr) { Language.find_or_create_by!(code: "fr", name: "French") }
   let!(:language_am) { Language.find_or_create_by!(code: "Am", name: "Amharic") }
@@ -24,7 +27,7 @@ resource "ResourceDefaultOrders" do
   get "resource_default_orders" do
     before do
       FactoryBot.create(:resource_default_order, resource: resource, language: language_en)
-      FactoryBot.create(:resource_default_order, resource: other_resource, language: language_en)
+      FactoryBot.create(:resource_default_order, resource: resource2, language: language_en)
     end
 
     context "without filters" do
@@ -310,7 +313,6 @@ resource "ResourceDefaultOrders" do
         end
 
         context "when sending more than 1 resource default order" do
-          let(:resource2) { other_resource }
           let(:resource_ids) { [resource.id, resource2.id] }
 
           it "returns an array with more than 1 resource default order" do
@@ -328,8 +330,6 @@ resource "ResourceDefaultOrders" do
       end
 
       context "with previous resource default orders" do
-        let!(:resource2) { other_resource }
-        let!(:resource3) { Resource.find_by(id: 5) }
         let!(:resource_default_order) do
           FactoryBot.create(:resource_default_order, resource: resource, language: language_en, position: 1)
         end
