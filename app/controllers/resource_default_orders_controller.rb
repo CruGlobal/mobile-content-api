@@ -88,7 +88,7 @@ class ResourceDefaultOrdersController < ApplicationController
     valid_resource_ids = Resource.where(id: incoming_resource_ids, resource_type_id: resource_type.id).pluck(:id)
     invalid_resource_ids = incoming_resource_ids - valid_resource_ids
     if invalid_resource_ids.any?
-      raise "Resources not found or do not match the provided resource type. Invalid IDs: #{invalid_resource_ids.join(", ")})" # rubocop:disable Layout/LineLength
+      raise "Resources not found or do not match the provided resource type. Invalid IDs: #{invalid_resource_ids.join(", ")})"
     end
 
     current_default_orders = ResourceDefaultOrder
