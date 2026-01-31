@@ -162,6 +162,17 @@ resource "ResourceDefaultOrders" do
         expect(json["data"]["relationships"]["resource"]["data"]["id"]).to eq(resource.id.to_s)
       end
     end
+
+    context "with invalid parameters" do
+      it "returns unprocessable entity" do
+        do_request(data: {type: "resource_default_order",
+                          attributes: {resource_id: resource.id, position: "invalid"}})
+
+        expect(status).to be(422)
+        json = JSON.parse(response_body)
+        expect(json).to have_key("errors")
+      end
+    end
   end
 
   delete "resource_default_orders/:id" do
@@ -255,7 +266,11 @@ resource "ResourceDefaultOrders" do
 
       context "when sending an empty array" do
         it "raises an error" do
-          expect { do_request(params) }.to raise_error(RuntimeError, "Language and Resource Type should be provided")
+          do_request(params)
+
+          expect(status).to be(422)
+          json = JSON.parse(response_body)
+          expect(json["errors"][0]["detail"]).to include("Language and Resource Type should be provided")
         end
       end
 
@@ -263,7 +278,11 @@ resource "ResourceDefaultOrders" do
         let(:resource_ids) { [resource.id] }
 
         it "raises an error" do
-          expect { do_request(params) }.to raise_error(RuntimeError, "Language and Resource Type should be provided")
+          do_request(params)
+
+          expect(status).to be(422)
+          json = JSON.parse(response_body)
+          expect(json["errors"][0]["detail"]).to include("Language and Resource Type should be provided")
         end
       end
     end
@@ -273,7 +292,11 @@ resource "ResourceDefaultOrders" do
 
       context "when sending an empty array" do
         it "returns an error" do
-          expect { do_request(params) }.to raise_error(RuntimeError, "Language and Resource Type should be provided")
+          do_request(params)
+
+          expect(status).to be(422)
+          json = JSON.parse(response_body)
+          expect(json["errors"][0]["detail"]).to include("Language and Resource Type should be provided")
         end
       end
 
@@ -281,8 +304,23 @@ resource "ResourceDefaultOrders" do
         let(:resource_ids) { [resource.id] }
 
         it "returns an error" do
-          expect { do_request(params) }.to raise_error(RuntimeError, "Language and Resource Type should be provided")
+          do_request(params)
+
+          expect(status).to be(422)
+          json = JSON.parse(response_body)
+          expect(json["errors"][0]["detail"]).to include("Language and Resource Type should be provided")
         end
+      end
+    end
+
+    context "with invalid resource_type param" do
+      let(:resource_type) { ResourceType.find_by!(name: "article") }
+      it "returns an error" do
+        do_request(params)
+
+        expect(status).to be(422)
+        json = JSON.parse(response_body)
+        expect(json["errors"][0]["detail"]).to include("is not supported")
       end
     end
 
@@ -295,6 +333,18 @@ resource "ResourceDefaultOrders" do
             expect(status).to be(200)
             json = JSON.parse(response_body)
             expect(json["data"].count).to eq(0)
+          end
+        end
+
+        context "when sending an array of strings" do
+          let(:resource_ids) { [resource.id.to_s, resource2.id.to_s] }
+
+          it "returns an error" do
+            do_request(params)
+
+            expect(status).to be(422)
+            json = JSON.parse(response_body)
+            expect(json["errors"][0]["detail"]).to include("is expected to be an array of integers")
           end
         end
 
@@ -325,6 +375,31 @@ resource "ResourceDefaultOrders" do
             expect(json["data"][0]["attributes"]["position"]).to eq(1)
             expect(json["data"][1]["relationships"]["resource"]["data"]["id"]).to eq(resource2.id.to_s)
             expect(json["data"][1]["attributes"]["position"]).to eq(2)
+          end
+
+          context "when sending duplicate ids" do
+            let(:resource_ids) { [resource.id, resource.id] }
+
+            it "returns an error" do
+              do_request(params)
+
+              expect(status).to be(422)
+              json = JSON.parse(response_body)
+              expect(json["errors"][0]["detail"]).to include("cannot contain duplicate ids")
+            end
+          end
+
+          context "when sending resource ids which correspond to a different resource type" do
+            let(:resource_type) { FactoryBot.create(:lesson_resource_type) }
+            let(:resource_ids) { [resource.id, resource2.id] }
+
+            it "returns an error" do
+              do_request(params)
+
+              expect(status).to be(422)
+              json = JSON.parse(response_body)
+              expect(json["errors"][0]["detail"]).to include("Resources not found or do not match the provided resource type")
+            end
           end
         end
       end

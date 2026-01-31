@@ -121,17 +121,16 @@ class ResourceDefaultOrdersController < ApplicationController
       current_default_orders.each do |ro|
         ro.destroy! unless incoming_resource_ids.include?(ro.resource_id)
       end
-
-      resulting_default_orders = ResourceDefaultOrder
-        .joins(:resource)
-        .where(language_id: language.id)
-        .where(resources: {resource_type_id: resource_type.id})
-        .order(position: :asc)
-
-      render json: resulting_default_orders, status: :ok
-    rescue => e
-      render json: {errors: [{detail: "Error: #{e.message}"}]}, status: :unprocessable_content
     end
+    resulting_default_orders = ResourceDefaultOrder
+      .joins(:resource)
+      .where(language_id: language.id)
+      .where(resources: {resource_type_id: resource_type.id})
+      .order(position: :asc)
+
+    render json: resulting_default_orders, status: :ok
+  rescue => e
+    render json: {errors: [{detail: "Error: #{e.message}"}]}, status: :unprocessable_content
   end
 
   private

@@ -279,7 +279,7 @@ resource "ResourceScores" do
     let(:country) { "US" }
     let(:lang) { "en" }
     let(:resource_ids) { [] }
-    let(:resource_type) { ResourceType.find(resource.resource_type_id) }
+    let(:resource_type) { ResourceType.find_by!(name: "tract") }
     let(:featured) { true }
     let(:params) do
       {data: {attributes: {country: country, lang: lang, resource_ids: resource_ids,
@@ -359,6 +359,17 @@ resource "ResourceScores" do
       end
     end
 
+    context "with invalid resource_type param" do
+      let(:resource_type) { ResourceType.find_by!(name: "article") }
+      it "returns an error" do
+        do_request(params)
+
+        expect(status).to be(422)
+        json = JSON.parse(response_body)
+        expect(json["errors"][0]["detail"]).to include("is not supported")
+      end
+    end
+
     context "with country and lang params" do
       context "with no previous resource score" do
         context "when sending an empty array" do
@@ -368,6 +379,18 @@ resource "ResourceScores" do
             expect(status).to be(200)
             json = JSON.parse(response_body)
             expect(json["data"].count).to eq(0)
+          end
+        end
+
+        context "when sending an array of strings" do
+          let(:resource_ids) { [resource.id.to_s, resource2.id.to_s] }
+
+          it "returns an error" do
+            do_request(params)
+
+            expect(status).to be(422)
+            json = JSON.parse(response_body)
+            expect(json["errors"][0]["detail"]).to include("is expected to be an array of integers")
           end
         end
 
@@ -395,6 +418,44 @@ resource "ResourceScores" do
             expect(json["data"].count).to eq(2)
             expect(json["data"][0]["relationships"]["resource"]["data"]["id"]).to eq(resource.id.to_s)
             expect(json["data"][1]["relationships"]["resource"]["data"]["id"]).to eq(resource2.id.to_s)
+          end
+
+          context "when sending duplicate ids" do
+            let(:resource_ids) { [resource.id, resource.id] }
+
+            it "returns an error" do
+              do_request(params)
+
+              expect(status).to be(422)
+              json = JSON.parse(response_body)
+              expect(json["errors"][0]["detail"]).to include("cannot contain duplicate ids")
+            end
+          end
+
+          context "when sending resource ids which correspond to a different resource type" do
+            let(:resource_type) { FactoryBot.create(:lesson_resource_type) }
+            let(:resource_ids) { [resource.id, resource2.id] }
+
+            it "returns an error" do
+              do_request(params)
+
+              expect(status).to be(422)
+              json = JSON.parse(response_body)
+              expect(json["errors"][0]["detail"]).to include("Resources not found or do not match the provided resource type")
+            end
+          end
+
+          context "when sending resource ids which represent resources of different types" do
+            let(:resource_type) { FactoryBot.create(:lesson_resource_type) }
+            let(:resource_ids) { [resource.id, resource2.id] }
+
+            it "returns an error" do
+              do_request(params)
+
+              expect(status).to be(422)
+              json = JSON.parse(response_body)
+              expect(json["errors"][0]["detail"]).to include("do not match")
+            end
           end
         end
       end
@@ -551,7 +612,7 @@ resource "ResourceScores" do
     let(:country) { "US" }
     let(:lang) { "en" }
     let(:ranked_resources) { [] }
-    let(:resource_type) { ResourceType.find(resource.resource_type_id) }
+    let(:resource_type) { ResourceType.find_by!(name: "tract") }
     let(:params) do
       {data: {attributes: {country: country, lang: lang, ranked_resources: ranked_resources,
                            resource_type: resource_type&.name}}}
@@ -606,6 +667,18 @@ resource "ResourceScores" do
       end
     end
 
+    context "with invalid resource_type param" do
+      let(:resource_type) { ResourceType.find_by!(name: "article") }
+
+      it "returns an error" do
+        do_request(params)
+
+        expect(status).to be(422)
+        json = JSON.parse(response_body)
+        expect(json["errors"][0]["detail"]).to include("not supported")
+      end
+    end
+
     context "with country and lang params" do
       context "with no previous resource scores" do
         context "when sending an empty array" do
@@ -634,6 +707,31 @@ resource "ResourceScores" do
 
         context "when sending more than 1 ranked resource" do
           let(:ranked_resources) { [{resource_id: resource.id, score: 20}, {resource_id: resource2.id, score: 10}] }
+
+          context "when sending duplicate ids" do
+            let(:ranked_resources) { [{resource_id: resource.id, score: 6}, {resource_id: resource.id, score: 7}] }
+
+            it "returns an error" do
+              do_request(params)
+
+              expect(status).to be(422)
+              json = JSON.parse(response_body)
+              expect(json["errors"][0]["detail"]).to include("cannot contain duplicate ids")
+            end
+          end
+
+          context "when sending resource ids which correspond to a different resource type" do
+            let(:resource_type) { FactoryBot.create(:lesson_resource_type) }
+            let(:resource_ids) { [resource.id, resource2.id] }
+
+            it "returns an error" do
+              do_request(params)
+
+              expect(status).to be(422)
+              json = JSON.parse(response_body)
+              expect(json["errors"][0]["detail"]).to include("Resources not found or do not match the provided resource type")
+            end
+          end
 
           it "returns an array with more than 1 resource score" do
             do_request(params)
@@ -675,6 +773,32 @@ resource "ResourceScores" do
 
             json = JSON.parse(response_body)
             expect(json["data"]).to be_empty
+          end
+
+          context "when existing scores are featured" do
+            before do
+              resource_score.update!(featured: true, featured_order: 1)
+              resource_score2.update!(featured: true, featured_order: 2)
+            end
+
+            it "soft-deletes the scores" do
+              do_request(params)
+
+              expect(status).to be(200)
+              json = JSON.parse(response_body)
+              expect(json["data"]).to be_empty
+
+              resource_score.reload
+              resource_score2.reload
+
+              expect(resource_score.score).to be_nil
+              expect(resource_score.featured).to be true
+              expect(resource_score.featured_order).to eq(1)
+
+              expect(resource_score2.score).to be_nil
+              expect(resource_score2.featured).to be true
+              expect(resource_score2.featured_order).to eq(2)
+            end
           end
         end
 

@@ -78,5 +78,19 @@ resource "ContentStatus" do
         "last_updated"
       )
     end
+
+    context "when an error occurs" do
+      before do
+        allow(Language).to receive(:joins).and_raise("Something went wrong")
+      end
+
+      it "returns unprocessable entity" do
+        do_request
+
+        expect(status).to eq(422)
+        json = JSON.parse(response_body)
+        expect(json).to have_key("errors")
+      end
+    end
   end
 end
