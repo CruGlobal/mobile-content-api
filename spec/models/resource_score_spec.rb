@@ -21,10 +21,10 @@ RSpec.describe ResourceScore, type: :model do
         FactoryBot.create(:resource_score, resource: resource, country: "us", language: language_en)
       end
 
-      it "validates uniqueness of resource_id scoped to country, language and resource_type" do
+      it "validates uniqueness of resource_id scoped to country and language" do
         duplicate = FactoryBot.build(:resource_score, resource: resource, country: "us", language: language_en)
         expect(duplicate).not_to be_valid
-        expect(duplicate.errors[:resource_id]).to include("should have only one score per country, language and resource type")
+        expect(duplicate.errors[:resource_id]).to include("should have only one ResourceScore per country and language")
       end
     end
 
@@ -36,16 +36,25 @@ RSpec.describe ResourceScore, type: :model do
         expect(resource_score.errors[:featured_order]).to include("must be present if resource is featured")
       end
 
+      it "requires featured to be true if featured_order is assigned" do
+        resource_score.featured = false
+        resource_score.featured_order = 1
+        expect(resource_score).not_to be_valid
+        expect(resource_score.errors[:featured]).to include("must be true if a featured_order is assigned")
+      end
+
       it "validates uniqueness of featured_order within country, language and resource type" do
         resource_score_with_resource
-        duplicate = ResourceScore.new(resource: resource, featured: true, featured_order: 1, country: "us", language: language_en)
+        duplicate = ResourceScore.new(resource: resource, featured: true, featured_order: 1, country: "us",
+          language: language_en)
         expect(duplicate).not_to be_valid
         expect(duplicate.errors[:featured_order]).to include("is already taken for this country, language and resource type")
       end
 
       context "having a resource score created previously" do
         let!(:previous_resource_score) do
-          ResourceScore.create(resource: resource, featured: true, featured_order: 1, country: "us", language: language_en)
+          ResourceScore.create(resource: resource, featured: true, featured_order: 1, country: "us",
+            language: language_en)
         end
 
         it "allows same featured_order for different country" do
@@ -63,11 +72,17 @@ RSpec.describe ResourceScore, type: :model do
         end
       end
 
-      it "allows same featured_order for different resources" do
+      it "allows same featured_order for different resource type" do
         resource_score_with_resource
-        different_resource = FactoryBot.build(:resource_score, resource: Resource.last, featured: true,
-          featured_order: 1, country: "US", language: language_en)
-        expect(different_resource).to be_valid
+        different_resource_type = FactoryBot.build(
+          :resource_score,
+          resource: FactoryBot.create(:resource, resource_type: FactoryBot.create(:lesson_resource_type)),
+          featured: true,
+          featured_order: 1,
+          country: "US",
+          language: language_en
+        )
+        expect(different_resource_type).to be_valid
       end
     end
   end

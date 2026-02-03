@@ -60,84 +60,75 @@ class ResourceDefaultOrdersController < ApplicationController
 
   def mass_update
     lang_code = params.dig(:data, :attributes, :lang)&.downcase
-    resource_type = params.dig(:data, :attributes, :resource_type)
-    incoming_resources = params.dig(:data, :attributes, :resource_ids) || []
-    resulting_resource_default_orders = []
+    resource_type_name = params.dig(:data, :attributes, :resource_type)&.downcase
+    incoming_resource_ids = params.dig(:data, :attributes, :resource_ids) || []
 
-    raise "Lang and Resource Type should be provided" unless lang_code.present? && resource_type.present?
+    raise "Language and Resource Type should be provided" unless lang_code.present? && resource_type_name.present?
 
-    language = Language.where("code = :lang OR LOWER(code) = LOWER(:lang)", lang: lang_code).first
+    language = Language.find_by("code = :lang OR LOWER(code) = LOWER(:lang)", lang: lang_code)
     raise "Language not found for code: #{lang_code}" unless language.present?
 
-    current_orders = ResourceDefaultOrder.where(language_id: language.id).order(position: :asc)
+    resource_type = ResourceType.find_by(name: resource_type_name)
+    raise "ResourceType '#{resource_type_name}' not found" unless resource_type.present?
 
-    if resource_type.present?
-      current_orders = current_orders.joins(resource: :resource_type)
-        .where(resource_types: {name: resource_type.downcase})
+    unless %w[lesson tract].include?(resource_type.name.downcase)
+      raise "ResourceType '#{resource_type_name}' is not supported"
     end
 
-    current_orders = current_orders.to_a
-
-    if incoming_resources.empty?
-      current_orders.each do |ro|
-        ro.destroy!
-      end
-      current_orders.reject! { |ro| !ro.persisted? }
-
-      return render json: current_orders, status: :ok
+    unless incoming_resource_ids.is_a?(Array) && incoming_resource_ids.all?(Integer)
+      raise "resource_ids is expected to be an array of integers"
     end
+
+    raise "resource_ids is expected to include a maximum of 9 ids" if incoming_resource_ids.length > 9
+
+    if incoming_resource_ids.uniq.length != incoming_resource_ids.length
+      raise "resource_ids cannot contain duplicate ids"
+    end
+
+    valid_resource_ids = Resource.where(id: incoming_resource_ids, resource_type_id: resource_type.id).pluck(:id)
+    invalid_resource_ids = incoming_resource_ids - valid_resource_ids
+    if invalid_resource_ids.any?
+      raise "Resources not found or do not match the provided resource type. Invalid IDs: #{invalid_resource_ids.join(", ")})"
+    end
+
+    current_default_orders = ResourceDefaultOrder
+      .joins(:resource)
+      .where(language_id: language.id)
+      .where(resources: {resource_type_id: resource_type.id})
+      .order(position: :asc)
+      .lock
+      .to_a
 
     ResourceDefaultOrder.transaction do
-      incoming_resources.each_with_index do |resource_id, index|
-        current_position = index + 1
+      current_default_orders.each do |ro|
+        ro.update_column(:position, nil)
+      end
 
-        if resource_id.nil?
-          # Remove any existing resource default order at this position
-          resource_order_to_remove = current_orders.find { |ro| ro.position == current_position }
-          resource_order_to_remove&.destroy!
-          next
-        end
+      orders_by_resource_id = current_default_orders.index_by(&:resource_id)
+      incoming_resource_ids.each_with_index do |resource_id, index|
+        relevant_order = orders_by_resource_id[resource_id]
 
-        incoming_resource_order = current_orders.find { |ro| ro.resource_id == resource_id }
-        current_resource_order_at_position = current_orders.find { |ro| ro.position == current_position }
-
-        if incoming_resource_order
-          if incoming_resource_order.position != current_position
-            # Incoming ResourceDefaultOrder exists but at a different position
-            # Remove ResourceDefaultOrder currently at this position, if any
-            if current_resource_order_at_position
-              current_resource_order_at_position.destroy!
-              current_orders.reject! { |ro| ro.id == current_resource_order_at_position.id }
-            end
-
-            # Move incoming ResourceDefaultOrder to the new position
-            incoming_resource_order.update!(position: current_position)
-            resulting_resource_default_orders << incoming_resource_order
-          else
-            # Incoming ResourceDefaultOrder exists and is already at the correct position
-            resulting_resource_default_orders << incoming_resource_order
-            next
-          end
-        elsif current_resource_order_at_position
-          # There is a ResourceDefaultOrder at this position, update it to the new resource_id
-          current_resource_order_at_position.update!(resource_id: resource_id)
-          resulting_resource_default_orders << current_resource_order_at_position
+        if relevant_order
+          relevant_order.update!(position: index + 1)
         else
-          # No ResourceDefaultOrder at this position, create a new one
-          resulting_resource_default_orders << ResourceDefaultOrder.create!(
+          ResourceDefaultOrder.create!(
             resource_id: resource_id,
             language_id: language.id,
-            position: current_position
+            position: index + 1
           )
         end
       end
-
-      # Destroy any current orders that are not in the incoming resources list
-      current_orders.each do |ro|
-        ro.destroy! unless incoming_resources.include?(ro.resource_id)
+      current_default_orders.each do |ro|
+        ro.destroy! unless incoming_resource_ids.include?(ro.resource_id)
       end
     end
-    render json: resulting_resource_default_orders, status: :ok
+    resulting_default_orders = ResourceDefaultOrder
+      .joins(:resource)
+      .where(language_id: language.id)
+      .where(resources: {resource_type_id: resource_type.id})
+      .order(position: :asc)
+
+    render json: resulting_default_orders, status: :ok
   rescue => e
     render json: {errors: [{detail: "Error: #{e.message}"}]}, status: :unprocessable_content
   end

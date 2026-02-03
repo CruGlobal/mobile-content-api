@@ -35,7 +35,7 @@ class ResourcesController < ApplicationController
       resource_type: params.dig(:filter, :resource_type) || params[:resource_type]
     )
 
-    render json: featured_resources, include: params[:include], status: :ok
+    render json: featured_resources, include: params[:include], fields: field_params, status: :ok
   end
 
   def default_order
@@ -51,7 +51,7 @@ class ResourcesController < ApplicationController
       resource_type: params.dig(:filter, :resource_type) || params[:resource_type]
     )
 
-    render json: default_order_resources, include: params[:include], status: :ok
+    render json: default_order_resources, include: params[:include], fields: field_params, status: :ok
   rescue => e
     render json: {errors: [{detail: "Error: #{e.message}"}]}, status: :unprocessable_content
   end
