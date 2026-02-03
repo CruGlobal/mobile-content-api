@@ -5,7 +5,7 @@ class RuleCountriesController < ApplicationController
   def create
     create_rule_country
   rescue ActiveRecord::RecordInvalid => e
-    render json: {errors: formatted_errors("record_invalid", e)}, status: :unprocessable_entity
+    render json: {errors: formatted_errors("record_invalid", e)}, status: :unprocessable_content
   end
 
   def update

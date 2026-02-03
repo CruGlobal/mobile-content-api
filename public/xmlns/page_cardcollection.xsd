@@ -2,11 +2,13 @@
 <xs:schema xmlns:analytics="https://mobile-content-api.cru.org/xmlns/analytics"
     xmlns:content="https://mobile-content-api.cru.org/xmlns/content"
     xmlns:page="https://mobile-content-api.cru.org/xmlns/page"
+    xmlns:publish="https://mobile-content-api.cru.org/xmlns/publish"
     xmlns:xs="http://www.w3.org/2001/XMLSchema"
     elementFormDefault="qualified" targetNamespace="https://mobile-content-api.cru.org/xmlns/page">
 
     <xs:import namespace="https://mobile-content-api.cru.org/xmlns/analytics" schemaLocation="analytics.xsd" />
     <xs:import namespace="https://mobile-content-api.cru.org/xmlns/content" schemaLocation="content.xsd" />
+    <xs:import namespace="https://mobile-content-api.cru.org/xmlns/publish" schemaLocation="publish.xsd" />
     <xs:include schemaLocation="page_base.xsd" />
 
     <xs:complexType name="cardcollection">
@@ -76,5 +78,6 @@
                 </xs:documentation>
             </xs:annotation>
         </xs:attribute>
+        <xs:attributeGroup ref="publish:contentFiltering" />
     </xs:complexType>
 </xs:schema>

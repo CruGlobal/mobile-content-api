@@ -1,25 +1,25 @@
 {
   "ignored_warnings": [
     {
-      "warning_type": "Weak Hash",
-      "warning_code": 90,
-      "fingerprint": "003c2db09fbe3434813e3efd45799f8072a7cca7139f85d57deb4d287d8639e8",
-      "check_name": "WeakHash",
-      "message": "Weak hashing algorithm used: MD5",
-      "file": "app/lib/one_sky.rb",
-      "line": 54,
-      "link": "https://brakemanscanner.org/docs/warning_types/weak_hash/",
-      "code": "Digest::MD5.hexdigest((AuthUtil.epoch_time_seconds + ENV[\"ONESKY_API_SECRET\"]))",
+      "warning_type": "Unscoped Find",
+      "warning_code": 82,
+      "fingerprint": "0bd6486ea46fa6dbb922f16405e32a2a4bfa40ac96aebb804d96b28b490f3945",
+      "check_name": "UnscopedFind",
+      "message": "Unscoped call to `ResourceScore#find`",
+      "file": "app/controllers/resource_scores_controller.rb",
+      "line": 39,
+      "link": "https://brakemanscanner.org/docs/warning_types/unscoped_find/",
+      "code": "ResourceScore.find(params[:id])",
       "render_path": null,
       "location": {
         "type": "method",
-        "class": "OneSky",
-        "method": "s(:self).headers"
+        "class": "ResourceScoresController",
+        "method": "update"
       },
-      "user_input": null,
-      "confidence": "Medium",
+      "user_input": "params[:id]",
+      "confidence": "Weak",
       "cwe_id": [
-        328
+        285
       ],
       "note": ""
     },
@@ -49,6 +49,29 @@
     {
       "warning_type": "Unscoped Find",
       "warning_code": 82,
+      "fingerprint": "2fb5ff2fd47e751a6ef49f6b4de92d55d80c2ec6d13da50c2c9f1f833b17e458",
+      "check_name": "UnscopedFind",
+      "message": "Unscoped call to `ResourceDefaultOrder#find`",
+      "file": "app/controllers/resource_default_orders_controller.rb",
+      "line": 37,
+      "link": "https://brakemanscanner.org/docs/warning_types/unscoped_find/",
+      "code": "ResourceDefaultOrder.find(params[:id])",
+      "render_path": null,
+      "location": {
+        "type": "method",
+        "class": "ResourceDefaultOrdersController",
+        "method": "update"
+      },
+      "user_input": "params[:id]",
+      "confidence": "Weak",
+      "cwe_id": [
+        285
+      ],
+      "note": ""
+    },
+    {
+      "warning_type": "Unscoped Find",
+      "warning_code": 82,
       "fingerprint": "2fcf6c61aca934c2bf52da730148abb448c3aa319353ae8f4bc1b76dc12bc46c",
       "check_name": "UnscopedFind",
       "message": "Unscoped call to `CustomPage#find`",
@@ -61,6 +84,29 @@
         "type": "method",
         "class": "CustomPagesController",
         "method": "destroy"
+      },
+      "user_input": "params[:id]",
+      "confidence": "Weak",
+      "cwe_id": [
+        285
+      ],
+      "note": ""
+    },
+    {
+      "warning_type": "Unscoped Find",
+      "warning_code": 82,
+      "fingerprint": "4ea8f626e9227588bf15a6e0e279c3691b3317e64c690f1177b049c48f489aff",
+      "check_name": "UnscopedFind",
+      "message": "Unscoped call to `ResourceScore#find`",
+      "file": "app/controllers/resources/featured_controller.rb",
+      "line": 40,
+      "link": "https://brakemanscanner.org/docs/warning_types/unscoped_find/",
+      "code": "ResourceScore.find(params[:id])",
+      "render_path": null,
+      "location": {
+        "type": "method",
+        "class": "Resources::FeaturedController",
+        "method": "update"
       },
       "user_input": "params[:id]",
       "confidence": "Weak",
@@ -130,6 +176,52 @@
         "type": "method",
         "class": "PagesController",
         "method": "update"
+      },
+      "user_input": "params[:id]",
+      "confidence": "Weak",
+      "cwe_id": [
+        285
+      ],
+      "note": ""
+    },
+    {
+      "warning_type": "Unscoped Find",
+      "warning_code": 82,
+      "fingerprint": "8a99a92cfa46c5cedaf6349c1bc54c065505922ebfc9b7fc2bed934660bd6701",
+      "check_name": "UnscopedFind",
+      "message": "Unscoped call to `ResourceScore#find`",
+      "file": "app/controllers/resource_scores_controller.rb",
+      "line": 30,
+      "link": "https://brakemanscanner.org/docs/warning_types/unscoped_find/",
+      "code": "ResourceScore.find(params[:id])",
+      "render_path": null,
+      "location": {
+        "type": "method",
+        "class": "ResourceScoresController",
+        "method": "destroy"
+      },
+      "user_input": "params[:id]",
+      "confidence": "Weak",
+      "cwe_id": [
+        285
+      ],
+      "note": ""
+    },
+    {
+      "warning_type": "Unscoped Find",
+      "warning_code": 82,
+      "fingerprint": "9b3d70b933848eb2f93618484ed8d80dfc5f1629d90eb3832bf594c117d93106",
+      "check_name": "UnscopedFind",
+      "message": "Unscoped call to `ResourceDefaultOrder#find`",
+      "file": "app/controllers/resources/default_order_controller.rb",
+      "line": 29,
+      "link": "https://brakemanscanner.org/docs/warning_types/unscoped_find/",
+      "code": "ResourceDefaultOrder.find(params[:id])",
+      "render_path": null,
+      "location": {
+        "type": "method",
+        "class": "Resources::DefaultOrderController",
+        "method": "destroy"
       },
       "user_input": "params[:id]",
       "confidence": "Weak",
@@ -212,9 +304,9 @@
       "warning_code": 120,
       "fingerprint": "d84924377155b41e094acae7404ec2e521629d86f97b0ff628e3d1b263f8101c",
       "check_name": "EOLRails",
-      "message": "Support for Rails 7.0.8.7 ended on 2025-04-01",
+      "message": "Support for Rails 7.1.5.2 ended on 2025-10-01",
       "file": "Gemfile.lock",
-      "line": 795,
+      "line": 851,
       "link": "https://brakemanscanner.org/docs/warning_types/unmaintained_dependency/",
       "code": null,
       "render_path": null,
@@ -248,7 +340,76 @@
         285
       ],
       "note": ""
+    },
+    {
+      "warning_type": "Unscoped Find",
+      "warning_code": 82,
+      "fingerprint": "f25882ed7eaf7fb1151c8a23125c104191f95878112eb3c66a7bfd1cb2fa49ec",
+      "check_name": "UnscopedFind",
+      "message": "Unscoped call to `ResourceDefaultOrder#find`",
+      "file": "app/controllers/resource_default_orders_controller.rb",
+      "line": 28,
+      "link": "https://brakemanscanner.org/docs/warning_types/unscoped_find/",
+      "code": "ResourceDefaultOrder.find(params[:id])",
+      "render_path": null,
+      "location": {
+        "type": "method",
+        "class": "ResourceDefaultOrdersController",
+        "method": "destroy"
+      },
+      "user_input": "params[:id]",
+      "confidence": "Weak",
+      "cwe_id": [
+        285
+      ],
+      "note": ""
+    },
+    {
+      "warning_type": "Unscoped Find",
+      "warning_code": 82,
+      "fingerprint": "fe49ae693aee294b9c9a624606afa2dc31c3b2b41a83479dbac9601d7f2f9f8b",
+      "check_name": "UnscopedFind",
+      "message": "Unscoped call to `ResourceDefaultOrder#find`",
+      "file": "app/controllers/resources/default_order_controller.rb",
+      "line": 37,
+      "link": "https://brakemanscanner.org/docs/warning_types/unscoped_find/",
+      "code": "ResourceDefaultOrder.find(params[:id])",
+      "render_path": null,
+      "location": {
+        "type": "method",
+        "class": "Resources::DefaultOrderController",
+        "method": "update"
+      },
+      "user_input": "params[:id]",
+      "confidence": "Weak",
+      "cwe_id": [
+        285
+      ],
+      "note": ""
+    },
+    {
+      "warning_type": "Unscoped Find",
+      "warning_code": 82,
+      "fingerprint": "fefed2e595dbe4832adc275de94477f4fc19a6421498f07a68c7a3c39e22cd14",
+      "check_name": "UnscopedFind",
+      "message": "Unscoped call to `ResourceScore#find`",
+      "file": "app/controllers/resources/featured_controller.rb",
+      "line": 31,
+      "link": "https://brakemanscanner.org/docs/warning_types/unscoped_find/",
+      "code": "ResourceScore.find(params[:id])",
+      "render_path": null,
+      "location": {
+        "type": "method",
+        "class": "Resources::FeaturedController",
+        "method": "destroy"
+      },
+      "user_input": "params[:id]",
+      "confidence": "Weak",
+      "cwe_id": [
+        285
+      ],
+      "note": ""
     }
   ],
-  "brakeman_version": "7.0.2"
+  "brakeman_version": "7.1.1"
 }

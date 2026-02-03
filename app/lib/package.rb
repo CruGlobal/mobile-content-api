@@ -43,11 +43,8 @@ class Package
 
     build_zip
     upload
-
-    PageClient.delete_temp_dir(@directory)
-  rescue => e
-    PageClient.delete_temp_dir(@directory)
-    raise e
+  ensure
+    FileUtils.remove_dir(@directory)
   end
 
   private
@@ -160,7 +157,7 @@ class Package
   end
 
   def upload
-    Rails.logger.info("Uploading zip to OneSky for translation with id: #{@translation.id}")
+    Rails.logger.info("Uploading zip for translation with id: #{@translation.id}")
 
     obj = self.class.s3_object(@translation)
     obj.upload_file("#{@directory}/#{@translation.zip_name}", acl: "public-read")

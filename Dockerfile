@@ -15,7 +15,9 @@ WORKDIR /home/webapp/app
 RUN apk upgrade --no-cache
 
 # Install rails/app dependencies
-RUN apk --no-cache add libc6-compat git postgresql-libs tzdata
+RUN apk --no-cache add libc6-compat git postgresql-libs tzdata jemalloc
+
+ENV LD_PRELOAD=/usr/lib/libjemalloc.so.2
 
 # Copy dependency definitions and lock files
 COPY Gemfile Gemfile.lock .ruby-version ./
@@ -39,6 +41,30 @@ ARG TEST_DB_USER=postgres
 ARG TEST_DB_PASSWORD
 ARG TEST_DB_HOST=localhost
 ARG TEST_DB_PORT=5432
+ARG SESSION_REDIS_DB_INDEX=1
+ARG SESSION_REDIS_HOST=localhost
+ARG SESSION_REDIS_PORT=6379
+ARG STORAGE_REDIS_DB_INDEX=1
+ARG STORAGE_REDIS_HOST=localhost
+ARG STORAGE_REDIS_PORT=6379
+ARG MOBILE_CONTENT_API_BUCKET=fake
+ARG AWS_REGION=fake
+ARG SALESFORCE_AUTH_URI=example.com
+ARG SALESFORCE_CLIENT_ID=fake
+ARG SALESFORCE_CLIENT_SECRET=fake
+ARG SALESFORCE_REST_URI=example.com
+ARG SALESFORCE_SFMC_DE_EXTERNAL_KEY=fake
+ARG APPLE_CLIENT_ID=org.cru.godtools
+ARG APPLE_PRIVATE_KEY=fake
+ARG APPLE_KEY_ID=fake
+ARG APPLE_TEAM_ID=fake
+ARG APPLE_REDIRECT_URI=https://mobile-content-api.cru.org
+ARG OKTA_SERVER_URL=example.com
+ARG OKTA_SERVER_PATH=fake
+ARG OKTA_SERVER_AUDIENCE=fake
+ARG FACEBOOK_APP_ID=facebook_app_id
+ARG FACEBOOK_APP_SECRET=facebook_app_secret
+ARG GOOGLE_APP_ID=fake
 
 # Compile assets and fix permissions
 # just like in Actions, we need to copy the fake cred json so that our tests can function

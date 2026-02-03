@@ -14,7 +14,14 @@ if ENV["AWS_EXECUTION_ENV"].present?
     c.runtime_metrics.enabled = true
 
     c.service = ENV["PROJECT_NAME"]
-    c.env = ENV["ENVIRONMENT"]
+    c.env = case ENV["ENVIRONMENT"]
+    when "production"
+      "prod"
+    when "staging"
+      "stage"
+    else
+      "dev"
+    end
 
     # Tracing settings
     c.tracing.analytics.enabled = true

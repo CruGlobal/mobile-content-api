@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class Destination < ActiveRecord::Base
-  enum service_type: {growth_spaces: "growth_spaces", adobe_campaigns: "adobe_campaigns", salesforce: "salesforce"}
+  enum :service_type, {growth_spaces: "growth_spaces", adobe_campaigns: "adobe_campaigns", salesforce: "salesforce"}
 
   validates :url, :service_type, presence: true
   validates :access_key_id, :access_key_secret, presence: true, unless: :salesforce? # salesforce uses env vars for secrets

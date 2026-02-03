@@ -6,7 +6,7 @@ class TrainingTipsController < WithUserController
     response.headers["Location"] = "users/#{@user.id}/training-tips/#{user_training_tip.id}"
     render json: user_training_tip, status: :created
   rescue ActiveRecord::RecordInvalid => e
-    render json: {errors: formatted_errors("record_invalid", e)}, status: :unprocessable_entity
+    render json: {errors: formatted_errors("record_invalid", e)}, status: :unprocessable_content
   end
 
   def update

@@ -25,8 +25,7 @@ class Translation < ActiveRecord::Base
   end
 
   def translated_page(page_id, strict)
-    page = Page.find(page_id)
-    phrases = download_translated_phrases(page.filename)
+    phrases = download_translated_phrases
     xml = Nokogiri::XML(page_structure(page_id))
 
     xml = filter_node_content(xml, self)
@@ -37,8 +36,7 @@ class Translation < ActiveRecord::Base
   end
 
   def translated_tip(tip_id, strict)
-    tip = Tip.find(tip_id)
-    phrases = download_translated_phrases("tip_#{tip.name}.json")
+    phrases = download_translated_phrases
     xml = Nokogiri::XML(tip_structure(tip_id))
 
     xml = filter_node_content(xml, self)
@@ -70,23 +68,22 @@ class Translation < ActiveRecord::Base
     resource.custom_manifests.find_by(language_id: language_id)&.structure || resource.manifest
   end
 
-  def manifest_translated_phrases
-    @manifest_translated_phrases ||= download_translated_phrases("name_description.xml")
-  end
-
   def push_published_to_s3
     return if is_published
 
     if resource.uses_crowdin?
       ActiveRecord::Base.transaction do
-        phrases = manifest_translated_phrases
-        name_desc_crowdin(phrases)
-        create_translated_attributes(phrases)
+        name_desc_crowdin(download_translated_phrases)
+        create_translated_attributes(download_translated_phrases)
       end
     end
 
     Package.new(self).push_to_s3
     update(is_published: true, publishing_errors: nil)
+  end
+
+  def download_translated_phrases
+    @downloaded_translated_phrases ||= CrowdinService.download_translated_phrases(language_code: language.code, project_id: resource.crowdin_project_id)
   end
 
   private
@@ -128,10 +125,6 @@ class Translation < ActiveRecord::Base
     end
 
     translation_attributes.where.not(id: translation_attribute_ids).delete_all
-  end
-
-  def download_translated_phrases(filename)
-    CrowdinService.download_translated_phrases(language_code: language.code, project_id: resource.crowdin_project_id)
   end
 
   def set_defaults

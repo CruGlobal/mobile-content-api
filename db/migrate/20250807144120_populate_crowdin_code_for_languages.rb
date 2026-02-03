@@ -3,7 +3,7 @@ class PopulateCrowdinCodeForLanguages < ActiveRecord::Migration[7.0]
     # Reload column information to ensure crowdin_code column is available
     Language.reset_column_information
 
-    # Language mapping from coworker's code
+    # Language mapping provided by Daniel Frett
     language_mapping = {
       "bs-BA" => "bs",
       "bo" => "bo-BT",

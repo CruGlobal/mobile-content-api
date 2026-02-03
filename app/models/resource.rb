@@ -14,6 +14,8 @@ class Resource < ActiveRecord::Base
   has_many :custom_manifests
   has_many :resource_tool_groups
   has_many :tool_groups, through: :resource_tool_groups
+  has_many :resource_scores, dependent: :destroy
+  has_many :resource_default_orders, dependent: :destroy
 
   belongs_to :metatool, optional: true, class_name: "Resource"
   belongs_to :default_variant, optional: true, class_name: "Resource"

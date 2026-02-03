@@ -2,8 +2,6 @@
 
 require "equivalent-xml"
 require "rails_helper"
-require "package"
-require "xml_util"
 
 describe Package do
   let(:translated_page_one) do
@@ -135,7 +133,7 @@ describe Package do
     mock_s3(instance_double(Aws::S3::Object, upload_file: true), translation)
 
     allow_any_instance_of(Attachment).to receive(:url) do |attachment|
-      "#{fixture_path}/#{attachment.filename}"
+      "#{fixture_paths.first}/#{attachment.filename}"
     end
 
     allow(SecureRandom).to receive(:uuid).and_return(guid)
@@ -143,8 +141,8 @@ describe Package do
 
   after do
     if Dir.exist?(directory)
-      allow(PageClient).to receive(:delete_temp_dir).and_call_original
-      PageClient.delete_temp_dir(directory)
+      allow(FileUtils).to receive(:remove_dir).and_call_original
+      FileUtils.remove_dir(directory)
     end
   end
 
@@ -373,7 +371,7 @@ describe Package do
   end
 
   def mock_dir_deletion
-    allow(PageClient).to receive(:delete_temp_dir)
+    allow(FileUtils).to receive(:remove_dir)
   end
 
   def push
