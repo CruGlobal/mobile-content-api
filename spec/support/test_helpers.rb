@@ -1,3 +1,5 @@
+require "google/analytics/data/v1beta"
+
 module TestHelpers
   module_function def stub_request_to_analytics(rspec_context, analytics_status: 200, access_token_status: 200)
     rspec_context.instance_eval do
