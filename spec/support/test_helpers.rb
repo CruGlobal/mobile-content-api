@@ -9,9 +9,9 @@ module TestHelpers
       gospel_data = JSON.parse(File.read(Rails.root.join("spec", "fixtures", "ga4_gospel_presentations_stub.json")))
 
       # Build mock responses
-      analytics_response = build_ga4_response(analytics_data)
-      countries_response = build_ga4_response(countries_data)
-      gospel_response = build_ga4_response(gospel_data)
+      analytics_response = TestHelpers.build_ga4_response(analytics_data)
+      countries_response = TestHelpers.build_ga4_response(countries_data)
+      gospel_response = TestHelpers.build_ga4_response(gospel_data)
 
       # Mock the GA4 client
       mock_client = instance_double(Google::Analytics::Data::V1beta::AnalyticsData::Client)
