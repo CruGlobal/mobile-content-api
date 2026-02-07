@@ -37,35 +37,6 @@ describe CrowdinService do
       expect(result).to eq("test_key" => "translated_text")
     end
 
-    it "handles array format from Crowdin API" do
-      mock_client = double("Crowdin::Client")
-      allow(CrowdinService).to receive(:client).and_return(mock_client)
-
-      # Use the seeded language
-      language = Language.find_by!(code: language_code)
-      # Ensure crowdin_code is set for the test
-      language.update!(crowdin_code: "en")
-
-      # Mock the export call
-      export_response = {
-        "data" => {
-          "url" => "http://example.com/export.xml"
-        }
-      }
-      allow(mock_client).to receive(:export_project_translation)
-        .with({targetLanguageId: "en", format: "crowdin-json"}, nil, project_id)
-        .and_return(export_response)
-
-      # Mock the HTTP request to return array format
-      json_content = '[{"identifier":"test_key","translation":"translated_text"},{"identifier":"another_key","translation":"another_translation"}]'
-      stub_request(:get, "http://example.com/export.xml")
-        .to_return(status: 200, body: json_content, headers: {})
-
-      result = CrowdinService.download_translated_phrases(project_id: project_id, language_code: language_code)
-
-      expect(result).to eq("test_key" => "translated_text", "another_key" => "another_translation")
-    end
-
     it "raises errors instead of handling them" do
       mock_client = double("Crowdin::Client")
       allow(CrowdinService).to receive(:client).and_return(mock_client)
