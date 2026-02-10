@@ -152,7 +152,7 @@ GEM
     bindex (0.8.1)
     bootsnap (1.21.1)
       msgpack (~> 1.2)
-    brakeman (8.0.1)
+    brakeman (8.0.2)
       racc
     builder (3.3.0)
     bundler-audit (0.9.3)
@@ -205,7 +205,7 @@ GEM
     factory_bot_rails (6.5.1)
       factory_bot (~> 6.5)
       railties (>= 6.1.0)
-    faraday (2.14.0)
+    faraday (2.14.1)
       faraday-net_http (>= 2.0, < 3.5)
       json
       logger
@@ -286,7 +286,7 @@ GEM
       actionview (>= 7.0.0)
       activesupport (>= 7.0.0)
     jmespath (1.6.2)
-    json (2.18.0)
+    json (2.18.1)
     json-jwt (1.16.6)
       activesupport (>= 4.2)
       aes_key_wrap
@@ -737,7 +737,7 @@ CHECKSUMS
   bindata (2.5.0) sha256=29dccb8ba1cc9de148f24bb88930840c62db56715f0f80eccadd624d9f3d2623
   bindex (0.8.1) sha256=7b1ecc9dc539ed8bccfc8cb4d2732046227b09d6f37582ff12e50a5047ceb17e
   bootsnap (1.21.1) sha256=9373acfe732da35846623c337d3481af8ce77c7b3a927fb50e9aa92b46dbc4c4
-  brakeman (8.0.1) sha256=c68ce0ac35a6295027c4eab8b4ac597d2a0bfc82f0d62dcd334bbf944d352f70
+  brakeman (8.0.2) sha256=7b02065ce8b1de93949cefd3f2ad78e8eb370e644b95c8556a32a912a782426a
   builder (3.3.0) sha256=497918d2f9dca528fdca4b88d84e4ef4387256d984b8154e9d5d3fe5a9c8835f
   bundler-audit (0.9.3) sha256=81c8766c71e47d0d28a0f98c7eed028539f21a6ea3cd8f685eb6f42333c9b4e9
   byebug (13.0.0) sha256=d2263efe751941ca520fa29744b71972d39cbc41839496706f5d9b22e92ae05d
@@ -767,7 +767,7 @@ CHECKSUMS
   erubi (1.13.1) sha256=a082103b0885dbc5ecf1172fede897f9ebdb745a4b97a5e8dc63953db1ee4ad9
   factory_bot (6.5.5) sha256=ce59295daee1b4704dab8a2fee6816f513d467c6aa3bc587860767d74a66efbe
   factory_bot_rails (6.5.1) sha256=d3cc4851eae4dea8a665ec4a4516895045e710554d2b5ac9e68b94d351bc6d68
-  faraday (2.14.0) sha256=8699cfe5d97e55268f2596f9a9d5a43736808a943714e3d9a53e6110593941cd
+  faraday (2.14.1) sha256=a43cceedc1e39d188f4d2cdd360a8aaa6a11da0c407052e426ba8d3fb42ef61c
   faraday-follow_redirects (0.3.0) sha256=d92d975635e2c7fe525dd494fcd4b9bb7f0a4a0ec0d5f4c15c729530fdb807f9
   faraday-net_http (3.4.2) sha256=f147758260d3526939bf57ecf911682f94926a3666502e24c69992765875906c
   ffi (1.17.3-arm64-darwin) sha256=0c690555d4cee17a7f07c04d59df39b2fba74ec440b19da1f685c6579bb0717f
@@ -796,7 +796,7 @@ CHECKSUMS
   irb (1.16.0) sha256=2abe56c9ac947cdcb2f150572904ba798c1e93c890c256f8429981a7675b0806
   jbuilder (2.14.1) sha256=4eb26376ff60ef100cb4fd6fd7533cd271f9998327e86adf20fd8c0e69fabb42
   jmespath (1.6.2) sha256=238d774a58723d6c090494c8879b5e9918c19485f7e840f2c1c7532cf84ebcb1
-  json (2.18.0) sha256=b10506aee4183f5cf49e0efc48073d7b75843ce3782c68dbeb763351c08fd505
+  json (2.18.1) sha256=fe112755501b8d0466b5ada6cf50c8c3f41e897fa128ac5d263ec09eedc9f986
   json-jwt (1.16.6) sha256=ab451f9cd8743cecc4137f4170806046c1d8a6d4ee6e8570e0b5c958409b266c
   jsonapi-renderer (0.2.2) sha256=b5c44b033d61b4abdb6500fa4ab84807ca0b36ea0e59e47a2c3ca7095a6e447b
   jwt (2.10.2) sha256=31e1ee46f7359883d5e622446969fe9c118c3da87a0b1dca765ce269c3a0c4f4
