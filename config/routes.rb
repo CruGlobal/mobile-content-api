@@ -26,9 +26,16 @@ Rails.application.routes.draw do
         collection do
           put :mass_update
           patch :mass_update
+          put :mass_update_ranked
+          patch :mass_update_ranked
         end
       end
-      resources :default_order, only: [:index, :create, :update, :destroy], module: :resources
+      resources :default_order, only: [:index, :create, :update, :destroy], module: :resources do
+        collection do
+          put :mass_update
+          patch :mass_update
+        end
+      end
     end
   end
   resources :drafts, only: [:index, :show, :create, :destroy]
@@ -106,6 +113,8 @@ Rails.application.routes.draw do
       end
     end
   end
+
+  get "content_status", to: "content_status#index"
 
   if Rails.env.production? || Rails.env.staging?
     Sidekiq::Web.use Rack::Auth::Basic do |username, password|
