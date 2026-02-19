@@ -19,8 +19,8 @@ GIT
 GEM
   remote: https://gems.contribsys.com/
   specs:
-    sidekiq-pro (7.3.7)
-      sidekiq (>= 7.3.7, < 8)
+    sidekiq-pro (8.1.0)
+      sidekiq (>= 8.1.0, < 9)
 
 GEM
   remote: https://rubygems.org/
@@ -165,7 +165,7 @@ GEM
     cgi (0.5.1)
     coderay (1.1.3)
     concurrent-ruby (1.3.6)
-    connection_pool (2.5.5)
+    connection_pool (3.0.2)
     crack (0.4.6)
       bigdecimal
       rexml
@@ -541,12 +541,12 @@ GEM
     rubyzip (2.4.1)
     securerandom (0.4.1)
     shellany (0.0.1)
-    sidekiq (7.3.10)
-      base64
-      connection_pool (>= 2.3.0, < 3)
-      logger
-      rack (>= 2.2.4, < 3.3)
-      redis-client (>= 0.23.0, < 1)
+    sidekiq (8.1.1)
+      connection_pool (>= 3.0.0)
+      json (>= 2.16.0)
+      logger (>= 1.7.0)
+      rack (>= 3.2.0)
+      redis-client (>= 0.26.0)
     sidekiq-failures (1.1.0)
       sidekiq (>= 4.0.0)
     sidekiq-unique-jobs (8.0.13)
@@ -691,7 +691,7 @@ DEPENDENCIES
   rspec_api_documentation!
   rubocop-rspec
   rubyzip (>= 1.2.2)
-  sidekiq (~> 7.3)
+  sidekiq (~> 8.0)
   sidekiq-failures
   sidekiq-pro!
   sidekiq-unique-jobs
@@ -745,7 +745,7 @@ CHECKSUMS
   cgi (0.5.1) sha256=e93fcafc69b8a934fe1e6146121fa35430efa8b4a4047c4893764067036f18e9
   coderay (1.1.3) sha256=dc530018a4684512f8f38143cd2a096c9f02a1fc2459edcfe534787a7fc77d4b
   concurrent-ruby (1.3.6) sha256=6b56837e1e7e5292f9864f34b69c5a2cbc75c0cf5338f1ce9903d10fa762d5ab
-  connection_pool (2.5.5) sha256=e54ff92855753df1fd7c59fa04a398833355f27dd14c074f8c83a05f72a716ad
+  connection_pool (3.0.2) sha256=33fff5ba71a12d2aa26cb72b1db8bba2a1a01823559fb01d29eb74c286e62e0a
   crack (0.4.6) sha256=ee251d0aab36ab196946b851fd129870d66bdde4855cfdb3078d86a619c28864
   crass (1.0.6) sha256=dc516022a56e7b3b156099abc81b6d2b08ea1ed12676ac7a5657617f012bd45d
   crowdin-api (1.13.0) sha256=89437e113ec6d16bd15358bb4fa585e003d9a2fa6bde3af9fc683dbc454b9939
@@ -900,9 +900,9 @@ CHECKSUMS
   rubyzip (2.4.1) sha256=8577c88edc1fde8935eb91064c5cb1aef9ad5494b940cf19c775ee833e075615
   securerandom (0.4.1) sha256=cc5193d414a4341b6e225f0cb4446aceca8e50d5e1888743fac16987638ea0b1
   shellany (0.0.1) sha256=0e127a9132698766d7e752e82cdac8250b6adbd09e6c0a7fbbb6f61964fedee7
-  sidekiq (7.3.10) sha256=781eb4f65ef36042534ad73d72f211283afb7fee82eec786ada4ed1972ef8e3c
+  sidekiq (8.1.1) sha256=afdf2736883e1e80c1c9b7c47afe0387e1a4997c87170978a45560d35d429151
   sidekiq-failures (1.1.0) sha256=c874e10cee8be2db23d22c29887273e0f93d42f345075ed413ca2b2fac40a2f1
-  sidekiq-pro (7.3.7) sha256=53d7f528e823c014d7a38f409286b73df0c9803debca3125f6c5272aad037d7a
+  sidekiq-pro (8.1.0) sha256=dab05060675b2b4528fcf1341603c6aba08776960c122744125f73d0bbce629a
   sidekiq-unique-jobs (8.0.13) sha256=b7ded4264a54b6eb4154f34aab513ddcdcbf4bf0994740fb96a3e10a95e4ae9b
   signet (0.21.0) sha256=d617e9fbf24928280d39dcfefba9a0372d1c38187ffffd0a9283957a10a8cd5b
   simplecov (0.22.0) sha256=fe2622c7834ff23b98066bb0a854284b2729a569ac659f82621fc22ef36213a5
