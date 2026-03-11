@@ -12,45 +12,57 @@ Rails.application.routes.draw do
   # Defines the root path route ("/")
   # root "posts#index"
 
-  resources :systems, only: [:index, :show]
+  resources :systems, only: %i[index show]
   resources :languages
-  resources :resource_types, only: [:index, :show]
+  resources :resource_types, only: %i[index show]
   get "resources/suggestions", to: "resources#suggestions"
 
   resources :resources do
-    resources :languages, controller: :resource_languages, only: [:update, :show]
-    resources :translated_attributes, path: "translated-attributes", only: [:create, :update, :destroy]
+    resources :languages, controller: :resource_languages, only: %i[update show]
+    resources :translated_attributes, path: "translated-attributes", only: %i[create update destroy]
     post "translations/publish", to: "resources#publish_translation"
     collection do
-      resources :featured, only: [:index, :create, :update, :destroy], module: :resources do
-        collection do
-          put :mass_update
-          patch :mass_update
-        end
-      end
-      resources :default_order, only: [:index, :create, :update, :destroy], module: :resources
+      get :featured
+      get :default_order
     end
   end
-  resources :drafts, only: [:index, :show, :create, :destroy]
-  resources :translations, only: [:index, :show]
-  resources :pages, only: [:create, :update, :show]
-  resources :tips, only: [:create, :update]
-  resources :custom_pages, only: [:create, :update, :destroy, :show]
-  resources :custom_tips, only: [:create, :destroy]
 
-  resources :attributes, only: [:create, :update, :destroy, :show]
-  resources :translated_pages, only: [:create, :update, :destroy, :show]
+  resources :resource_scores, only: %i[index create update destroy] do
+    collection do
+      put :mass_update
+      patch :mass_update
+      put :mass_update_ranked
+      patch :mass_update_ranked
+    end
+  end
+
+  resources :resource_default_orders, only: %i[index create update destroy] do
+    collection do
+      put :mass_update
+      patch :mass_update
+    end
+  end
+
+  resources :drafts, only: %i[index show create destroy]
+  resources :translations, only: %i[index show]
+  resources :pages, only: %i[create update show]
+  resources :tips, only: %i[create update]
+  resources :custom_pages, only: %i[create update destroy show]
+  resources :custom_tips, only: %i[create destroy]
+
+  resources :attributes, only: %i[create update destroy show]
+  resources :translated_pages, only: %i[create update destroy show]
 
   resources :views, only: [:create]
   resources :follow_ups, only: [:create]
 
   resources :attachments
 
-  resources :auth, only: [:create, :show]
+  resources :auth, only: %i[create show]
 
-  resources :custom_manifests, only: [:create, :update, :destroy, :show]
+  resources :custom_manifests, only: %i[create update destroy show]
 
-  resources :tool_groups, path: "tool-groups", only: [:create, :destroy, :index, :show, :update] do
+  resources :tool_groups, path: "tool-groups", only: %i[create destroy index show update] do
     post "tools", to: "tool_groups#create_tool"
     put "tools/:id", to: "tool_groups#update_tool"
     delete "tools/:id", to: "tool_groups#delete_tool"
@@ -58,17 +70,17 @@ Rails.application.routes.draw do
 
   # Rule Languages
   resources :tool_groups, path: "tool-groups", only: [] do
-    resources :rule_languages, path: "rules-language", only: [:create, :destroy, :update]
+    resources :rule_languages, path: "rules-language", only: %i[create destroy update]
   end
 
   # Rule Countries
   resources :tool_groups, path: "tool-groups", only: [] do
-    resources :rule_countries, path: "rules-country", only: [:create, :destroy, :update]
+    resources :rule_countries, path: "rules-country", only: %i[create destroy update]
   end
 
   # Rule Praxis
   resources :tool_groups, path: "tool-groups", only: [] do
-    resources :rule_praxes, path: "rules-praxis", only: [:create, :destroy, :update]
+    resources :rule_praxes, path: "rules-praxis", only: %i[create destroy update]
   end
 
   patch "user/counters/:id", to: "user_counters#update" # Legacy route for GodTools Android v5.7.0-v6.0.0
@@ -80,12 +92,12 @@ Rails.application.routes.draw do
   patch "users/:id", to: "users#update"
 
   scope "users/:user_id/relationships" do
-    resources :favorite_tools, path: "favorite-tools", only: [:index, :create]
+    resources :favorite_tools, path: "favorite-tools", only: %i[index create]
   end
   delete "users/:user_id/relationships/favorite-tools", to: "favorite_tools#destroy"
 
   scope "users/:user_id" do
-    resources :training_tips, path: "training-tips", only: [:create, :update, :destroy]
+    resources :training_tips, path: "training-tips", only: %i[create update destroy]
   end
 
   get "monitors/commit"
@@ -94,7 +106,9 @@ Rails.application.routes.draw do
   get "analytics/global", to: "global_activity_analytics#show"
 
   get "translations/files/:path",
-    to: redirect("https://#{ENV.fetch("MOBILE_CONTENT_API_BUCKET")}.s3.#{ENV.fetch("AWS_REGION")}.amazonaws.com/#{Package::TRANSLATION_FILES_PATH}%{path}", status: 302),
+    to: redirect(
+      "https://#{ENV.fetch("MOBILE_CONTENT_API_BUCKET")}.s3.#{ENV.fetch("AWS_REGION")}.amazonaws.com/#{Package::TRANSLATION_FILES_PATH}%{path}", status: 302
+    ),
     format: false, # these next lines are required to have the extension be part of path
     default: {format: "html"},
     constraints: {path: /.*/}
@@ -106,6 +120,8 @@ Rails.application.routes.draw do
       end
     end
   end
+
+  get "content_status", to: "content_status#index"
 
   if Rails.env.production? || Rails.env.staging?
     Sidekiq::Web.use Rack::Auth::Basic do |username, password|
