@@ -14,29 +14,45 @@ describe Xml::Manifest do
   end
 
   context "manifest" do
+    let(:page1_sha) { "790a2170adb13955e67dee0261baff93cc7f045b22a35ad434435bdbdcec036a" }
+    let(:page2_sha) { "5ce1cd1be598eb31a76c120724badc90e1e9bafa4b03c33ce40f80ccff756444" }
+    let(:tip_sha) { "aabbccddaabbccddaabbccddaabbccddaabbccddaabbccddaabbccddaabbccdd" }
+    let(:resource_sha) { "073d78ef4dc421f10d2db375414660d3983f506fabdaaff0887f6ee955aa3bdd" }
+
     let(:pages) do
-      Nokogiri::XML('<pages xmlns="https://mobile-content-api.cru.org/xmlns/manifest">
-        <page filename="04_ThirdPoint.xml" src="790a2170adb13955e67dee0261baff93cc7f045b22a35ad434435bdbdcec036a.xml"/>
-        <page filename="13_FinalPage.xml" src="5ce1cd1be598eb31a76c120724badc90e1e9bafa4b03c33ce40f80ccff756444.xml"/>
-      </pages>').root
+      Nokogiri::XML(<<~XML).root
+        <pages xmlns="https://mobile-content-api.cru.org/xmlns/manifest">
+          <page filename="04_ThirdPoint.xml" src="#{page1_sha}.xml"
+                checksum-sha256="#{page1_sha}" size="1024"/>
+          <page filename="13_FinalPage.xml" src="#{page2_sha}.xml"
+                checksum-sha256="#{page2_sha}" size="2048"/>
+        </pages>
+      XML
     end
     let(:tips) do
-      Nokogiri::XML('<tips xmlns="https://mobile-content-api.cru.org/xmlns/manifest">
-        <tip id="tip_name" src="kt6SxuuCU5M8AYmqpGjcWNNYCiCipEauybniinC5HrhF6h6KOvEZo8f5UhQUnRd.xml"/>
-      </tips>').root
+      Nokogiri::XML(<<~XML).root
+        <tips xmlns="https://mobile-content-api.cru.org/xmlns/manifest">
+          <tip id="tip_name" src="kt6SxuuCU5M8AYmqpGjcWNNYCiCipEauybniinC5HrhF6h6KOvEZo8f5UhQUnRd.xml"
+               checksum-sha256="#{tip_sha}" size="512"/>
+        </tips>
+      XML
     end
     let(:resources) do
-      Nokogiri::XML('<resources xmlns="https://mobile-content-api.cru.org/xmlns/manifest">
-        <resource filename="wall.jpg" src="073d78ef4dc421f10d2db375414660d3983f506fabdaaff0887f6ee955aa3bdd"/>
-      </resources>').root
+      Nokogiri::XML(<<~XML).root
+        <resources xmlns="https://mobile-content-api.cru.org/xmlns/manifest">
+          <resource filename="wall.jpg" src="#{resource_sha}"
+                    checksum-sha256="#{resource_sha}" size="65536"/>
+        </resources>
+      XML
     end
 
     let(:manifest) do
       m = described_class.new(translation)
-      m.add_page("04_ThirdPoint.xml", "790a2170adb13955e67dee0261baff93cc7f045b22a35ad434435bdbdcec036a.xml")
-      m.add_page("13_FinalPage.xml", "5ce1cd1be598eb31a76c120724badc90e1e9bafa4b03c33ce40f80ccff756444.xml")
-      m.add_tip("tip_name", "kt6SxuuCU5M8AYmqpGjcWNNYCiCipEauybniinC5HrhF6h6KOvEZo8f5UhQUnRd.xml")
-      m.add_resource("wall.jpg", "073d78ef4dc421f10d2db375414660d3983f506fabdaaff0887f6ee955aa3bdd")
+      m.add_page("04_ThirdPoint.xml", "#{page1_sha}.xml", checksum: page1_sha, size: 1024)
+      m.add_page("13_FinalPage.xml", "#{page2_sha}.xml", checksum: page2_sha, size: 2048)
+      m.add_tip("tip_name", "kt6SxuuCU5M8AYmqpGjcWNNYCiCipEauybniinC5HrhF6h6KOvEZo8f5UhQUnRd.xml",
+        checksum: tip_sha, size: 512)
+      m.add_resource("wall.jpg", resource_sha, checksum: resource_sha, size: 65536)
       m
     end
 
