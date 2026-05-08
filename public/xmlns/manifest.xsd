@@ -50,6 +50,32 @@
         </xs:documentation>
     </xs:annotation>
 
+    <xs:attributeGroup name="resourceChecksums">
+        <xs:annotation>
+            <xs:documentation>Integrity attributes for a referenced resource file. These allow clients to verify the
+                integrity and size of a downloaded resource without having to open or process it.
+            </xs:documentation>
+        </xs:annotation>
+
+        <xs:attribute name="checksum-sha256">
+            <xs:annotation>
+                <xs:documentation>SHA-256 checksum of the resource file, encoded as 64 hex characters.
+                </xs:documentation>
+            </xs:annotation>
+            <xs:simpleType>
+                <xs:restriction base="xs:string">
+                    <xs:pattern value="[a-fA-F0-9]{64}" />
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:attribute>
+
+        <xs:attribute name="size" type="xs:nonNegativeInteger">
+            <xs:annotation>
+                <xs:documentation>Size of the resource file in bytes.</xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+    </xs:attributeGroup>
+
     <xs:simpleType name="toolType">
         <xs:restriction base="xs:token">
             <xs:enumeration value="article" />
@@ -81,6 +107,7 @@
                                 <xs:complexType>
                                     <xs:attribute name="filename" type="xs:string" />
                                     <xs:attribute name="src" type="xs:string" use="required" />
+                                    <xs:attributeGroup ref="manifest:resourceChecksums" />
                                 </xs:complexType>
                             </xs:element>
 
@@ -95,6 +122,7 @@
                                 <xs:complexType>
                                     <xs:attribute name="filename" type="xs:string" use="required" />
                                     <xs:attribute name="src" type="xs:string" use="required" />
+                                    <xs:attributeGroup ref="manifest:resourceChecksums" />
                                 </xs:complexType>
                             </xs:element>
                         </xs:sequence>
@@ -107,6 +135,7 @@
                                 <xs:complexType>
                                     <xs:attribute name="id" type="content:id" use="required" />
                                     <xs:attribute name="src" type="xs:string" use="required" />
+                                    <xs:attributeGroup ref="manifest:resourceChecksums" />
                                 </xs:complexType>
                             </xs:element>
                         </xs:sequence>
