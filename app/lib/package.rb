@@ -81,9 +81,9 @@ class Package
     @translation.resource.pages.order(position: :asc).each do |page|
       Rails.logger.info("Adding page with id: #{page.id} to package for translation with id: #{@translation.id}")
 
-      sha_filename = write_page_to_file(page)
+      sha_filename, checksum, size = write_page_to_file(page)
       add_file_to_zip_and_s3(zip_file, sha_filename, "#{@directory}/#{sha_filename}")
-      manifest.add_page(page.filename, sha_filename)
+      manifest.add_page(page.filename, sha_filename, checksum: checksum, size: size)
     end
   end
 
@@ -91,9 +91,9 @@ class Package
     @tips.uniq.each do |tip|
       Rails.logger.info("Adding tip with id: #{tip.id} to package for translation with id: #{@translation.id}")
 
-      sha_filename = write_tip_to_file(tip)
+      sha_filename, checksum, size = write_tip_to_file(tip)
       add_file_to_zip_and_s3(zip_file, sha_filename, "#{@directory}/#{sha_filename}")
-      manifest.add_tip(tip.name, sha_filename)
+      manifest.add_tip(tip.name, sha_filename, checksum: checksum, size: size)
     end
   end
 
@@ -102,22 +102,24 @@ class Package
     document = Nokogiri::XML(translated_page)
     determine_resources(document)
     determine_tips(document) if include_tips?
-    sha_filename = XmlUtil.xml_filename_sha(translated_page)
+    checksum = XmlUtil.sha256_hexdigest(translated_page)
+    sha_filename = "#{checksum}.xml"
 
     File.write("#{@directory}/#{sha_filename}", translated_page)
 
-    sha_filename
+    [sha_filename, checksum, translated_page.bytesize]
   end
 
   def write_tip_to_file(tip)
     translated_tip = @translation.translated_tip(tip.id, true)
     document = Nokogiri::XML(translated_tip)
     determine_resources(document)
-    sha_filename = XmlUtil.xml_filename_sha(translated_tip)
+    checksum = XmlUtil.sha256_hexdigest(translated_tip)
+    sha_filename = "#{checksum}.xml"
 
     File.write("#{@directory}/#{sha_filename}", translated_tip)
 
-    sha_filename
+    [sha_filename, checksum, translated_tip.bytesize]
   end
 
   def add_attachments(zip_file, manifest)
@@ -127,9 +129,9 @@ class Package
       Rails.logger.info("Adding attachment with id: #{attachment.id} to package " \
                         "for translation with id: #{@translation.id}")
 
-      sha_filename = save_attachment_to_file(attachment)
+      sha_filename, checksum, size = save_attachment_to_file(attachment)
       add_file_to_zip_and_s3(zip_file, sha_filename, "#{@directory}/#{sha_filename}")
-      manifest.add_resource(attachment.filename, sha_filename)
+      manifest.add_resource(attachment.filename, sha_filename, checksum: checksum, size: size)
     end
   end
 
@@ -142,11 +144,11 @@ class Package
     sha_with_ext_filename = attachment.sha256 + File.extname(attachment.url)
 
     File.binwrite("#{@directory}/#{sha_with_ext_filename}", string_io_bytes)
-    sha_with_ext_filename
+    [sha_with_ext_filename, attachment.sha256, string_io_bytes.bytesize]
   end
 
   def write_manifest_to_file(manifest)
-    filename = XmlUtil.xml_filename_sha(manifest.document.to_s)
+    filename = "#{XmlUtil.sha256_hexdigest(manifest.document.to_s)}.xml"
     @translation.manifest_name = filename
 
     file = File.open("#{@directory}/#{filename}", "w")
