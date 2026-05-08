@@ -102,7 +102,7 @@ class Package
     document = Nokogiri::XML(translated_page)
     determine_resources(document)
     determine_tips(document) if include_tips?
-    checksum = XmlUtil.filename_sha(translated_page)
+    checksum = XmlUtil.sha256_hexdigest(translated_page)
     sha_filename = "#{checksum}.xml"
 
     File.write("#{@directory}/#{sha_filename}", translated_page)
@@ -114,7 +114,7 @@ class Package
     translated_tip = @translation.translated_tip(tip.id, true)
     document = Nokogiri::XML(translated_tip)
     determine_resources(document)
-    checksum = XmlUtil.filename_sha(translated_tip)
+    checksum = XmlUtil.sha256_hexdigest(translated_tip)
     sha_filename = "#{checksum}.xml"
 
     File.write("#{@directory}/#{sha_filename}", translated_tip)
@@ -148,7 +148,7 @@ class Package
   end
 
   def write_manifest_to_file(manifest)
-    filename = "#{XmlUtil.filename_sha(manifest.document.to_s)}.xml"
+    filename = "#{XmlUtil.sha256_hexdigest(manifest.document.to_s)}.xml"
     @translation.manifest_name = filename
 
     file = File.open("#{@directory}/#{filename}", "w")
