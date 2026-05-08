@@ -20,10 +20,6 @@ module XmlUtil
     xml.xpath("//@*[contains(name(),'-i18n-id')]")
   end
 
-  def self.xml_filename_sha(data)
-    "#{filename_sha(data)}.xml"
-  end
-
   def self.filename_sha(data)
     Digest::SHA256.hexdigest(data)
   end
