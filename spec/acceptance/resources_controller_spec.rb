@@ -19,9 +19,9 @@ resource "Resources" do
   let(:resource_4) { Resource.find(4) }
   let(:resource_5) { Resource.find(5) }
 
-  let(:languages_fr_en) { ["fr", "en"] }
-  let(:languages_fr_it) { ["fr", "it"] }
-  let(:languages_fr_es) { ["fr", "es"] }
+  let(:languages_fr_en) { %w[fr en] }
+  let(:languages_fr_it) { %w[fr it] }
+  let(:languages_fr_es) { %w[fr es] }
   let(:languages_fr) { ["fr"] }
   let(:languages_it) { ["it"] }
   let(:languages_en) { ["en"] }
@@ -30,8 +30,8 @@ resource "Resources" do
   let(:countries_fr) { ["FR"] }
   let(:countries_gb) { ["GB"] }
   let(:countries_nz) { ["NZ"] }
-  let(:countries_fr_us) { ["FR", "US"] }
-  let(:countries_gb_us_nz) { ["GB", "US", "NZ"] }
+  let(:countries_fr_us) { %w[FR US] }
+  let(:countries_gb_us_nz) { %w[GB US NZ] }
 
   let(:openness_1) { [1] }
   let(:openness_2) { [2] }
@@ -47,7 +47,12 @@ resource "Resources" do
   let(:confidence_2_3) { [2, 3] }
   let(:confidence_3_4) { [3, 4] }
 
-  let(:resources_result) { ["metatool", "Knowing God Personally", "Questions About God", "Satisfied?", "Knowing God Personally Variant"].sort }
+  let!(:language_en) { Language.find_or_create_by!(code: "en", name: "English") }
+  let!(:language_fr) { Language.find_or_create_by!(code: "fr", name: "French") }
+
+  let(:resources_result) do
+    ["metatool", "Knowing God Personally", "Questions About God", "Satisfied?", "Knowing God Personally Variant"].sort
+  end
 
   get "resources/suggestions" do
     before(:each) do
@@ -136,8 +141,12 @@ resource "Resources" do
 
     context "when matching a tool group with :include in params" do
       let!(:translation) { Resource.first.latest_translations.first }
-      let!(:translation_attribute_1) { FactoryBot.create(:translation_attribute, key: "key1", value: "translation content 1", translation: translation) }
-      let!(:translation_attribute_2) { FactoryBot.create(:translation_attribute, key: "key2", value: "translation content 2", translation: translation) }
+      let!(:translation_attribute_1) do
+        FactoryBot.create(:translation_attribute, key: "key1", value: "translation content 1", translation: translation)
+      end
+      let!(:translation_attribute_2) do
+        FactoryBot.create(:translation_attribute, key: "key2", value: "translation content 2", translation: translation)
+      end
 
       it "return suggested resources with :include and :fields key values for attributes expecified" do
         delete_all_rules
@@ -159,7 +168,8 @@ resource "Resources" do
       it "return suggested resources ordered" do
         delete_all_rules
 
-        do_request "filter[country]": "fr", "filter[language]": languages_fr, "filter[openness]": 1, "filter[confidence]": 2
+        do_request "filter[country]": "fr", "filter[language]": languages_fr, "filter[openness]": 1,
+          "filter[confidence]": 2
 
         expect(status).to be(200)
         data = JSON.parse(response_body)["data"]
@@ -194,15 +204,21 @@ resource "Resources" do
         ResourceToolGroup.create!(resource_id: resource_4.id, tool_group_id: tool_group_two.id, suggestions_weight: 1.3)
         ResourceToolGroup.create!(resource_id: resource_5.id, tool_group_id: tool_group_two.id, suggestions_weight: 1.0)
 
-        ResourceToolGroup.create!(resource_id: resource_1.id, tool_group_id: tool_group_three.id, suggestions_weight: 2.0)
-        ResourceToolGroup.create!(resource_id: resource_2.id, tool_group_id: tool_group_three.id, suggestions_weight: 1.5)
-        ResourceToolGroup.create!(resource_id: resource_3.id, tool_group_id: tool_group_three.id, suggestions_weight: 1.1)
-        ResourceToolGroup.create!(resource_id: resource_4.id, tool_group_id: tool_group_three.id, suggestions_weight: 1.0)
-        ResourceToolGroup.create!(resource_id: resource_5.id, tool_group_id: tool_group_three.id, suggestions_weight: 1.2)
+        ResourceToolGroup.create!(resource_id: resource_1.id, tool_group_id: tool_group_three.id,
+          suggestions_weight: 2.0)
+        ResourceToolGroup.create!(resource_id: resource_2.id, tool_group_id: tool_group_three.id,
+          suggestions_weight: 1.5)
+        ResourceToolGroup.create!(resource_id: resource_3.id, tool_group_id: tool_group_three.id,
+          suggestions_weight: 1.1)
+        ResourceToolGroup.create!(resource_id: resource_4.id, tool_group_id: tool_group_three.id,
+          suggestions_weight: 1.0)
+        ResourceToolGroup.create!(resource_id: resource_5.id, tool_group_id: tool_group_three.id,
+          suggestions_weight: 1.2)
       end
 
       it "return suggested resources ordered" do
-        do_request "filter[country]": "fr", "filter[language]": languages_fr, "filter[openness]": 1, "filter[confidence]": 2
+        do_request "filter[country]": "fr", "filter[language]": languages_fr, "filter[openness]": 1,
+          "filter[confidence]": 2
 
         # Result ordered
         # ----------------------------------
@@ -246,7 +262,8 @@ resource "Resources" do
       end
 
       it "return suggested resources" do
-        do_request "filter[country]": "fr", "filter[language]": languages_fr, "filter[openness]": 1, "filter[confidence]": 2
+        do_request "filter[country]": "fr", "filter[language]": languages_fr, "filter[openness]": 1,
+          "filter[confidence]": 2
 
         expect(status).to be(200)
 
@@ -258,7 +275,8 @@ resource "Resources" do
 
       context "plus matching languages with negative rule as false" do
         it "return suggested resources" do
-          do_request "filter[country]": "fr", "filter[language]": languages_fr, "filter[openness]": 1, "filter[confidence]": 2
+          do_request "filter[country]": "fr", "filter[language]": languages_fr, "filter[openness]": 1,
+            "filter[confidence]": 2
 
           expect(status).to be(200)
           data = JSON.parse(response_body)["data"]
@@ -320,7 +338,8 @@ resource "Resources" do
         context "plus matching openness" do
           context "with negative rule as false" do
             it "return suggested resources" do
-              do_request "filter[country]": "fr", "filter[language]": languages_fr, "filter[openness]": 1, "filter[confidence]": 2
+              do_request "filter[country]": "fr", "filter[language]": languages_fr, "filter[openness]": 1,
+                "filter[confidence]": 2
 
               expect(status).to be(200)
               data = JSON.parse(response_body)["data"]
@@ -363,7 +382,8 @@ resource "Resources" do
         end
 
         it "return suggested resources" do
-          do_request "filter[country]": "fr", "filter[language]": languages_es, "filter[openness]": 1, "filter[confidence]": 2
+          do_request "filter[country]": "fr", "filter[language]": languages_es, "filter[openness]": 1,
+            "filter[confidence]": 2
 
           expect(status).to be(200)
           data = JSON.parse(response_body)["data"]
@@ -512,13 +532,18 @@ resource "Resources" do
       expect(status).to be(200)
       json = JSON.parse(response_body)
       metatool = json["data"].detect { |entry| entry["attributes"]["resource-type"] == "metatool" }
-      expect(metatool["relationships"]["variants"]["data"]).to match_array([{"id" => "1", "type" => "resource"}, {"id" => "5", "type" => "resource"}])
+      expect(metatool["relationships"]["variants"]["data"]).to match_array([{"id" => "1", "type" => "resource"},
+        {"id" => "5", "type" => "resource"}])
     end
 
     context "with translation attributes" do
       let!(:translation) { Resource.first.latest_translations.first }
-      let!(:translation_attribute_1) { FactoryBot.create(:translation_attribute, key: "key1", value: "translation content 1", translation: translation) }
-      let!(:translation_attribute_2) { FactoryBot.create(:translation_attribute, key: "key2", value: "translation content 2", translation: translation) }
+      let!(:translation_attribute_1) do
+        FactoryBot.create(:translation_attribute, key: "key1", value: "translation content 1", translation: translation)
+      end
+      let!(:translation_attribute_2) do
+        FactoryBot.create(:translation_attribute, key: "key2", value: "translation content 2", translation: translation)
+      end
 
       it "get all resources, include latest-translations" do
         do_request "filter[system]": "GodTools", include: "latest-translations"
@@ -536,7 +561,7 @@ resource "Resources" do
 
       expect(status).to be(200)
       data = JSON.parse(response_body)["data"][0]
-      expect(data["attributes"].keys).to match_array(["name", "attr-banner-image", "resource-type", "total-views"])
+      expect(data["attributes"].keys).to match_array(%w[name attr-banner-image resource-type total-views])
       expect(data["relationships"].keys).to eq ["system"]
     end
 
@@ -557,6 +582,245 @@ resource "Resources" do
       expect(json["data"].count).to be(1)
       expect(json["included"].count).to be(1)
       expect(json["included"][0]["attributes"]["abbreviation"]).to eq("kgp")
+    end
+  end
+
+  get "resources/featured" do
+    let!(:resource_score) do
+      ResourceScore.find_or_create_by!(resource: resource_1, country: "us",
+        language: Language.find_or_create_by!(code: "en", name: "English")) do |rs|
+        rs.featured = true
+        rs.featured_order = 1
+      end
+    end
+
+    context "without filters" do
+      it "returns featured resources" do
+        do_request include: "resource-score"
+
+        expect(status).to be(200)
+        json = JSON.parse(response_body)
+        expect(json["data"].size).to eq(1)
+        expect(json["data"][0]["relationships"]["resource-scores"]["data"][0]["id"]).to eq(resource_score.id.to_s)
+      end
+    end
+
+    context "with language filter" do
+      it "returns featured resources for specified language" do
+        do_request lang: "fr"
+
+        expect(status).to be(200)
+        json = JSON.parse(response_body)
+        expect(json["data"].size).to eq(0)
+      end
+
+      context "inside filter param" do
+        it "returns featured resources for specified language" do
+          do_request filter: {lang: "fr"}
+
+          expect(status).to be(200)
+          json = JSON.parse(response_body)
+          expect(json["data"].size).to eq(0)
+        end
+      end
+    end
+
+    context "with country filter" do
+      it "returns featured resources for specified country" do
+        do_request country: "us"
+
+        expect(status).to be(200)
+        json = JSON.parse(response_body)
+        expect(json["data"].size).to eq(1)
+        expect(json["data"][0]["relationships"]["resource-scores"]["data"][0]["id"]).to eq(resource_score.id.to_s)
+      end
+
+      context "inside filter param" do
+        it "returns featured resources for specified country" do
+          do_request filter: {country: "us"}
+
+          expect(status).to be(200)
+          json = JSON.parse(response_body)
+          expect(json["data"].size).to eq(1)
+          expect(json["data"][0]["relationships"]["resource-scores"]["data"][0]["id"]).to eq(resource_score.id.to_s)
+        end
+      end
+    end
+
+    context "with resource_type filter" do
+      let!(:tool_resource) { Resource.joins(:resource_type).where(resource_types: {name: "metatool"}).first }
+      let!(:tool_score) do
+        FactoryBot.create(:resource_score, resource: tool_resource, featured: true, featured_order: 2,
+          language: Language.find_or_create_by!(code: "en", name: "English"))
+      end
+
+      it "returns featured resources for specified resource type" do
+        do_request resource_type: "metatool"
+
+        expect(status).to be(200)
+        json = JSON.parse(response_body)
+        expect(json["data"].size).to eq(1)
+        expect(json["data"][0]["relationships"]["resource-scores"]["data"][0]["id"]).to eq(tool_score.id.to_s)
+      end
+
+      context "inside filter param" do
+        it "returns featured resources for specified resource type" do
+          do_request filter: {resource_type: "metatool"}
+
+          expect(status).to be(200)
+          json = JSON.parse(response_body)
+          expect(json["data"].size).to eq(1)
+          expect(json["data"][0]["relationships"]["resource-scores"]["data"][0]["id"]).to eq(tool_score.id.to_s)
+        end
+      end
+    end
+  end
+
+  get "resources/default_order" do
+    let!(:resource_default_order_1) do
+      ResourceDefaultOrder.find_or_create_by!(resource: resource_1,
+        language: Language.find_or_create_by!(code: "en", name: "English")) do |rdo|
+        rdo.position = 1
+      end
+    end
+
+    let!(:resource_default_order_2) do
+      ResourceDefaultOrder.find_or_create_by!(resource: resource_2,
+        language: Language.find_or_create_by!(code: "en", name: "English")) do |rdo|
+        rdo.position = 2
+      end
+    end
+
+    context "without filters" do
+      it "returns default order resources" do
+        do_request include: "language"
+
+        expect(status).to be(200)
+        json = JSON.parse(response_body)
+        expect(json["data"].size).to eq(2)
+        expect(json["data"][0]["id"]).to eq(resource_1.id.to_s)
+        expect(json["data"][1]["id"]).to eq(resource_2.id.to_s)
+      end
+    end
+
+    context "with language filter" do
+      it "returns default order resources for specified language" do
+        do_request lang: "en"
+
+        expect(status).to be(200)
+        json = JSON.parse(response_body)
+        expect(json["data"].size).to eq(2)
+        expect(json["data"][0]["id"]).to eq(resource_1.id.to_s)
+      end
+
+      it "returns empty array for non-existent language" do
+        do_request lang: "de"
+
+        expect(status).to be(200)
+        json = JSON.parse(response_body)
+        expect(json["data"].size).to eq(0)
+      end
+
+      context "inside filter param" do
+        it "returns default order resources for specified language" do
+          do_request filter: {lang: "en"}
+
+          expect(status).to be(200)
+          json = JSON.parse(response_body)
+          expect(json["data"].size).to eq(2)
+          expect(json["data"][0]["id"]).to eq(resource_1.id.to_s)
+        end
+      end
+
+      context "with case insensitive language code" do
+        it "returns default order resources" do
+          do_request lang: "EN"
+
+          expect(status).to be(200)
+          json = JSON.parse(response_body)
+          expect(json["data"].size).to eq(2)
+        end
+      end
+    end
+
+    context "with resource_type filter" do
+      let!(:tool_resource) { Resource.joins(:resource_type).where(resource_types: {name: "metatool"}).first }
+      let!(:tool_default_order) do
+        ResourceDefaultOrder.find_or_create_by!(resource: tool_resource,
+          language: Language.find_or_create_by!(code: "en", name: "English")) do |rdo|
+          rdo.position = 3
+        end
+      end
+
+      it "returns default order resources for specified resource type" do
+        do_request resource_type: "metatool"
+
+        expect(status).to be(200)
+        json = JSON.parse(response_body)
+        expect(json["data"].size).to eq(1)
+        expect(json["data"][0]["id"]).to eq(tool_resource.id.to_s)
+      end
+
+      context "inside filter param" do
+        it "returns default order resources for specified resource type" do
+          do_request filter: {resource_type: "metatool"}
+
+          expect(status).to be(200)
+          json = JSON.parse(response_body)
+          expect(json["data"].size).to eq(1)
+          expect(json["data"][0]["id"]).to eq(tool_resource.id.to_s)
+        end
+      end
+    end
+
+    context "with language and resource_type filters" do
+      let!(:tool_resource) { Resource.joins(:resource_type).where(resource_types: {name: "metatool"}).first }
+      let!(:tool_default_order) do
+        ResourceDefaultOrder.find_or_create_by!(resource: tool_resource,
+          language: Language.find_or_create_by!(code: "en", name: "English")) do |rdo|
+          rdo.position = 3
+        end
+      end
+
+      it "returns default order resources matching both filters" do
+        do_request lang: "en", resource_type: "metatool"
+
+        expect(status).to be(200)
+        json = JSON.parse(response_body)
+        expect(json["data"].size).to eq(1)
+        expect(json["data"][0]["id"]).to eq(tool_resource.id.to_s)
+      end
+    end
+
+    context "with invalid language code" do
+      it "returns unprocessable content error" do
+        do_request lang: "invalid_lang_code_that_does_not_exist"
+
+        expect(status).to be(422)
+        json = JSON.parse(response_body)
+        expect(json["errors"]).to be_present
+        expect(json["errors"].first["detail"]).to include("Language not found")
+      end
+    end
+
+    context "returns resources in correct order" do
+      let!(:resource_default_order_3) do
+        ResourceDefaultOrder.find_or_create_by!(resource: resource_3,
+          language: Language.find_or_create_by!(code: "en", name: "English")) do |rdo|
+          rdo.position = 1
+        end
+      end
+
+      it "orders by position ascending" do
+        do_request lang: "en"
+
+        expect(status).to be(200)
+        json = JSON.parse(response_body)
+        expect(json["data"].size).to eq(3)
+        expect(json["data"][0]["id"]).to eq(resource_3.id.to_s)
+        expect(json["data"][1]["id"]).to eq(resource_1.id.to_s)
+        expect(json["data"][2]["id"]).to eq(resource_2.id.to_s)
+      end
     end
   end
 
@@ -640,7 +904,9 @@ resource "Resources" do
         expect(JSON.parse(response_body)["data"]).not_to be_nil
       end
       context "attribute present" do
-        let!(:something_else_attribute) { FactoryBot.create(:attribute, resource_id: id, key: "something_else", value: "current_value") }
+        let!(:something_else_attribute) do
+          FactoryBot.create(:attribute, resource_id: id, key: "something_else", value: "current_value")
+        end
 
         it "updates resource and updates existing attributes" do
           do_request data: {type: :resource, attributes: {:description => "hello, world", :"attr-language-attribute" => "language_value",
@@ -705,7 +971,10 @@ resource "Resources" do
     end
 
     context "unpublished translation exists already" do
-      let!(:translation) { FactoryBot.create(:translation, version: 10, resource_id: resource_id, language_id: language.id, is_published: false) }
+      let!(:translation) do
+        FactoryBot.create(:translation, version: 10, resource_id: resource_id, language_id: language.id,
+          is_published: false)
+      end
 
       it "reuses an existing translation and publishes the resource" do
         expect do
@@ -735,9 +1004,7 @@ resource "Resources" do
   def resources_matched(data)
     resources = []
     data.select do |element|
-      if element["attributes"] && element["attributes"]["name"]
-        resources << element["attributes"]["name"]
-      end
+      resources << element["attributes"]["name"] if element["attributes"] && element["attributes"]["name"]
     end
     resources.sort
   end
