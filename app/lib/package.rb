@@ -25,6 +25,20 @@ class Package
     s3_bucket.object(translation.object_name.to_s)
   end
 
+  def self.content_host
+    ENV["MOBILE_CONTENT_API_CDN_HOST"].presence ||
+      "#{ENV.fetch("MOBILE_CONTENT_API_BUCKET")}.s3.#{ENV.fetch("AWS_REGION")}.amazonaws.com"
+  end
+
+  def self.public_url(s3_object)
+    s3_url = s3_object.public_url
+    cdn_host = ENV["MOBILE_CONTENT_API_CDN_HOST"].presence
+    return s3_url unless cdn_host
+    uri = URI.parse(s3_url)
+    uri.host = cdn_host
+    uri.to_s
+  end
+
   # for upload the zip files to s3, keep the bucket instance so we don't have to keep creating it
   def s3_bucket
     @s3_bucket ||= self.class.s3_bucket

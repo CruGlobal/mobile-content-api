@@ -5,6 +5,19 @@ require "sidekiq/pro/web"
 Rails.application.routes.draw do
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
+  # When MOBILE_CONTENT_API_CDN_HOST is set, ActiveStorage blob URLs are generated
+  # against that host directly (typically a CloudFront distribution in front of the
+  # S3 bucket). Otherwise, fall back to the standard Rails blob URL.
+  direct :rails_public_blob do |attachable, options|
+    cdn_host = ENV["MOBILE_CONTENT_API_CDN_HOST"].presence
+    if cdn_host && attachable.present?
+      blob = attachable.respond_to?(:blob) ? attachable.blob : attachable
+      File.join("https://#{cdn_host}", blob.key)
+    else
+      route_for(:rails_blob, attachable, options)
+    end
+  end
+
   # Reveal health status on /monitors/lb that returns 200 if the app boots with no exceptions, otherwise 500.
   # Can be used by load balancers and uptime monitors to verify that the app is live.
   get "monitors/lb", as: :rails_health_check
@@ -94,7 +107,7 @@ Rails.application.routes.draw do
   get "analytics/global", to: "global_activity_analytics#show"
 
   get "translations/files/:path",
-    to: redirect("https://#{ENV.fetch("MOBILE_CONTENT_API_BUCKET")}.s3.#{ENV.fetch("AWS_REGION")}.amazonaws.com/#{Package::TRANSLATION_FILES_PATH}%{path}", status: 302),
+    to: redirect("https://#{Package.content_host}/#{Package::TRANSLATION_FILES_PATH}%{path}", status: 302),
     format: false, # these next lines are required to have the extension be part of path
     default: {format: "html"},
     constraints: {path: /.*/}
