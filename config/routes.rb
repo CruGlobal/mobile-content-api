@@ -12,7 +12,8 @@ Rails.application.routes.draw do
     cdn_host = ENV["MOBILE_CONTENT_API_CDN_HOST"].presence
     if cdn_host && attachable.present?
       blob = attachable.respond_to?(:blob) ? attachable.blob : attachable
-      File.join("https://#{cdn_host}", blob.key)
+      path = blob.key.start_with?("/") ? blob.key : "/#{blob.key}"
+      "https://#{cdn_host}#{path}"
     else
       route_for(:rails_blob, attachable, options)
     end
