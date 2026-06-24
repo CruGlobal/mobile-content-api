@@ -70,7 +70,7 @@ gem "adobe-campaign", "~> 0.4"
 gem "apple_id"
 gem "aws-sdk-s3"
 gem "connection_pool", "< 3.0" # Conflict with redis_cache_store in Rails < 8.1.2
-gem "crowdin-api", "~> 1.13.0"
+gem "crowdin-api", "~> 1.14.0"
 gem "datadog"
 gem "dogstatsd-ruby", "~> 5.3"
 gem "file_validators"
