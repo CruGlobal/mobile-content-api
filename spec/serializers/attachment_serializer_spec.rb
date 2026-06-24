@@ -5,8 +5,8 @@ require "rails_helper"
 RSpec.describe AttachmentSerializer, type: :serializer do
   include Rails.application.routes.url_helpers
 
-  let(:test_file) { Rack::Test::UploadedFile.new("#{fixture_paths.first}/wall.jpg", "image/png") }
-  let(:attachment) { Attachment.create(resource_id: 2, file: test_file) }
+  let(:test_file) { Rack::Test::UploadedFile.new("#{fixture_paths.first}/wall.jpg", "image/jpeg") }
+  let(:attachment) { Attachment.create!(resource_id: 2, file: test_file) }
 
   subject { described_class.new(attachment) }
 
