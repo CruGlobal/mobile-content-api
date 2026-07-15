@@ -12,43 +12,88 @@ class ResourceScoresController < ApplicationController
     )
 
     render json: resource_scores, include: params[:include], status: :ok
+  rescue InvalidRequestError => e
+    render json: {errors: [{detail: "Error: #{e.message}"}]},
+      status: :unprocessable_content
   end
 
   def create
     sanitized_params = create_params
-    language = Language.find_by!(code: create_params[:lang].downcase) if create_params[:lang].present?
-    sanitized_params.delete(:lang) if sanitized_params[:lang].present?
+    lang = sanitized_params.delete(:lang)
+
+    if lang.present?
+      language = Language.find_by_code(lang)
+      raise InvalidRequestError, "Language not found for code: #{lang}" unless language.present?
+    end
+
     @resource_score = ResourceScore.new(sanitized_params)
     @resource_score.language = language if language.present?
     @resource_score.save!
+
     render json: @resource_score, status: :created
-  rescue => e
-    render json: {errors: formatted_errors("record_invalid", e)}, status: :unprocessable_content
+  rescue InvalidRequestError => e
+    render json: {errors: [{detail: "Error: #{e.message}"}]},
+      status: :unprocessable_content
+  rescue ActiveRecord::RecordInvalid => e
+    render json: {errors: formatted_errors("record_invalid", e)},
+      status: :unprocessable_content
   end
 
   def destroy
     @resource_score = ResourceScore.find(params[:id])
     @resource_score.destroy!
+
     render json: {}, status: :ok
-  rescue
-    render json: {errors: [{source: {pointer: "/data/attributes/id"}, detail: e.message}]},
-      status: :unprocessable_content
+  rescue ActiveRecord::RecordNotFound => e
+    render json: {
+      errors: [
+        {
+          source: {pointer: "/data/attributes/id"},
+          detail: e.message
+        }
+      ]
+    }, status: :not_found
+  rescue ActiveRecord::RecordNotDestroyed => e
+    render json: {
+      errors: [
+        {
+          source: {pointer: "/data/attributes/id"},
+          detail: e.message
+        }
+      ]
+    }, status: :unprocessable_content
   end
 
   def update
     @resource_score = ResourceScore.find(params[:id])
     sanitized_params = create_params
-    if create_params[:lang].present?
-      language = Language.where("code = :lang OR LOWER(code) = LOWER(:lang)",
-        lang: create_params[:lang]).first
+    lang = sanitized_params.delete(:lang)
+
+    if lang.present?
+      language = Language.find_by_code(lang)
+      raise InvalidRequestError, "Language not found for code: #{lang}" unless language.present?
+
+      @resource_score.language = language
     end
-    sanitized_params.delete(:lang) if sanitized_params[:lang].present?
-    @resource_score.language = language if language.present?
+
     @resource_score.update!(sanitized_params)
 
     render json: @resource_score, status: :ok
+  rescue InvalidRequestError => e
+    render json: {errors: [{detail: "Error: #{e.message}"}]},
+      status: :unprocessable_content
+  rescue ActiveRecord::RecordNotFound => e
+    render json: {
+      errors: [
+        {
+          source: {pointer: "/data/attributes/id"},
+          detail: e.message
+        }
+      ]
+    }, status: :not_found
   rescue ActiveRecord::RecordInvalid => e
-    render json: {errors: formatted_errors("record_invalid", e)}, status: :unprocessable_content
+    render json: {errors: formatted_errors("record_invalid", e)},
+      status: :unprocessable_content
   end
 
   def mass_update
@@ -58,45 +103,56 @@ class ResourceScoresController < ApplicationController
     incoming_resource_ids = params.dig(:data, :attributes, :resource_ids) || []
 
     unless country.present? && lang_code.present? && resource_type_name.present?
-      raise "Country, Language, and Resource Type should be provided"
+      raise InvalidRequestError,
+        "Country, Language, and Resource Type should be provided"
     end
 
-    language = Language.find_by("code = :lang OR LOWER(code) = LOWER(:lang)", lang: lang_code)
-    raise "Language not found for code: #{lang_code}" unless language.present?
+    language = Language.find_by_code(lang_code)
+    raise InvalidRequestError,
+      "Language not found for code: #{lang_code}" unless language.present?
 
     resource_type = ResourceType.find_by(name: resource_type_name)
-    raise "ResourceType '#{resource_type_name}' not found" unless resource_type.present?
+    raise InvalidRequestError,
+      "ResourceType '#{resource_type_name}' not found" unless resource_type.present?
 
     unless %w[lesson tract].include?(resource_type.name.downcase)
-      raise "ResourceType '#{resource_type_name}' is not supported"
+      raise InvalidRequestError,
+        "ResourceType '#{resource_type_name}' is not supported"
     end
 
     unless incoming_resource_ids.is_a?(Array) && incoming_resource_ids.all?(Integer)
-      raise "resource_ids is expected to be an array of integers"
+      raise InvalidRequestError,
+        "resource_ids is expected to be an array of integers"
     end
 
-    raise "resource_ids is expected to include a maximum of 9 ids" if incoming_resource_ids.length > 9
+    if incoming_resource_ids.length > ResourceScore::MAX_FEATURED_ORDER_POSITION
+      raise InvalidRequestError,
+        "resource_ids is expected to include a maximum of " \
+        "#{ResourceScore::MAX_FEATURED_ORDER_POSITION} ids"
+    end
 
     if incoming_resource_ids.uniq.length != incoming_resource_ids.length
-      raise "resource_ids cannot contain duplicate ids"
+      raise InvalidRequestError,
+        "resource_ids cannot contain duplicate ids"
     end
 
     valid_resource_ids = Resource.where(id: incoming_resource_ids, resource_type_id: resource_type.id).pluck(:id)
     invalid_resource_ids = incoming_resource_ids - valid_resource_ids
     if invalid_resource_ids.any?
-      raise %(Resources not found or do not match the provided resource type.
-         Invalid IDs: #{invalid_resource_ids.join(", ")})
+      raise InvalidRequestError,
+        "Resources not found or do not match the provided resource type. " \
+        "Invalid IDs: #{invalid_resource_ids.join(", ")}"
     end
 
-    current_scores = ResourceScore
-      .joins(:resource)
-      .where(country: country, language_id: language.id)
-      .where(resources: {resource_type_id: resource_type.id})
-      .order(:featured_order)
-      .lock
-      .to_a
-
     ResourceScore.transaction do
+      current_scores = ResourceScore
+        .joins(:resource)
+        .where(country: country, language_id: language.id)
+        .where(resources: {resource_type_id: resource_type.id})
+        .order(:featured_order)
+        .lock
+        .to_a
+
       current_scores.each do |rs|
         rs.update!(featured: false, featured_order: nil)
       end
@@ -128,8 +184,15 @@ class ResourceScoresController < ApplicationController
       .order(:featured_order)
 
     render json: resulting_resource_scores, include: params[:include], status: :ok
-  rescue => e
-    render json: {errors: [{detail: "Error: #{e.message}"}]}, status: :unprocessable_content
+  rescue InvalidRequestError => e
+    render json: {errors: [{detail: "Error: #{e.message}"}]},
+      status: :unprocessable_content
+  rescue ActiveRecord::RecordInvalid => e
+    render json: {errors: formatted_errors("record_invalid", e)},
+      status: :unprocessable_content
+  rescue ActiveRecord::RecordNotDestroyed => e
+    render json: {errors: [{detail: "Error: #{e.message}"}]},
+      status: :unprocessable_content
   end
 
   def mass_update_ranked
@@ -140,40 +203,45 @@ class ResourceScoresController < ApplicationController
     symbolized_incoming_resource_array = incoming_resource_array.map { |r| r.to_unsafe_h.deep_symbolize_keys }
 
     unless country.present? && lang_code.present? && resource_type_name.present?
-      raise "Country, Language, and Resource Type should be provided"
+      raise InvalidRequestError,
+        "Country, Language, and Resource Type should be provided"
     end
 
-    language = Language.find_by("code = :lang OR LOWER(code) = LOWER(:lang)", lang: lang_code)
-    raise "Language not found for code: #{lang_code}" unless language.present?
+    language = Language.find_by_code(lang_code)
+    raise InvalidRequestError,
+      "Language not found for code: #{lang_code}" unless language.present?
 
     resource_type = ResourceType.find_by(name: resource_type_name)
-    raise "ResourceType '#{resource_type_name}' not found" unless resource_type.present?
+    raise InvalidRequestError,
+      "ResourceType '#{resource_type_name}' not found" unless resource_type.present?
 
     unless %w[lesson tract].include?(resource_type.name.downcase)
-      raise "ResourceType '#{resource_type_name}' is not supported"
+      raise InvalidRequestError,
+        "ResourceType '#{resource_type_name}' is not supported"
     end
 
     incoming_resource_ids = symbolized_incoming_resource_array.map { |r| r[:resource_id] }
     if incoming_resource_ids.uniq.length != incoming_resource_ids.length
-      raise "resource_ids cannot contain duplicate ids"
+      raise InvalidRequestError,
+        "resource_ids cannot contain duplicate ids"
     end
 
     valid_resource_ids = Resource.where(id: incoming_resource_ids, resource_type_id: resource_type.id).pluck(:id)
     invalid_resource_ids = incoming_resource_ids - valid_resource_ids
     if invalid_resource_ids.any?
-      raise "Resources not found or do not match the provided resource type.
-         Invalid resource ids: #{invalid_resource_ids.join(", ")}"
+      raise InvalidRequestError,
+        "Resources not found or do not match the provided resource type. " \
+        "Invalid resource IDs: #{invalid_resource_ids.join(", ")}"
     end
 
-    current_scores = ResourceScore
-      .joins(:resource)
-      .where(country: country, language_id: language.id)
-      .where(resources: {resource_type_id: resource_type.id})
-      .order(score: :desc)
-      .lock
-      .to_a
-
     ResourceScore.transaction do
+      current_scores = ResourceScore
+        .joins(:resource)
+        .where(country: country, language_id: language.id)
+        .where(resources: {resource_type_id: resource_type.id})
+        .order(score: :desc)
+        .lock
+        .to_a
       scores_by_resource_id = current_scores.index_by(&:resource_id)
 
       symbolized_incoming_resource_array.each do |incoming_resource|
@@ -210,8 +278,15 @@ class ResourceScoresController < ApplicationController
       .order(score: :desc)
 
     render json: resulting_resource_scores, include: params[:include], status: :ok
-  rescue => e
-    render json: {errors: [{detail: "Error: #{e.message}"}]}, status: :unprocessable_content
+  rescue InvalidRequestError => e
+    render json: {errors: [{detail: "Error: #{e.message}"}]},
+      status: :unprocessable_content
+  rescue ActiveRecord::RecordInvalid => e
+    render json: {errors: formatted_errors("record_invalid", e)},
+      status: :unprocessable_content
+  rescue ActiveRecord::RecordNotDestroyed => e
+    render json: {errors: [{detail: "Error: #{e.message}"}]},
+      status: :unprocessable_content
   end
 
   private
@@ -226,8 +301,11 @@ class ResourceScoresController < ApplicationController
     scope = ResourceScore.all
 
     if lang_code.present?
-      language = Language.where("code = :lang OR LOWER(code) = LOWER(:lang)", lang: lang_code).first
-      scope = scope.left_joins(:language).where(languages: {id: language.id}) if language.present?
+      language = Language.find_by_code(lang_code)
+      raise InvalidRequestError,
+        "Language not found for code: #{lang_code}" unless language.present?
+
+      scope = scope.where(language_id: language.id)
     end
 
     scope = scope.where("LOWER(country) = LOWER(?)", country) if country.present?

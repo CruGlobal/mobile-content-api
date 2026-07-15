@@ -12,4 +12,10 @@ class Language < ActiveRecord::Base
   validates :name, presence: true
   validates :code, presence: true
   validates_with LanguageValidator, on: %i[create update]
+
+  def self.find_by_code(code)
+    return if code.blank?
+
+    find_by("LOWER(code) = LOWER(?)", code)
+  end
 end

@@ -146,13 +146,34 @@ resource "ResourceScores" do
     end
 
     context "with valid parameters" do
+      let(:new_resource) do
+        Resource.create!(
+          name: "Resource Score Test #{SecureRandom.hex(4)}",
+          abbreviation: "rs_#{SecureRandom.hex(4)}",
+          system_id: resource.system_id,
+          resource_type_id: resource.resource_type_id
+        )
+      end
+
       it "creates a new resource score" do
-        do_request(valid_params)
+        request_params = valid_params.deep_merge(
+          data: {
+            attributes: {
+              resource_id: new_resource.id
+            }
+          }
+        )
+
+        expect do
+          do_request(request_params)
+        end.to change(ResourceScore, :count).by(1)
 
         expect(status).to be(201)
+
         json = JSON.parse(response_body)
         expect(json["data"]["attributes"]["featured"]).to be true
-        expect(json["data"]["relationships"]["resource"]["data"]["id"]).to eq(resource.id.to_s)
+        expect(json["data"]["relationships"]["resource"]["data"]["id"])
+          .to eq(new_resource.id.to_s)
       end
     end
 

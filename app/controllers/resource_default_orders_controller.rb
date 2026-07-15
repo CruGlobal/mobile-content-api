@@ -8,54 +8,94 @@ class ResourceDefaultOrdersController < ApplicationController
     resource_type = params.dig(:filter, :resource_type) || params[:resource_type]
 
     if lang.present?
-      language = Language.where("code = :lang OR LOWER(code) = LOWER(:lang)", lang: lang).first
-      raise "Language not found for code: #{lang}" unless language.present?
+      language = Language.find_by_code(lang)
+      raise InvalidRequestError, "Language not found for code: #{lang}" unless language.present?
     end
 
     default_order_resources = all_default_order_resources(lang: lang, resource_type: resource_type)
 
     render json: default_order_resources, include: params[:include], status: :ok
-  rescue => e
-    render json: {errors: [{detail: "Error: #{e.message}"}]}, status: :unprocessable_content
+  rescue InvalidRequestError => e
+    render json: {errors: [{detail: "Error: #{e.message}"}]},
+      status: :unprocessable_content
   end
 
   def create
     sanitized_params = create_params
-    if create_params[:lang].present?
-      language = Language.where("code = :lang OR LOWER(code) = LOWER(:lang)",
-        lang: create_params[:lang]).first
+    lang = sanitized_params.delete(:lang)
+
+    if lang.present?
+      language = Language.find_by_code(lang)
+      raise InvalidRequestError, "Language not found for code: #{lang}" unless language.present?
     end
-    sanitized_params.delete(:lang) if sanitized_params[:lang].present?
+
     @resource_default_order = ResourceDefaultOrder.new(sanitized_params)
     @resource_default_order.language = language if language.present?
     @resource_default_order.save!
+
     render json: @resource_default_order, status: :created
-  rescue => e
-    render json: {errors: formatted_errors("record_invalid", e)}, status: :unprocessable_content
+  rescue InvalidRequestError => e
+    render json: {errors: [{detail: "Error: #{e.message}"}]},
+      status: :unprocessable_content
+  rescue ActiveRecord::RecordInvalid => e
+    render json: {errors: formatted_errors("record_invalid", e)},
+      status: :unprocessable_content
   end
 
   def destroy
     @resource_default_order = ResourceDefaultOrder.find(params[:id])
     @resource_default_order.destroy!
     render json: {}, status: :ok
-  rescue
-    render json: {errors: [{source: {pointer: "/data/attributes/id"}, detail: e.message}]},
-      status: :unprocessable_content
+  rescue ActiveRecord::RecordNotFound => e
+    render json: {
+      errors: [
+        {
+          source: {pointer: "/data/attributes/id"},
+          detail: e.message
+        }
+      ]
+    }, status: :not_found
+  rescue ActiveRecord::RecordNotDestroyed => e
+    render json: {
+      errors: [
+        {
+          source: {pointer: "/data/attributes/id"},
+          detail: e.message
+        }
+      ]
+    }, status: :unprocessable_content
   end
 
   def update
     @resource_default_order = ResourceDefaultOrder.find(params[:id])
     sanitized_params = create_params
-    if create_params[:lang].present?
-      language = Language.where("code = :lang OR LOWER(code) = LOWER(:lang)",
-        lang: create_params[:lang]).first
+    lang = sanitized_params.delete(:lang)
+
+    if lang.present?
+      language = Language.find_by_code(lang)
+      raise InvalidRequestError, "Language not found for code: #{lang}" unless language.present?
+
+      @resource_default_order.language = language
     end
-    sanitized_params.delete(:lang) if sanitized_params[:lang].present?
-    @resource_default_order.language = language if language.present?
+
     @resource_default_order.update!(sanitized_params)
+
     render json: @resource_default_order, status: :ok
-  rescue => e
-    render json: {errors: formatted_errors("record_invalid", e)}, status: :unprocessable_content
+  rescue InvalidRequestError => e
+    render json: {errors: [{detail: "Error: #{e.message}"}]},
+      status: :unprocessable_content
+  rescue ActiveRecord::RecordNotFound => e
+    render json: {
+      errors: [
+        {
+          source: {pointer: "/data/attributes/id"},
+          detail: e.message
+        }
+      ]
+    }, status: :not_found
+  rescue ActiveRecord::RecordInvalid => e
+    render json: {errors: formatted_errors("record_invalid", e)},
+      status: :unprocessable_content
   end
 
   def mass_update
@@ -63,43 +103,54 @@ class ResourceDefaultOrdersController < ApplicationController
     resource_type_name = params.dig(:data, :attributes, :resource_type)&.downcase
     incoming_resource_ids = params.dig(:data, :attributes, :resource_ids) || []
 
-    raise "Language and Resource Type should be provided" unless lang_code.present? && resource_type_name.present?
+    raise InvalidRequestError,
+      "Language and Resource Type should be provided" unless lang_code.present? && resource_type_name.present?
 
-    language = Language.find_by("code = :lang OR LOWER(code) = LOWER(:lang)", lang: lang_code)
-    raise "Language not found for code: #{lang_code}" unless language.present?
+    language = Language.find_by_code(lang_code)
+    raise InvalidRequestError,
+      "Language not found for code: #{lang_code}" unless language.present?
 
     resource_type = ResourceType.find_by(name: resource_type_name)
-    raise "ResourceType '#{resource_type_name}' not found" unless resource_type.present?
+    raise InvalidRequestError,
+      "ResourceType '#{resource_type_name}' not found" unless resource_type.present?
 
     unless %w[lesson tract].include?(resource_type.name.downcase)
-      raise "ResourceType '#{resource_type_name}' is not supported"
+      raise InvalidRequestError,
+        "ResourceType '#{resource_type_name}' is not supported"
     end
 
     unless incoming_resource_ids.is_a?(Array) && incoming_resource_ids.all?(Integer)
-      raise "resource_ids is expected to be an array of integers"
+      raise InvalidRequestError,
+        "resource_ids is expected to be an array of integers"
     end
 
-    raise "resource_ids is expected to include a maximum of 9 ids" if incoming_resource_ids.length > 9
+    if incoming_resource_ids.length > ResourceScore::MAX_FEATURED_ORDER_POSITION
+      raise InvalidRequestError,
+        "resource_ids is expected to include a maximum of " \
+        "#{ResourceScore::MAX_FEATURED_ORDER_POSITION} ids"
+    end
 
     if incoming_resource_ids.uniq.length != incoming_resource_ids.length
-      raise "resource_ids cannot contain duplicate ids"
+      raise InvalidRequestError,
+        "resource_ids cannot contain duplicate ids"
     end
 
     valid_resource_ids = Resource.where(id: incoming_resource_ids, resource_type_id: resource_type.id).pluck(:id)
     invalid_resource_ids = incoming_resource_ids - valid_resource_ids
     if invalid_resource_ids.any?
-      raise "Resources not found or do not match the provided resource type. Invalid IDs: #{invalid_resource_ids.join(", ")})"
+      raise InvalidRequestError,
+        "Resources not found or do not match the provided resource type. Invalid IDs: #{invalid_resource_ids.join(", ")}"
     end
 
-    current_default_orders = ResourceDefaultOrder
-      .joins(:resource)
-      .where(language_id: language.id)
-      .where(resources: {resource_type_id: resource_type.id})
-      .order(position: :asc)
-      .lock
-      .to_a
-
     ResourceDefaultOrder.transaction do
+      current_default_orders = ResourceDefaultOrder
+        .joins(:resource)
+        .where(language_id: language.id)
+        .where(resources: {resource_type_id: resource_type.id})
+        .order(position: :asc)
+        .lock
+        .to_a
+
       current_default_orders.each do |ro|
         ro.update_column(:position, nil)
       end
@@ -129,8 +180,15 @@ class ResourceDefaultOrdersController < ApplicationController
       .order(position: :asc)
 
     render json: resulting_default_orders, status: :ok
-  rescue => e
-    render json: {errors: [{detail: "Error: #{e.message}"}]}, status: :unprocessable_content
+  rescue InvalidRequestError => e
+    render json: {errors: [{detail: "Error: #{e.message}"}]},
+      status: :unprocessable_content
+  rescue ActiveRecord::RecordInvalid => e
+    render json: {errors: formatted_errors("record_invalid", e)},
+      status: :unprocessable_content
+  rescue ActiveRecord::RecordNotDestroyed => e
+    render json: {errors: [{detail: "Error: #{e.message}"}]},
+      status: :unprocessable_content
   end
 
   private
@@ -139,7 +197,7 @@ class ResourceDefaultOrdersController < ApplicationController
     scope = Resource.joins(:resource_default_orders)
 
     if lang.present?
-      language = Language.where("code = :lang OR LOWER(code) = LOWER(:lang)", lang: lang).first
+      language = Language.find_by_code(lang)
       scope = scope.joins(resource_default_orders: :language).where(languages: {id: language.id})
     end
 
