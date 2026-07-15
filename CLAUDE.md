@@ -66,12 +66,33 @@ Multiple OAuth providers supported through service classes in `app/services/`:
 - Translation publishing handled by `PublishTranslationJob`
 - Redis configuration in `config/redis.yml`
 
+### Content Spec / XML Schemas
+
+XSD schemas defining the XML format for all tool content live in `public/xmlns/`. Base namespace: `https://mobile-content-api.cru.org/xmlns/`
+
+**Tool manifest**: `manifest.xsd` — defines resources and base styles included with a tool
+**Tool types**: `tract.xsd`, `lesson.xsd`, `article.xsd`, `cyoa.xsd`, `meta.xsd`
+**Page types**: `page.xsd`, `page_base.xsd`, `page_content.xsd`, `page_cardcollection.xsd`, `page_page-collection.xsd`, `cyoa_pages.xsd`
+**Shared**: `content.xsd`, `analytics.xsd`, `shareable.xsd`, `training.xsd`
+**Platform / publishing**: `web.xsd` (web rendering overrides), `publish.xsd` (publishing directives)
+
+Schema tests live in `schema_tests/{type}/valid/` and `schema_tests/{type}/invalid/`. Valid tests must pass `xmllint --schema`; invalid tests must fail it (enforced by `schema_tests/invalid.sh`). CI runs these automatically via GitHub Actions on every push/PR.
+
+To validate locally:
+```bash
+# Valid files must pass
+xmllint --schema public/xmlns/manifest.xsd --noout schema_tests/manifest/valid/tests/*.xml
+
+# Invalid files must fail
+./schema_tests/invalid.sh public/xmlns/manifest.xsd schema_tests/manifest/invalid/tests/*.xml
+```
+
 ### File Organization
 - `app/lib/` - Custom business logic (OneSky, XML utilities, analytics)
 - `app/services/` - Service objects for external integrations
 - `app/validators/` - Custom validation logic
 - `spec/acceptance/` - API integration tests
-- `schema_tests/` - XML schema validation tests
+- `schema_tests/` - XML schema validation tests (valid/ and invalid/ cases per schema type)
 
 ### Environment Requirements
 Key environment variables needed:
@@ -82,5 +103,4 @@ Key environment variables needed:
 
 ### Branch Strategy
 - Main branch: `master`
-- Current working branch: `rails71` (Rails 7.1 upgrade)
 - CI/CD runs on pushes to `master` and `staging` branches
