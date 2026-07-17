@@ -80,4 +80,27 @@ resource "Pages" do
       expect(Page.find(1).filename).not_to eq(other.filename)
     end
   end
+
+  post "resources/:resource_id/pages/reorder" do
+    let(:resource_id) { 1 }
+    let(:ordered_ids) { Resource.find(1).pages.order(:position).pluck(:id) }
+
+    requires_authorization
+
+    it "reorders the resource's pages" do
+      reversed_ids = ordered_ids.reverse
+
+      do_request data: {type: :page, attributes: {page_ids: reversed_ids}}
+
+      expect(status).to eq(200)
+      expect(Resource.find(1).pages.order(:position).pluck(:id)).to eq(reversed_ids)
+      expect(Resource.find(1).pages.order(:position).pluck(:position)).to eq([0, 1])
+    end
+
+    it "rejects page ids that don't match the resource's pages" do
+      do_request data: {type: :page, attributes: {page_ids: [ordered_ids.first]}}
+
+      expect(status).to eq(400)
+    end
+  end
 end

@@ -21,6 +21,7 @@ Rails.application.routes.draw do
     resources :languages, controller: :resource_languages, only: [:update, :show]
     resources :translated_attributes, path: "translated-attributes", only: [:create, :update, :destroy]
     post "translations/publish", to: "resources#publish_translation"
+    post "pages/reorder", to: "pages#reorder"
     collection do
       resources :featured, only: [:index, :create, :update, :destroy], module: :resources do
         collection do
