@@ -95,6 +95,9 @@ resource "Pages" do
       expect(status).to eq(200)
       expect(Resource.find(1).pages.order(:position).pluck(:id)).to eq(reversed_ids)
       expect(Resource.find(1).pages.order(:position).pluck(:position)).to eq([0, 1])
+
+      body_pages = JSON.parse(response_body)["data"]
+      expect(body_pages.map { |page| page["attributes"]["position"] }).to eq([0, 1])
     end
 
     it "rejects page ids that don't match the resource's pages" do
