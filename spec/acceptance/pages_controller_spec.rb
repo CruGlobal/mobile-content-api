@@ -58,4 +58,26 @@ resource "Pages" do
       expect(JSON.parse(response_body)["data"]).not_to be_nil
     end
   end
+
+  put "pages/:id" do
+    let(:id) { 1 }
+
+    requires_authorization
+
+    it "updates the filename" do
+      do_request data: {type: :page, attributes: {filename: "renamed.xml"}}
+
+      expect(status).to eq(200)
+      expect(Page.find(1).filename).to eq("renamed.xml")
+    end
+
+    it "rejects a filename already used by another page of the resource" do
+      other = Page.find(1).resource.pages.where.not(id: 1).first
+
+      do_request data: {type: :page, attributes: {filename: other.filename}}
+
+      expect(status).to eq(400)
+      expect(Page.find(1).filename).not_to eq(other.filename)
+    end
+  end
 end
