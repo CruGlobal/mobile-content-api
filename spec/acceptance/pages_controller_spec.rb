@@ -71,6 +71,13 @@ resource "Pages" do
       expect(Page.find(1).filename).to eq("renamed.xml")
     end
 
+    it "updates the position" do
+      do_request data: {type: :page, attributes: {position: 7}}
+
+      expect(status).to eq(200)
+      expect(Page.find(1).position).to eq(7)
+    end
+
     it "rejects a filename already used by another page of the resource" do
       other = Page.find(1).resource.pages.where.not(id: 1).first
 

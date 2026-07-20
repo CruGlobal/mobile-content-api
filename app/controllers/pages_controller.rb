@@ -11,7 +11,7 @@ class PagesController < SecureController
 
   def update
     page = Page.find(params[:id])
-    page.update!(params.require(:data).require(:attributes).permit(:structure, :filename))
+    page.update!(params.require(:data).require(:attributes).permit(:structure, :filename, :position))
     render json: page, status: :ok
   end
 
