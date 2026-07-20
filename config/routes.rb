@@ -21,7 +21,6 @@ Rails.application.routes.draw do
     resources :languages, controller: :resource_languages, only: [:update, :show]
     resources :translated_attributes, path: "translated-attributes", only: [:create, :update, :destroy]
     post "translations/publish", to: "resources#publish_translation"
-    post "pages/reorder", to: "pages#reorder"
     collection do
       resources :featured, only: [:index, :create, :update, :destroy], module: :resources do
         collection do
@@ -35,6 +34,7 @@ Rails.application.routes.draw do
   resources :drafts, only: [:index, :show, :create, :destroy]
   resources :translations, only: [:index, :show]
   resources :pages, only: [:create, :update, :show]
+  post "resources/:resource_id/pages/reorder", to: "pages#reorder"
   resources :tips, only: [:create, :update]
   resources :custom_pages, only: [:create, :update, :destroy, :show]
   resources :custom_tips, only: [:create, :destroy]
