@@ -31,7 +31,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Architecture Overview
 
-This is a **Rails 7.1 API application** that serves as a mobile content management system for Christian ministry tools and resources.
+This is a **Rails 8.0.5 API application** that serves as a mobile content management system for Christian ministry tools and resources.
 
 ### Core Domain Models
 - **Resources** - Main content entities (tracts, lessons, training materials)
