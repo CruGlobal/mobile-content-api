@@ -43,7 +43,7 @@ gem "bootsnap", require: false
 # gem "kamal", require: false # Declined: deployed to AWS ECS via Docker
 
 # Add HTTP asset caching/compression and X-Sendfile acceleration to Puma [https://github.com/basecamp/thruster/]
-# gem "thruster", require: false # Adopted in the stacked thruster PR
+gem "thruster", require: false
 
 # Use Active Storage variants [https://guides.rubyonrails.org/active_storage_overview.html#transforming-images]
 # gem "image_processing", "~> 1.2"
