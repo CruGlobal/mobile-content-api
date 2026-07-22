@@ -48,4 +48,13 @@ describe Page do
 
     expect(result.errors["resource"]).to include("Does not use Crowdin.")
   end
+
+  it "can be updated for resource not using Crowdin" do
+    page = described_class.new(filename: "legacy.xml", resource_id: 3, structure: structure, position: 1)
+    page.save!(validate: false)
+
+    page.update!(filename: "renamed.xml")
+
+    expect(page.reload.filename).to eq("renamed.xml")
+  end
 end
