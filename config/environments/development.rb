@@ -77,6 +77,11 @@ Rails.application.configure do
   # config.generators.apply_rubocop_autocorrect_after_generate!
 
   config.middleware.insert_before 0, Rack::Cors do
+    # Accept cookies from localhost domains
+    allow do
+      origins %r{\Ahttp://localhost(:\d+)?\z}
+      resource "*", headers: :any, methods: [:get, :post, :put, :patch, :options, :delete], credentials: true
+    end
     allow do
       origins "*"
       resource "*", headers: :any, methods: [:get, :post, :put, :patch, :options, :delete]

@@ -64,4 +64,32 @@ describe SecureController do
 
     expect(response).to have_http_status(:unauthorized)
   end
+
+  it "successes if admin token is provided via cookie" do
+    cookies[:auth_token] = user_token
+    user.update(admin: true)
+
+    get :index
+
+    expect(response).to have_http_status(:ok)
+  end
+
+  it "unauthorized if cookie token is for non-admin user" do
+    cookies[:auth_token] = user_token
+    user.update(admin: false)
+
+    get :index
+
+    expect(response).to have_http_status(:unauthorized)
+  end
+
+  it "prefers the Authorization header over the cookie" do
+    cookies[:auth_token] = "not-a-valid-token"
+    request.headers["Authorization"] = user_token
+    user.update(admin: true)
+
+    get :index
+
+    expect(response).to have_http_status(:ok)
+  end
 end

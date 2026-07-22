@@ -3,6 +3,8 @@
 class ApplicationController < ActionController::Base
   include Fields
 
+  AUTH_COOKIE = "auth_token"
+
   skip_before_action :verify_authenticity_token
   before_action :decode_json_api
 
@@ -51,7 +53,21 @@ class ApplicationController < ActionController::Base
   end
 
   def authorization
-    @authorization ||= AuthToken.decode(request.headers["Authorization"])
+    @authorization ||= AuthToken.decode(request.headers["Authorization"].presence || cookies[AUTH_COOKIE])
+  end
+
+  def set_auth_cookie(value)
+    cookies[AUTH_COOKIE] = {
+      value: value,
+      httponly: true,
+      secure: !Rails.env.local?,
+      same_site: :lax,
+      expires: 24.hours.from_now
+    }
+  end
+
+  def clear_auth_cookie
+    cookies.delete(AUTH_COOKIE)
   end
 
   def current_user_id

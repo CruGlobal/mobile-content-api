@@ -46,7 +46,9 @@ Rails.application.routes.draw do
 
   resources :attachments
 
+  get "auth/me", to: "auth#me"
   resources :auth, only: [:create, :show]
+  delete "auth", to: "auth#destroy"
 
   resources :custom_manifests, only: [:create, :update, :destroy, :show]
 

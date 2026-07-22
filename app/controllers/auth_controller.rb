@@ -25,7 +25,10 @@ class AuthController < ApplicationController
 
     token ||= AuthToken.new(user: user)
 
-    render json: token, status: :created if token
+    if token
+      set_auth_cookie(token.token) if user
+      render json: token, status: :created
+    end
   rescue UserAlreadyExist::Error => e
     render json: json_errors("user_already_exists", e.message), status: :bad_request
     nil
@@ -39,6 +42,25 @@ class AuthController < ApplicationController
   rescue AccessCode::FailedAuthentication => e
     render_bad_request e.message
     nil
+  end
+
+  # Session probe for browser clients: reports the signed-in user.
+  def me
+    return render_unauthorized unless current_user
+
+    render json: {
+      data: {
+        id: current_user.id,
+        email: current_user.email,
+        name: current_user.name,
+        admin: current_user.admin
+      }
+    }
+  end
+
+  def destroy
+    clear_auth_cookie
+    head :no_content
   end
 
   private
