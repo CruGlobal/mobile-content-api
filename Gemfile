@@ -106,7 +106,6 @@ group :development, :test do
   gem "rspec_api_documentation", github: "zipmark/rspec_api_documentation"
   gem "rubocop-rspec", require: false
   gem "simplecov-cobertura", require: false
-  gem "spring-commands-rspec"
   gem "standard"
   gem "webmock", require: false
 end
