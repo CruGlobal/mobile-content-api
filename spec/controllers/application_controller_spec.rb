@@ -82,7 +82,7 @@ describe ApplicationController do
       expect(decoded["exp"]).to be_within(5.seconds).of(1.hour.from_now.to_i)
     end
 
-    it "does not set an Authorization response header when unauthenticated" do
+    it "does not set an X-Auth-Renewal response header when unauthenticated" do
       get :index
 
       expect(response.headers["X-Auth-Renewal"]).to be_nil
