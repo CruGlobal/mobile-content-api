@@ -79,7 +79,7 @@ Rails.application.configure do
   config.middleware.insert_before 0, Rack::Cors do
     allow do
       origins "*"
-      resource "*", headers: :any, methods: [:get, :post, :put, :patch, :options, :delete], expose: ["Authorization"]
+      resource "*", headers: :any, methods: [:get, :post, :put, :patch, :options, :delete], expose: ["X-Auth-Renewal"]
     end
   end
 
