@@ -61,8 +61,10 @@ class AuthToken < ActiveModelSerializers::Model
     end
   end
 
+  # Admin sessions (Okta) use short-lived, sliding tokens for security. Mobile app tokens
+  # (Apple/Google/Facebook) have a longer lifetime.
   def expiration
-    24.hours.from_now
+    (@user&.admin ? 1.hour : 24.hours).from_now
   end
 
   def user_id
