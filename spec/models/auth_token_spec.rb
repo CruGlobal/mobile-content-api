@@ -13,7 +13,7 @@ describe AuthToken do
       expect(AuthToken.jwt?(subject)).to be true
     end
 
-    it "sets expiration to 24 hours" do
+    it "sets expiration to 1 hour" do
       decoded = AuthToken.decode(subject).first
 
       expect(decoded["exp"]).to be_within(5.seconds).of(1.hour.from_now.to_i)
