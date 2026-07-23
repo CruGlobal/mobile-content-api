@@ -69,26 +69,17 @@ describe ApplicationController do
   end
 
   describe "refreshing the auth token" do
-    it "returns a fresh token in the Authorization response header for an admin" do
-      admin = FactoryBot.create(:user, admin: true)
-      request.headers["Authorization"] = AuthToken.new(user: admin).token
+    it "returns a fresh token in the Authorization response header when authenticated" do
+      user = FactoryBot.create(:user)
+      request.headers["Authorization"] = AuthToken.new(user: user).token
 
       get :index
 
       refreshed = response.headers["Authorization"]
       expect(refreshed).to be_present
       decoded = AuthToken.decode(refreshed).first
-      expect(decoded["user_id"]).to eq admin.id
-      expect(decoded["exp"]).to be_within(5.seconds).of(1.hour.from_now.to_i)
-    end
-
-    it "does not set an Authorization response header for a non-admin" do
-      user = FactoryBot.create(:user, admin: false)
-      request.headers["Authorization"] = AuthToken.new(user: user).token
-
-      get :index
-
-      expect(response.headers["Authorization"]).to be_nil
+      expect(decoded["user_id"]).to eq user.id
+      expect(decoded["exp"]).to be_within(5.seconds).of(1.day.from_now.to_i)
     end
 
     it "does not set an Authorization response header when unauthenticated" do

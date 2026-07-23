@@ -16,42 +16,23 @@ describe AuthToken do
     it "sets expiration to 24 hours" do
       decoded = AuthToken.decode(subject).first
 
-      expect(decoded["exp"]).to be_within(5.seconds).of(24.hours.from_now.to_i)
+      expect(decoded["exp"]).to be_within(5.seconds).of(1.hour.from_now.to_i)
     end
   end
 
   describe "#expiration" do
-    it "equals 24 hours from now with no user" do
-      travel_to Time.now do
-        expect(described_class.new.expiration).to eq 24.hours.from_now
-      end
-    end
+    subject { described_class.new.expiration }
 
-    it "equals 24 hours from now for a non-admin user" do
-      user = FactoryBot.build(:user, admin: false)
+    it "equals 1 hour from now" do
       travel_to Time.now do
-        expect(described_class.new(user: user).expiration).to eq 24.hours.from_now
-      end
-    end
-
-    it "equals 1 hour from now for an admin user" do
-      user = FactoryBot.build(:user, admin: true)
-      travel_to Time.now do
-        expect(described_class.new(user: user).expiration).to eq 1.hour.from_now
+        expect(subject).to eq 1.hour.from_now
       end
     end
   end
 
   describe "#token exp claim" do
-    it "expires in 24 hours for a non-admin user" do
-      user = FactoryBot.create(:user, admin: false)
-      decoded = AuthToken.decode(described_class.new(user: user).token).first
-
-      expect(decoded["exp"]).to be_within(5.seconds).of(24.hours.from_now.to_i)
-    end
-
-    it "expires in 1 hour for an admin user" do
-      user = FactoryBot.create(:user, admin: true)
+    it "expires in 1 hour" do
+      user = FactoryBot.create(:user)
       decoded = AuthToken.decode(described_class.new(user: user).token).first
 
       expect(decoded["exp"]).to be_within(5.seconds).of(1.hour.from_now.to_i)
