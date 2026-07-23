@@ -79,7 +79,7 @@ describe ApplicationController do
       expect(refreshed).to be_present
       decoded = AuthToken.decode(refreshed).first
       expect(decoded["user_id"]).to eq user.id
-      expect(decoded["exp"]).to be_within(5.seconds).of(1.day.from_now.to_i)
+      expect(decoded["exp"]).to be_within(5.seconds).of(1.hour.from_now.to_i)
     end
 
     it "does not set an Authorization response header when unauthenticated" do
