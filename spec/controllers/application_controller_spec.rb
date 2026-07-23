@@ -69,13 +69,13 @@ describe ApplicationController do
   end
 
   describe "refreshing the auth token" do
-    it "returns a fresh token in the Authorization response header when authenticated" do
+    it "returns a fresh token in the X-Auth-Renewal response header when authenticated" do
       user = FactoryBot.create(:user)
       request.headers["Authorization"] = AuthToken.new(user: user).token
 
       get :index
 
-      refreshed = response.headers["Authorization"]
+      refreshed = response.headers["X-Auth-Renewal"]
       expect(refreshed).to be_present
       decoded = AuthToken.decode(refreshed).first
       expect(decoded["user_id"]).to eq user.id
@@ -85,7 +85,7 @@ describe ApplicationController do
     it "does not set an Authorization response header when unauthenticated" do
       get :index
 
-      expect(response.headers["Authorization"]).to be_nil
+      expect(response.headers["X-Auth-Renewal"]).to be_nil
     end
   end
 

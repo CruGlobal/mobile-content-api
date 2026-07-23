@@ -55,7 +55,7 @@ class ApplicationController < ActionController::Base
   def refresh_auth_token
     return unless current_user
 
-    response.headers["Authorization"] = AuthToken.new(user: current_user).token
+    response.headers["X-Auth-Renewal"] = AuthToken.new(user: current_user).token
   end
 
   def authorization
