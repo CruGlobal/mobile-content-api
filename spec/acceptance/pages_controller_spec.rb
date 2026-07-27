@@ -58,4 +58,59 @@ resource "Pages" do
       expect(JSON.parse(response_body)["data"]).not_to be_nil
     end
   end
+
+  put "pages/:id" do
+    let(:id) { 1 }
+
+    requires_authorization
+
+    it "updates the filename" do
+      do_request data: {type: :page, attributes: {filename: "renamed.xml"}}
+
+      expect(status).to eq(200)
+      expect(Page.find(1).filename).to eq("renamed.xml")
+    end
+
+    it "updates the position" do
+      do_request data: {type: :page, attributes: {position: 7}}
+
+      expect(status).to eq(200)
+      expect(Page.find(1).position).to eq(7)
+    end
+
+    it "rejects a filename already used by another page of the resource" do
+      other = Page.find(1).resource.pages.where.not(id: 1).first
+
+      do_request data: {type: :page, attributes: {filename: other.filename}}
+
+      expect(status).to eq(400)
+      expect(Page.find(1).filename).not_to eq(other.filename)
+    end
+  end
+
+  post "resources/:resource_id/pages/reorder" do
+    let(:resource_id) { 1 }
+    let(:ordered_ids) { Resource.find(1).pages.order(:position).pluck(:id) }
+
+    requires_authorization
+
+    it "reorders the resource's pages" do
+      reversed_ids = ordered_ids.reverse
+
+      do_request data: {type: :page, attributes: {page_ids: reversed_ids}}
+
+      expect(status).to eq(200)
+      expect(Resource.find(1).pages.order(:position).pluck(:id)).to eq(reversed_ids)
+      expect(Resource.find(1).pages.order(:position).pluck(:position)).to eq([0, 1])
+
+      body_pages = JSON.parse(response_body)["data"]
+      expect(body_pages.map { |page| page["attributes"]["position"] }).to eq([0, 1])
+    end
+
+    it "rejects page ids that don't match the resource's pages" do
+      do_request data: {type: :page, attributes: {page_ids: [ordered_ids.first]}}
+
+      expect(status).to eq(400)
+    end
+  end
 end
