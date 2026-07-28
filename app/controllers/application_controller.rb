@@ -5,6 +5,7 @@ class ApplicationController < ActionController::Base
 
   skip_before_action :verify_authenticity_token
   before_action :decode_json_api
+  after_action :refresh_auth_token
 
   rescue_from ActiveRecord::RecordNotFound, Error::NotFoundError do |exception|
     render_api_error(exception, :not_found)
@@ -48,6 +49,13 @@ class ApplicationController < ActionController::Base
     return if current_user&.admin
 
     render_unauthorized
+  end
+
+  # Refresh the user's short-lived, sliding token on every authenticated request.
+  def refresh_auth_token
+    return unless current_user
+
+    response.headers["X-Auth-Renewal"] = AuthToken.new(user: current_user).token
   end
 
   def authorization

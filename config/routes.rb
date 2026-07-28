@@ -7,7 +7,7 @@ Rails.application.routes.draw do
 
   # Reveal health status on /monitors/lb that returns 200 if the app boots with no exceptions, otherwise 500.
   # Can be used by load balancers and uptime monitors to verify that the app is live.
-  get "monitors/lb", as: :rails_health_check
+  get MobileContentApi::HEALTHCHECK_PATH.delete_prefix("/"), as: :rails_health_check
 
   # Defines the root path route ("/")
   # root "posts#index"
@@ -46,6 +46,8 @@ Rails.application.routes.draw do
   resources :drafts, only: %i[index show create destroy]
   resources :translations, only: %i[index show]
   resources :pages, only: %i[create update show]
+  post "resources/:resource_id/pages/reorder", to: "pages#reorder"
+  
   resources :tips, only: %i[create update]
   resources :custom_pages, only: %i[create update destroy show]
   resources :custom_tips, only: %i[create destroy]

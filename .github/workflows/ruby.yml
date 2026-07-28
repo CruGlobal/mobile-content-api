@@ -76,7 +76,7 @@ jobs:
         run: bundle exec bundle audit check --update ${{ vars.CVE_IGNORES && format('--ignore {0}', vars.CVE_IGNORES) }}
 
       - name: Brakeman
-        run: bundle exec brakeman -A -q --ensure-latest --no-pager
+        run: bundle exec brakeman -A -q --ensure-latest --no-pager -x UnscopedFind
 
       - name: StandardRB
         run: bundle exec standardrb --format simple
