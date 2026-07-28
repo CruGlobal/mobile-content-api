@@ -102,12 +102,12 @@ Rails.application.configure do
   config.middleware.insert_before 0, Rack::Cors do
     allow do
       origins(/\Ahttps:\/\/mobilecontentadmin(-stage)?\.cru\.org\z/)
-      resource "*", headers: :any, methods: [:get, :post, :put, :patch, :options, :delete], credentials: true
+      resource "*", headers: :any, methods: [:get, :post, :put, :patch, :options, :delete], credentials: true, expose: ["X-Auth-Renewal"]
     end
 
     allow do
       origins "*"
-      resource "*", headers: :any, methods: [:get, :post, :put, :patch, :options, :delete]
+      resource "*", headers: :any, methods: [:get, :post, :put, :patch, :options, :delete], expose: ["X-Auth-Renewal"]
     end
   end
 end
