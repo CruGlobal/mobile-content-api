@@ -124,10 +124,10 @@ class ResourceDefaultOrdersController < ApplicationController
         "resource_ids is expected to be an array of integers"
     end
 
-    if incoming_resource_ids.length > ResourceScore::MAX_FEATURED_ORDER_POSITION
+    if incoming_resource_ids.length > ResourceDefaultOrder::MAX_DEFAULT_ORDER_POSITION
       raise InvalidRequestError,
         "resource_ids is expected to include a maximum of " \
-        "#{ResourceScore::MAX_FEATURED_ORDER_POSITION} ids"
+        "#{ResourceDefaultOrder::MAX_DEFAULT_ORDER_POSITION} ids"
     end
 
     if incoming_resource_ids.uniq.length != incoming_resource_ids.length

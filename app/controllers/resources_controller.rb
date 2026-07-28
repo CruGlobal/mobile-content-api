@@ -29,6 +29,12 @@ class ResourcesController < ApplicationController
 
   def featured
     lang_code = params.dig(:filter, :lang) || params[:lang]
+
+    if lang_code.present?
+      language = Language.find_by_code(lang_code)
+      raise InvalidRequestError, "Language not found for code: #{lang_code}" unless language.present?
+    end
+
     featured_resources = all_featured_resources(
       lang_code: lang_code,
       country: params.dig(:filter, :country) || params[:country],
@@ -36,6 +42,9 @@ class ResourcesController < ApplicationController
     )
 
     render json: featured_resources, include: params[:include], fields: field_params, status: :ok
+  rescue InvalidRequestError => e
+    render json: {errors: [{detail: "Error: #{e.message}"}]},
+      status: :unprocessable_content
   end
 
   def default_order
@@ -133,8 +142,8 @@ class ResourcesController < ApplicationController
     scope = Resource.includes(:resource_scores).left_joins(:resource_scores).where(resource_scores: {featured: true})
 
     if lang_code.present?
-      language = Language.find_by(code: lang_code.downcase)
-      scope = scope.joins(resource_scores: :language).where(languages: {id: language.id}) if language.present?
+      language = Language.find_by_code(lang_code)
+      scope = scope.joins(resource_scores: :language).where(languages: {id: language.id})
     end
 
     scope = scope.where("resource_scores.country = LOWER(:country)", country:) if country.present?

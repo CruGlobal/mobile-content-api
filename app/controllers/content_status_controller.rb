@@ -31,8 +31,6 @@ class ContentStatusController < ApplicationController
     }
 
     render json: metrics, status: :ok
-  rescue => e
-    render json: {errors: [{detail: "Error: #{e.message}"}]}, status: :unprocessable_content
   end
 
   private

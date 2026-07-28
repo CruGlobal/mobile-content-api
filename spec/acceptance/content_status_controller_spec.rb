@@ -81,15 +81,13 @@ resource "ContentStatus" do
 
     context "when an error occurs" do
       before do
-        allow(Language).to receive(:joins).and_raise("Something went wrong")
+        allow(Language).to receive(:joins)
+          .and_raise(RuntimeError, "Something went wrong")
       end
 
-      it "returns unprocessable entity" do
-        do_request
-
-        expect(status).to eq(422)
-        json = JSON.parse(response_body)
-        expect(json).to have_key("errors")
+      it "propagates the error" do
+        expect { do_request }
+          .to raise_error(RuntimeError, "Something went wrong")
       end
     end
   end

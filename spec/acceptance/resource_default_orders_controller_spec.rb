@@ -385,7 +385,7 @@ resource "ResourceDefaultOrders" do
 
     context "when sending too many resource ids" do
       let(:resource_ids) do
-        (1..(ResourceScore::MAX_FEATURED_ORDER_POSITION + 1)).to_a
+        (1..(ResourceDefaultOrder::MAX_DEFAULT_ORDER_POSITION + 1)).to_a
       end
 
       it "returns an error" do
@@ -394,7 +394,7 @@ resource "ResourceDefaultOrders" do
         expect(status).to be(422)
         expect(JSON.parse(response_body)["errors"][0]["detail"])
           .to include(
-            "maximum of #{ResourceScore::MAX_FEATURED_ORDER_POSITION}"
+            "maximum of #{ResourceDefaultOrder::MAX_DEFAULT_ORDER_POSITION}"
           )
       end
     end
