@@ -625,6 +625,17 @@ resource "Resources" do
       end
     end
 
+    context "with invalid language code" do
+      it "returns unprocessable content error" do
+        do_request lang: "apple_orchard"
+
+        expect(status).to be(422)
+        json = JSON.parse(response_body)
+        expect(json["errors"]).to be_present
+        expect(json["errors"].first["detail"]).to include("Language not found")
+      end
+    end
+
     context "with country filter" do
       it "returns featured resources for specified country" do
         do_request country: "us"

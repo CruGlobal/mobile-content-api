@@ -320,7 +320,7 @@ resource "ResourceDefaultOrders" do
       {data: {attributes: {lang: lang, resource_ids: resource_ids, resource_type: resource_type&.name}}}
     end
 
-    context "with no lang param" do
+    context "with no language" do
       let(:lang) { nil }
 
       context "when sending an empty array" do
@@ -346,7 +346,7 @@ resource "ResourceDefaultOrders" do
       end
     end
 
-    context "with no resource_type param" do
+    context "with no resource_type" do
       let(:resource_type) { nil }
 
       context "when sending an empty array" do
@@ -372,7 +372,7 @@ resource "ResourceDefaultOrders" do
       end
     end
 
-    context "with invalid resource_type param" do
+    context "with unsupported resource_type" do
       let(:resource_type) { ResourceType.find_by!(name: "article") }
       it "returns an error" do
         do_request(params)
@@ -380,6 +380,40 @@ resource "ResourceDefaultOrders" do
         expect(status).to be(422)
         json = JSON.parse(response_body)
         expect(json["errors"][0]["detail"]).to include("is not supported")
+      end
+    end
+
+    context "with invalid language" do
+      let(:lang) { "invalid_lang" }
+
+      it "returns an error" do
+        do_request(params)
+
+        expect(status).to be(422)
+        expect(JSON.parse(response_body)["errors"][0]["detail"])
+          .to include("Language not found for code: invalid_lang")
+      end
+    end
+
+    context "with invalid resource_type" do
+      let(:params) do
+        {
+          data: {
+            attributes: {
+              lang: lang,
+              resource_ids: resource_ids,
+              resource_type: "invalid_type"
+            }
+          }
+        }
+      end
+
+      it "returns an error" do
+        do_request(params)
+
+        expect(status).to be(422)
+        expect(JSON.parse(response_body)["errors"][0]["detail"])
+          .to include("ResourceType 'invalid_type' not found")
       end
     end
 

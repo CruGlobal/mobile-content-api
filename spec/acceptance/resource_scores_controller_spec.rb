@@ -360,7 +360,7 @@ resource "ResourceScores" do
                            resource_type: resource_type&.name}}}
     end
 
-    context "with no country and lang params" do
+    context "with no country or lang" do
       let(:country) { nil }
       let(:lang) { nil }
 
@@ -383,7 +383,7 @@ resource "ResourceScores" do
       end
     end
 
-    context "with no country, lang, or resource_type params" do
+    context "with no country, lang, or resource_type" do
       let(:country) { nil }
       let(:lang) { nil }
       let(:resource_type) { nil }
@@ -407,7 +407,7 @@ resource "ResourceScores" do
       end
     end
 
-    context "with no resource_type param" do
+    context "with no resource_type" do
       let(:resource_type) { nil }
 
       context "when sending an empty array" do
@@ -433,7 +433,7 @@ resource "ResourceScores" do
       end
     end
 
-    context "with invalid resource_type param" do
+    context "with unsupported resource_type" do
       let(:resource_type) { ResourceType.find_by!(name: "article") }
       it "returns an error" do
         do_request(params)
@@ -441,6 +441,41 @@ resource "ResourceScores" do
         expect(status).to be(422)
         json = JSON.parse(response_body)
         expect(json["errors"][0]["detail"]).to include("is not supported")
+      end
+    end
+
+    context "with invalid language" do
+      let(:lang) { "invalid" }
+
+      it "returns an error" do
+        do_request(params)
+
+        expect(status).to be(422)
+        expect(JSON.parse(response_body)["errors"][0]["detail"])
+          .to include("Language not found for code: invalid")
+      end
+    end
+
+    context "with invalid resource_type" do
+      let(:params) do
+        {
+          data: {
+            attributes: {
+              country: country,
+              lang: lang,
+              resource_ids: resource_ids,
+              resource_type: "invalid_type"
+            }
+          }
+        }
+      end
+
+      it "returns an error" do
+        do_request(params)
+
+        expect(status).to be(422)
+        expect(JSON.parse(response_body)["errors"][0]["detail"])
+          .to include("ResourceType 'invalid_type' not found")
       end
     end
 
@@ -511,7 +546,7 @@ resource "ResourceScores" do
       end
     end
 
-    context "with country and lang params" do
+    context "with country and lang" do
       context "with no previous resource score" do
         context "when sending an empty array" do
           it "returns an empty array" do
@@ -759,7 +794,7 @@ resource "ResourceScores" do
                            resource_type: resource_type&.name}}}
     end
 
-    context "with no country and lang params" do
+    context "with no country or lang" do
       let(:country) { nil }
       let(:lang) { nil }
 
@@ -782,7 +817,7 @@ resource "ResourceScores" do
       end
     end
 
-    context "with no resource_type param" do
+    context "with no resource_type" do
       let(:resource_type) { nil }
 
       context "when sending an empty array" do
@@ -808,7 +843,7 @@ resource "ResourceScores" do
       end
     end
 
-    context "with invalid resource_type param" do
+    context "with unsupported resource_type" do
       let(:resource_type) { ResourceType.find_by!(name: "article") }
 
       it "returns an error" do
@@ -817,6 +852,41 @@ resource "ResourceScores" do
         expect(status).to be(422)
         json = JSON.parse(response_body)
         expect(json["errors"][0]["detail"]).to include("not supported")
+      end
+    end
+
+    context "with invalid language" do
+      let(:lang) { "invalid" }
+
+      it "returns an error" do
+        do_request(params)
+
+        expect(status).to be(422)
+        expect(JSON.parse(response_body)["errors"][0]["detail"])
+          .to include("Language not found for code: invalid")
+      end
+    end
+
+    context "with invalid resource_type" do
+      let(:params) do
+        {
+          data: {
+            attributes: {
+              country: country,
+              lang: lang,
+              ranked_resources: ranked_resources,
+              resource_type: "invalid_type"
+            }
+          }
+        }
+      end
+
+      it "returns an error" do
+        do_request(params)
+
+        expect(status).to be(422)
+        expect(JSON.parse(response_body)["errors"][0]["detail"])
+          .to include("ResourceType 'invalid_type' not found")
       end
     end
 
@@ -873,7 +943,7 @@ resource "ResourceScores" do
       end
     end
 
-    context "with country and lang params" do
+    context "with country and lang" do
       context "with no previous resource scores" do
         context "when sending an empty array" do
           it "returns an empty array" do
