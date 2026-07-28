@@ -108,12 +108,16 @@ class ResourceScoresController < ApplicationController
     end
 
     language = Language.find_by_code(lang_code)
-    raise InvalidRequestError,
-      "Language not found for code: #{lang_code}" unless language.present?
+    unless language.present?
+      raise InvalidRequestError,
+        "Language not found for code: #{lang_code}"
+    end
 
     resource_type = ResourceType.find_by(name: resource_type_name)
-    raise InvalidRequestError,
-      "ResourceType '#{resource_type_name}' not found" unless resource_type.present?
+    unless resource_type.present?
+      raise InvalidRequestError,
+        "ResourceType '#{resource_type_name}' not found"
+    end
 
     unless %w[lesson tract].include?(resource_type.name.downcase)
       raise InvalidRequestError,
@@ -208,12 +212,16 @@ class ResourceScoresController < ApplicationController
     end
 
     language = Language.find_by_code(lang_code)
-    raise InvalidRequestError,
-      "Language not found for code: #{lang_code}" unless language.present?
+    unless language.present?
+      raise InvalidRequestError,
+        "Language not found for code: #{lang_code}"
+    end
 
     resource_type = ResourceType.find_by(name: resource_type_name)
-    raise InvalidRequestError,
-      "ResourceType '#{resource_type_name}' not found" unless resource_type.present?
+    unless resource_type.present?
+      raise InvalidRequestError,
+        "ResourceType '#{resource_type_name}' not found"
+    end
 
     unless %w[lesson tract].include?(resource_type.name.downcase)
       raise InvalidRequestError,
@@ -302,8 +310,10 @@ class ResourceScoresController < ApplicationController
 
     if lang_code.present?
       language = Language.find_by_code(lang_code)
-      raise InvalidRequestError,
-        "Language not found for code: #{lang_code}" unless language.present?
+      unless language.present?
+        raise InvalidRequestError,
+          "Language not found for code: #{lang_code}"
+      end
 
       scope = scope.where(language_id: language.id)
     end

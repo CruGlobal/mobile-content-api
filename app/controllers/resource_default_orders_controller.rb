@@ -103,16 +103,22 @@ class ResourceDefaultOrdersController < ApplicationController
     resource_type_name = params.dig(:data, :attributes, :resource_type)&.downcase
     incoming_resource_ids = params.dig(:data, :attributes, :resource_ids) || []
 
-    raise InvalidRequestError,
-      "Language and Resource Type should be provided" unless lang_code.present? && resource_type_name.present?
+    unless lang_code.present? && resource_type_name.present?
+      raise InvalidRequestError,
+        "Language and Resource Type should be provided"
+    end
 
     language = Language.find_by_code(lang_code)
-    raise InvalidRequestError,
-      "Language not found for code: #{lang_code}" unless language.present?
+    unless language.present?
+      raise InvalidRequestError,
+        "Language not found for code: #{lang_code}"
+    end
 
     resource_type = ResourceType.find_by(name: resource_type_name)
-    raise InvalidRequestError,
-      "ResourceType '#{resource_type_name}' not found" unless resource_type.present?
+    unless resource_type.present?
+      raise InvalidRequestError,
+        "ResourceType '#{resource_type_name}' not found"
+    end
 
     unless %w[lesson tract].include?(resource_type.name.downcase)
       raise InvalidRequestError,

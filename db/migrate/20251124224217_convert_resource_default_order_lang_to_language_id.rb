@@ -27,11 +27,13 @@ class ConvertResourceDefaultOrderLangToLanguageId < ActiveRecord::Migration[7.1]
       WHERE resource_default_orders.language_id = languages.id
     SQL
 
-    remove_index :resource_default_orders,
-      [:resource_id, :language_id] if index_exists?(
-        :resource_default_orders,
+    if index_exists?(
+      :resource_default_orders,
+      [:resource_id, :language_id]
+    )
+      remove_index :resource_default_orders,
         [:resource_id, :language_id]
-      )
+    end
 
     remove_column :resource_default_orders, :language_id if column_exists?(
       :resource_default_orders,

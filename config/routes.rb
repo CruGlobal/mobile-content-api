@@ -47,7 +47,7 @@ Rails.application.routes.draw do
   resources :translations, only: %i[index show]
   resources :pages, only: %i[create update show]
   post "resources/:resource_id/pages/reorder", to: "pages#reorder"
-  
+
   resources :tips, only: %i[create update]
   resources :custom_pages, only: %i[create update destroy show]
   resources :custom_tips, only: %i[create destroy]

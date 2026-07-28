@@ -25,11 +25,13 @@ class ConvertResourceScoreLangToLanguageId < ActiveRecord::Migration[7.1]
       WHERE resource_scores.language_id = languages.id
     SQL
 
-    remove_index :resource_scores,
-      [:resource_id, :language_id, :country] if index_exists?(
-        :resource_scores,
+    if index_exists?(
+      :resource_scores,
+      [:resource_id, :language_id, :country]
+    )
+      remove_index :resource_scores,
         [:resource_id, :language_id, :country]
-      )
+    end
 
     remove_column :resource_scores, :language_id if column_exists?(
       :resource_scores,
