@@ -729,7 +729,7 @@ resource "Resources" do
   end
 
   RSpec::Matchers.define :resource_id do |id|
-    match { |actual| (actual.id == id) }
+    match { |actual| actual.id == id }
   end
 
   def resources_matched(data)
