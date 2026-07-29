@@ -80,5 +80,13 @@ VOLUME /home/webapp/app/nginx-conf
 # Run container process as non-root user
 USER webapp
 
-# Command to start rails
-CMD ["bundle", "exec", "puma", "-C", "config/puma.rb"]
+# Disable Thruster's per-request Go slog output: it would double container
+# stdout volume into the Ougai-keyed Datadog log pipeline and re-log the
+# health checks that Rails silences (fleet decision).
+ENV LOG_REQUESTS="false"
+
+# Thruster listens on 80 (HTTP caching/compression + static serving in front of Puma)
+EXPOSE 80
+
+# Command to start rails behind Thruster
+CMD ["./bin/thrust", "bundle", "exec", "puma", "-C", "config/puma.rb"]
