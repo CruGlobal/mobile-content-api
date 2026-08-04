@@ -16,10 +16,16 @@ Rails.application.configure do
   config.action_controller.perform_caching = true
 
   # Disable serving static files from `public/`, relying on NGINX/Apache to do so instead.
-  config.public_file_server.enabled = false
+  # Disabled: Thruster now fronts Puma, so Rails serves public/ itself
+  # (the 8.0 default is enabled = true; the nginx sidecar is being removed).
+  # config.public_file_server.enabled = false
 
   # Cache assets for far-future expiry since they are all digest stamped.
-  config.public_file_server.headers = {"cache-control" => "public, max-age=#{1.year.to_i}"}
+  # Disabled: this app has NO digest-stamped assets (no asset pipeline), and
+  # public/ serves canonical-but-mutable schema files (public/xmlns/*.xsd) —
+  # a 1-year cache on those would be harmful, and without digested assets the
+  # far-future default has no upside here (fleet mutable-public-files exception).
+  # config.public_file_server.headers = {"cache-control" => "public, max-age=#{1.year.to_i}"}
 
   # Enable serving of images, stylesheets, and JavaScripts from an asset server.
   # config.asset_host = "http://assets.example.com"
