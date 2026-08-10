@@ -6,8 +6,16 @@ class Language < ActiveRecord::Base
   has_many :custom_tips, dependent: :restrict_with_error
   has_many :translated_pages, dependent: :restrict_with_error
   has_many :language_attributes, dependent: :restrict_with_error
+  has_many :resource_scores, dependent: :restrict_with_error
+  has_many :resource_default_orders, dependent: :restrict_with_error
 
   validates :name, presence: true
   validates :code, presence: true
-  validates_with LanguageValidator, on: [:create, :update]
+  validates_with LanguageValidator, on: %i[create update]
+
+  def self.find_by_code(code)
+    return if code.blank?
+
+    find_by("LOWER(code) = LOWER(?)", code)
+  end
 end
