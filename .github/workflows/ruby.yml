@@ -75,8 +75,13 @@ jobs:
       - name: Bundle audit
         run: bundle exec bundle audit check --update ${{ vars.CVE_IGNORES && format('--ignore {0}', vars.CVE_IGNORES) }}
 
+      # -w2: block only on medium+ confidence findings — weak nudges (e.g. the
+      # Rails-EOL warning) shouldn't wedge merges devs can't individually fix.
+      # --ensure-latest dropped: Dependabot keeps brakeman current under the
+      # groups in .github/dependabot.yml, so the flag would only re-add a race
+      # where an out-of-date brakeman reds every PR on brakeman release day.
       - name: Brakeman
-        run: bundle exec brakeman -A -q --ensure-latest --no-pager -x UnscopedFind
+        run: bundle exec brakeman -A -q --no-pager -w2 -x UnscopedFind
 
       - name: StandardRB
         run: bundle exec standardrb --format simple
