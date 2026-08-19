@@ -1,6 +1,72 @@
 version: 2
+
+registries:
+  contribsys:
+    type: rubygems-server
+    url: 'https://gems.contribsys.com/'
+    # Org-level Dependabot secret (cru-terraform github/CruGlobal/secrets/
+    # rails_variables.tf), auto-scoped to all CruGlobal Ruby repos; the
+    # SSM-backed value is the user:password pair Basic auth needs.
+    token: ${{secrets.BUNDLE_GEMS__CONTRIBSYS__COM}}
+
 updates:
 - package-ecosystem: bundler
   directory: "/"
   schedule:
     interval: daily
+  # Gems are security-only fleet-wide (ratified 2026-08-19; the original
+  # ADL-32 intent): individual majors refill the PR ceiling daily and
+  # grouped minors rewrite Gemfile pins (infobase#519). Security PRs are
+  # exempt from the limit and still open at every semver level. Tool
+  # currency (brakeman, bundler-audit) is watched by the nightly digest.
+  open-pull-requests-limit: 0
+  registries: [contribsys]
+  insecure-external-code-execution: allow
+  groups:
+    bundler-security:
+      applies-to: security-updates
+      patterns:
+      - "*"
+  ignore:
+  # NOTE: with the limit above at 0 these are inert forward guards — the
+  # version-update lane never runs, and update-types-scoped ignores never
+  # gate security updates (dependabot-core IgnoreCondition). Kept so a
+  # future limit > 0 flip inherits the pin guards.
+  # Rails minors/majors are deliberate, hand-run upgrades; security patches
+  # within the current minor still flow.
+  - dependency-name: rails
+    update-types:
+    - version-update:semver-minor
+    - version-update:semver-major
+  # minitest 6 drops minitest/mock (ararat #210 landmine); direct-major
+  # guard only — transitive lock-floats stay a review item.
+  - dependency-name: minitest
+    update-types:
+    - version-update:semver-major
+  # Gemfile:77 pins connection_pool < 3.0 (redis_cache_store conflict on
+  # Rails < 8.1.2). Drop this ignore with the pin at Rails >= 8.1.2.
+  - dependency-name: connection_pool
+    update-types:
+    - version-update:semver-major
+- package-ecosystem: github-actions
+  directory: "/"
+  schedule:
+    interval: daily
+  open-pull-requests-limit: 10
+  groups:
+    actions-patch:
+      patterns:
+      - "*"
+      update-types:
+      - patch
+    actions-minor:
+      patterns:
+      - "*"
+      update-types:
+      - minor
+  ignore:
+  # BLANKET ignore — every update type, not just majors. The CruGlobal/.github
+  # reusable workflows are consumed at the floating @v1 tag, which the org
+  # moves by hand as a coordinated rollout; Dependabot proposals against a
+  # human-managed tag are noise in every direction.
+  - dependency-name: "CruGlobal/.github*"
