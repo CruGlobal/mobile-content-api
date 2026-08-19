@@ -84,9 +84,9 @@ jobs:
       # this job on every PR from then on. -w2 buys runway, it does not retire
       # the class. The durable fix is the Rails 8.1 upgrade, not a brakeman flag.
       #
-      # --ensure-latest dropped: Dependabot keeps brakeman current under the
-      # groups in .github/dependabot.yml, so the flag would only re-add a race
-      # where an out-of-date brakeman reds every PR on brakeman release day.
+      # --ensure-latest dropped, and no proposer exists under the security-only
+      # posture in .github/dependabot.yml (limit: 0): the flag would red every
+      # PR on brakeman release day with nothing ever proposing the fix.
       #
       # -x UnscopedFind is INERT under -w2 and kept only as a guard: the check
       # hardcodes :confidence => :weak, which -w2 already drops at add_warning
