@@ -74,10 +74,8 @@ class ResourcesPersonalizationController < ApplicationController
   end
 
   def all_featured_resources(language:, country:, resource_types: nil)
-    scope = Resource.includes(:resource_scores).left_joins(:resource_scores)
+    scope = scored_resources(language: language, country: country)
       .where(resource_scores: {featured: true})
-      .joins(resource_scores: :language).where(languages: {id: language.id})
-      .where("resource_scores.country = LOWER(:country)", country:)
     scope = apply_resource_type_filter(scope, resource_types)
 
     scope.order("resource_scores.featured_order ASC, resource_scores.featured DESC NULLS LAST, \
@@ -86,10 +84,8 @@ class ResourcesPersonalizationController < ApplicationController
   end
 
   def all_ranked_resources(language:, country:, resource_types: nil)
-    scope = Resource.includes(:resource_scores).left_joins(:resource_scores)
+    scope = scored_resources(language: language, country: country)
       .where.not(resource_scores: {score: nil})
-      .joins(resource_scores: :language).where(languages: {id: language.id})
-      .where("resource_scores.country = LOWER(:country)", country:)
     scope = apply_resource_type_filter(scope, resource_types)
 
     scope.order("resource_scores.score DESC, resources.created_at DESC")
@@ -97,10 +93,15 @@ class ResourcesPersonalizationController < ApplicationController
 
   def all_default_order_resources(language:, resource_types: nil)
     scope = Resource.joins(:resource_default_orders)
-      .joins(resource_default_orders: :language).where(languages: {id: language.id})
+      .where(resource_default_orders: {language_id: language.id})
     scope = apply_resource_type_filter(scope, resource_types)
 
     scope.order("resource_default_orders.position ASC NULLS LAST, resources.created_at DESC")
+  end
+
+  def scored_resources(language:, country:)
+    Resource.includes(:resource_scores).joins(:resource_scores)
+      .where(resource_scores: {language_id: language.id, country: country.downcase})
   end
 
   def apply_resource_type_filter(scope, resource_types)
