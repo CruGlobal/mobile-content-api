@@ -17,13 +17,11 @@ class ResourcesPersonalizationController < ApplicationController
 
     language = find_language!(lang_code)
 
-    featured_resources = all_featured_resources(
+    render_resources all_featured_resources(
       language: language,
       country: country,
       resource_types: params.dig(:filter, :"resource-type")
     )
-
-    render json: featured_resources, include: params[:include], fields: field_params, status: :ok
   end
 
   def ranked
@@ -37,13 +35,11 @@ class ResourcesPersonalizationController < ApplicationController
 
     language = find_language!(lang_code)
 
-    ranked_resources = all_ranked_resources(
+    render_resources all_ranked_resources(
       language: language,
       country: country,
       resource_types: params.dig(:filter, :"resource-type")
     )
-
-    render json: ranked_resources, include: params[:include], fields: field_params, status: :ok
   end
 
   def default_order
@@ -56,12 +52,10 @@ class ResourcesPersonalizationController < ApplicationController
 
     language = find_language!(lang)
 
-    default_order_resources = all_default_order_resources(
+    render_resources all_default_order_resources(
       language: language,
       resource_types: params.dig(:filter, :"resource-type")
     )
-
-    render json: default_order_resources, include: params[:include], fields: field_params, status: :ok
   end
 
   private
@@ -109,5 +103,11 @@ class ResourcesPersonalizationController < ApplicationController
     return scope if type_names.none?
 
     scope.joins(:resource_type).where(resource_types: {name: type_names})
+  end
+
+  def render_resources(resources)
+    # the serializer touches resource_type and resource_attributes for every resource
+    render json: resources.preload(:resource_type, :resource_attributes),
+      include: params[:include], fields: field_params, status: :ok
   end
 end
