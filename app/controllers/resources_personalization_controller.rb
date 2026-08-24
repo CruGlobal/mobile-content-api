@@ -1,6 +1,11 @@
 # frozen_string_literal: true
 
 class ResourcesPersonalizationController < ApplicationController
+  rescue_from InvalidRequestError do |e|
+    render json: {errors: [{detail: "Error: #{e.message}"}]},
+      status: :unprocessable_content
+  end
+
   def featured
     lang_code = params.dig(:filter, :lang)
     country = params.dig(:filter, :country)
@@ -19,9 +24,6 @@ class ResourcesPersonalizationController < ApplicationController
     )
 
     render json: featured_resources, include: params[:include], fields: field_params, status: :ok
-  rescue InvalidRequestError => e
-    render json: {errors: [{detail: "Error: #{e.message}"}]},
-      status: :unprocessable_content
   end
 
   def ranked
@@ -42,9 +44,6 @@ class ResourcesPersonalizationController < ApplicationController
     )
 
     render json: ranked_resources, include: params[:include], fields: field_params, status: :ok
-  rescue InvalidRequestError => e
-    render json: {errors: [{detail: "Error: #{e.message}"}]},
-      status: :unprocessable_content
   end
 
   def default_order
@@ -63,9 +62,6 @@ class ResourcesPersonalizationController < ApplicationController
     )
 
     render json: default_order_resources, include: params[:include], fields: field_params, status: :ok
-  rescue InvalidRequestError => e
-    render json: {errors: [{detail: "Error: #{e.message}"}]},
-      status: :unprocessable_content
   end
 
   private
