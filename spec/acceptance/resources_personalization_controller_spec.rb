@@ -37,27 +37,17 @@ resource "ResourcesPersonalization" do
 
     context "with language filter" do
       it "returns featured resources for specified language" do
-        do_request lang: "fr"
+        do_request filter: {lang: "fr"}
 
         expect(status).to be(200)
         json = JSON.parse(response_body)
         expect(json["data"].size).to eq(0)
       end
-
-      context "inside filter param" do
-        it "returns featured resources for specified language" do
-          do_request filter: {lang: "fr"}
-
-          expect(status).to be(200)
-          json = JSON.parse(response_body)
-          expect(json["data"].size).to eq(0)
-        end
-      end
     end
 
     context "with invalid language code" do
       it "returns unprocessable content error" do
-        do_request lang: "apple_orchard"
+        do_request filter: {lang: "apple_orchard"}
 
         expect(status).to be(422)
         json = JSON.parse(response_body)
@@ -68,23 +58,12 @@ resource "ResourcesPersonalization" do
 
     context "with country filter" do
       it "returns featured resources for specified country" do
-        do_request country: "us"
+        do_request filter: {country: "us"}
 
         expect(status).to be(200)
         json = JSON.parse(response_body)
         expect(json["data"].size).to eq(1)
         expect(json["data"][0]["relationships"]["resource-scores"]["data"][0]["id"]).to eq(resource_score.id.to_s)
-      end
-
-      context "inside filter param" do
-        it "returns featured resources for specified country" do
-          do_request filter: {country: "us"}
-
-          expect(status).to be(200)
-          json = JSON.parse(response_body)
-          expect(json["data"].size).to eq(1)
-          expect(json["data"][0]["relationships"]["resource-scores"]["data"][0]["id"]).to eq(resource_score.id.to_s)
-        end
       end
     end
 
@@ -284,7 +263,7 @@ resource "ResourcesPersonalization" do
 
     context "with language filter" do
       it "returns default order resources for specified language" do
-        do_request lang: "en"
+        do_request filter: {lang: "en"}
 
         expect(status).to be(200)
         json = JSON.parse(response_body)
@@ -293,27 +272,16 @@ resource "ResourcesPersonalization" do
       end
 
       it "returns empty array for non-existent language" do
-        do_request lang: "de"
+        do_request filter: {lang: "de"}
 
         expect(status).to be(200)
         json = JSON.parse(response_body)
         expect(json["data"].size).to eq(0)
       end
 
-      context "inside filter param" do
-        it "returns default order resources for specified language" do
-          do_request filter: {lang: "en"}
-
-          expect(status).to be(200)
-          json = JSON.parse(response_body)
-          expect(json["data"].size).to eq(2)
-          expect(json["data"][0]["id"]).to eq(resource_1.id.to_s)
-        end
-      end
-
       context "with case insensitive language code" do
         it "returns default order resources" do
-          do_request lang: "EN"
+          do_request filter: {lang: "EN"}
 
           expect(status).to be(200)
           json = JSON.parse(response_body)
@@ -362,7 +330,7 @@ resource "ResourcesPersonalization" do
       end
 
       it "returns default order resources matching both filters" do
-        do_request lang: "en", resource_type: "metatool"
+        do_request filter: {lang: "en"}, resource_type: "metatool"
 
         expect(status).to be(200)
         json = JSON.parse(response_body)
@@ -373,7 +341,7 @@ resource "ResourcesPersonalization" do
 
     context "with invalid language code" do
       it "returns unprocessable content error" do
-        do_request lang: "invalid_lang_code_that_does_not_exist"
+        do_request filter: {lang: "invalid_lang_code_that_does_not_exist"}
 
         expect(status).to be(422)
         json = JSON.parse(response_body)
@@ -391,7 +359,7 @@ resource "ResourcesPersonalization" do
       end
 
       it "orders by position ascending" do
-        do_request lang: "en"
+        do_request filter: {lang: "en"}
 
         expect(status).to be(200)
         json = JSON.parse(response_body)

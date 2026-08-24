@@ -2,13 +2,13 @@
 
 class ResourcesPersonalizationController < ApplicationController
   def featured
-    lang_code = params.dig(:filter, :lang) || params[:lang]
+    lang_code = params.dig(:filter, :lang)
 
     find_language!(lang_code) if lang_code.present?
 
     featured_resources = all_featured_resources(
       lang_code: lang_code,
-      country: params.dig(:filter, :country) || params[:country],
+      country: params.dig(:filter, :country),
       resource_type: params.dig(:filter, :resource_type) || params[:resource_type]
     )
 
@@ -42,7 +42,7 @@ class ResourcesPersonalizationController < ApplicationController
   end
 
   def default_order
-    lang = params.dig(:filter, :lang) || params[:lang]
+    lang = params.dig(:filter, :lang)
 
     find_language!(lang) if lang.present?
 
