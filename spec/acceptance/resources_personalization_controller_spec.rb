@@ -88,15 +88,15 @@ resource "ResourcesPersonalization" do
       end
     end
 
-    context "with resource_type filter" do
+    context "with resource-type filter" do
       let!(:tool_resource) { Resource.joins(:resource_type).where(resource_types: {name: "metatool"}).first }
       let!(:tool_score) do
         FactoryBot.create(:resource_score, resource: tool_resource, featured: true, featured_order: 2,
           language: language_en)
       end
 
-      it "returns featured resources for specified resource type" do
-        do_request({filter: {lang: "en", country: "us"}, resource_type: "metatool"})
+      it "returns featured resources for a single resource type" do
+        do_request filter: {lang: "en", country: "us", "resource-type": "metatool"}
 
         expect(status).to be(200)
         json = JSON.parse(response_body)
@@ -104,15 +104,12 @@ resource "ResourcesPersonalization" do
         expect(json["data"][0]["relationships"]["resource-scores"]["data"][0]["id"]).to eq(tool_score.id.to_s)
       end
 
-      context "inside filter param" do
-        it "returns featured resources for specified resource type" do
-          do_request filter: {lang: "en", country: "us", resource_type: "metatool"}
+      it "returns featured resources for comma-separated resource types" do
+        do_request filter: {lang: "en", country: "us", "resource-type": "tract,metatool"}
 
-          expect(status).to be(200)
-          json = JSON.parse(response_body)
-          expect(json["data"].size).to eq(1)
-          expect(json["data"][0]["relationships"]["resource-scores"]["data"][0]["id"]).to eq(tool_score.id.to_s)
-        end
+        expect(status).to be(200)
+        json = JSON.parse(response_body)
+        expect(json["data"].size).to eq(2)
       end
     end
   end
@@ -309,7 +306,7 @@ resource "ResourcesPersonalization" do
       end
     end
 
-    context "with resource_type filter" do
+    context "with resource-type filter" do
       let!(:tool_resource) { Resource.joins(:resource_type).where(resource_types: {name: "metatool"}).first }
       let!(:tool_default_order) do
         ResourceDefaultOrder.find_or_create_by!(resource: tool_resource,
@@ -317,9 +314,15 @@ resource "ResourcesPersonalization" do
           rdo.position = 3
         end
       end
+      let!(:article_default_order) do
+        ResourceDefaultOrder.find_or_create_by!(resource: resource_3,
+          language: Language.find_or_create_by!(code: "en", name: "English")) do |rdo|
+          rdo.position = 4
+        end
+      end
 
-      it "returns default order resources for specified resource type" do
-        do_request({filter: {lang: "en"}, resource_type: "metatool"})
+      it "returns default order resources for a single resource type" do
+        do_request filter: {lang: "en", "resource-type": "metatool"}
 
         expect(status).to be(200)
         json = JSON.parse(response_body)
@@ -327,15 +330,14 @@ resource "ResourcesPersonalization" do
         expect(json["data"][0]["id"]).to eq(tool_resource.id.to_s)
       end
 
-      context "inside filter param" do
-        it "returns default order resources for specified resource type" do
-          do_request filter: {lang: "en", resource_type: "metatool"}
+      it "returns default order resources for comma-separated resource types" do
+        do_request filter: {lang: "en", "resource-type": "tract,metatool"}
 
-          expect(status).to be(200)
-          json = JSON.parse(response_body)
-          expect(json["data"].size).to eq(1)
-          expect(json["data"][0]["id"]).to eq(tool_resource.id.to_s)
-        end
+        expect(status).to be(200)
+        json = JSON.parse(response_body)
+        expect(json["data"].map { |d| d["id"] }).to eq(
+          [resource_1.id.to_s, resource_2.id.to_s, tool_resource.id.to_s]
+        )
       end
     end
 

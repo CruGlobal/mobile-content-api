@@ -15,7 +15,7 @@ class ResourcesPersonalizationController < ApplicationController
     featured_resources = all_featured_resources(
       language: language,
       country: country,
-      resource_type: params.dig(:filter, :resource_type) || params[:resource_type]
+      resource_types: params.dig(:filter, :"resource-type")
     )
 
     render json: featured_resources, include: params[:include], fields: field_params, status: :ok
@@ -59,7 +59,7 @@ class ResourcesPersonalizationController < ApplicationController
 
     default_order_resources = all_default_order_resources(
       language: language,
-      resource_type: params.dig(:filter, :resource_type) || params[:resource_type]
+      resource_types: params.dig(:filter, :"resource-type")
     )
 
     render json: default_order_resources, include: params[:include], fields: field_params, status: :ok
@@ -77,15 +77,12 @@ class ResourcesPersonalizationController < ApplicationController
     language
   end
 
-  def all_featured_resources(language:, country:, resource_type: nil)
+  def all_featured_resources(language:, country:, resource_types: nil)
     scope = Resource.includes(:resource_scores).left_joins(:resource_scores)
       .where(resource_scores: {featured: true})
       .joins(resource_scores: :language).where(languages: {id: language.id})
       .where("resource_scores.country = LOWER(:country)", country:)
-
-    if resource_type.present?
-      scope = scope.joins(:resource_type).where(resource_types: {name: resource_type.downcase})
-    end
+    scope = apply_resource_type_filter(scope, resource_types)
 
     scope.order("resource_scores.featured_order ASC, resource_scores.featured DESC NULLS LAST, \
     resource_scores.score DESC NULLS LAST, \
@@ -97,20 +94,23 @@ class ResourcesPersonalizationController < ApplicationController
       .where.not(resource_scores: {score: nil})
       .joins(resource_scores: :language).where(languages: {id: language.id})
       .where("resource_scores.country = LOWER(:country)", country:)
-
-    type_names = Array(resource_types).flat_map { |t| t.split(",") }.map(&:downcase)
-    scope = scope.joins(:resource_type).where(resource_types: {name: type_names}) if type_names.any?
+    scope = apply_resource_type_filter(scope, resource_types)
 
     scope.order("resource_scores.score DESC, resources.created_at DESC")
   end
 
-  def all_default_order_resources(language:, resource_type: nil)
+  def all_default_order_resources(language:, resource_types: nil)
     scope = Resource.joins(:resource_default_orders)
       .joins(resource_default_orders: :language).where(languages: {id: language.id})
+    scope = apply_resource_type_filter(scope, resource_types)
 
-    if resource_type.present?
-      scope = scope.joins(:resource_type).where(resource_types: {name: resource_type.downcase})
-    end
     scope.order("resource_default_orders.position ASC NULLS LAST, resources.created_at DESC")
+  end
+
+  def apply_resource_type_filter(scope, resource_types)
+    type_names = Array(resource_types).flat_map { |t| t.split(",") }.map(&:downcase)
+    return scope if type_names.none?
+
+    scope.joins(:resource_type).where(resource_types: {name: type_names})
   end
 end
