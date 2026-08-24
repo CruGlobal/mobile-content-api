@@ -22,8 +22,8 @@ Rails.application.routes.draw do
     resources :translated_attributes, path: "translated-attributes", only: %i[create update destroy]
     post "translations/publish", to: "resources#publish_translation"
     collection do
-      get :featured
-      get :default_order
+      get :featured, to: "resources_personalization#featured"
+      get :default_order, to: "resources_personalization#default_order"
     end
   end
 
