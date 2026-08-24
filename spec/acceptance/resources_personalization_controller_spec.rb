@@ -5,24 +5,17 @@ require "acceptance_helper"
 resource "ResourcesPersonalization" do
   header "Accept", "application/vnd.api+json"
   header "Content-Type", "application/vnd.api+json"
-  let(:raw_post) { params.to_json }
-  let(:authorization) { AuthToken.generic_token }
 
   let(:resource_1) { Resource.find(1) }
   let(:resource_2) { Resource.find(2) }
   let(:resource_3) { Resource.find(3) }
+  let(:tool_resource) { Resource.find_by!(name: "metatool") }
 
   let!(:language_en) { Language.find_or_create_by!(code: "en", name: "English") }
   let!(:language_fr) { Language.find_or_create_by!(code: "fr", name: "French") }
 
   get "resources/featured" do
-    let!(:resource_score) do
-      ResourceScore.find_or_create_by!(resource: resource_1, country: "us",
-        language: Language.find_or_create_by!(code: "en", name: "English")) do |rs|
-        rs.featured = true
-        rs.featured_order = 1
-      end
-    end
+    let!(:resource_score) { FactoryBot.create(:resource_score, resource: resource_1, language: language_en) }
 
     context "with lang and country filters" do
       it "returns featured resources" do
@@ -89,7 +82,6 @@ resource "ResourcesPersonalization" do
     end
 
     context "with resource-type filter" do
-      let!(:tool_resource) { Resource.joins(:resource_type).where(resource_types: {name: "metatool"}).first }
       let!(:tool_score) do
         FactoryBot.create(:resource_score, resource: tool_resource, featured: true, featured_order: 2,
           language: language_en)
@@ -115,8 +107,6 @@ resource "ResourcesPersonalization" do
   end
 
   get "resources/ranked" do
-    let(:resource_4) { Resource.find(4) }
-
     let!(:low_score) do
       ResourceScore.find_or_create_by!(resource: resource_1, country: "us", language: language_en) do |rs|
         rs.score = 5
@@ -136,7 +126,7 @@ resource "ResourcesPersonalization" do
     end
 
     let!(:featured_without_score) do
-      ResourceScore.find_or_create_by!(resource: resource_4, country: "us", language: language_en) do |rs|
+      ResourceScore.find_or_create_by!(resource: tool_resource, country: "us", language: language_en) do |rs|
         rs.featured = true
         rs.featured_order = 1
       end
@@ -254,17 +244,11 @@ resource "ResourcesPersonalization" do
 
   get "resources/default-order" do
     let!(:resource_default_order_1) do
-      ResourceDefaultOrder.find_or_create_by!(resource: resource_1,
-        language: Language.find_or_create_by!(code: "en", name: "English")) do |rdo|
-        rdo.position = 1
-      end
+      FactoryBot.create(:resource_default_order, resource: resource_1, language: language_en, position: 1)
     end
 
     let!(:resource_default_order_2) do
-      ResourceDefaultOrder.find_or_create_by!(resource: resource_2,
-        language: Language.find_or_create_by!(code: "en", name: "English")) do |rdo|
-        rdo.position = 2
-      end
+      FactoryBot.create(:resource_default_order, resource: resource_2, language: language_en, position: 2)
     end
 
     context "with missing required filters" do
@@ -307,18 +291,11 @@ resource "ResourcesPersonalization" do
     end
 
     context "with resource-type filter" do
-      let!(:tool_resource) { Resource.joins(:resource_type).where(resource_types: {name: "metatool"}).first }
       let!(:tool_default_order) do
-        ResourceDefaultOrder.find_or_create_by!(resource: tool_resource,
-          language: Language.find_or_create_by!(code: "en", name: "English")) do |rdo|
-          rdo.position = 3
-        end
+        FactoryBot.create(:resource_default_order, resource: tool_resource, language: language_en, position: 3)
       end
       let!(:article_default_order) do
-        ResourceDefaultOrder.find_or_create_by!(resource: resource_3,
-          language: Language.find_or_create_by!(code: "en", name: "English")) do |rdo|
-          rdo.position = 4
-        end
+        FactoryBot.create(:resource_default_order, resource: resource_3, language: language_en, position: 4)
       end
 
       it "returns default order resources for a single resource type" do
@@ -354,10 +331,7 @@ resource "ResourcesPersonalization" do
 
     context "returns resources in correct order" do
       let!(:resource_default_order_3) do
-        ResourceDefaultOrder.find_or_create_by!(resource: resource_3,
-          language: Language.find_or_create_by!(code: "en", name: "English")) do |rdo|
-          rdo.position = 1
-        end
+        FactoryBot.create(:resource_default_order, resource: resource_3, language: language_en, position: 1)
       end
 
       it "orders by position ascending" do
