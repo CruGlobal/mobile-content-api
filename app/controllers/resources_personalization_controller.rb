@@ -3,12 +3,18 @@
 class ResourcesPersonalizationController < ApplicationController
   def featured
     lang_code = params.dig(:filter, :lang)
+    country = params.dig(:filter, :country)
 
-    find_language!(lang_code) if lang_code.present?
+    unless lang_code.present? && country.present?
+      return render json: {errors: [{detail: "Error: Language and Country Filters are required."}]},
+        status: :bad_request
+    end
+
+    language = find_language!(lang_code)
 
     featured_resources = all_featured_resources(
-      lang_code: lang_code,
-      country: params.dig(:filter, :country),
+      language: language,
+      country: country,
       resource_type: params.dig(:filter, :resource_type) || params[:resource_type]
     )
 
@@ -66,15 +72,12 @@ class ResourcesPersonalizationController < ApplicationController
     language
   end
 
-  def all_featured_resources(lang_code:, country:, resource_type: nil)
-    scope = Resource.includes(:resource_scores).left_joins(:resource_scores).where(resource_scores: {featured: true})
+  def all_featured_resources(language:, country:, resource_type: nil)
+    scope = Resource.includes(:resource_scores).left_joins(:resource_scores)
+      .where(resource_scores: {featured: true})
+      .joins(resource_scores: :language).where(languages: {id: language.id})
+      .where("resource_scores.country = LOWER(:country)", country:)
 
-    if lang_code.present?
-      language = Language.find_by_code(lang_code)
-      scope = scope.joins(resource_scores: :language).where(languages: {id: language.id})
-    end
-
-    scope = scope.where("resource_scores.country = LOWER(:country)", country:) if country.present?
     if resource_type.present?
       scope = scope.joins(:resource_type).where(resource_types: {name: resource_type.downcase})
     end

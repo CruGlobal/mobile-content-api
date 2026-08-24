@@ -24,20 +24,26 @@ resource "ResourcesPersonalization" do
       end
     end
 
-    context "without filters" do
+    context "with lang and country filters" do
       it "returns featured resources" do
-        do_request include: "resource-score"
+        do_request filter: {lang: "en", country: "us"}, include: "resource-score"
 
         expect(status).to be(200)
         json = JSON.parse(response_body)
         expect(json["data"].size).to eq(1)
         expect(json["data"][0]["relationships"]["resource-scores"]["data"][0]["id"]).to eq(resource_score.id.to_s)
       end
-    end
 
-    context "with language filter" do
-      it "returns featured resources for specified language" do
-        do_request filter: {lang: "fr"}
+      it "returns no featured resources for another language" do
+        do_request filter: {lang: "fr", country: "us"}
+
+        expect(status).to be(200)
+        json = JSON.parse(response_body)
+        expect(json["data"].size).to eq(0)
+      end
+
+      it "returns no featured resources for another country" do
+        do_request filter: {lang: "en", country: "gb"}
 
         expect(status).to be(200)
         json = JSON.parse(response_body)
@@ -45,9 +51,35 @@ resource "ResourcesPersonalization" do
       end
     end
 
+    context "with missing required filters" do
+      it "returns bad request when both lang and country are missing" do
+        do_request
+
+        expect(status).to be(400)
+        json = JSON.parse(response_body)
+        expect(json["errors"].first["detail"]).to include("Language and Country Filters are required.")
+      end
+
+      it "returns bad request when country is missing" do
+        do_request filter: {lang: "en"}
+
+        expect(status).to be(400)
+        json = JSON.parse(response_body)
+        expect(json["errors"].first["detail"]).to include("Language and Country Filters are required.")
+      end
+
+      it "returns bad request when lang is missing" do
+        do_request filter: {country: "us"}
+
+        expect(status).to be(400)
+        json = JSON.parse(response_body)
+        expect(json["errors"].first["detail"]).to include("Language and Country Filters are required.")
+      end
+    end
+
     context "with invalid language code" do
       it "returns unprocessable content error" do
-        do_request filter: {lang: "apple_orchard"}
+        do_request filter: {lang: "apple_orchard", country: "us"}
 
         expect(status).to be(422)
         json = JSON.parse(response_body)
@@ -56,26 +88,15 @@ resource "ResourcesPersonalization" do
       end
     end
 
-    context "with country filter" do
-      it "returns featured resources for specified country" do
-        do_request filter: {country: "us"}
-
-        expect(status).to be(200)
-        json = JSON.parse(response_body)
-        expect(json["data"].size).to eq(1)
-        expect(json["data"][0]["relationships"]["resource-scores"]["data"][0]["id"]).to eq(resource_score.id.to_s)
-      end
-    end
-
     context "with resource_type filter" do
       let!(:tool_resource) { Resource.joins(:resource_type).where(resource_types: {name: "metatool"}).first }
       let!(:tool_score) do
         FactoryBot.create(:resource_score, resource: tool_resource, featured: true, featured_order: 2,
-          language: Language.find_or_create_by!(code: "en", name: "English"))
+          language: language_en)
       end
 
       it "returns featured resources for specified resource type" do
-        do_request resource_type: "metatool"
+        do_request({filter: {lang: "en", country: "us"}, resource_type: "metatool"})
 
         expect(status).to be(200)
         json = JSON.parse(response_body)
@@ -85,7 +106,7 @@ resource "ResourcesPersonalization" do
 
       context "inside filter param" do
         it "returns featured resources for specified resource type" do
-          do_request filter: {resource_type: "metatool"}
+          do_request filter: {lang: "en", country: "us", resource_type: "metatool"}
 
           expect(status).to be(200)
           json = JSON.parse(response_body)
