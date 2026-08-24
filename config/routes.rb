@@ -24,7 +24,7 @@ Rails.application.routes.draw do
     collection do
       get :featured, to: "resources_personalization#featured"
       get :ranked, to: "resources_personalization#ranked"
-      get :default_order, to: "resources_personalization#default_order"
+      get "default-order", to: "resources_personalization#default_order"
     end
   end
 

@@ -50,10 +50,15 @@ class ResourcesPersonalizationController < ApplicationController
   def default_order
     lang = params.dig(:filter, :lang)
 
-    find_language!(lang) if lang.present?
+    unless lang.present?
+      return render json: {errors: [{detail: "Error: Language Filter is required."}]},
+        status: :bad_request
+    end
+
+    language = find_language!(lang)
 
     default_order_resources = all_default_order_resources(
-      lang: lang,
+      language: language,
       resource_type: params.dig(:filter, :resource_type) || params[:resource_type]
     )
 
@@ -99,13 +104,9 @@ class ResourcesPersonalizationController < ApplicationController
     scope.order("resource_scores.score DESC, resources.created_at DESC")
   end
 
-  def all_default_order_resources(lang:, resource_type: nil)
+  def all_default_order_resources(language:, resource_type: nil)
     scope = Resource.joins(:resource_default_orders)
-
-    if lang.present?
-      language = Language.find_by_code(lang)
-      scope = scope.joins(resource_default_orders: :language).where(languages: {id: language.id})
-    end
+      .joins(resource_default_orders: :language).where(languages: {id: language.id})
 
     if resource_type.present?
       scope = scope.joins(:resource_type).where(resource_types: {name: resource_type.downcase})

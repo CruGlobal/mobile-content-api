@@ -255,7 +255,7 @@ resource "ResourcesPersonalization" do
     end
   end
 
-  get "resources/default_order" do
+  get "resources/default-order" do
     let!(:resource_default_order_1) do
       ResourceDefaultOrder.find_or_create_by!(resource: resource_1,
         language: Language.find_or_create_by!(code: "en", name: "English")) do |rdo|
@@ -270,15 +270,13 @@ resource "ResourcesPersonalization" do
       end
     end
 
-    context "without filters" do
-      it "returns default order resources" do
-        do_request include: "language"
+    context "with missing required filters" do
+      it "returns bad request when lang is missing" do
+        do_request
 
-        expect(status).to be(200)
+        expect(status).to be(400)
         json = JSON.parse(response_body)
-        expect(json["data"].size).to eq(2)
-        expect(json["data"][0]["id"]).to eq(resource_1.id.to_s)
-        expect(json["data"][1]["id"]).to eq(resource_2.id.to_s)
+        expect(json["errors"].first["detail"]).to include("Language Filter is required.")
       end
     end
 
@@ -321,7 +319,7 @@ resource "ResourcesPersonalization" do
       end
 
       it "returns default order resources for specified resource type" do
-        do_request resource_type: "metatool"
+        do_request({filter: {lang: "en"}, resource_type: "metatool"})
 
         expect(status).to be(200)
         json = JSON.parse(response_body)
@@ -331,32 +329,13 @@ resource "ResourcesPersonalization" do
 
       context "inside filter param" do
         it "returns default order resources for specified resource type" do
-          do_request filter: {resource_type: "metatool"}
+          do_request filter: {lang: "en", resource_type: "metatool"}
 
           expect(status).to be(200)
           json = JSON.parse(response_body)
           expect(json["data"].size).to eq(1)
           expect(json["data"][0]["id"]).to eq(tool_resource.id.to_s)
         end
-      end
-    end
-
-    context "with language and resource_type filters" do
-      let!(:tool_resource) { Resource.joins(:resource_type).where(resource_types: {name: "metatool"}).first }
-      let!(:tool_default_order) do
-        ResourceDefaultOrder.find_or_create_by!(resource: tool_resource,
-          language: Language.find_or_create_by!(code: "en", name: "English")) do |rdo|
-          rdo.position = 3
-        end
-      end
-
-      it "returns default order resources matching both filters" do
-        do_request filter: {lang: "en"}, resource_type: "metatool"
-
-        expect(status).to be(200)
-        json = JSON.parse(response_body)
-        expect(json["data"].size).to eq(1)
-        expect(json["data"][0]["id"]).to eq(tool_resource.id.to_s)
       end
     end
 
