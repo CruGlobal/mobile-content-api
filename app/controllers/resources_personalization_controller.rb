@@ -72,9 +72,9 @@ class ResourcesPersonalizationController < ApplicationController
       .where(resource_scores: {featured: true})
     scope = apply_resource_type_filter(scope, resource_types)
 
-    scope.order("resource_scores.featured_order ASC, resource_scores.featured DESC NULLS LAST, \
-    resource_scores.score DESC NULLS LAST, \
-    resources.created_at DESC")
+    scope.order("resource_scores.featured_order ASC, \
+      resource_scores.score DESC NULLS LAST, \
+      resources.created_at DESC")
   end
 
   def all_ranked_resources(language:, country:, resource_types: nil)
