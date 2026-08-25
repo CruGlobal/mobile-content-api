@@ -1,19 +1,11 @@
 # frozen_string_literal: true
 
 class ResourcesPersonalizationController < ApplicationController
-  rescue_from InvalidRequestError do |e|
-    render json: {errors: [{detail: "Error: #{e.message}"}]},
-      status: :unprocessable_content
-  end
-
   def featured
     lang_code = filter_param(:lang)
     country = filter_param(:country)
 
-    unless lang_code.present? && country.present?
-      return render json: {errors: [{detail: "Error: Language and Country Filters are required."}]},
-        status: :bad_request
-    end
+    raise Error::BadRequestError, "Language and Country Filters are required." unless lang_code.present? && country.present?
 
     language = find_language!(lang_code)
 
@@ -28,10 +20,7 @@ class ResourcesPersonalizationController < ApplicationController
     lang_code = filter_param(:lang)
     country = filter_param(:country)
 
-    unless lang_code.present? && country.present?
-      return render json: {errors: [{detail: "Error: Language and Country Filters are required."}]},
-        status: :bad_request
-    end
+    raise Error::BadRequestError, "Language and Country Filters are required." unless lang_code.present? && country.present?
 
     language = find_language!(lang_code)
 
@@ -45,10 +34,7 @@ class ResourcesPersonalizationController < ApplicationController
   def default_order
     lang = filter_param(:lang)
 
-    unless lang.present?
-      return render json: {errors: [{detail: "Error: Language Filter is required."}]},
-        status: :bad_request
-    end
+    raise Error::BadRequestError, "Language Filter is required." unless lang.present?
 
     language = find_language!(lang)
 

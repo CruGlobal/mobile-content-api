@@ -28,6 +28,10 @@ class ApplicationController < ActionController::Base
     render_api_error(exception, :conflict)
   end
 
+  rescue_from InvalidRequestError do |exception|
+    render_api_error(exception, :unprocessable_content)
+  end
+
   def render(**args)
     response.headers["Content-Type"] = "application/vnd.api+json" if args.key?(:json)
 
