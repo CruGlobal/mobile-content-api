@@ -213,6 +213,32 @@ resource "ResourcesPersonalization" do
       end
     end
 
+    context "with malformed filter params" do
+      it "returns bad request when the filter param is not nested" do
+        do_request filter: "abc"
+
+        expect(status).to be(400)
+        json = JSON.parse(response_body)
+        expect(json["errors"].first["detail"]).to include("Language and Country Filters are required.")
+      end
+
+      it "returns unprocessable content when a filter value is an array" do
+        do_request filter: {lang: "en", country: ["us"]}
+
+        expect(status).to be(422)
+        json = JSON.parse(response_body)
+        expect(json["errors"].first["detail"]).to include("filter[country] must be a single value")
+      end
+
+      it "returns unprocessable content when a filter value is nested" do
+        do_request filter: {lang: "en", country: "us", "resource-type": {a: "b"}}
+
+        expect(status).to be(422)
+        json = JSON.parse(response_body)
+        expect(json["errors"].first["detail"]).to include("filter[resource-type] must be a single value")
+      end
+    end
+
     context "with resource-type filter" do
       it "returns ranked resources for a single resource type" do
         do_request filter: {lang: "en", country: "us", "resource-type": "article"}

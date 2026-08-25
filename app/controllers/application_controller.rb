@@ -44,6 +44,18 @@ class ApplicationController < ActionController::Base
     data_attrs.permit(params)
   end
 
+  # Read a scalar value from the JSON:API filter param, rejecting any
+  # non-scalar shapes a query string can produce.
+  def filter_param(key)
+    filter = params[:filter]
+    return nil unless filter.is_a?(ActionController::Parameters)
+
+    value = filter[key]
+    raise InvalidRequestError, "filter[#{key}] must be a single value" if value.present? && !value.is_a?(String)
+
+    value
+  end
+
   def authorize!
     # requested is authorized if using okta and user is admin
     return if current_user&.admin

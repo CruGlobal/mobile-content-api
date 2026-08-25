@@ -7,8 +7,8 @@ class ResourcesPersonalizationController < ApplicationController
   end
 
   def featured
-    lang_code = params.dig(:filter, :lang)
-    country = params.dig(:filter, :country)
+    lang_code = filter_param(:lang)
+    country = filter_param(:country)
 
     unless lang_code.present? && country.present?
       return render json: {errors: [{detail: "Error: Language and Country Filters are required."}]},
@@ -20,13 +20,13 @@ class ResourcesPersonalizationController < ApplicationController
     render_resources all_featured_resources(
       language: language,
       country: country,
-      resource_types: params.dig(:filter, :"resource-type")
+      resource_types: filter_param(:"resource-type")
     )
   end
 
   def ranked
-    lang_code = params.dig(:filter, :lang)
-    country = params.dig(:filter, :country)
+    lang_code = filter_param(:lang)
+    country = filter_param(:country)
 
     unless lang_code.present? && country.present?
       return render json: {errors: [{detail: "Error: Language and Country Filters are required."}]},
@@ -38,12 +38,12 @@ class ResourcesPersonalizationController < ApplicationController
     render_resources all_ranked_resources(
       language: language,
       country: country,
-      resource_types: params.dig(:filter, :"resource-type")
+      resource_types: filter_param(:"resource-type")
     )
   end
 
   def default_order
-    lang = params.dig(:filter, :lang)
+    lang = filter_param(:lang)
 
     unless lang.present?
       return render json: {errors: [{detail: "Error: Language Filter is required."}]},
@@ -54,7 +54,7 @@ class ResourcesPersonalizationController < ApplicationController
 
     render_resources all_default_order_resources(
       language: language,
-      resource_types: params.dig(:filter, :"resource-type")
+      resource_types: filter_param(:"resource-type")
     )
   end
 
