@@ -2,6 +2,7 @@
 
 class ApplicationController < ActionController::Base
   include Fields
+  include Pundit::Authorization
 
   skip_before_action :verify_authenticity_token
   before_action :decode_json_api
@@ -28,6 +29,8 @@ class ApplicationController < ActionController::Base
     render_api_error(exception, :conflict)
   end
 
+  rescue_from Pundit::NotAuthorizedError, with: :render_forbidden
+
   def render(**args)
     response.headers["Content-Type"] = "application/vnd.api+json" if args.key?(:json)
 
@@ -47,6 +50,15 @@ class ApplicationController < ActionController::Base
   def require_admin!
     # requested is authorized if using okta and user is admin
     return if current_user&.admin
+
+    render_unauthorized
+  end
+
+  # For endpoints where being signed in is the floor and a Pundit policy decides
+  # the rest. Keeps the 401/403 split honest: no token is unauthenticated, a
+  # token without the right grant is forbidden.
+  def require_login!
+    return if current_user
 
     render_unauthorized
   end
