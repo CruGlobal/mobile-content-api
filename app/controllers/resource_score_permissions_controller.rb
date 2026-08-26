@@ -1,11 +1,17 @@
 # frozen_string_literal: true
 
-# Admin-only management of which (country, language) pairs a user may edit
-# ResourceScores for. Granting edit access is itself a superuser action, so this
-# whole controller stays behind require_admin!.
+# Management of which (country, language) pairs a user may edit ResourceScores
+# for. Handing out edit access is itself a superuser action, so every writing
+# action stays behind require_admin!.
+#
+# Reading is the exception: an editor may read their own grants, so the admin UI
+# can grey out the locales they cannot touch without having to be an admin to
+# ask. Reading someone else's still requires admin.
 class ResourceScorePermissionsController < ApplicationController
-  before_action :require_admin!
+  before_action :require_login!, only: :index
+  before_action :require_admin!, except: :index
   before_action :load_user
+  before_action :require_self_or_admin!, only: :index
 
   def index
     render json: @user.resource_score_permissions.includes(:language),
@@ -71,8 +77,17 @@ class ResourceScorePermissionsController < ApplicationController
 
   private
 
+  # "me" mirrors the subject convention WithUserController already uses for the
+  # other per-user endpoints.
   def load_user
-    @user = User.find(params[:user_id])
+    @user = (params[:user_id] == "me") ? current_user : User.find(params[:user_id])
+  end
+
+  def require_self_or_admin!
+    return if current_user&.admin
+    return if @user == current_user
+
+    render_forbidden
   end
 
   def create_params

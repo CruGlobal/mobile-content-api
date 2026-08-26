@@ -19,16 +19,72 @@ describe "ResourceScorePermissions management", type: :request do
   let(:base) { "/users/#{editor.id}/resource-score-permissions" }
 
   describe "authorization" do
-    it "rejects a non-admin" do
-      get base, headers: headers_for(editor)
-
-      expect(response).to have_http_status(:unauthorized)
-    end
+    let(:other_editor) { FactoryBot.create(:user, admin: false) }
 
     it "rejects an anonymous caller" do
       get base, headers: {"Accept" => "application/vnd.api+json"}
 
       expect(response).to have_http_status(:unauthorized)
+    end
+
+    context "reading" do
+      before do
+        FactoryBot.create(:resource_score_permission, user: editor, country: "us", language: english)
+      end
+
+      it "lets an editor read their own grants by id" do
+        get base, headers: headers_for(editor)
+
+        expect(response).to have_http_status(:ok)
+        expect(JSON.parse(response.body)["meta"]["grants"]).to eq({"us" => ["en"]})
+      end
+
+      it "lets an editor read their own grants via me" do
+        get "/users/me/resource-score-permissions", headers: headers_for(editor)
+
+        expect(response).to have_http_status(:ok)
+        expect(JSON.parse(response.body)["meta"]["grants"]).to eq({"us" => ["en"]})
+      end
+
+      it "forbids an editor from reading someone else's grants" do
+        get "/users/#{other_editor.id}/resource-score-permissions", headers: headers_for(editor)
+
+        expect(response).to have_http_status(:forbidden)
+      end
+
+      it "still lets an admin read anyone's grants" do
+        get base, headers: headers_for(admin)
+
+        expect(response).to have_http_status(:ok)
+      end
+    end
+
+    context "writing" do
+      it "rejects a non-admin creating a grant for themselves" do
+        post base,
+          params: {data: {attributes: {country: "mx", lang: "en"}}}.to_json,
+          headers: headers_for(editor)
+
+        expect(response).to have_http_status(:unauthorized)
+        expect(editor.resource_score_permissions).to be_empty
+      end
+
+      it "rejects a non-admin replacing their own grant map" do
+        patch "#{base}/mass_update",
+          params: {data: {attributes: {grants: {"mx" => ["*"]}}}}.to_json,
+          headers: headers_for(editor)
+
+        expect(response).to have_http_status(:unauthorized)
+      end
+
+      it "rejects a non-admin destroying a grant" do
+        permission = FactoryBot.create(:resource_score_permission, user: editor, country: "us", language: english)
+
+        delete "#{base}/#{permission.id}", headers: headers_for(editor)
+
+        expect(response).to have_http_status(:unauthorized)
+        expect(ResourceScorePermission.exists?(permission.id)).to be true
+      end
     end
   end
 
