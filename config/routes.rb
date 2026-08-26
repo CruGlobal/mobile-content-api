@@ -100,6 +100,14 @@ Rails.application.routes.draw do
 
   scope "users/:user_id" do
     resources :training_tips, path: "training-tips", only: %i[create update destroy]
+
+    resources :resource_score_permissions, path: "resource-score-permissions",
+      only: %i[index create destroy] do
+      collection do
+        put :mass_update
+        patch :mass_update
+      end
+    end
   end
 
   get "monitors/commit"
