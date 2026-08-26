@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<manifest xmlns="https://mobile-content-api.cru.org/xmlns/manifest">
+    <resources>
+        <resource filename="hero.jpg" src="https://example.com/hero.jpg"
+            checksum-sha256="g1h2i3j4k5l6g1h2i3j4k5l6g1h2i3j4k5l6g1h2i3j4k5l6g1h2i3j4k5l6g1h2" />
+    </resources>
+</manifest>

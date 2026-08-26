@@ -22,16 +22,16 @@ module Xml
       translate_node_attributes(@document, phrases, true)
     end
 
-    def add_page(filename, sha_filename)
-      pages_node.add_child(create_file_node(XmlUtil::XMLNS_MANIFEST, "page", filename, sha_filename))
+    def add_page(filename, sha_filename, checksum: nil, size: nil)
+      pages_node.add_child(create_file_node(XmlUtil::XMLNS_MANIFEST, "page", filename, sha_filename, checksum: checksum, size: size))
     end
 
-    def add_tip(name, sha_filename)
-      tips_node.add_child(create_file_node(XmlUtil::XMLNS_MANIFEST, "tip", name, sha_filename, "id"))
+    def add_tip(name, sha_filename, checksum: nil, size: nil)
+      tips_node.add_child(create_file_node(XmlUtil::XMLNS_MANIFEST, "tip", name, sha_filename, "id", checksum: checksum, size: size))
     end
 
-    def add_resource(filename, sha_filename)
-      resources_node.add_child(create_file_node(XmlUtil::XMLNS_MANIFEST, "resource", filename, sha_filename))
+    def add_resource(filename, sha_filename, checksum: nil, size: nil)
+      resources_node.add_child(create_file_node(XmlUtil::XMLNS_MANIFEST, "resource", filename, sha_filename, checksum: checksum, size: size))
     end
 
     private
@@ -84,10 +84,12 @@ module Xml
       @resources = XmlUtil.get_or_create_child(@document.root, XmlUtil::XMLNS_MANIFEST, "resources")
     end
 
-    def create_file_node(namespace, type, filename, sha_filename, filename_key = "filename")
+    def create_file_node(namespace, type, filename, sha_filename, filename_key = "filename", checksum: nil, size: nil)
       node = @document.create_element(type, xmlns: namespace)
       node[filename_key] = filename
       node["src"] = sha_filename
+      node["checksum-sha256"] = checksum if checksum
+      node["size"] = size.to_s if size
       node
     end
   end

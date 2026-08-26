@@ -10,11 +10,11 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_10_22_202102) do
+ActiveRecord::Schema[8.0].define(version: 2025_11_24_224217) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
+  enable_extension "pg_catalog.plpgsql"
   enable_extension "pg_stat_statements"
-  enable_extension "plpgsql"
   enable_extension "uuid-ossp"
 
   create_table "access_codes", id: :serial, force: :cascade do |t|
@@ -185,10 +185,10 @@ ActiveRecord::Schema[7.1].define(version: 2025_10_22_202102) do
   create_table "resource_default_orders", force: :cascade do |t|
     t.integer "position"
     t.integer "resource_id"
-    t.string "lang"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["lang"], name: "index_resource_default_orders_on_lang"
+    t.integer "language_id"
+    t.index ["resource_id", "language_id"], name: "index_resource_default_orders_on_resource_id_and_language_id", unique: true
     t.index ["resource_id"], name: "index_resource_default_orders_on_resource_id"
   end
 
@@ -196,14 +196,14 @@ ActiveRecord::Schema[7.1].define(version: 2025_10_22_202102) do
     t.integer "resource_id"
     t.boolean "featured"
     t.string "country"
-    t.string "lang"
     t.integer "score"
     t.float "user_score_average"
     t.integer "user_score_count"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer "featured_order"
-    t.index ["lang", "country"], name: "index_resource_scores_on_lang_and_country"
+    t.integer "language_id"
+    t.index ["resource_id", "language_id", "country"], name: "idx_on_resource_id_language_id_country_2842b155a9", unique: true
     t.index ["resource_id"], name: "index_resource_scores_on_resource_id"
   end
 

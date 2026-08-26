@@ -192,26 +192,46 @@ describe Package do
 
   context "manifest" do
     let(:pages) do
-      Nokogiri::XML('<pages xmlns="https://mobile-content-api.cru.org/xmlns/manifest">
-        <page filename="04_ThirdPoint.xml" src="ec9bac08c42c571a4df305171d04e196a5601af87e664600f1afba820b2a1a59.xml"/>
-        <page filename="13_FinalPage.xml" src="e9a07c177bb189cb1665307fffd770ad7c52316e0284a38fb8fa42f436b29397.xml"/>
-      </pages>').root
+      Nokogiri::XML(<<~XML).root
+        <pages xmlns="https://mobile-content-api.cru.org/xmlns/manifest">
+          <page filename="04_ThirdPoint.xml"
+                src="ec9bac08c42c571a4df305171d04e196a5601af87e664600f1afba820b2a1a59.xml"
+                checksum-sha256="ec9bac08c42c571a4df305171d04e196a5601af87e664600f1afba820b2a1a59"
+                size="1181"/>
+          <page filename="13_FinalPage.xml"
+                src="e9a07c177bb189cb1665307fffd770ad7c52316e0284a38fb8fa42f436b29397.xml"
+                checksum-sha256="e9a07c177bb189cb1665307fffd770ad7c52316e0284a38fb8fa42f436b29397"
+                size="1621"/>
+        </pages>
+      XML
     end
     let(:resources) do
-      Nokogiri::XML('<resources xmlns="https://mobile-content-api.cru.org/xmlns/manifest">
-        <resource filename="web_bundled.png" src="d028ba4dc56eb5ac641f19eeca5baa25d748ab303b32a5580f601e112a19b9f5.png"/>
-        <resource filename="web_attach.png" src="97c82df868bcd36afcb4b0af912a06c93782d47e9edc35604d9a4dc31afb0e47.png"/>
-        <resource filename="mobile_only.png" src="2cf2ab68c49b217c6b2402699c742a236f96efe36bc48821eb6ba1a1427b8945.png"/>
-        <resource filename="web_mobile.png" src="4245551d69a8c582b6fc5185fb5312efc4f6863bda991a12a76102736f92fa2d.png"/>
-        <resource filename="both.png" src="ad03ee4cc7b015919b375539db150dee5f47245c6a293663c21c774b2dba294f.png"/>
-        <resource filename="wall.jpg" src="073d78ef4dc421f10d2db375414660d3983f506fabdaaff0887f6ee955aa3bdd.jpg"/>
-      </resources>').root
+      Nokogiri::XML(<<~XML).root
+        <resources xmlns="https://mobile-content-api.cru.org/xmlns/manifest">
+          <resource filename="web_bundled.png" src="d028ba4dc56eb5ac641f19eeca5baa25d748ab303b32a5580f601e112a19b9f5.png"
+                    checksum-sha256="d028ba4dc56eb5ac641f19eeca5baa25d748ab303b32a5580f601e112a19b9f5" size="4108"/>
+          <resource filename="web_attach.png" src="97c82df868bcd36afcb4b0af912a06c93782d47e9edc35604d9a4dc31afb0e47.png"
+                    checksum-sha256="97c82df868bcd36afcb4b0af912a06c93782d47e9edc35604d9a4dc31afb0e47" size="5853"/>
+          <resource filename="mobile_only.png" src="2cf2ab68c49b217c6b2402699c742a236f96efe36bc48821eb6ba1a1427b8945.png"
+                    checksum-sha256="2cf2ab68c49b217c6b2402699c742a236f96efe36bc48821eb6ba1a1427b8945" size="4166"/>
+          <resource filename="web_mobile.png" src="4245551d69a8c582b6fc5185fb5312efc4f6863bda991a12a76102736f92fa2d.png"
+                    checksum-sha256="4245551d69a8c582b6fc5185fb5312efc4f6863bda991a12a76102736f92fa2d" size="5266"/>
+          <resource filename="both.png" src="ad03ee4cc7b015919b375539db150dee5f47245c6a293663c21c774b2dba294f.png"
+                    checksum-sha256="ad03ee4cc7b015919b375539db150dee5f47245c6a293663c21c774b2dba294f" size="2413"/>
+          <resource filename="wall.jpg" src="073d78ef4dc421f10d2db375414660d3983f506fabdaaff0887f6ee955aa3bdd.jpg"
+                    checksum-sha256="073d78ef4dc421f10d2db375414660d3983f506fabdaaff0887f6ee955aa3bdd" size="23688"/>
+        </resources>
+      XML
     end
     let(:tips) do
-      Nokogiri::XML('<tips xmlns="https://mobile-content-api.cru.org/xmlns/manifest">
-        <tip id="tip1" src="c26f707f414bbfda0656d890867d7da90058d8d0303dce8daef80951760cd56d.xml"/>
-        <tip id="tip2" src="503fa579c48f89d3e7428e3a3f24fae80b43bf97b53318309696a093298ae032.xml"/>
-      </tips>').root
+      Nokogiri::XML(<<~XML).root
+        <tips xmlns="https://mobile-content-api.cru.org/xmlns/manifest">
+          <tip id="tip1" src="c26f707f414bbfda0656d890867d7da90058d8d0303dce8daef80951760cd56d.xml"
+               checksum-sha256="c26f707f414bbfda0656d890867d7da90058d8d0303dce8daef80951760cd56d" size="393"/>
+          <tip id="tip2" src="503fa579c48f89d3e7428e3a3f24fae80b43bf97b53318309696a093298ae032.xml"
+               checksum-sha256="503fa579c48f89d3e7428e3a3f24fae80b43bf97b53318309696a093298ae032" size="508"/>
+        </tips>
+      XML
     end
     let(:title) { "this is the kgp" }
 
@@ -245,7 +265,7 @@ describe Package do
         push
 
         result = XmlUtil.xpath_namespace(load_xml(translation.manifest_name), "//manifest:tips").first
-        expect(result).to_not be_equivalent_to(tips)
+        expect(result).to be_nil
         verify_s3_uploads_match_zip
       end
     end

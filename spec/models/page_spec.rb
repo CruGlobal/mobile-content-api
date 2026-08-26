@@ -43,9 +43,12 @@ describe Page do
     expect(result.errors["filename"]).to include("has already been taken")
   end
 
-  it "cannot be created for resource not using Crowdin" do
-    result = described_class.create(filename: "blahblah.xml", resource_id: 3, structure: structure, position: 1)
+  it "can be saved for resource not using Crowdin" do
+    page = described_class.new(filename: "legacy.xml", resource_id: 3, structure: structure, position: 1)
+    page.save!(validate: false)
 
-    expect(result.errors["resource"]).to include("Does not use Crowdin.")
+    page.update!(filename: "renamed.xml")
+
+    expect(page.reload.filename).to eq("renamed.xml")
   end
 end

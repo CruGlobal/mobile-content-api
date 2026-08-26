@@ -4,9 +4,9 @@ Staging push status: [![staging push status](https://github.com/CruGlobal/mobile
 
 Master push status: [![master push status](https://github.com/CruGlobal/mobile-content-api/actions/workflows/ruby.yml/badge.svg?event=push&branch=master)](https://github.com/CruGlobal/mobile-content-api/actions/workflows/ruby.yml)
 
-* Ruby version: 2.6.6
-* Bundler version: 1.17.3
-* Rails version: 5.2.3
+* Ruby version: 3.3.10 (see `.ruby-version`)
+* Bundler version: 2.7.2
+* Rails version: 8.0.5
 * `Draft` --> `Translation.is_published == false`
 * You will need to set the following environment variables:
     * MOBILE_CONTENT_API_BUCKET
