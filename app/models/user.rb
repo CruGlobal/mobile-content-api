@@ -8,8 +8,19 @@ class User < ApplicationRecord
 
   has_many :user_attributes, dependent: :destroy
 
+  has_many :resource_score_permissions, dependent: :destroy
+
   validates :sso_guid, uniqueness: true, presence: true, unless: -> { facebook_user_id.present? || google_user_id.present? || apple_user_id.present? }
   validates :email, presence: true
+
+  # Grants nested by country, the shape the admin UI reads and writes:
+  #   {"mx" => ["es"], "us" => ["en", "es"], "vn" => ["*"]}
+  def resource_score_grants
+    resource_score_permissions.includes(:language).each_with_object({}) do |permission, grants|
+      code = permission.language&.code || ResourceScorePermission::ALL_LANGUAGES
+      (grants[permission.country] ||= []) << code
+    end
+  end
 
   def set_arbitrary_attributes!(data_attrs)
     data_attrs.each_pair do |key, value|
