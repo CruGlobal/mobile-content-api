@@ -44,7 +44,7 @@ class ApplicationController < ActionController::Base
     data_attrs.permit(params)
   end
 
-  def authorize!
+  def require_admin!
     # requested is authorized if using okta and user is admin
     return if current_user&.admin
 

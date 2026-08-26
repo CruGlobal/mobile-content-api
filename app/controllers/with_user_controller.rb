@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
 class WithUserController < ApplicationController
-  before_action :authorize!
+  before_action :authorize_user!
 
-  def authorize!
+  def authorize_user!
     # make sure we have a valid auth to begin with
     render_unauthorized and return unless authorization && current_user
 

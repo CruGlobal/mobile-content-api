@@ -1,5 +1,5 @@
 class RuleLanguagesController < ApplicationController
-  before_action :authorize!
+  before_action :require_admin!
   before_action :convert_hyphen_to_dash, only: [:create, :update]
 
   def create

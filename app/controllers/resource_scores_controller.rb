@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class ResourceScoresController < ApplicationController
-  before_action :authorize!, only: %i[create destroy update mass_update mass_update_ranked]
+  before_action :require_admin!, only: %i[create destroy update mass_update mass_update_ranked]
 
   def index
     lang_code = params.dig(:filter, :lang) || params[:lang]
