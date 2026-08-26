@@ -21,7 +21,7 @@ class ResourceScore < ApplicationRecord
   }
   validate :featured_and_featured_order_consistency
 
-  before_save :downcase_country
+  before_validation :downcase_country
   after_commit :clear_resource_cache
   after_commit :touch_resource, on: %i[create update]
 
@@ -31,6 +31,9 @@ class ResourceScore < ApplicationRecord
     self.country = country.downcase if country.present?
   end
 
+  # Relies on downcase_country running as a before_validation: country is stored
+  # downcased, so comparing it raw would let a request sending "US" match nothing
+  # and skip both this check and the featured_order one below.
   def unique_resource_score_per_country_and_language
     existing = ResourceScore.where(
       country: country,

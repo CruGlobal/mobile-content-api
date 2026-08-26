@@ -169,7 +169,8 @@ resource "ResourceScores" do
         request_params = valid_params.deep_merge(
           data: {
             attributes: {
-              resource_id: new_resource.id
+              resource_id: new_resource.id,
+              featured_order: 2
             }
           }
         )
@@ -194,6 +195,42 @@ resource "ResourceScores" do
         expect(status).to be(422)
         json = JSON.parse(response_body)
         expect(json).to have_key("errors")
+      end
+    end
+
+    context "with a country whose case differs from the stored value" do
+      let(:new_resource) do
+        Resource.create!(
+          name: "Resource Score Case Test #{SecureRandom.hex(4)}",
+          abbreviation: "rsc_#{SecureRandom.hex(4)}",
+          system_id: resource.system_id,
+          resource_type_id: resource.resource_type_id
+        )
+      end
+
+      # "US" used to compare against nothing (stored country is "us"), letting a
+      # duplicate featured_order slip past unique_featured_order_per_country_...
+      it "still enforces the featured_order uniqueness check" do
+        request_params = valid_params.deep_merge(
+          data: {attributes: {resource_id: new_resource.id}}
+        )
+
+        expect do
+          do_request(request_params)
+        end.not_to change(ResourceScore, :count)
+
+        expect(status).to be(422)
+      end
+
+      it "stores the country downcased" do
+        request_params = valid_params.deep_merge(
+          data: {attributes: {resource_id: new_resource.id, featured_order: 3}}
+        )
+
+        do_request(request_params)
+
+        expect(status).to be(201)
+        expect(ResourceScore.find_by(resource_id: new_resource.id).country).to eq("us")
       end
     end
 
