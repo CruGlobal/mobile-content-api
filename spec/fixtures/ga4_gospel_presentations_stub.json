@@ -1,0 +1,18 @@
+{
+  "metricHeaders": [
+    {
+      "name": "eventCount",
+      "type": "TYPE_INTEGER"
+    }
+  ],
+  "rows": [
+    {
+      "metricValues": [
+        {
+          "value": "43834"
+        }
+      ]
+    }
+  ],
+  "rowCount": 1
+}
