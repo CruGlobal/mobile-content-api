@@ -232,6 +232,16 @@ resource "ResourceScores" do
         expect(status).to be(201)
         expect(ResourceScore.find_by(resource_id: new_resource.id).country).to eq("us")
       end
+
+      it "rejects a country that is not a real ISO 3166-1 alpha-2 code" do
+        request_params = valid_params.deep_merge(
+          data: {attributes: {resource_id: new_resource.id, country: "uk", featured_order: 4}}
+        )
+
+        do_request(request_params)
+
+        expect(status).to be(422)
+      end
     end
 
     context "with an invalid language" do

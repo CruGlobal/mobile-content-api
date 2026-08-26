@@ -7,7 +7,10 @@ class ResourceScore < ApplicationRecord
   belongs_to :language
 
   validates :resource_id, presence: true
-  validates :country, presence: true
+  validates :country, presence: true, inclusion: {
+    in: CountryCodes::ALPHA2,
+    message: "is not a recognized ISO 3166-1 alpha-2 country code"
+  }
   validates :language, presence: true
   validates :featured_order, numericality: {
     only_integer: true, greater_than_or_equal_to: 1, less_than_or_equal_to: MAX_FEATURED_ORDER_POSITION

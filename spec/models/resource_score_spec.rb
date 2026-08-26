@@ -16,6 +16,23 @@ RSpec.describe ResourceScore, type: :model do
     end
     it { is_expected.to be_valid }
 
+    context "country code" do
+      it "accepts a recognized code regardless of case" do
+        expect(FactoryBot.build(:resource_score, resource: resource, language: language_en, country: "US")).to be_valid
+      end
+
+      it "rejects a code that is not ISO 3166-1 alpha-2" do
+        score = FactoryBot.build(:resource_score, resource: resource, language: language_en, country: "uk")
+
+        expect(score).not_to be_valid
+        expect(score.errors[:country]).to include("is not a recognized ISO 3166-1 alpha-2 country code")
+      end
+
+      it "accepts gb, the real code for the United Kingdom" do
+        expect(FactoryBot.build(:resource_score, resource: resource, language: language_en, country: "gb")).to be_valid
+      end
+    end
+
     context "uniqueness validation" do
       let!(:previous_resource_score) do
         FactoryBot.create(:resource_score, resource: resource, country: "us", language: language_en)
