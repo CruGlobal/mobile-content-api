@@ -11,9 +11,15 @@ Bundler.require(*Rails.groups)
 
 require_relative "../lib/log/logger"
 module MobileContentApi
+  # The app's health-check endpoint, consumed by production.rb (ssl_options
+  # redirect exclude + silence_healthcheck_path), routes.rb, and the
+  # lograge/ddtrace initializers so the path only needs changing here.
+  HEALTHCHECK_PATH = "/monitors/lb"
+  HEALTHCHECK_ACTION = "MonitorsController#lb"
+
   class Application < Rails::Application
     # Initialize configuration defaults for originally generated Rails version.
-    config.load_defaults 7.2
+    config.load_defaults 8.0
 
     # Please, add to the `ignore` list any other `lib` subdirectories that do
     # not contain `.rb` files, or that should not be reloaded or eager loaded.

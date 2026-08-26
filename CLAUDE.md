@@ -17,7 +17,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 ### Code Quality and Linting
 - `bundle exec standardrb` - Run Ruby style linter (StandardRB)
 - `bundle exec standardrb --format simple` - Run StandardRB with simplified output
-- `bundle exec brakeman -A -q --ensure-latest --no-pager` - Run security analysis
+- `bundle exec brakeman -A -q --no-pager -w2 -x UnscopedFind` - Run security analysis (matches CI)
 - `bundle exec bundle audit check --update` - Check for security vulnerabilities in dependencies
 
 ### Development Server
@@ -31,7 +31,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Architecture Overview
 
-This is a **Rails 7.1 API application** that serves as a mobile content management system for Christian ministry tools and resources.
+This is a **Rails 8.0.5 API application** that serves as a mobile content management system for Christian ministry tools and resources.
 
 ### Core Domain Models
 - **Resources** - Main content entities (tracts, lessons, training materials)

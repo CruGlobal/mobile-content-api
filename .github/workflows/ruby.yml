@@ -33,7 +33,7 @@ jobs:
 
     steps:
       - name: Check out files
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
 
       - name: Set up Ruby
         uses: ruby/setup-ruby@v1
@@ -63,7 +63,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Check out files
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
 
       - name: Set up Ruby
         uses: ruby/setup-ruby@v1
@@ -75,8 +75,27 @@ jobs:
       - name: Bundle audit
         run: bundle exec bundle audit check --update ${{ vars.CVE_IGNORES && format('--ignore {0}', vars.CVE_IGNORES) }}
 
+      # -w2: block only on medium+ confidence findings. It filters Weak ONLY --
+      # min_confidence 1, so Medium and High still report and still red this job.
+      # Do not read it as "EOL warnings can't fail lint": they can, and this one
+      # will. Brakeman's EOL ladder escalates the Rails-EOL warning to :medium at
+      # eol_date - 30d, and brakeman 8.0.6 (our lock) dates Rails 8.0.x EOL at
+      # 2026-11-07 -- so the warning returns as Medium on 2026-10-08 and reds
+      # this job on every PR from then on. -w2 buys runway, it does not retire
+      # the class. The durable fix is the Rails 8.1 upgrade, not a brakeman flag.
+      #
+      # --ensure-latest dropped, and no proposer exists under the security-only
+      # posture in .github/dependabot.yml (limit: 0): the flag would red every
+      # PR on brakeman release day with nothing ever proposing the fix.
+      #
+      # -x UnscopedFind is INERT under -w2 and kept only as a guard: the check
+      # hardcodes :confidence => :weak, which -w2 already drops at add_warning
+      # time, so removing the flag today would produce byte-identical output.
+      # It was load-bearing under the old default-confidence line; -w2 retired
+      # it in the same commit. It exists so that dropping -w2 later does not
+      # silently re-red this job. The fleet canary line carries no such flag.
       - name: Brakeman
-        run: bundle exec brakeman -A -q --ensure-latest --no-pager
+        run: bundle exec brakeman -A -q --no-pager -w2 -x UnscopedFind
 
       - name: StandardRB
         run: bundle exec standardrb --format simple
