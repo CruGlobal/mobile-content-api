@@ -78,6 +78,11 @@
         </xs:restriction>
     </xs:simpleType>
     <xs:simpleType name="verticalGravity">
+        <xs:annotation>
+            <xs:documentation>This type defines gravity values for aligning content along the vertical axis only.
+                Vertical alignment is independent of the layout direction (LTR/RTL).
+            </xs:documentation>
+        </xs:annotation>
         <xs:restriction base="content:gravity">
             <xs:enumeration value="top" />
             <xs:enumeration value="center" />
@@ -592,7 +597,9 @@
                 <xs:extension base="content:textType">
                     <xs:attribute name="start-image" type="xs:string">
                         <xs:annotation>
-                            <xs:documentation>Defines an image to display to the "start" of this text node.
+                            <xs:documentation>Defines an image to display to the "start" of this text node. The image is
+                                rendered beside the text in the same row and is never cropped; if the image is taller
+                                than the rendered text, the row expands vertically to fully contain the image.
                             </xs:documentation>
                         </xs:annotation>
                     </xs:attribute>
@@ -605,14 +612,23 @@
                     </xs:attribute>
                     <xs:attribute name="start-image-align" type="content:verticalGravity" default="center">
                         <xs:annotation>
-                            <xs:documentation>Defines the vertical alignment of the start image within this text node.
-                                This defaults to center.
+                            <xs:documentation>Defines the vertical alignment of the start image relative to the
+                                rendered text of this text node. The image always stays within the bounds of the row;
+                                if the aligned image would extend beyond the text vertically, the row expands to fully
+                                contain both the image and the text. This attribute is ignored when start-image is not
+                                defined. This defaults to center.
+
+                                - top: aligns the top edge of the image with the top of the text element
+                                - center: centers the image on the vertical midpoint of the text element
+                                - bottom: aligns the bottom edge of the image with the bottom of the text element
                             </xs:documentation>
                         </xs:annotation>
                     </xs:attribute>
                     <xs:attribute name="end-image" type="xs:string">
                         <xs:annotation>
-                            <xs:documentation>Defines an image to display to the "end" of this text node.
+                            <xs:documentation>Defines an image to display to the "end" of this text node. The image is
+                                rendered beside the text in the same row and is never cropped; if the image is taller
+                                than the rendered text, the row expands vertically to fully contain the image.
                             </xs:documentation>
                         </xs:annotation>
                     </xs:attribute>
@@ -625,8 +641,15 @@
                     </xs:attribute>
                     <xs:attribute name="end-image-align" type="content:verticalGravity" default="center">
                         <xs:annotation>
-                            <xs:documentation>Defines the vertical alignment of the end image within this text node.
+                            <xs:documentation>Defines the vertical alignment of the end image relative to the rendered
+                                text of this text node. The image always stays within the bounds of the row; if the
+                                aligned image would extend beyond the text vertically, the row expands to fully contain
+                                both the image and the text. This attribute is ignored when end-image is not defined.
                                 This defaults to center.
+
+                                - top: aligns the top edge of the image with the top of the text element
+                                - center: centers the image on the vertical midpoint of the text element
+                                - bottom: aligns the bottom edge of the image with the bottom of the text element
                             </xs:documentation>
                         </xs:annotation>
                     </xs:attribute>
