@@ -77,6 +77,13 @@
             <xs:enumeration value="end" />
         </xs:restriction>
     </xs:simpleType>
+    <xs:simpleType name="verticalGravity">
+        <xs:restriction base="content:gravity">
+            <xs:enumeration value="top" />
+            <xs:enumeration value="center" />
+            <xs:enumeration value="bottom" />
+        </xs:restriction>
+    </xs:simpleType>
 
     <xs:simpleType name="id">
         <xs:annotation>
@@ -596,6 +603,13 @@
                             </xs:documentation>
                         </xs:annotation>
                     </xs:attribute>
+                    <xs:attribute name="start-image-align" type="content:verticalGravity" default="center">
+                        <xs:annotation>
+                            <xs:documentation>Defines the vertical alignment of the start image within this text node.
+                                This defaults to center.
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:attribute>
                     <xs:attribute name="end-image" type="xs:string">
                         <xs:annotation>
                             <xs:documentation>Defines an image to display to the "end" of this text node.
@@ -606,6 +620,13 @@
                         <xs:annotation>
                             <xs:documentation>Defines the size in "density-independent pixels"/"points" of the end
                                 image. This defaults to 40.
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:attribute>
+                    <xs:attribute name="end-image-align" type="content:verticalGravity" default="center">
+                        <xs:annotation>
+                            <xs:documentation>Defines the vertical alignment of the end image within this text node.
+                                This defaults to center.
                             </xs:documentation>
                         </xs:annotation>
                     </xs:attribute>
