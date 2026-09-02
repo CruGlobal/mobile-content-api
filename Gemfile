@@ -88,6 +88,7 @@ gem "nokogiri"
 gem "oj", "~> 3.17.0"
 gem "ougai", "~> 2.0"
 gem "pg"
+gem "pundit"
 gem "rack-cors", require: "rack/cors"
 gem "raddocs", github: "CruGlobal/raddocs"
 gem "redis", ">= 4.0.1" # Dropped from the 8.0 skeleton; still used for :redis_cache_store and the Action Cable redis adapter

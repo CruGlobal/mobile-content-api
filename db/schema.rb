@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_11_24_224217) do
+ActiveRecord::Schema[8.0].define(version: 2026_08_26_120000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
   enable_extension "pg_catalog.plpgsql"
@@ -190,6 +190,18 @@ ActiveRecord::Schema[8.0].define(version: 2025_11_24_224217) do
     t.integer "language_id"
     t.index ["resource_id", "language_id"], name: "index_resource_default_orders_on_resource_id_and_language_id", unique: true
     t.index ["resource_id"], name: "index_resource_default_orders_on_resource_id"
+  end
+
+  create_table "resource_score_permissions", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.string "country", null: false
+    t.integer "language_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["language_id"], name: "index_resource_score_permissions_on_language_id"
+    t.index ["user_id", "country", "language_id"], name: "index_resource_score_permissions_on_user_country_language", unique: true, where: "(language_id IS NOT NULL)"
+    t.index ["user_id", "country"], name: "index_resource_score_permissions_on_user_country_wildcard", unique: true, where: "(language_id IS NULL)"
+    t.index ["user_id"], name: "index_resource_score_permissions_on_user_id"
   end
 
   create_table "resource_scores", force: :cascade do |t|
@@ -395,6 +407,8 @@ ActiveRecord::Schema[8.0].define(version: 2025_11_24_224217) do
   add_foreign_key "follow_ups", "destinations"
   add_foreign_key "follow_ups", "languages"
   add_foreign_key "pages", "resources"
+  add_foreign_key "resource_score_permissions", "languages"
+  add_foreign_key "resource_score_permissions", "users"
   add_foreign_key "resource_tool_groups", "resources"
   add_foreign_key "resource_tool_groups", "tool_groups"
   add_foreign_key "resources", "resource_types"

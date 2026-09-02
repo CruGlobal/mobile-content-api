@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class CustomManifestsController < SecureController
-  skip_before_action :authorize!, only: [:show]
+  skip_before_action :require_admin!, only: [:show]
 
   def create
     manifest = find_manifest
