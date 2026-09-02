@@ -8,13 +8,13 @@
 # can grey out the locales they cannot touch without having to be an admin to
 # ask. Reading someone else's still requires admin.
 #
-# Both guards keep the same 401/403 split: no token is unauthenticated, a valid
-# token without the rights is forbidden.
-class ResourceScorePermissionsController < ApplicationController
-  before_action :require_login!, only: :index
+# WithUserController owns the shared shape of /users/:user_id/... -- the token
+# check, the "me" subject convention, and the self-only 403 -- and this widens
+# only the last of those, so the 401/403 split stays the same everywhere: no
+# token is unauthenticated, a valid token without the rights is forbidden.
+class ResourceScorePermissionsController < WithUserController
   before_action :require_admin!, except: :index
-  before_action :load_user
-  before_action :require_self_or_admin!, only: :index
+  before_action :require_subject!
 
   def index
     render json: @user.resource_score_permissions.includes(:language),
@@ -86,19 +86,20 @@ class ResourceScorePermissionsController < ApplicationController
     render json: {errors: formatted_errors("record_invalid", e)}, status: :unprocessable_content
   end
 
-  private
+  protected
 
-  # "me" mirrors the subject convention WithUserController already uses for the
-  # other per-user endpoints.
-  def load_user
-    @user = (params[:user_id] == "me") ? current_user : User.find(params[:user_id])
+  # Admins manage anyone's grants; everyone else is held to the inherited
+  # self-only rule, which refuses an unknown id and someone else's id alike.
+  def authorized_for_subject?
+    current_user&.admin || super
   end
 
-  def require_self_or_admin!
-    return if current_user&.admin
-    return if @user == current_user
+  private
 
-    render_forbidden
+  # Only an admin gets past authorize_user! with a missing subject, and they are
+  # entitled to know which users exist, so a 404 here leaks nothing.
+  def require_subject!
+    raise ActiveRecord::RecordNotFound, "Couldn't find User with 'id'=#{params[:user_id]}" if @user.nil?
   end
 
   def create_params

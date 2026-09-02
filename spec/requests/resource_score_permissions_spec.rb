@@ -52,6 +52,18 @@ describe "ResourceScorePermissions management", type: :request do
         expect(response).to have_http_status(:forbidden)
       end
 
+      it "gives an editor the same 403 for an unknown user id, so ids can't be probed" do
+        get "/users/#{User.maximum(:id) + 1}/resource-score-permissions", headers: headers_for(editor)
+
+        expect(response).to have_http_status(:forbidden)
+      end
+
+      it "still 404s an unknown user id for an admin, who may know what exists" do
+        get "/users/#{User.maximum(:id) + 1}/resource-score-permissions", headers: headers_for(admin)
+
+        expect(response).to have_http_status(:not_found)
+      end
+
       it "still lets an admin read anyone's grants" do
         get base, headers: headers_for(admin)
 
