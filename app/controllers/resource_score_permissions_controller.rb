@@ -7,6 +7,9 @@
 # Reading is the exception: an editor may read their own grants, so the admin UI
 # can grey out the locales they cannot touch without having to be an admin to
 # ask. Reading someone else's still requires admin.
+#
+# Both guards keep the same 401/403 split: no token is unauthenticated, a valid
+# token without the rights is forbidden.
 class ResourceScorePermissionsController < ApplicationController
   before_action :require_login!, only: :index
   before_action :require_admin!, except: :index

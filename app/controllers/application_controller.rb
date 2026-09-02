@@ -47,11 +47,13 @@ class ApplicationController < ActionController::Base
     data_attrs.permit(params)
   end
 
+  # Admin-only endpoints. Keeps the 401/403 split honest the same way
+  # require_login! does: no (or an expired) token is unauthenticated, a valid
+  # token belonging to a non-admin is forbidden.
   def require_admin!
-    # requested is authorized if using okta and user is admin
     return if current_user&.admin
 
-    render_unauthorized
+    current_user ? render_forbidden : render_unauthorized
   end
 
   # For endpoints where being signed in is the floor and a Pundit policy decides

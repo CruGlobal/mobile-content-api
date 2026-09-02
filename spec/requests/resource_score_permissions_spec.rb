@@ -60,12 +60,20 @@ describe "ResourceScorePermissions management", type: :request do
     end
 
     context "writing" do
+      it "rejects an anonymous caller as unauthenticated, not forbidden" do
+        post base,
+          params: {data: {attributes: {country: "mx", lang: "en"}}}.to_json,
+          headers: {"Accept" => "application/vnd.api+json", "Content-Type" => "application/vnd.api+json"}
+
+        expect(response).to have_http_status(:unauthorized)
+      end
+
       it "rejects a non-admin creating a grant for themselves" do
         post base,
           params: {data: {attributes: {country: "mx", lang: "en"}}}.to_json,
           headers: headers_for(editor)
 
-        expect(response).to have_http_status(:unauthorized)
+        expect(response).to have_http_status(:forbidden)
         expect(editor.resource_score_permissions).to be_empty
       end
 
@@ -74,7 +82,7 @@ describe "ResourceScorePermissions management", type: :request do
           params: {data: {attributes: {grants: {"mx" => ["*"]}}}}.to_json,
           headers: headers_for(editor)
 
-        expect(response).to have_http_status(:unauthorized)
+        expect(response).to have_http_status(:forbidden)
       end
 
       it "rejects a non-admin destroying a grant" do
@@ -82,7 +90,7 @@ describe "ResourceScorePermissions management", type: :request do
 
         delete "#{base}/#{permission.id}", headers: headers_for(editor)
 
-        expect(response).to have_http_status(:unauthorized)
+        expect(response).to have_http_status(:forbidden)
         expect(ResourceScorePermission.exists?(permission.id)).to be true
       end
     end
