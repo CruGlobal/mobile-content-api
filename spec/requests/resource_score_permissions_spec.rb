@@ -52,14 +52,21 @@ describe "ResourceScorePermissions management", type: :request do
         expect(response).to have_http_status(:forbidden)
       end
 
+      # The headers are built first on purpose: headers_for is what creates the
+      # lazily-let user, and computing the id first would hand that very id to
+      # the user being created, making it a known one.
       it "gives an editor the same 403 for an unknown user id, so ids can't be probed" do
-        get "/users/#{User.maximum(:id) + 1}/resource-score-permissions", headers: headers_for(editor)
+        headers = headers_for(editor)
+
+        get "/users/#{User.maximum(:id) + 1}/resource-score-permissions", headers: headers
 
         expect(response).to have_http_status(:forbidden)
       end
 
       it "still 404s an unknown user id for an admin, who may know what exists" do
-        get "/users/#{User.maximum(:id) + 1}/resource-score-permissions", headers: headers_for(admin)
+        headers = headers_for(admin)
+
+        get "/users/#{User.maximum(:id) + 1}/resource-score-permissions", headers: headers
 
         expect(response).to have_http_status(:not_found)
       end
