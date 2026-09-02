@@ -110,6 +110,14 @@ describe "ResourceScorePermissions management", type: :request do
       expect(json["data"].size).to eq(2)
       expect(json["meta"]["grants"]).to eq({"us" => ["en"], "mx" => ["*"]})
     end
+
+    it "serializes lang and links only the language, not the owning user" do
+      get base, headers: headers_for(admin)
+
+      rows = JSON.parse(response.body)["data"]
+      expect(rows.map { |row| row["attributes"]["lang"] }).to contain_exactly("en", "*")
+      expect(rows.map { |row| row["relationships"].keys }.uniq).to eq([["language"]])
+    end
   end
 
   describe "POST create" do
