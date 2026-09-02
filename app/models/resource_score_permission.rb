@@ -6,18 +6,14 @@
 # ({"mx" => ["es"], "us" => ["en", "es"]}) to match how the org chart reads.
 # A NULL language means "every language in this country" and serializes as "*".
 class ResourceScorePermission < ApplicationRecord
+  include CountryCodes
+
   ALL_LANGUAGES = "*"
 
   belongs_to :user
   belongs_to :language, optional: true
 
-  validates :country, presence: true, inclusion: {
-    in: CountryCodes::ALPHA2,
-    message: "is not a recognized ISO 3166-1 alpha-2 country code"
-  }
   validate :grant_is_unique
-
-  before_validation :downcase_country
 
   scope :for_country, ->(country) { where(country: country.to_s.downcase) }
 
@@ -30,10 +26,6 @@ class ResourceScorePermission < ApplicationRecord
   end
 
   private
-
-  def downcase_country
-    self.country = country.downcase if country.present?
-  end
 
   # Mirrors the partial unique indexes so the API returns a 422 rather than
   # surfacing a RecordNotUnique.

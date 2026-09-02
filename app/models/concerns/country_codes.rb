@@ -1,11 +1,18 @@
 # frozen_string_literal: true
 
-# Canonical ISO 3166-1 alpha-2 list, stored and compared in lowercase.
+# Canonical ISO 3166-1 alpha-2 list, stored and compared in lowercase, plus the
+# model plumbing that keeps it that way: include this and a model gets the
+# presence/inclusion validation and the downcasing callback.
 #
 # Country is a permission key (see ResourceScorePermission), so an unrecognized
 # code is not a harmless typo: "uk" instead of "gb" silently produces a grant
-# that can never match a score, and a score that no grant can ever reach.
+# that can never match a score, and a score that no grant can ever reach. And
+# because ResourceScorePolicy matches grants to scores by exact string equality,
+# both sides have to agree on what a valid, normalized country looks like --
+# hence one shared implementation rather than a copy per model.
 module CountryCodes
+  extend ActiveSupport::Concern
+
   ALPHA2 = %w[
     ad ae af ag ai al am ao aq ar as at au aw ax az
     ba bb bd be bf bg bh bi bj bl bm bn bo bq br bs bt bv bw by bz
@@ -32,11 +39,23 @@ module CountryCodes
     wf ws
     ye yt
     za zm zw
-  ].freeze
+  ].to_set.freeze
 
-  VALID = ALPHA2.to_set.freeze
+  INVALID_MESSAGE = "is not a recognized ISO 3166-1 alpha-2 country code"
+
+  included do
+    validates :country, presence: true, inclusion: {in: ALPHA2, message: INVALID_MESSAGE}
+
+    before_validation :downcase_country
+  end
 
   def self.valid?(code)
-    VALID.include?(code.to_s.downcase)
+    ALPHA2.include?(code.to_s.downcase)
+  end
+
+  private
+
+  def downcase_country
+    self.country = country.downcase if country.present?
   end
 end
