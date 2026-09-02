@@ -51,7 +51,15 @@ class ResourceScorePermissionsController < ApplicationController
     grants = incoming_grants
     resolved = grants.flat_map do |country, langs|
       normalized = normalized_country(country)
-      Array(langs).map { |lang| [normalized, resolve_language(lang)] }
+      codes = Array(langs)
+      if codes.empty?
+        raise InvalidRequestError,
+          "'#{country}' must list at least one language code " \
+          "(use [\"#{ResourceScorePermission::ALL_LANGUAGES}\"] for the whole country, " \
+          "or drop the country from the map to revoke it)"
+      end
+
+      codes.map { |lang| [normalized, resolve_language(lang)] }
     end
 
     duplicates = resolved.tally.select { |_pair, count| count > 1 }.keys
@@ -113,9 +121,16 @@ class ResourceScorePermissionsController < ApplicationController
     normalized
   end
 
-  # nil (or "*") means every language in that country.
+  # An explicit "*" is the only way to ask for every language in a country. A
+  # missing or blank code is a client bug (a misspelled key gets dropped by
+  # permit), so it errors rather than silently granting the whole country.
   def resolve_language(code)
-    return nil if code.blank? || code == ResourceScorePermission::ALL_LANGUAGES
+    if code.blank?
+      raise InvalidRequestError,
+        "lang is required (use \"#{ResourceScorePermission::ALL_LANGUAGES}\" for every language in the country)"
+    end
+
+    return nil if code == ResourceScorePermission::ALL_LANGUAGES
 
     language = Language.find_by_code(code)
     raise InvalidRequestError, "Language not found for code: #{code}" unless language

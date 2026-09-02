@@ -140,6 +140,24 @@ describe "ResourceScorePermissions management", type: :request do
       expect(editor.resource_score_permissions).to be_empty
     end
 
+    it "rejects a missing lang instead of granting the whole country" do
+      post base,
+        params: {data: {attributes: {country: "us"}}}.to_json,
+        headers: headers_for(admin)
+
+      expect(response).to have_http_status(:unprocessable_content)
+      expect(editor.resource_score_permissions).to be_empty
+    end
+
+    it "rejects a blank lang" do
+      post base,
+        params: {data: {attributes: {country: "us", lang: ""}}}.to_json,
+        headers: headers_for(admin)
+
+      expect(response).to have_http_status(:unprocessable_content)
+      expect(editor.resource_score_permissions).to be_empty
+    end
+
     it "rejects an unknown language code" do
       post base,
         params: {data: {attributes: {country: "us", lang: "zz"}}}.to_json,
@@ -199,6 +217,24 @@ describe "ResourceScorePermissions management", type: :request do
     it "rolls back entirely on a bad country, leaving existing grants intact" do
       patch "#{base}/mass_update",
         params: {data: {attributes: {grants: {"us" => ["en"], "uk" => ["en"]}}}}.to_json,
+        headers: headers_for(admin)
+
+      expect(response).to have_http_status(:unprocessable_content)
+      expect(editor.resource_score_grants).to eq({"vn" => ["en"]})
+    end
+
+    it "rejects a null language list rather than silently revoking the country" do
+      patch "#{base}/mass_update",
+        params: {data: {attributes: {grants: {"vn" => nil}}}}.to_json,
+        headers: headers_for(admin)
+
+      expect(response).to have_http_status(:unprocessable_content)
+      expect(editor.resource_score_grants).to eq({"vn" => ["en"]})
+    end
+
+    it "rejects an empty language list" do
+      patch "#{base}/mass_update",
+        params: {data: {attributes: {grants: {"vn" => []}}}}.to_json,
         headers: headers_for(admin)
 
       expect(response).to have_http_status(:unprocessable_content)
