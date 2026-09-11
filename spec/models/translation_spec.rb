@@ -128,13 +128,20 @@ describe Translation do
     end
 
     it "returns public url" do
-      expected = "my_object_url"
       allow(object).to receive(:exists?).and_return(true)
-      allow(object).to receive(:public_url).and_return(expected)
+      allow(object).to receive(:public_url).and_return("https://testing%20bucket.s3.east.amazonaws.com/my_object_key.zip")
 
       result = translation.s3_url
 
-      expect(result).to eq(expected)
+      expect(result).to eq("https://testing%20bucket.s3.east.amazonaws.com/my_object_key.zip")
+    end
+
+    it "rewrites the host to the CDN when configured" do
+      allow(object).to receive(:exists?).and_return(true)
+      allow(object).to receive(:public_url).and_return("https://testing%20bucket.s3.east.amazonaws.com/my_object_key.zip")
+      stub_const("ENV", ENV.to_h.merge("MOBILE_CONTENT_API_CDN_HOST" => "cdn.example.com"))
+
+      expect(translation.s3_url).to eq("https://cdn.example.com/my_object_key.zip")
     end
 
     it "raises an error if object does not exist" do
