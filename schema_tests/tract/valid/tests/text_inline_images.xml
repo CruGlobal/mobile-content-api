@@ -7,6 +7,12 @@
             <content:text start-image="test.png" start-image-size="32">Start Image</content:text>
             <content:text end-image="test.png">End Image</content:text>
             <content:text end-image="test.png" end-image-size="32">End Image</content:text>
+            <content:text start-image="test.png" start-image-align="top">Start Image</content:text>
+            <content:text start-image="test.png" start-image-align="center">Start Image</content:text>
+            <content:text start-image="test.png" start-image-align="bottom">Start Image</content:text>
+            <content:text end-image="test.png" end-image-align="top">End Image</content:text>
+            <content:text end-image="test.png" end-image-align="center">End Image</content:text>
+            <content:text end-image="test.png" end-image-align="bottom">End Image</content:text>
         </content:paragraph>
     </hero>
 </page>
