@@ -1,6 +1,18 @@
 #!/usr/bin/env ruby
 require_relative "../config/boot"
 require "bundler/audit/cli"
+require "yaml"
 
-ARGV.concat %w[ --config config/bundler-audit.yml ] if ARGV.empty? || ARGV.include?("check")
+CONFIG = "config/bundler-audit.yml"
+
+if ARGV.empty? || ARGV.include?("check")
+  ARGV.concat ["--config", CONFIG]
+  if (start = ARGV.index("--ignore"))
+    stop = start + 1
+    stop += 1 while stop < ARGV.length && !ARGV[stop].start_with?("--")
+    cli_ignores = ARGV.slice!(start...stop).drop(1)
+    yml_ignores = File.exist?(CONFIG) ? Array(YAML.load_file(CONFIG)["ignore"]) : []
+    ARGV.concat ["--ignore", *(cli_ignores | yml_ignores)]
+  end
+end
 Bundler::Audit::CLI.start
