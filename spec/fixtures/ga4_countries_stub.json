@@ -1,0 +1,88 @@
+{
+  "dimensionHeaders": [
+    {
+      "name": "country"
+    }
+  ],
+  "metricHeaders": [
+    {
+      "name": "sessions",
+      "type": "TYPE_INTEGER"
+    }
+  ],
+  "rows": [
+    {
+      "dimensionValues": [
+        {
+          "value": "(not set)"
+        }
+      ],
+      "metricValues": [
+        {
+          "value": "52"
+        }
+      ]
+    },
+    {
+      "dimensionValues": [
+        {
+          "value": "Afghanistan"
+        }
+      ],
+      "metricValues": [
+        {
+          "value": "1"
+        }
+      ]
+    },
+    {
+      "dimensionValues": [
+        {
+          "value": "Albania"
+        }
+      ],
+      "metricValues": [
+        {
+          "value": "12"
+        }
+      ]
+    },
+    {
+      "dimensionValues": [
+        {
+          "value": "Algeria"
+        }
+      ],
+      "metricValues": [
+        {
+          "value": "6"
+        }
+      ]
+    },
+    {
+      "dimensionValues": [
+        {
+          "value": "Angola"
+        }
+      ],
+      "metricValues": [
+        {
+          "value": "5"
+        }
+      ]
+    },
+    {
+      "dimensionValues": [
+        {
+          "value": "Zimbabwe"
+        }
+      ],
+      "metricValues": [
+        {
+          "value": "24"
+        }
+      ]
+    }
+  ],
+  "rowCount": 6
+}
