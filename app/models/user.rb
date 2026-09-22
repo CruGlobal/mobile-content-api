@@ -11,6 +11,9 @@ class User < ApplicationRecord
   validates :sso_guid, uniqueness: true, presence: true, unless: -> { facebook_user_id.present? || google_user_id.present? || apple_user_id.present? }
   validates :email, presence: true
 
+  after_create_commit { MailchimpSubscribeJob.perform_async(id) }
+  after_destroy_commit { MailchimpRemoveJob.perform_async(email) }
+
   def set_arbitrary_attributes!(data_attrs)
     data_attrs.each_pair do |key, value|
       attr_name = key[/^attr-(.*)$/, 1]&.downcase

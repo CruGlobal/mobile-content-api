@@ -1,4 +1,28 @@
 {
-  "ignored_warnings": [],
-  "brakeman_version": "8.0.5"
+  "ignored_warnings": [
+    {
+      "warning_type": "Weak Hash",
+      "warning_code": 90,
+      "fingerprint": "95cf0f1b4333a6bc88d2fb6492595cbd0aca1be4412a0b5c467be8812ae7586a",
+      "check_name": "WeakHash",
+      "message": "Weak hashing algorithm used: MD5",
+      "file": "app/services/mailchimp.rb",
+      "line": 44,
+      "link": "https://brakemanscanner.org/docs/warning_types/weak_hash/",
+      "code": "Digest::MD5.hexdigest(email.downcase)",
+      "render_path": null,
+      "location": {
+        "type": "method",
+        "class": "Mailchimp",
+        "method": "self.subscriber_hash"
+      },
+      "user_input": null,
+      "confidence": "Medium",
+      "cwe_id": [
+        328
+      ],
+      "note": "MD5 is required by the Mailchimp API: list members are addressed by the MD5 of their lowercased email (subscriber_hash). Not used for security purposes."
+    }
+  ],
+  "brakeman_version": "8.0.6"
 }
