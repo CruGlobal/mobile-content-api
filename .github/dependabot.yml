@@ -43,11 +43,6 @@ updates:
   - dependency-name: minitest
     update-types:
     - version-update:semver-major
-  # Gemfile:77 pins connection_pool < 3.0 (redis_cache_store conflict on
-  # Rails < 8.1.2). Drop this ignore with the pin at Rails >= 8.1.2.
-  - dependency-name: connection_pool
-    update-types:
-    - version-update:semver-major
 - package-ecosystem: github-actions
   directory: "/"
   schedule:
