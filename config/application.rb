@@ -34,6 +34,9 @@ module MobileContentApi
     # config.time_zone = "Central Time (US & Canada)"
     # config.eager_load_paths << Rails.root.join("extras")
 
+    # No image_processing gem and no variants; rails/all still loads the engine.
+    config.active_storage.variant_processor = :disabled
+
     # Send all logs to stdout, which docker reads and sends to datadog.
     config.logger = Log::Logger.new($stdout) unless Rails.env.test? # we don't need a logger in test env
 
