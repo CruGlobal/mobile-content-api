@@ -32,8 +32,14 @@ RUN apk --no-cache add --virtual build-deps build-base postgresql-dev yaml-dev \
     && bundle install --jobs 20 --retry 2 \
     && apk del build-deps
 
+# Precompile bootsnap code for faster boot times
+RUN bundle exec bootsnap precompile --gemfile
+
 # Copy the application
 COPY . .
+
+# Precompile bootsnap code for faster boot times
+RUN bundle exec bootsnap precompile app/ lib/
 
 # Environment required to build the application
 ARG RAILS_ENV=production
