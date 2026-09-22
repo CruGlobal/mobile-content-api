@@ -130,7 +130,8 @@ describe Package do
   before do
     mock_crowdin
 
-    mock_s3(instance_double(Aws::S3::Object, upload_file: true), translation)
+    mock_s3(instance_double(Aws::S3::Object, client: nil, bucket_name: "testing bucket", key: translation.object_name.to_s), translation)
+    allow(Aws::S3::TransferManager).to receive(:new).and_return(instance_double(Aws::S3::TransferManager, upload_file: true))
 
     allow_any_instance_of(Attachment).to receive(:url) do |attachment|
       "#{fixture_paths.first}/#{attachment.filename}"
@@ -152,10 +153,22 @@ describe Package do
     pages_dir_nil
   end
 
-  it "deletes temp directory if error is raised" do
-    object = instance_double(Aws::S3::Object)
-    allow(object).to receive(:upload_file).and_raise(StandardError)
+  it "uploads the zip publicly to the translation's object key" do
+    client = Aws::S3::Client.new(stub_responses: true, region: "us-east-1", credentials: Aws::Credentials.new("key", "secret"))
+    object = Aws::S3::Object.new(bucket_name: "testing bucket", key: translation.object_name.to_s, client: client)
     mock_s3(object, translation)
+    allow(Aws::S3::TransferManager).to receive(:new).and_call_original
+
+    push
+
+    upload = client.api_requests.find { |r| r[:operation_name] == :put_object }
+    expect(upload[:params]).to include(bucket: "testing bucket", key: translation.object_name.to_s, acl: "public-read")
+  end
+
+  it "deletes temp directory if error is raised" do
+    transfer_manager = instance_double(Aws::S3::TransferManager)
+    allow(transfer_manager).to receive(:upload_file).and_raise(StandardError)
+    allow(Aws::S3::TransferManager).to receive(:new).and_return(transfer_manager)
 
     expect { push }.to raise_error(StandardError)
 

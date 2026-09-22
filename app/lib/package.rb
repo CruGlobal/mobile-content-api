@@ -162,7 +162,8 @@ class Package
     Rails.logger.info("Uploading zip for translation with id: #{@translation.id}")
 
     obj = self.class.s3_object(@translation)
-    obj.upload_file("#{@directory}/#{@translation.zip_name}", acl: "public-read")
+    Aws::S3::TransferManager.new(client: obj.client)
+      .upload_file("#{@directory}/#{@translation.zip_name}", bucket: obj.bucket_name, key: obj.key, acl: "public-read")
   end
 
   def include_tips?
