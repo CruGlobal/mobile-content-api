@@ -15,45 +15,33 @@ Rails.application.configure do
   # Turn on fragment caching in view templates.
   config.action_controller.perform_caching = true
 
-  # Disable serving static files from `public/`, relying on NGINX/Apache to do so instead.
-  # Disabled: Thruster now fronts Puma, so Rails serves public/ itself
-  # (the 8.0 default is enabled = true; the nginx sidecar is being removed).
-  # config.public_file_server.enabled = false
-
   # Cache assets for far-future expiry since they are all digest stamped.
-  # Disabled: this app has NO digest-stamped assets (no asset pipeline), and
-  # public/ serves canonical-but-mutable schema files (public/xmlns/*.xsd) —
-  # a 1-year cache on those would be harmful, and without digested assets the
-  # far-future default has no upside here (fleet mutable-public-files exception).
-  # config.public_file_server.headers = {"cache-control" => "public, max-age=#{1.year.to_i}"}
+  config.public_file_server.headers = { "cache-control" => "public, max-age=#{1.year.to_i}" }
 
   # Enable serving of images, stylesheets, and JavaScripts from an asset server.
   # config.asset_host = "http://assets.example.com"
 
-  # Store uploaded files on Amazon S3 (see config/storage.yml for options).
-  config.active_storage.service = :amazon
+  # Store uploaded files on the local file system (see config/storage.yml for options).
+  config.active_storage.service = :local
 
   # Assume all access to the app is happening through a SSL-terminating reverse proxy.
-  config.assume_ssl = true
+  # config.assume_ssl = true
 
   # Force all access to the app over SSL, use Strict-Transport-Security, and use secure cookies.
-  config.force_ssl = true
+  # config.force_ssl = true
 
-  # Skip http-to-https redirect for the health check endpoint (/monitors/lb).
-  config.ssl_options = {redirect: {exclude: ->(request) { request.path == MobileContentApi::HEALTHCHECK_PATH }}}
+  # Skip http-to-https redirect for the default health check endpoint.
+  # config.ssl_options = { redirect: { exclude: ->(request) { request.path == "/up" } } }
 
   # Log to STDOUT with the current request id as a default log tag.
-  # Disabled: this app sets a custom Ougai JSON logger (Log::Logger) in
-  # application.rb; the skeleton TaggedLogging logger would silently override
-  # it, and log_tags is a silent no-op for Ougai (no push_tags support).
-  # config.log_tags = [ :request_id ]
-  # config.logger   = ActiveSupport::TaggedLogging.logger(STDOUT)
+  config.log_tags = [ :request_id ]
+  config.logger   = ActiveSupport::TaggedLogging.logger(STDOUT)
 
-  # Change to "debug" to log everything (including potentially personally-identifiable information!)
+  # Change to "debug" to log everything (including potentially personally-identifiable information!).
   config.log_level = ENV.fetch("RAILS_LOG_LEVEL", "info")
 
   # Prevent health checks from clogging up the logs.
-  config.silence_healthcheck_path = MobileContentApi::HEALTHCHECK_PATH
+  config.silence_healthcheck_path = "/up"
 
   # Don't log any deprecations.
   config.active_support.report_deprecations = false
@@ -69,11 +57,9 @@ Rails.application.configure do
   # config.action_mailer.raise_delivery_errors = false
 
   # Set host to be used by links generated in mailer templates.
-  # Disabled: this app has no real mailers (only the unused ApplicationMailer
-  # stub); the skeleton's example.com host would silently apply if enabled.
-  # config.action_mailer.default_url_options = { host: "example.com" }
+  config.action_mailer.default_url_options = { host: "example.com" }
 
-  # Specify outgoing SMTP server. Remember to add smtp/* credentials via rails credentials:edit.
+  # Specify outgoing SMTP server. Remember to add smtp/* credentials via bin/rails credentials:edit.
   # config.action_mailer.smtp_settings = {
   #   user_name: Rails.application.credentials.dig(:smtp, :user_name),
   #   password: Rails.application.credentials.dig(:smtp, :password),
@@ -90,7 +76,7 @@ Rails.application.configure do
   config.active_record.dump_schema_after_migration = false
 
   # Only use :id for inspections in production.
-  config.active_record.attributes_for_inspect = [:id]
+  config.active_record.attributes_for_inspect = [ :id ]
 
   # Enable DNS rebinding protection and other `Host` header attacks.
   # config.hosts = [
@@ -100,24 +86,4 @@ Rails.application.configure do
   #
   # Skip DNS rebinding protection for the default health check endpoint.
   # config.host_authorization = { exclude: ->(request) { request.path == "/up" } }
-
-  # Action cable
-  config.secret_key_base = ENV["SECRET_KEY_BASE"]
-  config.action_cable.disable_request_forgery_protection = true
-
-  config.middleware.insert_before 0, Rack::Cors do
-    allow do
-      origins(/\Ahttps:\/\/mobilecontentadmin(-stage)?\.cru\.org\z/)
-      resource "*", headers: :any, methods: [:get, :post, :put, :patch, :options, :delete], credentials: true, expose: ["X-Auth-Renewal"]
-    end
-
-    allow do
-      origins "*"
-      resource "*", headers: :any, methods: [:get, :post, :put, :patch, :options, :delete], expose: ["X-Auth-Renewal"]
-    end
-  end
 end
-
-Rails.application.routes.default_url_options = {
-  host: "mobile-content-api.cru.org"
-}
