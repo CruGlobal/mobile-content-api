@@ -56,7 +56,7 @@ Rails.application.configure do
   config.silence_healthcheck_path = MobileContentApi::HEALTHCHECK_PATH
 
   # Don't log any deprecations.
-  config.active_support.report_deprecations = false
+  # config.active_support.report_deprecations = false
 
   # Replace the default in-process memory cache store with a durable alternative.
   # config.cache_store = :mem_cache_store
@@ -104,6 +104,8 @@ Rails.application.configure do
   # Action cable
   config.secret_key_base = ENV["SECRET_KEY_BASE"]
   config.action_cable.disable_request_forgery_protection = true
+
+  config.active_support.deprecation = :notify
 
   config.middleware.insert_before 0, Rack::Cors do
     allow do
