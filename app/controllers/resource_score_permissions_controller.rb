@@ -24,10 +24,9 @@ class ResourceScorePermissionsController < WithUserController
   end
 
   def create
-    country = normalized_country(create_params[:country])
     permission = @user.resource_score_permissions.new(
-      country: country,
-      language: resolve_language(create_params[:lang])
+      country: ResourceScoreGrants.normalized_country(create_params[:country]),
+      language: ResourceScoreGrants.resolve_language(create_params[:lang])
     )
     permission.save!
 
@@ -47,26 +46,12 @@ class ResourceScorePermissionsController < WithUserController
 
   # Replaces the user's entire grant map in one call, which is how the admin UI
   # edits it: {"mx": ["es"], "us": ["en", "es"], "vn": ["*"]}
+  #
+  # Resolution (country/language checks, duplicate detection) lives in
+  # ResourceScoreGrants, shared with the invite flow. This stays the destructive
+  # replace; only UserInvite#accept! merges additively.
   def mass_update
-    grants = incoming_grants
-    resolved = grants.flat_map do |country, langs|
-      normalized = normalized_country(country)
-      codes = Array(langs)
-      if codes.empty?
-        raise InvalidRequestError,
-          "'#{country}' must list at least one language code " \
-          "(use [\"#{ResourceScorePermission::ALL_LANGUAGES}\"] for the whole country, " \
-          "or drop the country from the map to revoke it)"
-      end
-
-      codes.map { |lang| [normalized, resolve_language(lang)] }
-    end
-
-    duplicates = resolved.tally.select { |_pair, count| count > 1 }.keys
-    if duplicates.any?
-      raise InvalidRequestError,
-        "duplicate grants: #{duplicates.map { |country, language| "#{country}/#{language&.code || ResourceScorePermission::ALL_LANGUAGES}" }.join(", ")}"
-    end
+    resolved = ResourceScoreGrants.resolve(incoming_grants)
 
     ResourceScorePermission.transaction do
       @user.resource_score_permissions.destroy_all
@@ -111,31 +96,5 @@ class ResourceScorePermissionsController < WithUserController
     raise InvalidRequestError, "grants must be an object keyed by country code" unless grants.respond_to?(:to_unsafe_h)
 
     grants.to_unsafe_h
-  end
-
-  def normalized_country(country)
-    normalized = country.to_s.downcase
-    unless CountryCodes.valid?(normalized)
-      raise InvalidRequestError, "'#{country}' is not a recognized ISO 3166-1 alpha-2 country code"
-    end
-
-    normalized
-  end
-
-  # An explicit "*" is the only way to ask for every language in a country. A
-  # missing or blank code is a client bug (a misspelled key gets dropped by
-  # permit), so it errors rather than silently granting the whole country.
-  def resolve_language(code)
-    if code.blank?
-      raise InvalidRequestError,
-        "lang is required (use \"#{ResourceScorePermission::ALL_LANGUAGES}\" for every language in the country)"
-    end
-
-    return nil if code == ResourceScorePermission::ALL_LANGUAGES
-
-    language = Language.find_by_code(code)
-    raise InvalidRequestError, "Language not found for code: #{code}" unless language
-
-    language
   end
 end

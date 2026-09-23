@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_08_26_120000) do
+ActiveRecord::Schema[8.0].define(version: 2026_09_21_120000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
   enable_extension "pg_catalog.plpgsql"
@@ -363,6 +363,27 @@ ActiveRecord::Schema[8.0].define(version: 2026_08_26_120000) do
     t.index ["user_id", "counter_name"], name: "index_user_counters_on_user_id_and_counter_name", unique: true
   end
 
+  create_table "user_invites", force: :cascade do |t|
+    t.citext "email", null: false
+    t.string "first_name"
+    t.string "last_name"
+    t.boolean "email_is_alias", default: false, null: false
+    t.boolean "admin", default: false, null: false
+    t.jsonb "grants", default: {}, null: false
+    t.string "token", null: false
+    t.datetime "expires_at", null: false
+    t.bigint "invited_by_id"
+    t.bigint "accepted_by_id"
+    t.datetime "accepted_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["accepted_by_id"], name: "index_user_invites_on_accepted_by_id"
+    t.index ["email"], name: "index_user_invites_on_email"
+    t.index ["expires_at"], name: "index_user_invites_on_expires_at"
+    t.index ["invited_by_id"], name: "index_user_invites_on_invited_by_id"
+    t.index ["token"], name: "index_user_invites_on_token", unique: true
+  end
+
   create_table "user_training_tips", force: :cascade do |t|
     t.bigint "user_id", null: false
     t.bigint "tool_id", null: false
@@ -424,6 +445,8 @@ ActiveRecord::Schema[8.0].define(version: 2026_08_26_120000) do
   add_foreign_key "translations", "languages"
   add_foreign_key "translations", "resources"
   add_foreign_key "user_attributes", "users"
+  add_foreign_key "user_invites", "users", column: "accepted_by_id", on_delete: :nullify
+  add_foreign_key "user_invites", "users", column: "invited_by_id", on_delete: :nullify
   add_foreign_key "user_training_tips", "languages"
   add_foreign_key "user_training_tips", "resources", column: "tool_id"
   add_foreign_key "user_training_tips", "users"

@@ -18,6 +18,7 @@ Master push status: [![master push status](https://github.com/CruGlobal/mobile-c
     * ADOBE_ANALYTICS_JWT_TOKEN
     * ADOBE_ANALYTICS_CLIENT_SECRET
     * ADOBE_ANALYTICS_EXCHANGE_JWT_URL
+    * ADMIN_APP_BASE_URL (origin of the admin dashboard, used to build invitation links; defaults to http://localhost:5173)
 * You will also need to set AWS credentials.
 
 

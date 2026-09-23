@@ -93,6 +93,16 @@ Rails.application.routes.draw do
   patch "user/me/counters/:id", to: "user_counters#update" # Legacy route for GodTools Android v6.0.1+
   get "users/:user_id/counters", to: "user_counters#index"
   patch "users/:user_id/counters/:id", to: "user_counters#update"
+
+  # Declared above the users/:id routes: those carry no :id constraint, so
+  # "invites" and "me" would otherwise be read as user ids.
+  resources :user_invites, path: "users/invites", only: %i[index show create update destroy] do
+    member { post :resend }
+  end
+  # A literal "me": the token bearer is the only legal subject, so there is no
+  # :user_id segment for an admin to aim at someone else.
+  post "users/me/accept-invite", to: "user_invite_acceptances#create"
+
   get "users", to: "users#index"
   get "users/:id", to: "users#show"
   delete "users/:id", to: "users#destroy"
