@@ -93,10 +93,42 @@ class ResourcesController < ApplicationController
     resources = resources.where(abbreviation: params[:filter][:abbreviation]) if params.dig(:filter, :abbreviation)
 
     if params.dig(:filter, :resource_type)
-      resources = resources.joins(:resource_type).where(resource_types: {name: params[:filter][:resource_type].downcase})
+      resources = resources.joins(:resource_type).where(resource_types: {name: ResourceType.expand_name(params[:filter][:resource_type])})
     end
 
     resources
+  end
+
+  def all_featured_resources(lang_code:, country:, resource_type: nil)
+    scope = Resource.includes(:resource_scores).left_joins(:resource_scores).where(resource_scores: {featured: true})
+
+    if lang_code.present?
+      language = Language.find_by_code(lang_code)
+      scope = scope.joins(resource_scores: :language).where(languages: {id: language.id})
+    end
+
+    scope = scope.where("resource_scores.country = LOWER(:country)", country:) if country.present?
+    if resource_type.present?
+      scope = scope.joins(:resource_type).where(resource_types: {name: ResourceType.expand_name(resource_type)})
+    end
+
+    scope.order("resource_scores.featured_order ASC, resource_scores.featured DESC NULLS LAST, \
+    resource_scores.score DESC NULLS LAST, \
+    resources.created_at DESC")
+  end
+
+  def all_default_order_resources(lang:, resource_type: nil)
+    scope = Resource.joins(:resource_default_orders)
+
+    if lang.present?
+      language = Language.find_by_code(lang)
+      scope = scope.joins(resource_default_orders: :language).where(languages: {id: language.id})
+    end
+
+    if resource_type.present?
+      scope = scope.joins(:resource_type).where(resource_types: {name: ResourceType.expand_name(resource_type)})
+    end
+    scope.order("resource_default_orders.position ASC NULLS LAST, resources.created_at DESC")
   end
 
   def load_resource
