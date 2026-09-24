@@ -126,16 +126,9 @@ class ResourceScoresController < ApplicationController
         "Language not found for code: #{lang_code}"
     end
 
-    resource_type = ResourceType.find_by(name: resource_type_name)
-    unless resource_type.present?
-      raise InvalidRequestError,
-        "ResourceType '#{resource_type_name}' not found"
-    end
-
-    unless %w[lesson tract].include?(resource_type.name.downcase)
-      raise InvalidRequestError,
-        "ResourceType '#{resource_type_name}' is not supported"
-    end
+    # "tool" covers every tool format (see ResourceType::TOOL), so one write
+    # orders tracts and CYOA tools together, as the app lists them.
+    resource_type_ids = ResourceType.orderable_ids_for!(resource_type_name)
 
     unless incoming_resource_ids.is_a?(Array) && incoming_resource_ids.all?(Integer)
       raise InvalidRequestError,
@@ -153,7 +146,7 @@ class ResourceScoresController < ApplicationController
         "resource_ids cannot contain duplicate ids"
     end
 
-    valid_resource_ids = Resource.where(id: incoming_resource_ids, resource_type_id: resource_type.id).pluck(:id)
+    valid_resource_ids = Resource.where(id: incoming_resource_ids, resource_type_id: resource_type_ids).pluck(:id)
     invalid_resource_ids = incoming_resource_ids - valid_resource_ids
     if invalid_resource_ids.any?
       raise InvalidRequestError,
@@ -169,7 +162,7 @@ class ResourceScoresController < ApplicationController
       current_scores = ResourceScore
         .joins(:resource)
         .where(country: country, language_id: language.id)
-        .where(resources: {resource_type_id: resource_type.id})
+        .where(resources: {resource_type_id: resource_type_ids})
         .order(:featured_order)
         .lock
         .to_a
@@ -201,7 +194,7 @@ class ResourceScoresController < ApplicationController
     resulting_resource_scores = ResourceScore
       .joins(:resource)
       .where(country: country, language_id: language.id, featured: true)
-      .where(resources: {resource_type_id: resource_type.id})
+      .where(resources: {resource_type_id: resource_type_ids})
       .order(:featured_order)
 
     render json: resulting_resource_scores, include: params[:include], status: :ok
@@ -234,16 +227,9 @@ class ResourceScoresController < ApplicationController
         "Language not found for code: #{lang_code}"
     end
 
-    resource_type = ResourceType.find_by(name: resource_type_name)
-    unless resource_type.present?
-      raise InvalidRequestError,
-        "ResourceType '#{resource_type_name}' not found"
-    end
-
-    unless %w[lesson tract].include?(resource_type.name.downcase)
-      raise InvalidRequestError,
-        "ResourceType '#{resource_type_name}' is not supported"
-    end
+    # "tool" covers every tool format (see ResourceType::TOOL), so one write
+    # orders tracts and CYOA tools together, as the app lists them.
+    resource_type_ids = ResourceType.orderable_ids_for!(resource_type_name)
 
     incoming_resource_ids = symbolized_incoming_resource_array.map { |r| r[:resource_id] }
     if incoming_resource_ids.uniq.length != incoming_resource_ids.length
@@ -251,7 +237,7 @@ class ResourceScoresController < ApplicationController
         "resource_ids cannot contain duplicate ids"
     end
 
-    valid_resource_ids = Resource.where(id: incoming_resource_ids, resource_type_id: resource_type.id).pluck(:id)
+    valid_resource_ids = Resource.where(id: incoming_resource_ids, resource_type_id: resource_type_ids).pluck(:id)
     invalid_resource_ids = incoming_resource_ids - valid_resource_ids
     if invalid_resource_ids.any?
       raise InvalidRequestError,
@@ -267,7 +253,7 @@ class ResourceScoresController < ApplicationController
       current_scores = ResourceScore
         .joins(:resource)
         .where(country: country, language_id: language.id)
-        .where(resources: {resource_type_id: resource_type.id})
+        .where(resources: {resource_type_id: resource_type_ids})
         .order(score: :desc)
         .lock
         .to_a
@@ -302,7 +288,7 @@ class ResourceScoresController < ApplicationController
     resulting_resource_scores = ResourceScore
       .joins(:resource)
       .where(country: country, language_id: language.id)
-      .where(resources: {resource_type_id: resource_type.id})
+      .where(resources: {resource_type_id: resource_type_ids})
       .where.not(score: nil)
       .order(score: :desc)
 
@@ -343,7 +329,7 @@ class ResourceScoresController < ApplicationController
 
     if resource_type.present?
       scope = scope.joins(resource: :resource_type)
-        .where(resource_types: {name: resource_type.downcase})
+        .where(resource_types: {name: ResourceType.expand_name(resource_type)})
     end
 
     scope.order("featured_order ASC, featured DESC NULLS LAST, score DESC NULLS LAST, created_at DESC")

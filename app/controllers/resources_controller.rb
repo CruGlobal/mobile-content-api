@@ -132,7 +132,7 @@ class ResourcesController < ApplicationController
     resources = resources.where(abbreviation: params[:filter][:abbreviation]) if params.dig(:filter, :abbreviation)
 
     if params.dig(:filter, :resource_type)
-      resources = resources.joins(:resource_type).where(resource_types: {name: params[:filter][:resource_type].downcase})
+      resources = resources.joins(:resource_type).where(resource_types: {name: ResourceType.expand_name(params[:filter][:resource_type])})
     end
 
     resources
@@ -148,7 +148,7 @@ class ResourcesController < ApplicationController
 
     scope = scope.where("resource_scores.country = LOWER(:country)", country:) if country.present?
     if resource_type.present?
-      scope = scope.joins(:resource_type).where(resource_types: {name: resource_type.downcase})
+      scope = scope.joins(:resource_type).where(resource_types: {name: ResourceType.expand_name(resource_type)})
     end
 
     scope.order("resource_scores.featured_order ASC, resource_scores.featured DESC NULLS LAST, \
@@ -165,7 +165,7 @@ class ResourcesController < ApplicationController
     end
 
     if resource_type.present?
-      scope = scope.joins(:resource_type).where(resource_types: {name: resource_type.downcase})
+      scope = scope.joins(:resource_type).where(resource_types: {name: ResourceType.expand_name(resource_type)})
     end
     scope.order("resource_default_orders.position ASC NULLS LAST, resources.created_at DESC")
   end
