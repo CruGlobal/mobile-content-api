@@ -8,7 +8,7 @@ end
 ruby file: ".ruby-version"
 
 # Bundle edge Rails instead: gem "rails", github: "rails/rails", branch: "main"
-gem "rails", "~> 8.1.3"
+gem "rails", "~> 8.1.4"
 # The modern asset pipeline for Rails [https://github.com/rails/propshaft]
 # gem "propshaft" # Declined: no asset pipeline in this API app — serves JSON + raddocs static docs
 # Use sqlite3 as the database for Active Record
