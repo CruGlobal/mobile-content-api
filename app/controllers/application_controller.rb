@@ -30,6 +30,9 @@ class ApplicationController < ActionController::Base
   end
 
   rescue_from Pundit::NotAuthorizedError, with: :render_forbidden
+  rescue_from InvalidRequestError do |exception|
+    render_api_error(exception, :unprocessable_content)
+  end
 
   def render(**args)
     response.headers["Content-Type"] = "application/vnd.api+json" if args.key?(:json)
@@ -45,6 +48,18 @@ class ApplicationController < ActionController::Base
 
   def permit_params(*params)
     data_attrs.permit(params)
+  end
+
+  # Read a scalar value from the JSON:API filter param, rejecting any
+  # non-scalar shapes a query string can produce.
+  def filter_param(key)
+    filter = params[:filter]
+    return nil unless filter.is_a?(ActionController::Parameters)
+
+    value = filter[key]
+    raise InvalidRequestError, "filter[#{key}] must be a single value" if value.present? && !value.is_a?(String)
+
+    value
   end
 
   # Admin-only endpoints. Keeps the 401/403 split honest the same way

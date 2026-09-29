@@ -99,7 +99,7 @@ gem "raddocs", github: "CruGlobal/raddocs"
 gem "redis", ">= 4.0.1" # Dropped from the 8.0 skeleton; still used for :redis_cache_store and the Action Cable redis adapter
 gem "rest-client", "~> 2.1.0"
 gem "rollbar"
-gem "rubyzip", ">= 1.2.2"
+gem "rubyzip", ">= 3.0"
 gem "sidekiq", "~> 8.0"
 gem "sidekiq-failures"
 gem "sidekiq-unique-jobs"

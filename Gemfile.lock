@@ -297,7 +297,6 @@ GEM
     jwt (2.10.3)
       base64
     language_server-protocol (3.17.0.5)
-    libdatadog (33.0.0.1.0)
     libdatadog (33.0.0.1.0-arm64-darwin)
     libdatadog (33.0.0.1.0-x86_64-linux)
     libddwaf (1.30.0.0.2-arm64-darwin)
@@ -536,7 +535,7 @@ GEM
       rubocop (~> 1.81)
     ruby-progressbar (1.13.0)
     ruby2_keywords (0.0.5)
-    rubyzip (2.4.1)
+    rubyzip (3.6.0)
     securerandom (0.4.1)
     shellany (0.0.1)
     sidekiq (8.0.10)
@@ -690,7 +689,7 @@ DEPENDENCIES
   rspec-rails (~> 8.0)
   rspec_api_documentation!
   rubocop-rspec
-  rubyzip (>= 1.2.2)
+  rubyzip (>= 3.0)
   sidekiq (~> 8.0)
   sidekiq-failures
   sidekiq-pro!
@@ -801,7 +800,6 @@ CHECKSUMS
   jsonapi-renderer (0.2.2) sha256=b5c44b033d61b4abdb6500fa4ab84807ca0b36ea0e59e47a2c3ca7095a6e447b
   jwt (2.10.3) sha256=e4d9352fbc7309b1a7448c7dd713dfe4d8c47077af80759cdbed8f878ea0b484
   language_server-protocol (3.17.0.5) sha256=fd1e39a51a28bf3eec959379985a72e296e9f9acfce46f6a79d31ca8760803cc
-  libdatadog (33.0.0.1.0) sha256=d1fdcf05065c4184c775282dddeae8ff4f5dee0f32af1ac05cad8cd80f616934
   libdatadog (33.0.0.1.0-arm64-darwin) sha256=051af4a3c4b708406a4ecf7f046b04ed332ecfbe1be7e5a23c81f4890a5ed9c4
   libdatadog (33.0.0.1.0-x86_64-linux) sha256=502bb55203dcdc5815f409667f12f387c36e21e06c7059c6ad8df0acbb6ff077
   libddwaf (1.30.0.0.2-arm64-darwin) sha256=cbbec7eee8fe7dbdc6c11bf1429fcfc217fad84e822fc6f252cb1c45daf663cc
@@ -898,7 +896,7 @@ CHECKSUMS
   rubocop-rspec (3.9.0) sha256=8fa70a3619408237d789aeecfb9beef40576acc855173e60939d63332fdb55e2
   ruby-progressbar (1.13.0) sha256=80fc9c47a9b640d6834e0dc7b3c94c9df37f08cb072b7761e4a71e22cff29b33
   ruby2_keywords (0.0.5) sha256=ffd13740c573b7301cf7a2e61fc857b2a8e3d3aff32545d6f8300d8bae10e3ef
-  rubyzip (2.4.1) sha256=8577c88edc1fde8935eb91064c5cb1aef9ad5494b940cf19c775ee833e075615
+  rubyzip (3.6.0) sha256=268994d44d62282d1cfd99bf10eae48d7267199158ad7ea3e1fee2da9458b695
   securerandom (0.4.1) sha256=cc5193d414a4341b6e225f0cb4446aceca8e50d5e1888743fac16987638ea0b1
   shellany (0.0.1) sha256=0e127a9132698766d7e752e82cdac8250b6adbd09e6c0a7fbbb6f61964fedee7
   sidekiq (8.0.10) sha256=37ccd8da8d46f6779b8655cb30c1bfcb0decd57e890ff56d8b8252a5d9a84cd6
