@@ -271,5 +271,4 @@ describe "Users index", type: :request do
       expect(ids).to include(ungranted.id)
     end
   end
-
 end

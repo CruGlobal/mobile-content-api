@@ -4,10 +4,22 @@ class ResourceScoresController < ApplicationController
   MUTATING_ACTIONS = %i[create destroy update mass_update mass_update_ranked].freeze
 
   before_action :require_login!, only: MUTATING_ACTIONS
-  # Only assert on a success path. These actions rescue-and-render their own
-  # 4xx, and after_action still fires on those -- checking unconditionally would
-  # turn every 422 into an AuthorizationNotPerformedError 500.
-  after_action :verify_authorized, only: MUTATING_ACTIONS, if: -> { response.successful? }
+  after_action :verify_authorized, only: MUTATING_ACTIONS
+
+  rescue_from ActiveRecord::RecordInvalid do |exception|
+    render json: {errors: formatted_errors("record_invalid", exception)}, status: :unprocessable_content
+  end
+
+  rescue_from ActiveRecord::RecordNotFound do |exception|
+    render json: {
+      errors: [
+        {
+          source: {pointer: "/data/attributes/id"},
+          detail: exception.message
+        }
+      ]
+    }, status: :not_found
+  end
 
   def index
     lang_code = params.dig(:filter, :lang) || params[:lang]
@@ -18,9 +30,6 @@ class ResourceScoresController < ApplicationController
     )
 
     render json: resource_scores, include: params[:include], status: :ok
-  rescue InvalidRequestError => e
-    render json: {errors: [{detail: "Error: #{e.message}"}]},
-      status: :unprocessable_content
   end
 
   def create
@@ -38,12 +47,6 @@ class ResourceScoresController < ApplicationController
     @resource_score.save!
 
     render json: @resource_score, status: :created
-  rescue InvalidRequestError => e
-    render json: {errors: [{detail: "Error: #{e.message}"}]},
-      status: :unprocessable_content
-  rescue ActiveRecord::RecordInvalid => e
-    render json: {errors: formatted_errors("record_invalid", e)},
-      status: :unprocessable_content
   end
 
   def destroy
@@ -52,15 +55,6 @@ class ResourceScoresController < ApplicationController
     @resource_score.destroy!
 
     render json: {}, status: :ok
-  rescue ActiveRecord::RecordNotFound => e
-    render json: {
-      errors: [
-        {
-          source: {pointer: "/data/attributes/id"},
-          detail: e.message
-        }
-      ]
-    }, status: :not_found
   rescue ActiveRecord::RecordNotDestroyed => e
     render json: {
       errors: [
@@ -92,21 +86,6 @@ class ResourceScoresController < ApplicationController
     @resource_score.save!
 
     render json: @resource_score, status: :ok
-  rescue InvalidRequestError => e
-    render json: {errors: [{detail: "Error: #{e.message}"}]},
-      status: :unprocessable_content
-  rescue ActiveRecord::RecordNotFound => e
-    render json: {
-      errors: [
-        {
-          source: {pointer: "/data/attributes/id"},
-          detail: e.message
-        }
-      ]
-    }, status: :not_found
-  rescue ActiveRecord::RecordInvalid => e
-    render json: {errors: formatted_errors("record_invalid", e)},
-      status: :unprocessable_content
   end
 
   def mass_update
@@ -205,12 +184,6 @@ class ResourceScoresController < ApplicationController
       .order(:featured_order)
 
     render json: resulting_resource_scores, include: params[:include], status: :ok
-  rescue InvalidRequestError => e
-    render json: {errors: [{detail: "Error: #{e.message}"}]},
-      status: :unprocessable_content
-  rescue ActiveRecord::RecordInvalid => e
-    render json: {errors: formatted_errors("record_invalid", e)},
-      status: :unprocessable_content
   rescue ActiveRecord::RecordNotDestroyed => e
     render json: {errors: [{detail: "Error: #{e.message}"}]},
       status: :unprocessable_content
@@ -307,12 +280,6 @@ class ResourceScoresController < ApplicationController
       .order(score: :desc)
 
     render json: resulting_resource_scores, include: params[:include], status: :ok
-  rescue InvalidRequestError => e
-    render json: {errors: [{detail: "Error: #{e.message}"}]},
-      status: :unprocessable_content
-  rescue ActiveRecord::RecordInvalid => e
-    render json: {errors: formatted_errors("record_invalid", e)},
-      status: :unprocessable_content
   rescue ActiveRecord::RecordNotDestroyed => e
     render json: {errors: [{detail: "Error: #{e.message}"}]},
       status: :unprocessable_content

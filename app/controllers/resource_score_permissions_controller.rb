@@ -16,6 +16,10 @@ class ResourceScorePermissionsController < WithUserController
   before_action :require_admin!, except: :index
   before_action :require_subject!
 
+  rescue_from ActiveRecord::RecordInvalid do |exception|
+    render json: {errors: formatted_errors("record_invalid", exception)}, status: :unprocessable_content
+  end
+
   def index
     render json: @user.resource_score_permissions.includes(:language),
       include: params[:include],
@@ -32,10 +36,6 @@ class ResourceScorePermissionsController < WithUserController
     permission.save!
 
     render json: permission, status: :created
-  rescue InvalidRequestError => e
-    render json: {errors: [{detail: "Error: #{e.message}"}]}, status: :unprocessable_content
-  rescue ActiveRecord::RecordInvalid => e
-    render json: {errors: formatted_errors("record_invalid", e)}, status: :unprocessable_content
   end
 
   def destroy
@@ -80,10 +80,6 @@ class ResourceScorePermissionsController < WithUserController
       include: params[:include],
       meta: {grants: @user.resource_score_grants},
       status: :ok
-  rescue InvalidRequestError => e
-    render json: {errors: [{detail: "Error: #{e.message}"}]}, status: :unprocessable_content
-  rescue ActiveRecord::RecordInvalid => e
-    render json: {errors: formatted_errors("record_invalid", e)}, status: :unprocessable_content
   end
 
   protected

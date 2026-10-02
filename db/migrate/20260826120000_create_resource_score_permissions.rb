@@ -24,6 +24,6 @@ class CreateResourceScorePermissions < ActiveRecord::Migration[8.0]
       unique: true, where: "language_id IS NULL",
       name: "index_resource_score_permissions_on_user_country_wildcard"
     add_index :resource_score_permissions, :language_id
-    add_foreign_key :resource_score_permissions, :languages
+    add_foreign_key :resource_score_permissions, :languages, on_delete: :cascade
   end
 end
