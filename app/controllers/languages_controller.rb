@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class LanguagesController < ApplicationController
-  before_action :authorize!, only: [:create, :update, :destroy]
+  before_action :require_admin!, only: [:create, :update, :destroy]
   before_action :convert_hyphen_to_dash, only: [:create, :update]
 
   def index

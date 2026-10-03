@@ -56,12 +56,12 @@ describe SecureController do
     expect(response).to have_http_status(:ok)
   end
 
-  it "unauthorized if token is for non-admin user" do
+  it "forbidden if token is for non-admin user" do
     request.headers["Authorization"] = user_token
     user.update(admin: false)
 
     get :index
 
-    expect(response).to have_http_status(:unauthorized)
+    expect(response).to have_http_status(:forbidden)
   end
 end
