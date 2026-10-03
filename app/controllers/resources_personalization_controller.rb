@@ -85,7 +85,7 @@ class ResourcesPersonalizationController < ApplicationController
   end
 
   def apply_resource_type_filter(scope, resource_types)
-    type_names = Array(resource_types).flat_map { |t| t.split(",") }.map(&:downcase)
+    type_names = Array(resource_types).flat_map { |t| t.split(",") }.flat_map { |t| ResourceType.expand_name(t) }
     return scope if type_names.none?
 
     scope.joins(:resource_type).where(resource_types: {name: type_names})
