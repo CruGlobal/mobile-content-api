@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class ResourcesController < ApplicationController
-  before_action :authorize!, only: %i[create update publish_translation]
+  before_action :require_admin!, only: %i[create update publish_translation]
 
   def index
     render json: cached_index_json, status: :ok

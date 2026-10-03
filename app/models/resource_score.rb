@@ -1,13 +1,16 @@
 # frozen_string_literal: true
 
 class ResourceScore < ApplicationRecord
-  MAX_FEATURED_ORDER_POSITION = 9
+  include CountryCodes
+
+  # Three slots per country, language and resource type, enforced here so the
+  # rule holds for every client rather than just the admin UI.
+  MAX_FEATURED_ORDER_POSITION = 3
   MAX_SCORE = 20
   belongs_to :resource
   belongs_to :language
 
   validates :resource_id, presence: true
-  validates :country, presence: true
   validates :language, presence: true
   validates :featured_order, numericality: {
     only_integer: true, greater_than_or_equal_to: 1, less_than_or_equal_to: MAX_FEATURED_ORDER_POSITION
@@ -21,16 +24,14 @@ class ResourceScore < ApplicationRecord
   }
   validate :featured_and_featured_order_consistency
 
-  before_save :downcase_country
   after_commit :clear_resource_cache
   after_commit :touch_resource, on: %i[create update]
 
   private
 
-  def downcase_country
-    self.country = country.downcase if country.present?
-  end
-
+  # Relies on the CountryCodes before_validation: country is stored downcased, so
+  # comparing it raw would let a request sending "US" match nothing and skip both
+  # this check and the featured_order one below.
   def unique_resource_score_per_country_and_language
     existing = ResourceScore.where(
       country: country,

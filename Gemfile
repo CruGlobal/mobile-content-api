@@ -1,8 +1,13 @@
 # frozen_string_literal: true
 
 source "https://rubygems.org"
-source "https://gems.contribsys.com/" do
-  gem "sidekiq-pro"
+# Sidekiq Pro requires credentials for gems.contribsys.com. Local development
+# without those credentials can bundle against Gemfile.oss instead, which sets
+# SIDEKIQ_OSS=true and falls back to open-source Sidekiq.
+unless ENV["SIDEKIQ_OSS"] == "true"
+  source "https://gems.contribsys.com/" do
+    gem "sidekiq-pro"
+  end
 end
 
 ruby file: ".ruby-version"
@@ -88,12 +93,13 @@ gem "nokogiri"
 gem "oj", "~> 3.17.0"
 gem "ougai", "~> 2.0"
 gem "pg"
+gem "pundit"
 gem "rack-cors", require: "rack/cors"
 gem "raddocs", github: "CruGlobal/raddocs"
 gem "redis", ">= 4.0.1" # Dropped from the 8.0 skeleton; still used for :redis_cache_store and the Action Cable redis adapter
 gem "rest-client", "~> 2.1.0"
 gem "rollbar"
-gem "rubyzip", ">= 1.2.2"
+gem "rubyzip", ">= 3.0"
 gem "sidekiq", "~> 8.0"
 gem "sidekiq-failures"
 gem "sidekiq-unique-jobs"

@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class ResourceDefaultOrdersController < ApplicationController
-  before_action :authorize!, only: %i[create destroy update mass_update]
+  before_action :require_admin!, only: %i[create destroy update mass_update]
 
   def index
     lang = params.dig(:filter, :lang) || params[:lang]

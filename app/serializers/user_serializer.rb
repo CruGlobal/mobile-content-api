@@ -2,9 +2,12 @@
 
 class UserSerializer < ActiveModel::Serializer
   type "user"
-  attributes :sso_guid, :created_at, :name, :email
+  attributes :sso_guid, :created_at, :name, :email, :admin
   attribute :first_name, key: "given-name"
   attribute :last_name, key: "family-name"
+
+  # Lets a client learn its own access from the profile request it already makes.
+  attribute :resource_score_grants, key: "resource-score-grants"
 
   has_many :tools, key: "favorite-tools"
   has_many :user_training_tips, key: "training-tips"

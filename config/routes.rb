@@ -1,6 +1,10 @@
 # frozen_string_literal: true
 
-require "sidekiq/pro/web"
+begin
+  require "sidekiq/pro/web"
+rescue LoadError
+  require "sidekiq/web" # open-source Sidekiq (no Pro credentials available)
+end
 
 Rails.application.routes.draw do
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
@@ -104,6 +108,7 @@ Rails.application.routes.draw do
   patch "user/me/counters/:id", to: "user_counters#update" # Legacy route for GodTools Android v6.0.1+
   get "users/:user_id/counters", to: "user_counters#index"
   patch "users/:user_id/counters/:id", to: "user_counters#update"
+  get "users", to: "users#index"
   get "users/:id", to: "users#show"
   delete "users/:id", to: "users#destroy"
   patch "users/:id", to: "users#update"
@@ -115,6 +120,14 @@ Rails.application.routes.draw do
 
   scope "users/:user_id" do
     resources :training_tips, path: "training-tips", only: %i[create update destroy]
+
+    resources :resource_score_permissions, path: "resource-score-permissions",
+      only: %i[index create destroy] do
+      collection do
+        put :mass_update
+        patch :mass_update
+      end
+    end
   end
 
   get "monitors/commit"
