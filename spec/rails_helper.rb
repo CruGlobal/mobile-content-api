@@ -11,6 +11,7 @@ end
 
 SimpleCov.start "rails" do
   add_filter "/lib/log/"
+  add_filter "/lib/tasks/"
   add_group "Serializers", "app/serializers"
   add_group "Validators", "app/validators"
   add_group "Service Classes", "app/services"
