@@ -86,7 +86,7 @@ describe "Tool resource type family", type: :request do
       featured = ResourceScore.where(country: "us", language: english, featured: true).order(:featured_order)
       expect(featured.map(&:resource_id)).to eq([cyoa.id, tract.id])
 
-      get "/resources/featured?filter[country]=us&filter[lang]=en&filter[resource_type]=tool"
+      get "/resources/featured?filter[country]=us&filter[lang]=en&filter[resource-type]=tool"
       expect(ids_in(response.body)).to eq([cyoa.id, tract.id])
     end
 
@@ -178,7 +178,7 @@ describe "Tool resource type family", type: :request do
       expect(response).to have_http_status(:ok)
       expect(ResourceDefaultOrder.where(language: english).order(:position).map(&:resource_id)).to eq([cyoa.id, tract.id])
 
-      get "/resources/default_order?filter[lang]=en&filter[resource_type]=tool"
+      get "/resources/default-order?filter[lang]=en&filter[resource-type]=tool"
       expect(ids_in(response.body)).to eq([cyoa.id, tract.id])
 
       get "/resource_default_orders?filter[lang]=en&filter[resource_type]=tool"
