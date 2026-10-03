@@ -193,6 +193,17 @@ describe "ResourceScorePermissions management", type: :request do
       expect(response).to have_http_status(:unprocessable_content)
       expect(editor.resource_score_permissions).to be_empty
     end
+
+    it "rejects a duplicate grant" do
+      FactoryBot.create(:resource_score_permission, user: editor, country: "us", language: english)
+
+      post base,
+        params: {data: {attributes: {country: "us", lang: "en"}}}.to_json,
+        headers: headers_for(admin)
+
+      expect(response).to have_http_status(:unprocessable_content)
+      expect(editor.resource_score_permissions.count).to eq(1)
+    end
   end
 
   describe "DELETE destroy" do
