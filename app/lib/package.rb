@@ -53,7 +53,7 @@ class Package
     manifest = Xml::Manifest.new(@translation)
     determine_resources(manifest.document)
 
-    Zip::File.open("#{@directory}/#{@translation.zip_name}", Zip::File::CREATE) do |zip_file|
+    Zip::File.open("#{@directory}/#{@translation.zip_name}", create: true) do |zip_file|
       add_pages(zip_file, manifest)
       add_tips(zip_file, manifest) if include_tips?
       add_attachments(zip_file, manifest)

@@ -188,6 +188,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_09_21_120000) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer "language_id"
+    t.index ["language_id"], name: "index_resource_default_orders_on_language_id"
     t.index ["resource_id", "language_id"], name: "index_resource_default_orders_on_resource_id_and_language_id", unique: true
     t.index ["resource_id"], name: "index_resource_default_orders_on_resource_id"
   end
@@ -215,6 +216,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_09_21_120000) do
     t.datetime "updated_at", null: false
     t.integer "featured_order"
     t.integer "language_id"
+    t.index ["language_id", "country"], name: "index_resource_scores_on_language_id_and_country"
     t.index ["resource_id", "language_id", "country"], name: "idx_on_resource_id_language_id_country_2842b155a9", unique: true
     t.index ["resource_id"], name: "index_resource_scores_on_resource_id"
   end
