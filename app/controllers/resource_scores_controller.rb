@@ -1,7 +1,13 @@
 # frozen_string_literal: true
 
 class ResourceScoresController < ApplicationController
-  before_action :authorize!, only: %i[create destroy update mass_update mass_update_ranked]
+  MUTATING_ACTIONS = %i[create destroy update mass_update mass_update_ranked].freeze
+
+  before_action :require_login!, only: MUTATING_ACTIONS
+  # Only assert on a success path. These actions rescue-and-render their own
+  # 4xx, and after_action still fires on those -- checking unconditionally would
+  # turn every 422 into an AuthorizationNotPerformedError 500.
+  after_action :verify_authorized, only: MUTATING_ACTIONS, if: -> { response.successful? }
 
   def index
     lang_code = params.dig(:filter, :lang) || params[:lang]
@@ -28,6 +34,7 @@ class ResourceScoresController < ApplicationController
 
     @resource_score = ResourceScore.new(sanitized_params)
     @resource_score.language = language if language.present?
+    authorize @resource_score
     @resource_score.save!
 
     render json: @resource_score, status: :created
@@ -41,6 +48,7 @@ class ResourceScoresController < ApplicationController
 
   def destroy
     @resource_score = ResourceScore.find(params[:id])
+    authorize @resource_score
     @resource_score.destroy!
 
     render json: {}, status: :ok
@@ -76,7 +84,12 @@ class ResourceScoresController < ApplicationController
       @resource_score.language = language
     end
 
-    @resource_score.update!(sanitized_params)
+    # assign-then-authorize, not update!: the policy compares country_was /
+    # language_id_was against the incoming values, which only exist as a pair
+    # while the record is dirty and unsaved.
+    @resource_score.assign_attributes(sanitized_params)
+    authorize @resource_score
+    @resource_score.save!
 
     render json: @resource_score, status: :ok
   rescue InvalidRequestError => e
@@ -147,6 +160,10 @@ class ResourceScoresController < ApplicationController
         "Resources not found or do not match the provided resource type. " \
         "Invalid IDs: #{invalid_resource_ids.join(", ")}"
     end
+
+    # One (country, language, resource_type) slice is rewritten wholesale below,
+    # so authorizing the slice covers every row the transaction touches.
+    authorize ResourceScore.new(country: country, language: language), :mass_update?
 
     ResourceScore.transaction do
       current_scores = ResourceScore
@@ -241,6 +258,10 @@ class ResourceScoresController < ApplicationController
         "Resources not found or do not match the provided resource type. " \
         "Invalid resource IDs: #{invalid_resource_ids.join(", ")}"
     end
+
+    # One (country, language, resource_type) slice is rewritten wholesale below,
+    # so authorizing the slice covers every row the transaction touches.
+    authorize ResourceScore.new(country: country, language: language), :mass_update_ranked?
 
     ResourceScore.transaction do
       current_scores = ResourceScore
