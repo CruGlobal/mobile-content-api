@@ -49,14 +49,14 @@ Rails.application.configure do
   # config.log_tags = [ :request_id ]
   # config.logger   = ActiveSupport::TaggedLogging.logger(STDOUT)
 
-  # Change to "debug" to log everything (including potentially personally-identifiable information!)
+  # Change to "debug" to log everything (including potentially personally-identifiable information!).
   config.log_level = ENV.fetch("RAILS_LOG_LEVEL", "info")
 
   # Prevent health checks from clogging up the logs.
   config.silence_healthcheck_path = MobileContentApi::HEALTHCHECK_PATH
 
   # Don't log any deprecations.
-  config.active_support.report_deprecations = false
+  # config.active_support.report_deprecations = false
 
   # Replace the default in-process memory cache store with a durable alternative.
   # config.cache_store = :mem_cache_store
@@ -73,7 +73,7 @@ Rails.application.configure do
   # stub); the skeleton's example.com host would silently apply if enabled.
   # config.action_mailer.default_url_options = { host: "example.com" }
 
-  # Specify outgoing SMTP server. Remember to add smtp/* credentials via rails credentials:edit.
+  # Specify outgoing SMTP server. Remember to add smtp/* credentials via bin/rails credentials:edit.
   # config.action_mailer.smtp_settings = {
   #   user_name: Rails.application.credentials.dig(:smtp, :user_name),
   #   password: Rails.application.credentials.dig(:smtp, :password),
@@ -99,11 +99,13 @@ Rails.application.configure do
   # ]
   #
   # Skip DNS rebinding protection for the default health check endpoint.
-  # config.host_authorization = { exclude: ->(request) { request.path == "/up" } }
+  config.host_authorization = {exclude: ->(request) { request.path == MobileContentApi::HEALTHCHECK_PATH }}
 
   # Action cable
   config.secret_key_base = ENV["SECRET_KEY_BASE"]
   config.action_cable.disable_request_forgery_protection = true
+
+  config.active_support.deprecation = :notify
 
   config.middleware.insert_before 0, Rack::Cors do
     allow do
