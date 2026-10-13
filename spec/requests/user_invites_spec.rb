@@ -252,6 +252,22 @@ describe "UserInvites management", type: :request do
       expect(response).to have_http_status(:unprocessable_content)
       expect(invite.reload.grants).to eq({"us" => ["*"]})
     end
+
+    it "answers 409 with the existing id when the new email belongs to another pending invite" do
+      other = FactoryBot.create(:user_invite, email: "taken@partner.org")
+
+      patch "/users/invites/#{invite.id}", params: body("email" => "taken@partner.org"), headers: headers_for(admin)
+
+      expect(response).to have_http_status(:conflict)
+      expect(JSON.parse(response.body)["errors"].first["meta"]["invite-id"]).to eq(other.id.to_s)
+      expect(invite.reload.email).not_to eq("taken@partner.org")
+    end
+
+    it "does not treat the invite's own email as a collision" do
+      patch "/users/invites/#{invite.id}", params: body("email" => invite.email), headers: headers_for(admin)
+
+      expect(response).to have_http_status(:ok)
+    end
   end
 
   describe "POST resend" do
@@ -268,6 +284,19 @@ describe "UserInvites management", type: :request do
       json = JSON.parse(response.body)
       expect(json["data"]["attributes"]["invite-url"]).to eq(invite.url)
       expect(json["meta"]["delivered"]).to be false
+    end
+
+    it "answers 409 with the existing id when another pending invite holds the email" do
+      expired = FactoryBot.create(:user_invite, :expired, email: "jane@partner.org")
+      current = FactoryBot.create(:user_invite, email: "jane@partner.org")
+      old_token = expired.token
+
+      post "/users/invites/#{expired.id}/resend", headers: headers_for(admin)
+
+      expect(response).to have_http_status(:conflict)
+      expect(JSON.parse(response.body)["errors"].first["meta"]["invite-id"]).to eq(current.id.to_s)
+      expect(expired.reload.token).to eq(old_token)
+      expect(expired).to be_expired
     end
   end
 

@@ -18,18 +18,6 @@ class UserInvitesController < SecureController
   end
 
   def create
-    existing = UserInvite.pending.find_by(email: invite_params[:email])
-    if existing
-      render json: {
-        errors: [{
-          code: "invite_already_pending",
-          detail: "A pending invitation for #{existing.email} already exists; resend or revoke it instead.",
-          meta: {"invite-id" => existing.id.to_s}
-        }]
-      }, status: :conflict
-      return
-    end
-
     new_invite = UserInvite.new(invite_params.merge(invited_by: current_user))
     new_invite.save!
     UserInviteNotifier.deliver(new_invite)
@@ -38,7 +26,7 @@ class UserInvitesController < SecureController
   rescue InvalidRequestError => e
     render json: {errors: [{detail: "Error: #{e.message}"}]}, status: :unprocessable_content
   rescue ActiveRecord::RecordInvalid => e
-    render json: {errors: formatted_errors("record_invalid", e)}, status: :unprocessable_content
+    render_record_invalid(e)
   end
 
   # Editing a pending invite changes what the already-distributed link will
@@ -50,7 +38,7 @@ class UserInvitesController < SecureController
   rescue InvalidRequestError => e
     render json: {errors: [{detail: "Error: #{e.message}"}]}, status: :unprocessable_content
   rescue ActiveRecord::RecordInvalid => e
-    render json: {errors: formatted_errors("record_invalid", e)}, status: :unprocessable_content
+    render_record_invalid(e)
   end
 
   def destroy
@@ -64,12 +52,32 @@ class UserInvitesController < SecureController
     UserInviteNotifier.deliver(invite)
 
     render json: invite, meta: delivery_meta(invite), status: :ok
+  rescue ActiveRecord::RecordInvalid => e
+    render_record_invalid(e)
   end
 
   private
 
   def invite
     @invite ||= UserInvite.find(params[:id])
+  end
+
+  # A pending-email collision answers 409 and names the invite in the way, so the
+  # dashboard can offer to resend or revoke it; any other failure is a plain 422.
+  def render_record_invalid(error)
+    existing = error.record.conflicting_pending_invite
+
+    if existing
+      render json: {
+        errors: [{
+          code: "invite_already_pending",
+          detail: "A pending invitation for #{existing.email} already exists; resend or revoke it instead.",
+          meta: {"invite-id" => existing.id.to_s}
+        }]
+      }, status: :conflict
+    else
+      render json: {errors: formatted_errors("record_invalid", error)}, status: :unprocessable_content
+    end
   end
 
   # Pending is the working set; the rest is opt-in so the audit trail stays

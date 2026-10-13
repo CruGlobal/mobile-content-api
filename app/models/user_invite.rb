@@ -25,7 +25,7 @@ class UserInvite < ApplicationRecord
   # Only when the map is being written: accept! stamps accepted_at on a row
   # whose map may reference a language deleted since, and that must not block.
   validate :grants_are_resolvable, if: -> { new_record? || will_save_change_to_grants? }
-  validate :only_one_pending_per_email, on: :create
+  validate :only_one_pending_per_email
 
   before_validation :default_expiry, on: :create
 
@@ -59,6 +59,15 @@ class UserInvite < ApplicationRecord
   # the code, sends the person through Okta, and redeems the code afterwards.
   def url
     "#{Rails.configuration.x.admin_app_base_url}/invite?code=#{token}"
+  end
+
+  # Another pending invite holding the email this record is about to claim, if
+  # any. Excludes self so an invite being edited or resent does not collide with
+  # its own row.
+  def conflicting_pending_invite
+    return if email.blank? || !claims_pending_email?
+
+    UserInvite.pending.where(email: email).where.not(id: id).first
   end
 
   # Rotates the credential and restarts the clock, so the old link stops working.
@@ -121,12 +130,18 @@ class UserInvite < ApplicationRecord
     errors.add(:grants, e.message)
   end
 
-  # The controller checks this first to answer with a 409 that points at the
-  # existing invite; this is the fallback that keeps a race from creating two.
+  # The controller turns a failure here into a 409 that points at the existing
+  # invite, found again through conflicting_pending_invite.
   def only_one_pending_per_email
-    return if email.blank?
-    return unless UserInvite.pending.where(email: email).exists?
+    return unless conflicting_pending_invite
 
     errors.add(:email, "already has a pending invitation")
+  end
+
+  # A create always claims its email. An update only does when it leaves the
+  # record pending and moves the email or the expiry: a PATCH to the email, or a
+  # resend reviving an expired invite. accept! stamps accepted_at, so it skips this.
+  def claims_pending_email?
+    new_record? || (pending? && (will_save_change_to_email? || will_save_change_to_expires_at?))
   end
 end
