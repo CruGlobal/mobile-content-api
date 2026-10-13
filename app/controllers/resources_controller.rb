@@ -93,7 +93,7 @@ class ResourcesController < ApplicationController
     resources = resources.where(abbreviation: params[:filter][:abbreviation]) if params.dig(:filter, :abbreviation)
 
     if params.dig(:filter, :resource_type)
-      resources = resources.joins(:resource_type).where(resource_types: {name: params[:filter][:resource_type].downcase})
+      resources = resources.joins(:resource_type).where(resource_types: {name: ResourceType.expand_name(params[:filter][:resource_type])})
     end
 
     resources

@@ -1,18 +1,22 @@
+# frozen_string_literal: true
+
+# "Tools" here means every tool format (tract and CYOA), matching the app's
+# Tools list; see ResourceType::TOOL_TYPE_NAMES.
 class ContentStatusController < ApplicationController
   def index
     metrics = {
       tools: {
         default: Language.joins(resource_default_orders: {resource: :resource_type}).where(
-          resource_types: {name: "tract"}
+          resource_types: {name: ResourceType::TOOL_TYPE_NAMES}
         ).distinct("languages.id").count,
         featured: Language.joins(resource_scores: {resource: :resource_type}).where(
-          resource_types: {name: "tract"},
+          resource_types: {name: ResourceType::TOOL_TYPE_NAMES},
           resource_scores: {featured: true}
         ).distinct("languages.id").count,
         ranked: Language.joins(resource_scores: {resource: :resource_type}).where(
-          resource_types: {name: "tract"}
+          resource_types: {name: ResourceType::TOOL_TYPE_NAMES}
         ).where.not(resource_scores: {score: nil}).distinct("languages.id").count,
-        total: Language.joins(resource_scores: {resource: :resource_type}).where(resource_types: {name: "tract"}).distinct("languages.id").count
+        total: Language.joins(resource_scores: {resource: :resource_type}).where(resource_types: {name: ResourceType::TOOL_TYPE_NAMES}).distinct("languages.id").count
       },
       lessons: {
         default: Language.joins(resource_default_orders: {resource: :resource_type}).where(
@@ -53,10 +57,10 @@ class ContentStatusController < ApplicationController
   def retrieve_tools_data(country, language)
     {
       featured: Resource.joins(:resource_type, resource_scores: :language).where(
-        resource_types: {name: "tract"}, resource_scores: {featured: true, country: country}
+        resource_types: {name: ResourceType::TOOL_TYPE_NAMES}, resource_scores: {featured: true, country: country}
       ).where(resource_scores: {language: language}).count,
       ranked: Resource.joins(:resource_type, resource_scores: :language).where(
-        resource_types: {name: "tract"}, resource_scores: {country: country}
+        resource_types: {name: ResourceType::TOOL_TYPE_NAMES}, resource_scores: {country: country}
       ).where(resource_scores: {language: language}).where.not(resource_scores: {score: nil}).count
     }
   end

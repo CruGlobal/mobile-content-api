@@ -400,7 +400,9 @@ resource "ResourceScores" do
     let(:country) { "US" }
     let(:lang) { "en" }
     let(:resource_ids) { [] }
-    let(:resource_type) { ResourceType.find_by!(name: "tract") }
+    # "tool" is the client-facing name for every tool format, not a row, so the
+    # default is an unsaved type: tracts are ordered by writing "tool".
+    let(:resource_type) { ResourceType.new(name: ResourceType::TOOL) }
     let(:featured) { true }
     let(:params) do
       {data: {attributes: {country: country, lang: lang, resource_ids: resource_ids,
@@ -835,7 +837,9 @@ resource "ResourceScores" do
     let(:country) { "US" }
     let(:lang) { "en" }
     let(:ranked_resources) { [] }
-    let(:resource_type) { ResourceType.find_by!(name: "tract") }
+    # "tool" is the client-facing name for every tool format, not a row, so the
+    # default is an unsaved type: tracts are ordered by writing "tool".
+    let(:resource_type) { ResourceType.new(name: ResourceType::TOOL) }
     let(:params) do
       {data: {attributes: {country: country, lang: lang, ranked_resources: ranked_resources,
                            resource_type: resource_type&.name}}}

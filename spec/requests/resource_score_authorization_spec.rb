@@ -112,7 +112,7 @@ describe "ResourceScore edit authorization", type: :request do
     it "is forbidden from mass_update outside the grant" do
       patch "/resource_scores/mass_update",
         params: {data: {attributes: {
-          country: "mx", lang: "en", resource_type: "tract", resource_ids: [resource.id]
+          country: "mx", lang: "en", resource_type: "tool", resource_ids: [resource.id]
         }}}.to_json, headers: headers
 
       expect(response).to have_http_status(:forbidden)
@@ -122,7 +122,7 @@ describe "ResourceScore edit authorization", type: :request do
     it "is forbidden from mass_update_ranked outside the grant" do
       patch "/resource_scores/mass_update_ranked",
         params: {data: {attributes: {
-          country: "mx", lang: "en", resource_type: "tract",
+          country: "mx", lang: "en", resource_type: "tool",
           ranked_resources: [{resource_id: resource.id, score: 3}]
         }}}.to_json, headers: headers
 
@@ -133,7 +133,7 @@ describe "ResourceScore edit authorization", type: :request do
     it "can mass_update inside the grant" do
       patch "/resource_scores/mass_update",
         params: {data: {attributes: {
-          country: "us", lang: "en", resource_type: "tract", resource_ids: [resource.id]
+          country: "us", lang: "en", resource_type: "tool", resource_ids: [resource.id]
         }}}.to_json, headers: headers
 
       expect(response).to have_http_status(:ok)

@@ -10,6 +10,11 @@ FactoryBot.define do
       dtd_file { "lesson.xsd" }
     end
 
+    factory :cyoa_resource_type do
+      name { "cyoa" }
+      dtd_file { "cyoa.xsd" }
+    end
+
     factory :article_resource_type do
       name { "article" }
       dtd_file { "article.xsd" }
