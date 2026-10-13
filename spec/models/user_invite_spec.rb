@@ -154,6 +154,27 @@ describe UserInvite do
       expect(invite.reload).to be_accepted
     end
 
+    it "treats a grant written concurrently by another redemption as already held" do
+      invite = FactoryBot.create(:user_invite, grants: {"us" => ["*"], "mx" => ["*"]})
+      # Two invites resolving to one user lock different rows, so both can pass the
+      # uniqueness check and then collide on the unique index at INSERT time. Slip
+      # the competing row in between the two to get the database's real error.
+      allow_any_instance_of(ResourceScorePermission).to receive(:grant_is_unique)
+      allow_any_instance_of(ResourceScorePermission).to receive(:save!).and_wrap_original do |original, *args, **kwargs|
+        record = original.receiver
+        ResourceScorePermission.insert!({user_id: record.user_id, country: "us", language_id: nil}) if record.country == "us"
+        original.call(*args, **kwargs)
+      end
+
+      expect { invite.accept!(user) }.not_to raise_error
+
+      # The simulated competitor is inserted inside the savepoint and rolls back
+      # with it; a real one commits in its own transaction. What this proves is
+      # that the collision did not abort the redemption: "mx" is still written.
+      expect(user.resource_score_grants).to include("mx" => ["*"])
+      expect(invite.reload).to be_accepted
+    end
+
     it "does not touch the acceptor's email, so an alias invite still applies" do
       invite = FactoryBot.create(:user_invite, email: "alias@partner.org")
 

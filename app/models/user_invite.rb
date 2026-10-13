@@ -99,9 +99,18 @@ class UserInvite < ApplicationRecord
       pairs.each do |country, language|
         # first_or_create! rather than create!: the user may be an existing
         # one who already holds the grant, and re-granting must be a no-op.
-        user.resource_score_permissions
-          .where(country: country, language_id: language&.id)
-          .first_or_create!
+        #
+        # The savepoint matters: a failed INSERT aborts the whole Postgres
+        # transaction, so without it one collision would sink the redemption.
+        transaction(requires_new: true) do
+          user.resource_score_permissions
+            .where(country: country, language_id: language&.id)
+            .first_or_create!
+        end
+      rescue ActiveRecord::RecordNotUnique
+        # A concurrent redemption for the same user (e.g. a primary and an alias
+        # invite) wrote this grant between our SELECT and INSERT. The invitee
+        # holds it either way, so there is nothing to do.
       end
 
       update!(accepted_at: Time.current, accepted_by: user)
