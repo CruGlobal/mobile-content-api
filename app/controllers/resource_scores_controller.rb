@@ -114,7 +114,8 @@ class ResourceScoresController < ApplicationController
     end
 
     # "tool" covers every tool format (see ResourceType::TOOL), so one write
-    # orders tracts and CYOA tools together, as the app lists them.
+    # orders tracts and CYOA tools together, as the app lists them. A single
+    # format is rejected: it would reorder only part of that list.
     resource_type_ids = ResourceType.orderable_ids_for!(resource_type_name)
 
     unless incoming_resource_ids.is_a?(Array) && incoming_resource_ids.all?(Integer)
@@ -211,7 +212,8 @@ class ResourceScoresController < ApplicationController
     end
 
     # "tool" covers every tool format (see ResourceType::TOOL), so one write
-    # orders tracts and CYOA tools together, as the app lists them.
+    # orders tracts and CYOA tools together, as the app lists them. A single
+    # format is rejected: it would reorder only part of that list.
     resource_type_ids = ResourceType.orderable_ids_for!(resource_type_name)
 
     incoming_resource_ids = symbolized_incoming_resource_array.map { |r| r[:resource_id] }
