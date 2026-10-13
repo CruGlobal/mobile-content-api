@@ -143,6 +143,28 @@ describe "UserInvite acceptance", type: :request do
     expect(JSON.parse(response.body)["errors"].first).to eq({"detail" => "That invitation link is not valid."})
   end
 
+  # The controller pre-checks state, but accept! re-checks under a row lock. These
+  # are the answers when a concurrent redemption changes the invite in between.
+  it "answers 409 when the invite is used between the pre-check and the lock" do
+    invite = FactoryBot.create(:user_invite)
+    allow_any_instance_of(UserInvite).to receive(:accept!).and_raise(UserInvite::AlreadyAccepted)
+
+    accept(invite.token)
+
+    expect(response).to have_http_status(:conflict)
+    expect(JSON.parse(response.body)["errors"].first).to eq({"detail" => "That invitation has already been used."})
+  end
+
+  it "answers 410 when the invite expires between the pre-check and the lock" do
+    invite = FactoryBot.create(:user_invite)
+    allow_any_instance_of(UserInvite).to receive(:accept!).and_raise(UserInvite::Expired)
+
+    accept(invite.token)
+
+    expect(response).to have_http_status(:gone)
+    expect(JSON.parse(response.body)["errors"].first).to eq({"detail" => "That invitation has expired."})
+  end
+
   it "reports a language that disappeared after the invite was created" do
     invite = FactoryBot.create(:user_invite, grants: {"mx" => ["*"]})
     invite.update_column(:grants, {"us" => ["zz"], "mx" => ["*"]})
