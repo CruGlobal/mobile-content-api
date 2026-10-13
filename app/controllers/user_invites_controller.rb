@@ -10,7 +10,7 @@ class UserInvitesController < SecureController
   before_action :reject_accepted_invite, only: %i[update destroy resend]
 
   def index
-    invites = scoped_invites.includes(:invited_by, :accepted_by).order(created_at: :desc)
+    invites = scoped_invites.order(created_at: :desc).load
 
     render json: invites, meta: {total: invites.size}, status: :ok
   end
