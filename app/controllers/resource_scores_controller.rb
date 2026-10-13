@@ -1,7 +1,25 @@
 # frozen_string_literal: true
 
 class ResourceScoresController < ApplicationController
-  before_action :authorize!, only: %i[create destroy update mass_update mass_update_ranked]
+  MUTATING_ACTIONS = %i[create destroy update mass_update mass_update_ranked].freeze
+
+  before_action :require_login!, only: MUTATING_ACTIONS
+  after_action :verify_authorized, only: MUTATING_ACTIONS
+
+  rescue_from ActiveRecord::RecordInvalid do |exception|
+    render json: {errors: formatted_errors("record_invalid", exception)}, status: :unprocessable_content
+  end
+
+  rescue_from ActiveRecord::RecordNotFound do |exception|
+    render json: {
+      errors: [
+        {
+          source: {pointer: "/data/attributes/id"},
+          detail: exception.message
+        }
+      ]
+    }, status: :not_found
+  end
 
   def index
     lang_code = params.dig(:filter, :lang) || params[:lang]
@@ -12,9 +30,6 @@ class ResourceScoresController < ApplicationController
     )
 
     render json: resource_scores, include: params[:include], status: :ok
-  rescue InvalidRequestError => e
-    render json: {errors: [{detail: "Error: #{e.message}"}]},
-      status: :unprocessable_content
   end
 
   def create
@@ -28,31 +43,18 @@ class ResourceScoresController < ApplicationController
 
     @resource_score = ResourceScore.new(sanitized_params)
     @resource_score.language = language if language.present?
+    authorize @resource_score
     @resource_score.save!
 
     render json: @resource_score, status: :created
-  rescue InvalidRequestError => e
-    render json: {errors: [{detail: "Error: #{e.message}"}]},
-      status: :unprocessable_content
-  rescue ActiveRecord::RecordInvalid => e
-    render json: {errors: formatted_errors("record_invalid", e)},
-      status: :unprocessable_content
   end
 
   def destroy
     @resource_score = ResourceScore.find(params[:id])
+    authorize @resource_score
     @resource_score.destroy!
 
     render json: {}, status: :ok
-  rescue ActiveRecord::RecordNotFound => e
-    render json: {
-      errors: [
-        {
-          source: {pointer: "/data/attributes/id"},
-          detail: e.message
-        }
-      ]
-    }, status: :not_found
   rescue ActiveRecord::RecordNotDestroyed => e
     render json: {
       errors: [
@@ -76,24 +78,14 @@ class ResourceScoresController < ApplicationController
       @resource_score.language = language
     end
 
-    @resource_score.update!(sanitized_params)
+    # assign-then-authorize, not update!: the policy compares country_was /
+    # language_id_was against the incoming values, which only exist as a pair
+    # while the record is dirty and unsaved.
+    @resource_score.assign_attributes(sanitized_params)
+    authorize @resource_score
+    @resource_score.save!
 
     render json: @resource_score, status: :ok
-  rescue InvalidRequestError => e
-    render json: {errors: [{detail: "Error: #{e.message}"}]},
-      status: :unprocessable_content
-  rescue ActiveRecord::RecordNotFound => e
-    render json: {
-      errors: [
-        {
-          source: {pointer: "/data/attributes/id"},
-          detail: e.message
-        }
-      ]
-    }, status: :not_found
-  rescue ActiveRecord::RecordInvalid => e
-    render json: {errors: formatted_errors("record_invalid", e)},
-      status: :unprocessable_content
   end
 
   def mass_update
@@ -148,6 +140,10 @@ class ResourceScoresController < ApplicationController
         "Invalid IDs: #{invalid_resource_ids.join(", ")}"
     end
 
+    # One (country, language, resource_type) slice is rewritten wholesale below,
+    # so authorizing the slice covers every row the transaction touches.
+    authorize ResourceScore.new(country: country, language: language), :mass_update?
+
     ResourceScore.transaction do
       current_scores = ResourceScore
         .joins(:resource)
@@ -188,12 +184,6 @@ class ResourceScoresController < ApplicationController
       .order(:featured_order)
 
     render json: resulting_resource_scores, include: params[:include], status: :ok
-  rescue InvalidRequestError => e
-    render json: {errors: [{detail: "Error: #{e.message}"}]},
-      status: :unprocessable_content
-  rescue ActiveRecord::RecordInvalid => e
-    render json: {errors: formatted_errors("record_invalid", e)},
-      status: :unprocessable_content
   rescue ActiveRecord::RecordNotDestroyed => e
     render json: {errors: [{detail: "Error: #{e.message}"}]},
       status: :unprocessable_content
@@ -242,6 +232,10 @@ class ResourceScoresController < ApplicationController
         "Invalid resource IDs: #{invalid_resource_ids.join(", ")}"
     end
 
+    # One (country, language, resource_type) slice is rewritten wholesale below,
+    # so authorizing the slice covers every row the transaction touches.
+    authorize ResourceScore.new(country: country, language: language), :mass_update_ranked?
+
     ResourceScore.transaction do
       current_scores = ResourceScore
         .joins(:resource)
@@ -286,12 +280,6 @@ class ResourceScoresController < ApplicationController
       .order(score: :desc)
 
     render json: resulting_resource_scores, include: params[:include], status: :ok
-  rescue InvalidRequestError => e
-    render json: {errors: [{detail: "Error: #{e.message}"}]},
-      status: :unprocessable_content
-  rescue ActiveRecord::RecordInvalid => e
-    render json: {errors: formatted_errors("record_invalid", e)},
-      status: :unprocessable_content
   rescue ActiveRecord::RecordNotDestroyed => e
     render json: {errors: [{detail: "Error: #{e.message}"}]},
       status: :unprocessable_content
