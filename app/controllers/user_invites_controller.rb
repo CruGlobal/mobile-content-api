@@ -69,9 +69,7 @@ class UserInvitesController < SecureController
   def reject_accepted_invite
     return unless invite.accepted?
 
-    render json: {
-      errors: [{code: "invite_already_accepted", detail: "That invitation has already been used."}]
-    }, status: :conflict
+    render json: {errors: [{detail: "That invitation has already been used."}]}, status: :conflict
   end
 
   # A pending-email collision answers 409 and names the invite in the way, so the
@@ -82,7 +80,6 @@ class UserInvitesController < SecureController
     if existing
       render json: {
         errors: [{
-          code: "invite_already_pending",
           detail: "A pending invitation for #{existing.email} already exists; resend or revoke it instead.",
           meta: {"invite-id" => existing.id.to_s}
         }]

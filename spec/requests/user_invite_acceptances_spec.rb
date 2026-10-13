@@ -122,7 +122,7 @@ describe "UserInvite acceptance", type: :request do
     accept(invite.token, as: other)
 
     expect(response).to have_http_status(:conflict)
-    expect(JSON.parse(response.body)["errors"].first["code"]).to eq("invite_already_accepted")
+    expect(JSON.parse(response.body)["errors"].first).to eq({"detail" => "That invitation has already been used."})
     expect(other.resource_score_permissions).to be_empty
   end
 
@@ -132,7 +132,7 @@ describe "UserInvite acceptance", type: :request do
     accept(invite.token)
 
     expect(response).to have_http_status(:gone)
-    expect(JSON.parse(response.body)["errors"].first["code"]).to eq("invite_expired")
+    expect(JSON.parse(response.body)["errors"].first).to eq({"detail" => "That invitation expired on #{invite.expires_at.to_date}."})
     expect(user.resource_score_permissions).to be_empty
   end
 
@@ -140,7 +140,7 @@ describe "UserInvite acceptance", type: :request do
     accept("not-a-real-token")
 
     expect(response).to have_http_status(:not_found)
-    expect(JSON.parse(response.body)["errors"].first["code"]).to eq("invite_not_found")
+    expect(JSON.parse(response.body)["errors"].first).to eq({"detail" => "That invitation link is not valid."})
   end
 
   it "reports a language that disappeared after the invite was created" do

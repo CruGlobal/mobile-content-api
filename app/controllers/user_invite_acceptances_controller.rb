@@ -17,9 +17,9 @@ class UserInviteAcceptancesController < ApplicationController
   def create
     invite = UserInvite.find_by(token: token_param)
 
-    return render_invite_error("invite_not_found", "That invitation link is not valid.", :not_found) if invite.nil?
-    return render_invite_error("invite_already_accepted", "That invitation has already been used.", :conflict) if invite.accepted?
-    return render_invite_error("invite_expired", "That invitation expired on #{invite.expires_at.to_date}.", :gone) if invite.expired?
+    return render_invite_error("That invitation link is not valid.", :not_found) if invite.nil?
+    return render_invite_error("That invitation has already been used.", :conflict) if invite.accepted?
+    return render_invite_error("That invitation expired on #{invite.expires_at.to_date}.", :gone) if invite.expired?
 
     skipped = invite.accept!(current_user)
 
@@ -30,9 +30,9 @@ class UserInviteAcceptancesController < ApplicationController
       meta: {"accepted-invite-id" => invite.id.to_s, "skipped-grants" => skipped},
       status: :ok
   rescue UserInvite::AlreadyAccepted
-    render_invite_error("invite_already_accepted", "That invitation has already been used.", :conflict)
+    render_invite_error("That invitation has already been used.", :conflict)
   rescue UserInvite::Expired
-    render_invite_error("invite_expired", "That invitation has expired.", :gone)
+    render_invite_error("That invitation has expired.", :gone)
   rescue InvalidRequestError => e
     render json: {errors: [{detail: "Error: #{e.message}"}]}, status: :unprocessable_content
   rescue ActiveRecord::RecordInvalid => e
@@ -48,7 +48,7 @@ class UserInviteAcceptancesController < ApplicationController
     token
   end
 
-  def render_invite_error(code, detail, status)
-    render json: {errors: [{code: code, detail: detail}]}, status: status
+  def render_invite_error(detail, status)
+    render json: {errors: [{detail: detail}]}, status: status
   end
 end

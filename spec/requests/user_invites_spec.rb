@@ -151,7 +151,7 @@ describe "UserInvites management", type: :request do
 
       expect(response).to have_http_status(:conflict)
       error = JSON.parse(response.body)["errors"].first
-      expect(error["code"]).to eq("invite_already_pending")
+      expect(error).not_to have_key("code")
       expect(error["meta"]["invite-id"]).to eq(existing.id.to_s)
       expect(UserInvite.count).to eq(1)
     end
