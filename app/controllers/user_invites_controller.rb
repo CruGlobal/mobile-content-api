@@ -7,6 +7,8 @@
 # Redemption is a different concern with a different caller (the invitee, who
 # is usually not an admin) and lives in UserInviteAcceptancesController.
 class UserInvitesController < SecureController
+  before_action :reject_accepted_invite, only: %i[update destroy resend]
+
   def index
     invites = scoped_invites.includes(:invited_by, :accepted_by).order(created_at: :desc)
 
@@ -60,6 +62,16 @@ class UserInvitesController < SecureController
 
   def invite
     @invite ||= UserInvite.find(params[:id])
+  end
+
+  # An accepted invite is the audit trail of who was let in and with what, so it
+  # is read-only: it cannot be edited, deleted or resent.
+  def reject_accepted_invite
+    return unless invite.accepted?
+
+    render json: {
+      errors: [{code: "invite_already_accepted", detail: "That invitation has already been used."}]
+    }, status: :conflict
   end
 
   # A pending-email collision answers 409 and names the invite in the way, so the

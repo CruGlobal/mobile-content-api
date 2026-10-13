@@ -263,6 +263,15 @@ describe "UserInvites management", type: :request do
       expect(invite.reload.email).not_to eq("taken@partner.org")
     end
 
+    it "answers 409 and leaves an accepted invite untouched" do
+      used = FactoryBot.create(:user_invite, :accepted, first_name: "Before")
+
+      patch "/users/invites/#{used.id}", params: body("given-name" => "After"), headers: headers_for(admin)
+
+      expect(response).to have_http_status(:conflict)
+      expect(used.reload.first_name).to eq("Before")
+    end
+
     it "does not treat the invite's own email as a collision" do
       patch "/users/invites/#{invite.id}", params: body("email" => invite.email), headers: headers_for(admin)
 
@@ -284,6 +293,18 @@ describe "UserInvites management", type: :request do
       json = JSON.parse(response.body)
       expect(json["data"]["attributes"]["invite-url"]).to eq(invite.url)
       expect(json["meta"]["delivered"]).to be false
+    end
+
+    it "answers 409 and leaves an accepted invite untouched" do
+      used = FactoryBot.create(:user_invite, :accepted)
+      old_token = used.token
+      old_expiry = used.expires_at
+
+      post "/users/invites/#{used.id}/resend", headers: headers_for(admin)
+
+      expect(response).to have_http_status(:conflict)
+      expect(used.reload.token).to eq(old_token)
+      expect(used.expires_at).to eq(old_expiry)
     end
 
     it "answers 409 with the existing id when another pending invite holds the email" do
@@ -308,6 +329,15 @@ describe "UserInvites management", type: :request do
 
       expect(response).to have_http_status(:ok)
       expect(UserInvite.exists?(invite.id)).to be false
+    end
+
+    it "answers 409 and keeps an accepted invite as the audit trail" do
+      used = FactoryBot.create(:user_invite, :accepted)
+
+      delete "/users/invites/#{used.id}", headers: headers_for(admin)
+
+      expect(response).to have_http_status(:conflict)
+      expect(UserInvite.exists?(used.id)).to be true
     end
 
     it "404s an unknown id" do
