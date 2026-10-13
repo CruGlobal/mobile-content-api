@@ -1,4 +1,28 @@
 {
-  "ignored_warnings": [],
+  "ignored_warnings": [
+    {
+      "warning_type": "Mass Assignment",
+      "warning_code": 105,
+      "fingerprint": "5f97f247d8598f2356f511cc0dd5921bacf77b982b280a7d712348b08e0f261a",
+      "check_name": "PermitAttributes",
+      "message": "Potentially dangerous key allowed for mass assignment",
+      "file": "app/controllers/user_invites_controller.rb",
+      "line": 108,
+      "link": "https://brakemanscanner.org/docs/warning_types/mass_assignment/",
+      "code": "data_attrs.permit(:email, :\"given-name\", :\"family-name\", :admin, :\"email-is-alias\", :grants => ({}))",
+      "render_path": null,
+      "location": {
+        "type": "method",
+        "class": "UserInvitesController",
+        "method": "invite_params"
+      },
+      "user_input": ":admin",
+      "confidence": "High",
+      "cwe_id": [
+        915
+      ],
+      "note": "Intentional: every action in UserInvitesController is admin-only via SecureController, and whether the invitee becomes an admin is the purpose of an invite. Unlike UsersController, no non-admin can reach this permit, so there is no self-promotion path."
+    }
+  ],
   "brakeman_version": "8.0.5"
 }
