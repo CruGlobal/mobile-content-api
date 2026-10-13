@@ -37,6 +37,18 @@ describe "UserInvite acceptance", type: :request do
     expect(response).to have_http_status(:unprocessable_content)
   end
 
+  it "answers 422 and leaves the invite pending when the user cannot be saved" do
+    invite = FactoryBot.create(:user_invite, :superadmin)
+    # A user that fails validation, so promoting them to admin raises RecordInvalid.
+    user.update_column(:email, "")
+
+    accept(invite.token)
+
+    expect(response).to have_http_status(:unprocessable_content)
+    expect(invite.reload).to be_pending
+    expect(user.reload.admin).to be false
+  end
+
   it "applies the grants and answers with the refreshed user" do
     spanish
     invite = FactoryBot.create(:user_invite, grants: {"mx" => ["es"]})

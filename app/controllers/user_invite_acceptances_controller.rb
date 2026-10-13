@@ -35,6 +35,8 @@ class UserInviteAcceptancesController < ApplicationController
     render_invite_error("invite_expired", "That invitation has expired.", :gone)
   rescue InvalidRequestError => e
     render json: {errors: [{detail: "Error: #{e.message}"}]}, status: :unprocessable_content
+  rescue ActiveRecord::RecordInvalid => e
+    render json: {errors: formatted_errors("record_invalid", e)}, status: :unprocessable_content
   end
 
   private
