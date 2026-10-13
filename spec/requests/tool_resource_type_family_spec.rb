@@ -38,9 +38,12 @@ describe "Tool resource type family", type: :request do
 
     it "resolves the ids an ordering write applies to" do
       expect(ResourceType.orderable_ids_for!("tool")).to contain_exactly(tract_type.id, cyoa_type.id)
-      expect(ResourceType.orderable_ids_for!("tract")).to eq([tract_type.id])
-      expect(ResourceType.orderable_ids_for!("cyoa")).to eq([cyoa_type.id])
       expect(ResourceType.orderable_ids_for!("lesson")).to eq([lesson_type.id])
+    end
+
+    it "does not accept an individual tool format, which would reorder only part of the shared slice" do
+      expect { ResourceType.orderable_ids_for!("tract") }.to raise_error(InvalidRequestError, /not supported/)
+      expect { ResourceType.orderable_ids_for!("cyoa") }.to raise_error(InvalidRequestError, /not supported/)
     end
 
     it "keeps not-found and not-supported distinct" do
@@ -99,14 +102,18 @@ describe "Tool resource type family", type: :request do
       expect(ResourceScore.where(country: "us", language: english, featured: true).pluck(:resource_id)).to eq([tract.id])
     end
 
-    it "still accepts tract alone, which leaves CYOA tools untouched" do
+    it "rejects an individual tool format, so it cannot renumber part of the tool slice" do
       english
-      patch path, params: body(resource_type: "tool", resource_ids: [cyoa.id]), headers: headers_for(admin)
-      patch path, params: body(resource_type: "tract", resource_ids: [tract.id]), headers: headers_for(admin)
+      patch path, params: body(resource_type: "tool", resource_ids: [cyoa.id, tract.id]), headers: headers_for(admin)
 
-      expect(response).to have_http_status(:ok)
-      expect(ResourceScore.where(country: "us", language: english, featured: true).pluck(:resource_id))
-        .to contain_exactly(cyoa.id, tract.id)
+      %w[tract cyoa].each do |type|
+        patch path, params: body(resource_type: type, resource_ids: [tract.id]), headers: headers_for(admin)
+
+        expect(response).to have_http_status(:unprocessable_content)
+        expect(JSON.parse(response.body)["errors"].first["detail"]).to include("not supported")
+      end
+      featured = ResourceScore.where(country: "us", language: english, featured: true).order(:featured_order)
+      expect(featured.map { |s| [s.resource_id, s.featured_order] }).to eq([[cyoa.id, 1], [tract.id, 2]])
     end
 
     it "rejects a lesson inside a tool write" do
@@ -114,12 +121,6 @@ describe "Tool resource type family", type: :request do
 
       expect(response).to have_http_status(:unprocessable_content)
       expect(JSON.parse(response.body)["errors"].first["detail"]).to include("Invalid IDs: #{lesson.id}")
-    end
-
-    it "rejects a CYOA tool inside a tract write" do
-      patch path, params: body(resource_type: "tract", resource_ids: [cyoa.id]), headers: headers_for(admin)
-
-      expect(response).to have_http_status(:unprocessable_content)
     end
 
     it "keeps rejecting unknown and unsupported types" do
@@ -155,6 +156,22 @@ describe "Tool resource type family", type: :request do
       expect(JSON.parse(response.body)["data"].size).to eq(2)
     end
 
+    it "rejects an individual tool format, so it cannot rescore part of the tool slice" do
+      english
+      patch path,
+        params: body(resource_type: "tool", ranked: [{resource_id: cyoa.id, score: 9}, {resource_id: tract.id, score: 4}]),
+        headers: headers_for(admin)
+
+      %w[tract cyoa].each do |type|
+        patch path, params: body(resource_type: type, ranked: [{resource_id: tract.id, score: 20}]), headers: headers_for(admin)
+
+        expect(response).to have_http_status(:unprocessable_content)
+        expect(JSON.parse(response.body)["errors"].first["detail"]).to include("not supported")
+      end
+      ranked = ResourceScore.where(country: "us", language: english).where.not(score: nil).order(score: :desc)
+      expect(ranked.map { |s| [s.resource_id, s.score] }).to eq([[cyoa.id, 9], [tract.id, 4]])
+    end
+
     it "drops a CYOA score omitted from a later tool write" do
       english
       patch path, params: body(resource_type: "tool", ranked: [{resource_id: cyoa.id, score: 9}]), headers: headers_for(admin)
@@ -185,6 +202,20 @@ describe "Tool resource type family", type: :request do
       expect(ids_in(response.body)).to eq([cyoa.id, tract.id])
     end
 
+    it "rejects an individual tool format, so it cannot renumber part of the tool slice" do
+      english
+      patch path, params: body(resource_type: "tool", resource_ids: [cyoa.id, tract.id]), headers: headers_for(admin)
+
+      %w[tract cyoa].each do |type|
+        patch path, params: body(resource_type: type, resource_ids: [tract.id]), headers: headers_for(admin)
+
+        expect(response).to have_http_status(:unprocessable_content)
+        expect(JSON.parse(response.body)["errors"].first["detail"]).to include("not supported")
+      end
+      defaults = ResourceDefaultOrder.where(language: english).order(:position)
+      expect(defaults.map { |d| [d.resource_id, d.position] }).to eq([[cyoa.id, 1], [tract.id, 2]])
+    end
+
     it "removes a CYOA default omitted from a later tool write" do
       english
       patch path, params: body(resource_type: "tool", resource_ids: [cyoa.id, tract.id]), headers: headers_for(admin)
@@ -197,13 +228,16 @@ describe "Tool resource type family", type: :request do
   describe "GET /content_status" do
     it "counts CYOA tools as tools" do
       ResourceScore.create!(resource: cyoa, country: "us", language: english, featured: true, featured_order: 1, score: 3)
+      ResourceDefaultOrder.create!(resource: cyoa, language: english, position: 1)
 
       get "/content_status", headers: {"Accept" => "application/vnd.api+json"}
 
       expect(response).to have_http_status(:ok)
       json = JSON.parse(response.body)
+      expect(json["tools"]["default"]).to eq(1)
       expect(json["tools"]["featured"]).to eq(1)
       expect(json["tools"]["ranked"]).to eq(1)
+      expect(json["tools"]["total"]).to eq(1)
       us = json["countries"].find { |c| c["country_code"] == "us" }
       en = us["languages"].find { |l| l["language_code"] == "en" }
       expect(en["tools"]).to eq({"featured" => 1, "ranked" => 1})

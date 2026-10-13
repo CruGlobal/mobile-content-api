@@ -315,7 +315,9 @@ resource "ResourceDefaultOrders" do
 
     let(:lang) { "en" }
     let(:resource_ids) { [] }
-    let(:resource_type) { ResourceType.find(resource.resource_type_id) }
+    # "tool" is the client-facing name for every tool format, not a row, so the
+    # default is an unsaved type: tracts are ordered by writing "tool".
+    let(:resource_type) { ResourceType.new(name: ResourceType::TOOL) }
     let(:params) do
       {data: {attributes: {lang: lang, resource_ids: resource_ids, resource_type: resource_type&.name}}}
     end

@@ -11,10 +11,12 @@ class ResourceType < ActiveRecord::Base
   TOOL = "tool"
   TOOL_TYPE_NAMES = %w[tract cyoa].freeze
 
-  # What a client may name when writing a featured, ranked or default order.
-  # The individual tool formats stay accepted for older callers; a client that
-  # wants the ordering the app shows should send TOOL.
-  ORDERABLE_NAMES = (["lesson", TOOL] + TOOL_TYPE_NAMES).freeze
+  # What a client may name when writing a featured, ranked or default order. The
+  # tool formats are ordered as one list, so a write has to name TOOL: one that
+  # named a single format would renumber only that format's rows and leave the
+  # other's positions colliding with them. Reads and filters still accept the
+  # individual formats; see expand_name.
+  ORDERABLE_NAMES = ["lesson", TOOL].freeze
 
   validates :name, presence: true, uniqueness: true
   validates :dtd_file, presence: true
@@ -38,8 +40,9 @@ class ResourceType < ActiveRecord::Base
   #   "tool"   => [tract.id, cyoa.id]
   #   "lesson" => [lesson.id]
   # Raises when the name cannot be used, with the reason in the message. "not
-  # found" (a typo or unknown name) and "not supported" (a real type such as
-  # article or metatool, which has no ordering in the app) are kept distinct
+  # found" (a typo or unknown name) and "not supported" (a real type that cannot
+  # be written on its own: article or metatool, which have no ordering in the
+  # app, and tract or cyoa, which are ordered together as TOOL) are kept distinct
   # so the client can tell the two apart.
   #
   # @raise [InvalidRequestError]
