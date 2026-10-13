@@ -95,19 +95,12 @@ class UserInvitesController < SecureController
   # Pending is the working set; the rest is opt-in so the audit trail stays
   # reachable without cluttering the dashboard's default listing.
   def scoped_invites
-    case status_filter
+    case filter_param(:status)
     when "expired" then UserInvite.expired
     when "accepted" then UserInvite.accepted
     when "all" then UserInvite.all
     else UserInvite.pending
     end
-  end
-
-  # ?filter=pending is not the nested JSON:API shape; read a scalar as absent
-  # rather than indexing into a String.
-  def status_filter
-    filter = params[:filter]
-    filter.is_a?(ActionController::Parameters) ? filter[:status].presence : nil
   end
 
   # JSON:API names mapped onto real columns. compact so an absent key leaves the

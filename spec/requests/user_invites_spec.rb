@@ -208,6 +208,12 @@ describe "UserInvites management", type: :request do
       expect(response).to have_http_status(:ok)
       expect(ids).to eq([live.id.to_s])
     end
+
+    it "rejects a status filter that is not a single value" do
+      get "/users/invites?filter[status][x]=expired", headers: headers_for(admin)
+
+      expect(response).to have_http_status(:unprocessable_content)
+    end
   end
 
   describe "GET show" do
