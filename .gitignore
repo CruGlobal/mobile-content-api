@@ -53,3 +53,4 @@ vendor/bundle
 
 spec/examples.txt
 service_account_cred.json
+dump/*.sql

@@ -1,0 +1,11 @@
+# frozen_string_literal: true
+
+# Local-development Gemfile for machines without Sidekiq Pro credentials.
+# Bundles the exact same gems as ./Gemfile minus sidekiq-pro, resolving into
+# Gemfile.oss.lock so the committed Gemfile.lock stays untouched.
+#
+#   BUNDLE_GEMFILE=Gemfile.oss bundle install
+#   BUNDLE_GEMFILE=Gemfile.oss bin/rails server
+ENV["SIDEKIQ_OSS"] = "true"
+
+eval_gemfile File.expand_path("Gemfile", __dir__)
