@@ -2,6 +2,8 @@
 require "rubygems"
 require "bundler/setup"
 
-ARGV.unshift("--ensure-latest")
+# Same result-affecting flags as the lint job in .github/workflows/ruby.yml
+# (-A -q -w2 -x UnscopedFind); CI adds --no-pager.
+ARGV.unshift("-A", "-q", "-w2", "-x", "UnscopedFind")
 
 load Gem.bin_path("brakeman", "brakeman")
