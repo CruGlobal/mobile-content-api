@@ -9,7 +9,7 @@
 
 # Ignore all environment files.
 /.env*
-
+dump/*.sql
 # Ignore all logfiles and tempfiles.
 /log/*
 /tmp/*

@@ -20,11 +20,15 @@ Sidekiq.configure_client do |config|
   end
 end
 
-Sidekiq::Client.reliable_push!
+# Sidekiq Pro features; the open-source gem falls back to plain push/fetch and
+# the basic scheduler, which are fine for local development.
+Sidekiq::Client.reliable_push! if Sidekiq::Client.respond_to?(:reliable_push!)
 
 Sidekiq.configure_server do |config|
-  config.super_fetch!
-  config.reliable_scheduler!
+  if config.respond_to?(:super_fetch!)
+    config.super_fetch!
+    config.reliable_scheduler!
+  end
   config.redis = redis_settings
 
   config.client_middleware do |chain|
@@ -40,7 +44,7 @@ end
 
 Sidekiq.failures_default_mode = :exhausted
 
-if ENV["AWS_EXECUTION_ENV"].present?
+if ENV["AWS_EXECUTION_ENV"].present? && defined?(Sidekiq::Pro)
   Sidekiq::Pro.dogstatsd = -> { Datadog::Statsd.new socket_path: "/var/run/datadog/dsd.socket" }
 end
 
