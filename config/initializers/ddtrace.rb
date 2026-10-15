@@ -10,7 +10,7 @@ if ENV["AWS_EXECUTION_ENV"].present?
     c.tags = {app: ENV["PROJECT_NAME"]}
     c.tracing.enabled = true
 
-    c.runtime_metrics.statsd = Datadog::Statsd.new socket_path: "var/run/datadog/dsd.socket"
+    c.runtime_metrics.statsd = Datadog::Statsd.new socket_path: "/var/run/datadog/dsd.socket"
     c.runtime_metrics.enabled = true
 
     c.service = ENV["PROJECT_NAME"]
@@ -28,11 +28,9 @@ if ENV["AWS_EXECUTION_ENV"].present?
     c.tracing.partial_flush.enabled = true
 
     # Instrumentation
-    c.tracing.instrument :rails,
-      service_name: ENV["PROJECT_NAME"],
-      controller_service: "#{ENV["PROJECT_NAME"]}-controller",
-      cache_service: "#{ENV["PROJECT_NAME"]}-cache",
-      database_service: "#{ENV["PROJECT_NAME"]}-db"
+    c.tracing.instrument :rails, service_name: ENV["PROJECT_NAME"]
+    c.tracing.instrument :active_record, service_name: "#{ENV["PROJECT_NAME"]}-db"
+    c.tracing.instrument :active_support, cache_service: "#{ENV["PROJECT_NAME"]}-cache"
 
     c.tracing.instrument :redis, service_name: "#{ENV["PROJECT_NAME"]}-redis"
 
