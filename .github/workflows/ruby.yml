@@ -77,20 +77,11 @@ jobs:
         env:
           BUNDLE_GEMS__CONTRIBSYS__COM: ${{ secrets.BUNDLE_GEMS__CONTRIBSYS__COM }}
 
-      # -w2: block only on medium+ confidence findings.
-      #
-      # --ensure-latest dropped, and no proposer exists under the security-only
-      # posture in .github/dependabot.yml (limit: 0): the flag would red every
-      # PR on brakeman release day with nothing ever proposing the fix.
-      #
-      # -x UnscopedFind is INERT under -w2 and kept only as a guard: the check
-      # hardcodes :confidence => :weak, which -w2 already drops at add_warning
-      # time, so removing the flag today would produce byte-identical output.
-      # It was load-bearing under the old default-confidence line; -w2 retired
-      # it in the same commit. It exists so that dropping -w2 later does not
-      # silently re-red this job. The fleet canary line carries no such flag.
+      # --ensure-latest dropped (no proposer exists under security-only;
+      # the flag reds lint on brakeman release day).
+      # -x UnscopedFind skips the Weak UnscopedFind findings on purpose.
       - name: Brakeman
-        run: bundle exec brakeman -A -q --no-pager -w2 -x UnscopedFind
+        run: bundle exec brakeman -A -q --no-pager -x UnscopedFind
 
       - name: StandardRB
         run: bundle exec standardrb --format simple
