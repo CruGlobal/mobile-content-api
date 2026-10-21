@@ -22,25 +22,6 @@
         915
       ],
       "note": "Intentional: every action in UserInvitesController is admin-only via SecureController, and whether the invitee becomes an admin is the purpose of an invite. Unlike UsersController, no non-admin can reach this permit, so there is no self-promotion path."
-    },
-    {
-      "warning_type": "Unmaintained Dependency",
-      "warning_code": 122,
-      "fingerprint": "98b26f60d776fd41ee6f088c833725145be9aac2d7c5b33780241c273622db42",
-      "check_name": "EOLRails",
-      "message": "Support for Rails 8.0.5.1 ends on 2026-11-07",
-      "file": "Gemfile.lock",
-      "line": 863,
-      "link": "https://brakemanscanner.org/docs/warning_types/unmaintained_dependency/",
-      "code": null,
-      "render_path": null,
-      "location": null,
-      "user_input": null,
-      "confidence": "Medium",
-      "cwe_id": [
-        1104
-      ],
-      "note": "Rails 8.0 support ends 2026-11-07 and Brakeman flags that at Medium from 30 days out. This entry stops matching on 2026-11-07 when the message changes to 'ended on'; the real fix is the Rails 8.1 upgrade in #2042."
     }
   ],
   "updated": "2026-10-12T13:59:40-04:00",

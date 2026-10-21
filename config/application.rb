@@ -19,7 +19,7 @@ module MobileContentApi
 
   class Application < Rails::Application
     # Initialize configuration defaults for originally generated Rails version.
-    config.load_defaults 8.0
+    config.load_defaults 8.1
 
     # Please, add to the `ignore` list any other `lib` subdirectories that do
     # not contain `.rb` files, or that should not be reloaded or eager loaded.
@@ -34,12 +34,17 @@ module MobileContentApi
     # config.time_zone = "Central Time (US & Canada)"
     # config.eager_load_paths << Rails.root.join("extras")
 
+    # No image_processing gem and no variants; rails/all still loads the engine.
+    config.active_storage.variant_processor = :disabled
+
     # Send all logs to stdout, which docker reads and sends to datadog.
     config.logger = Log::Logger.new($stdout) unless Rails.env.test? # we don't need a logger in test env
 
     config.redis_conf = YAML.safe_load(ERB.new(File.read(Rails.root.join("config", "redis.yml"))).result, permitted_classes: [Symbol], aliases: true)
     redis_cache_conf = config.redis_conf["cache"]
     redis_cache_conf[:url] = "redis://" + redis_cache_conf[:host] + "/" + redis_cache_conf[:db].to_s
+    # Pinned: 8.1 lowered the RedisCacheStore default to 250 bytes, which would hash long keys differently.
+    redis_cache_conf[:max_key_size] = 1024
     config.cache_store = :redis_cache_store, redis_cache_conf
 
     ActiveModelSerializers.config.adapter = :json_api
