@@ -25,6 +25,9 @@ class UserInvite < ApplicationRecord
   # Only when the map is being written: accept! stamps accepted_at on a row
   # whose map may reference a language deleted since, and that must not block.
   validate :grants_are_resolvable, if: -> { new_record? || will_save_change_to_grants? }
+  # Same guard: a pending row created before this rule may be empty, and
+  # accept! must still be able to stamp it.
+  validate :grants_or_admin_present, if: -> { new_record? || will_save_change_to_admin? || will_save_change_to_grants? }
   validate :only_one_pending_per_email
 
   before_validation :default_expiry, on: :create
@@ -137,6 +140,15 @@ class UserInvite < ApplicationRecord
     ResourceScoreGrants.resolve(grants)
   rescue InvalidRequestError => e
     errors.add(:grants, e.message)
+  end
+
+  # Redeeming a non-admin invite with no grants would burn the single-use link
+  # and create no access. A non-Hash value is already reported by
+  # grants_are_resolvable, so it is not reported twice.
+  def grants_or_admin_present
+    return if admin? || !grants.is_a?(Hash) || grants.present?
+
+    errors.add(:grants, "must include at least one grant unless the invitee is an admin")
   end
 
   # The controller turns a failure here into a 409 that points at the existing
