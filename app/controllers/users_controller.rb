@@ -36,6 +36,9 @@ class UsersController < WithUserController
   end
 
   def update
+    refusal = demotion_refusal
+    return render json: {errors: [{detail: refusal}]}, status: :unprocessable_content if refusal
+
     @user.update!(user_params)
     @user.set_arbitrary_attributes!(data_attrs)
 
@@ -76,6 +79,21 @@ class UsersController < WithUserController
     keys = [:email, :"given-name", :"family-name"]
     keys << :admin if current_user&.admin
     keys
+  end
+
+  # Dropping the last admin, or your own admin flag, locks everyone out of /users
+  # and the grants endpoints (both behind require_admin!). The last-admin case is
+  # checked first: only an admin can send admin, so the last admin is always the
+  # caller and the self check would otherwise hide it. The flag is cast because a
+  # form-encoded "false" must not slip past a strict == false.
+  def demotion_refusal
+    return unless @user.admin? && ActiveModel::Type::Boolean.new.cast(user_params[:admin]) == false
+
+    if User.where(admin: true).where.not(id: @user.id).none?
+      "The last remaining admin cannot be demoted."
+    elsif @user.id == current_user.id
+      "You cannot remove your own admin access."
+    end
   end
 
   # UserSerializer reads user_attributes, both has_many relationships and the
