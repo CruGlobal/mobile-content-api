@@ -112,7 +112,27 @@ class UsersController < WithUserController
       )
     end
 
+    # Subquery for the same reason as the country filter: a user holding several
+    # grants must not repeat.
+    if dashboard_access_filter?
+      scope = scope.where(admin: true).or(
+        scope.where(id: ResourceScorePermission.select(:user_id))
+      )
+    end
+
     scope
+  end
+
+  # filter[access]=dashboard -- admins and anyone holding a grant. Opt-in, so
+  # the default listing is unchanged. An unknown value is refused rather than
+  # ignored: a typo would otherwise return the full list looking like the
+  # dashboard one.
+  def dashboard_access_filter?
+    value = filter_param(:access).presence
+    return false unless value
+    return true if value == "dashboard"
+
+    raise InvalidRequestError, "filter[access] must be \"dashboard\""
   end
 
   # filter[country][]=mx&filter[country][]=us -- OR within the facet. Downcased
