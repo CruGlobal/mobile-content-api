@@ -65,6 +65,7 @@ ARG OKTA_SERVER_AUDIENCE=fake
 ARG FACEBOOK_APP_ID=facebook_app_id
 ARG FACEBOOK_APP_SECRET=facebook_app_secret
 ARG GOOGLE_APP_ID=fake
+ARG ADMIN_DASHBOARD_BASE_URL=https://example.com
 
 # Compile assets and fix permissions
 # just like in Actions, we need to copy the fake cred json so that our tests can function

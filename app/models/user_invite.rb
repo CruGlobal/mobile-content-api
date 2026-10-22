@@ -61,7 +61,7 @@ class UserInvite < ApplicationRecord
   # The link the invitee opens. The admin app owns the /invite route; it stashes
   # the code, sends the person through Okta, and redeems the code afterwards.
   def url
-    "#{Rails.configuration.x.admin_app_base_url}/invite?code=#{token}"
+    "#{Rails.configuration.x.admin_dashboard_base_url}/invite?code=#{token}"
   end
 
   # Another pending invite holding the email this record is about to claim, if
