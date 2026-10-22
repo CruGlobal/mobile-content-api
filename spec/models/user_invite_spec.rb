@@ -25,7 +25,7 @@ describe UserInvite do
     it "builds the link from the configured admin origin" do
       invite = FactoryBot.create(:user_invite)
 
-      expect(invite.url).to eq("#{Rails.configuration.x.admin_app_base_url}/invite?code=#{invite.token}")
+      expect(invite.url).to eq("#{Rails.configuration.x.admin_dashboard_base_url}/invite?code=#{invite.token}")
     end
 
     it "requires a well-formed email" do
