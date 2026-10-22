@@ -271,4 +271,76 @@ describe "Users index", type: :request do
       expect(ids).to include(ungranted.id)
     end
   end
+
+  describe "filter[access]=dashboard" do
+    let!(:plain) { FactoryBot.create(:user, admin: false) }
+    let!(:other_admin) { FactoryBot.create(:user, admin: true) }
+    let!(:mx_user) { FactoryBot.create(:user).tap { |u| u.resource_score_permissions.create!(country: "mx") } }
+    let!(:double_user) do
+      FactoryBot.create(:user).tap do |u|
+        u.resource_score_permissions.create!(country: "mx")
+        u.resource_score_permissions.create!(country: "us")
+      end
+    end
+
+    it "excludes a non-admin with no grants" do
+      get "/users", params: {filter: {access: "dashboard"}}, headers: headers_for(admin)
+
+      expect(response).to have_http_status(:ok)
+      expect(ids).not_to include(plain.id)
+    end
+
+    it "includes admins and users with grants" do
+      get "/users", params: {filter: {access: "dashboard"}}, headers: headers_for(admin)
+
+      expect(ids).to match_array([admin.id, other_admin.id, mx_user.id, double_user.id])
+    end
+
+    it "returns a user with two grants only once and keeps the total correct" do
+      get "/users", params: {filter: {access: "dashboard"}}, headers: headers_for(admin)
+
+      expect(ids.count(double_user.id)).to eq(1)
+      expect(json["meta"]["total"]).to eq(4)
+    end
+
+    it "combines with filter[search]" do
+      mx_user.update!(first_name: "Zelda")
+
+      get "/users", params: {filter: {access: "dashboard", search: "zelda"}}, headers: headers_for(admin)
+
+      expect(ids).to eq([mx_user.id])
+    end
+
+    it "combines with filter[country]" do
+      get "/users", params: {filter: {access: "dashboard", country: ["us"]}}, headers: headers_for(admin)
+
+      expect(ids).to eq([double_user.id])
+    end
+
+    it "combines with pagination" do
+      get "/users", params: {filter: {access: "dashboard"}, page: {size: 3, number: 2}}, headers: headers_for(admin)
+
+      expect(ids.size).to eq(1)
+      expect(json["meta"]).to include("total" => 4, "pages" => 2)
+    end
+
+    it "ignores an empty value" do
+      get "/users", params: {filter: {access: ""}}, headers: headers_for(admin)
+
+      expect(response).to have_http_status(:ok)
+      expect(ids).to include(plain.id)
+    end
+
+    it "refuses an unknown value" do
+      get "/users", params: {filter: {access: "everyone"}}, headers: headers_for(admin)
+
+      expect(response).to have_http_status(:unprocessable_content)
+    end
+
+    it "leaves the default listing unchanged" do
+      get "/users", headers: headers_for(admin)
+
+      expect(ids).to include(plain.id, admin.id, other_admin.id, mx_user.id, double_user.id)
+    end
+  end
 end

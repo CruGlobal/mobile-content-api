@@ -50,8 +50,9 @@ module MobileContentApi
     ActiveModelSerializers.config.adapter = :json_api
     FileUtils.mkdir_p("pages")
 
-    # Where invitation links point. The admin app owns the /invite route; the
-    # API only needs its origin. Default is the Vite dev server.
-    config.x.admin_app_base_url = ENV.fetch("ADMIN_APP_BASE_URL", "http://localhost:5173").chomp("/")
+    # Where invitation links point. The admin dashboard owns the /invite route;
+    # the API only needs its origin. No default: a missing value must fail at
+    # boot rather than emit invite links pointing at localhost.
+    config.x.admin_dashboard_base_url = ENV.fetch("ADMIN_DASHBOARD_BASE_URL").chomp("/")
   end
 end
