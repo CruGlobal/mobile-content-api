@@ -137,6 +137,28 @@ describe "UserInvites management", type: :request do
       expect(JSON.parse(response.body)["errors"].first["detail"]).to include("Language not found for code: zz")
     end
 
+    it "rejects a non-admin invite with no grants" do
+      post "/users/invites", params: body(valid_attributes.merge("grants" => {})), headers: headers_for(admin)
+
+      expect(response).to have_http_status(:unprocessable_content)
+      error = JSON.parse(response.body)["errors"].first
+      expect(error["detail"]).to include("at least one grant")
+      expect(error["source"]["pointer"]).to eq("/data/attributes/grants")
+      expect(UserInvite.count).to eq(0)
+    end
+
+    it "rejects a non-admin invite that omits grants" do
+      post "/users/invites", params: body(valid_attributes.except("grants")), headers: headers_for(admin)
+
+      expect(response).to have_http_status(:unprocessable_content)
+    end
+
+    it "allows an admin invite with no grants" do
+      post "/users/invites", params: body(valid_attributes.merge("admin" => true, "grants" => {})), headers: headers_for(admin)
+
+      expect(response).to have_http_status(:created)
+    end
+
     it "rejects a blank email" do
       post "/users/invites", params: body(valid_attributes.merge("email" => "")), headers: headers_for(admin)
 
@@ -257,6 +279,21 @@ describe "UserInvites management", type: :request do
 
       expect(response).to have_http_status(:unprocessable_content)
       expect(invite.reload.grants).to eq({"us" => ["*"]})
+    end
+
+    it "rejects clearing the grants of a non-admin invite" do
+      patch "/users/invites/#{invite.id}", params: body("grants" => {}), headers: headers_for(admin)
+
+      expect(response).to have_http_status(:unprocessable_content)
+      expect(JSON.parse(response.body)["errors"].first["detail"]).to include("at least one grant")
+      expect(invite.reload.grants).to eq({"us" => ["*"]})
+    end
+
+    it "allows clearing the grants when the invite becomes an admin invite" do
+      patch "/users/invites/#{invite.id}", params: body("admin" => true, "grants" => {}), headers: headers_for(admin)
+
+      expect(response).to have_http_status(:ok)
+      expect(invite.reload).to have_attributes(admin: true, grants: {})
     end
 
     it "answers 409 with the existing id when the new email belongs to another pending invite" do

@@ -60,6 +60,42 @@ describe UserInvite do
       expect(invite).not_to be_valid
     end
 
+    it "rejects a non-admin invite with no grants" do
+      invite = FactoryBot.build(:user_invite, admin: false, grants: {})
+
+      expect(invite).not_to be_valid
+      expect(invite.errors[:grants].first).to include("at least one grant")
+    end
+
+    it "allows an admin invite with no grants" do
+      expect(FactoryBot.build(:user_invite, :superadmin)).to be_valid
+    end
+
+    it "rejects clearing the grants of a non-admin invite" do
+      invite = FactoryBot.create(:user_invite)
+
+      invite.grants = {}
+
+      expect(invite).not_to be_valid
+    end
+
+    it "rejects demoting an admin invite that carries no grants" do
+      invite = FactoryBot.create(:user_invite, :superadmin)
+
+      invite.admin = false
+
+      expect(invite).not_to be_valid
+    end
+
+    it "does not block accepting or resending a pending invite saved empty before the rule" do
+      invite = FactoryBot.create(:user_invite)
+      invite.update_column(:grants, {})
+
+      expect { invite.resend! }.not_to raise_error
+      expect { invite.accept!(FactoryBot.create(:user)) }.not_to raise_error
+      expect(invite.reload).to be_accepted
+    end
+
     it "accepts real language codes" do
       english
       invite = FactoryBot.build(:user_invite, grants: {"us" => ["en", "*"]})

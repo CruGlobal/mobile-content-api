@@ -102,4 +102,78 @@ describe "Users update", type: :request do
       expect(editor.admin).to be(false)
     end
   end
+
+  describe "demoting an admin" do
+    let!(:other_admin) { FactoryBot.create(:user, admin: true) }
+
+    def error_detail = JSON.parse(response.body)["errors"].first["detail"]
+
+    it "refuses an admin demoting themselves" do
+      patch "/users/#{admin.id}",
+        params: body("admin" => false, "given-name" => "Nope"), headers: headers_for(admin)
+
+      expect(response).to have_http_status(:unprocessable_content)
+      expect(error_detail).to include("your own admin access")
+      admin.reload
+      expect(admin.admin).to be(true)
+      expect(admin.first_name).not_to eq("Nope")
+    end
+
+    it "refuses a form-encoded false the same way" do
+      patch "/users/#{admin.id}",
+        params: body("admin" => "false"), headers: headers_for(admin)
+
+      expect(response).to have_http_status(:unprocessable_content)
+      expect(admin.reload.admin).to be(true)
+    end
+
+    it "refuses demoting the last admin" do
+      other_admin.update!(admin: false)
+
+      patch "/users/#{admin.id}",
+        params: body("admin" => false), headers: headers_for(admin)
+
+      expect(response).to have_http_status(:unprocessable_content)
+      expect(error_detail).to include("last remaining admin")
+      expect(admin.reload.admin).to be(true)
+    end
+
+    it "allows demoting one of several other admins" do
+      patch "/users/#{other_admin.id}",
+        params: body("admin" => false), headers: headers_for(admin)
+
+      expect(response).to have_http_status(:ok)
+      expect(other_admin.reload.admin).to be(false)
+    end
+
+    it "does not block an admin editing themselves without touching the flag" do
+      patch "/users/#{admin.id}",
+        params: body("given-name" => "Renamed"), headers: headers_for(admin)
+
+      expect(response).to have_http_status(:ok)
+      expect(admin.reload.first_name).to eq("Renamed")
+    end
+
+    it "does not block re-sending admin: true to yourself" do
+      patch "/users/#{admin.id}",
+        params: body("admin" => true), headers: headers_for(admin)
+
+      expect(response).to have_http_status(:ok)
+    end
+
+    it "leaves a non-admin's own update unchanged" do
+      patch "/users/#{editor.id}",
+        params: body("given-name" => "Me", "admin" => false), headers: headers_for(editor)
+
+      expect(response).to have_http_status(:ok)
+      expect(editor.reload.first_name).to eq("Me")
+    end
+
+    it "lets an admin send admin: false for a user who is not an admin" do
+      patch "/users/#{subject_user.id}",
+        params: body("admin" => false), headers: headers_for(admin)
+
+      expect(response).to have_http_status(:ok)
+    end
+  end
 end
