@@ -577,7 +577,7 @@ resource "Resources" do
         expect(views_for(response_body, 1)).to eq(1268)
 
         View.create!(resource_id: 1, quantity: 5)
-        expect(ActiveModelSerializers::SerializableResource).not_to receive(:new)
+        expect_any_instance_of(ResourcesController).not_to receive(:index_json)
         do_request
 
         expect(status).to be(200)
@@ -590,7 +590,7 @@ resource "Resources" do
         expect(views_for(response_body, 1, section: "included")).to eq(1268)
 
         View.create!(resource_id: 1, quantity: 5)
-        expect(ActiveModelSerializers::SerializableResource).not_to receive(:new)
+        expect_any_instance_of(ResourcesController).not_to receive(:index_json)
         do_request "filter[resource_type]": "metatool", include: "variants"
 
         expect(views_for(response_body, 1, section: "included")).to eq(1273)
@@ -602,7 +602,7 @@ resource "Resources" do
         first_body = response_body
 
         View.create!(resource_id: 1, quantity: 5)
-        expect(ActiveModelSerializers::SerializableResource).not_to receive(:new)
+        expect_any_instance_of(ResourcesController).not_to receive(:index_json)
         do_request "fields[resource]": "name"
 
         expect(response_body).to eq(first_body)
