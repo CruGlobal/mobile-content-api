@@ -1,10 +1,12 @@
 # frozen_string_literal: true
 
 class ResourcesController < ApplicationController
+  TOTAL_VIEWS_KEY = "total-views"
+
   before_action :require_admin!, only: %i[create update publish_translation]
 
   def index
-    render json: cached_index_json, status: :ok
+    render json: with_current_total_views(cached_index_json), status: :ok
   end
 
   def show
@@ -73,6 +75,23 @@ class ResourcesController < ApplicationController
       include_param: params[:include],
       fields_param: field_params)
     Rails.cache.fetch(cache_key, expires_in: 1.hour) { index_json }
+  end
+
+  # A new view does not change the cache key above. Views arrive very often, and a
+  # rebuild of the index costs far more than a cache hit, so a view does not clear
+  # the cache. Instead, each response writes the current total_views into the
+  # cached JSON, so the index agrees with the other endpoints.
+  def with_current_total_views(json)
+    return json unless json.include?(TOTAL_VIEWS_KEY)
+
+    document = JSON.parse(json)
+    resources = Array.wrap(document["data"]) + Array.wrap(document["included"])
+    resources.select! { |r| r["type"] == "resource" && r["attributes"]&.key?(TOTAL_VIEWS_KEY) }
+    return json if resources.empty?
+
+    views = Resource.where(id: resources.map { |r| r["id"] }).pluck(:id, :total_views).to_h
+    resources.each { |r| r["attributes"][TOTAL_VIEWS_KEY] = views.fetch(r["id"].to_i, r["attributes"][TOTAL_VIEWS_KEY]) }
+    document.to_json
   end
 
   def index_json

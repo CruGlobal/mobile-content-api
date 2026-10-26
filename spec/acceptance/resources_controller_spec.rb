@@ -565,6 +565,16 @@ resource "Resources" do
       expect(data["relationships"].keys).to eq ["system"]
     end
 
+    it "shows the current total views after a cached response", document: false do
+      Rails.cache.clear
+      do_request
+      View.create!(resource_id: 1, quantity: 5)
+      do_request
+
+      data = JSON.parse(response_body)["data"].detect { |r| r["id"] == "1" }
+      expect(data["attributes"]["total-views"]).to eq(Resource.find(1).total_views)
+    end
+
     it "get resource with a specific abbreviation" do
       do_request "filter[abbreviation]": "es"
 
