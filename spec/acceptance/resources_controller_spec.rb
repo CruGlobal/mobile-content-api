@@ -565,14 +565,49 @@ resource "Resources" do
       expect(data["relationships"].keys).to eq ["system"]
     end
 
-    it "shows the current total views after a cached response", document: false do
-      Rails.cache.clear
-      do_request
-      View.create!(resource_id: 1, quantity: 5)
-      do_request
+    context "with a cached index", document: false do
+      before { Rails.cache.clear }
 
-      data = JSON.parse(response_body)["data"].detect { |r| r["id"] == "1" }
-      expect(data["attributes"]["total-views"]).to eq(Resource.find(1).total_views)
+      def views_for(body, id, section: "data")
+        JSON.parse(body)[section].detect { |r| r["id"] == id.to_s }["attributes"]["total-views"]
+      end
+
+      it "shows the current total views from the cached JSON" do
+        do_request
+        expect(views_for(response_body, 1)).to eq(1268)
+
+        View.create!(resource_id: 1, quantity: 5)
+        expect(ActiveModelSerializers::SerializableResource).not_to receive(:new)
+        do_request
+
+        expect(status).to be(200)
+        expect(views_for(response_body, 1)).to eq(1273)
+        expect(views_for(response_body, 5)).to eq(1268)
+      end
+
+      it "shows the current total views for resources in included" do
+        do_request "filter[resource_type]": "metatool", include: "variants"
+        expect(views_for(response_body, 1, section: "included")).to eq(1268)
+
+        View.create!(resource_id: 1, quantity: 5)
+        expect(ActiveModelSerializers::SerializableResource).not_to receive(:new)
+        do_request "filter[resource_type]": "metatool", include: "variants"
+
+        expect(views_for(response_body, 1, section: "included")).to eq(1273)
+        expect(views_for(response_body, 5, section: "included")).to eq(1268)
+      end
+
+      it "returns the cached JSON unchanged when total-views is not requested" do
+        do_request "fields[resource]": "name"
+        first_body = response_body
+
+        View.create!(resource_id: 1, quantity: 5)
+        expect(ActiveModelSerializers::SerializableResource).not_to receive(:new)
+        do_request "fields[resource]": "name"
+
+        expect(response_body).to eq(first_body)
+        expect(JSON.parse(response_body)["data"].first["attributes"].keys).to eq(["name"])
+      end
     end
 
     it "get resource with a specific abbreviation" do
