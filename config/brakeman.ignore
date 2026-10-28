@@ -24,5 +24,6 @@
       "note": "Intentional: every action in UserInvitesController is admin-only via SecureController, and whether the invitee becomes an admin is the purpose of an invite. Unlike UsersController, no non-admin can reach this permit, so there is no self-promotion path."
     }
   ],
-  "brakeman_version": "8.0.5"
+  "updated": "2026-10-12T13:59:40-04:00",
+  "brakeman_version": "8.0.6"
 }

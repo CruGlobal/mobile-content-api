@@ -9,7 +9,7 @@
 
 # Ignore all environment files.
 /.env*
-dump/*.sql
+
 # Ignore all logfiles and tempfiles.
 /log/*
 /tmp/*
@@ -30,8 +30,8 @@ dump/*.sql
 
 /public/assets
 
-# Ignore master key for decrypting credentials and more.
-/config/master.key
+# Ignore key files for decrypting credentials and more.
+/config/*.key
 
 vendor/ruby
 vendor/cache
@@ -53,3 +53,4 @@ vendor/bundle
 
 spec/examples.txt
 service_account_cred.json
+dump/*.sql
