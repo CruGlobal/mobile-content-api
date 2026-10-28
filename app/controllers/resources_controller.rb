@@ -1,10 +1,14 @@
 # frozen_string_literal: true
 
 class ResourcesController < ApplicationController
+  TOTAL_VIEWS_KEY = "total-views"
+  TOTAL_VIEWS_PLACEHOLDER_PREFIX = "__total_views_for_resource_"
+  TOTAL_VIEWS_PLACEHOLDER = /"#{TOTAL_VIEWS_KEY}":"#{TOTAL_VIEWS_PLACEHOLDER_PREFIX}(\d+)"/
+
   before_action :require_admin!, only: %i[create update publish_translation]
 
   def index
-    render json: cached_index_json, status: :ok
+    render json: index_response_json, status: :ok
   end
 
   def show
@@ -68,11 +72,51 @@ class ResourcesController < ApplicationController
     draft
   end
 
-  def cached_index_json
-    cache_key = Resource.index_cache_key(all_resources,
-      include_param: params[:include],
-      fields_param: field_params)
-    Rails.cache.fetch(cache_key, expires_in: 1.hour) { index_json }
+  # The index is expensive to build, so its JSON is cached. A new view does not
+  # change the cache key: views arrive very often, and a rebuild after each one
+  # would make the cache useless. Instead the cached JSON keeps a placeholder for
+  # each resource's total-views value, and each response writes the current
+  # values into those placeholders. No full parse of the cached JSON is needed.
+  def index_response_json
+    fresh_json = nil
+    cached = Rails.cache.fetch(index_cache_key, expires_in: 1.hour) do
+      fresh_json = index_json
+      index_cache_entry(fresh_json)
+    end
+    # On a cache miss the JSON was just built, so its values are already current.
+    return fresh_json if fresh_json
+    return cached[:body] if cached[:views].empty?
+
+    current = Resource.where(id: cached[:views].keys).pluck(:id, :total_views).to_h
+    fill_total_views(cached[:body], cached[:views].merge(current))
+  end
+
+  def index_cache_key
+    "#{Resource.index_cache_key(all_resources, include_param: params[:include], fields_param: field_params)}/total-views-placeholders"
+  end
+
+  # Builds {body:, views:}. body is the index JSON with a placeholder in place of
+  # each total-views value, and views maps resource id to the total_views value
+  # read at build time.
+  def index_cache_entry(json)
+    document = JSON.parse(json)
+    views = {}
+    (Array.wrap(document["data"]) + Array.wrap(document["included"])).each do |item|
+      attributes = item["attributes"]
+      next unless item["type"] == "resource" && attributes&.key?(TOTAL_VIEWS_KEY)
+
+      id = Integer(item["id"])
+      views[id] = attributes[TOTAL_VIEWS_KEY]
+      attributes[TOTAL_VIEWS_KEY] = "#{TOTAL_VIEWS_PLACEHOLDER_PREFIX}#{id}"
+    end
+    # ActiveSupport encoding keeps the same escaping as the uncached response.
+    {body: ActiveSupport::JSON.encode(document), views: views}
+  end
+
+  # Inside a JSON string every quote is escaped, so this pattern can only match
+  # a real "total-views" key and its placeholder value, never text in a manifest.
+  def fill_total_views(body, views)
+    body.gsub(TOTAL_VIEWS_PLACEHOLDER) { %("#{TOTAL_VIEWS_KEY}":#{JSON.generate(views[$1.to_i])}) }
   end
 
   def index_json
