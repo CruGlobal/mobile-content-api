@@ -36,6 +36,9 @@ class UsersController < WithUserController
   end
 
   def update
+    refusal = demotion_refusal
+    return render json: {errors: [{detail: refusal}]}, status: :unprocessable_content if refusal
+
     @user.update!(user_params)
     @user.set_arbitrary_attributes!(data_attrs)
 
@@ -78,6 +81,21 @@ class UsersController < WithUserController
     keys
   end
 
+  # Dropping the last admin, or your own admin flag, locks everyone out of /users
+  # and the grants endpoints (both behind require_admin!). The last-admin case is
+  # checked first: only an admin can send admin, so the last admin is always the
+  # caller and the self check would otherwise hide it. The flag is cast because a
+  # form-encoded "false" must not slip past a strict == false.
+  def demotion_refusal
+    return unless @user.admin? && ActiveModel::Type::Boolean.new.cast(user_params[:admin]) == false
+
+    if User.where(admin: true).where.not(id: @user.id).none?
+      "The last remaining admin cannot be demoted."
+    elsif @user.id == current_user.id
+      "You cannot remove your own admin access."
+    end
+  end
+
   # UserSerializer reads user_attributes, both has_many relationships and the
   # grants' languages, so every row costs extra queries unless preloaded here.
   def paginated(scope)
@@ -112,7 +130,27 @@ class UsersController < WithUserController
       )
     end
 
+    # Subquery for the same reason as the country filter: a user holding several
+    # grants must not repeat.
+    if dashboard_access_filter?
+      scope = scope.where(admin: true).or(
+        scope.where(id: ResourceScorePermission.select(:user_id))
+      )
+    end
+
     scope
+  end
+
+  # filter[access]=dashboard -- admins and anyone holding a grant. Opt-in, so
+  # the default listing is unchanged. An unknown value is refused rather than
+  # ignored: a typo would otherwise return the full list looking like the
+  # dashboard one.
+  def dashboard_access_filter?
+    value = filter_param(:access).presence
+    return false unless value
+    return true if value == "dashboard"
+
+    raise InvalidRequestError, "filter[access] must be \"dashboard\""
   end
 
   # filter[country][]=mx&filter[country][]=us -- OR within the facet. Downcased
