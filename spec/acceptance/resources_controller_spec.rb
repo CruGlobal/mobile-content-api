@@ -608,6 +608,45 @@ resource "Resources" do
         expect(response_body).to eq(first_body)
         expect(JSON.parse(response_body)["data"].first["attributes"].keys).to eq(["name"])
       end
+
+      # A cache hit must return the same bytes that a cache miss returns for the
+      # same request and the same view counts.
+      [
+        {},
+        {"filter[resource_type]": "metatool", include: "variants"},
+        {"filter[system]": "GodTools", include: "latest-translations"},
+        {"fields[resource]": "name,manifest"}
+      ].each do |request_params|
+        it "returns the same body on a cache hit as on a cache miss for #{request_params.inspect}" do
+          do_request request_params
+          miss_body = response_body
+
+          expect_any_instance_of(ResourcesController).not_to receive(:index_json)
+          do_request request_params
+          expect(response_body).to eq(miss_body)
+        end
+
+        it "returns the same body on a cache hit after a view as a rebuilt response for #{request_params.inspect}" do
+          do_request request_params
+          View.create!(resource_id: 1, quantity: 5)
+          do_request request_params
+          hit_body = response_body
+
+          Rails.cache.clear
+          do_request request_params
+          expect(response_body).to eq(hit_body)
+        end
+      end
+
+      it "does not read an entry written in the old cache format" do
+        old_key = Resource.index_cache_key(Resource.all, include_param: nil, fields_param: {})
+        Rails.cache.write(old_key, "old cached body")
+
+        do_request
+
+        expect(status).to be(200)
+        expect(views_for(response_body, 1)).to eq(1268)
+      end
     end
 
     it "get resource with a specific abbreviation" do
