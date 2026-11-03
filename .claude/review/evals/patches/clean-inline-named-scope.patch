@@ -1,0 +1,12 @@
+diff --git a/app/models/resource_type.rb b/app/models/resource_type.rb
+index 52eb90b..a512fce 100644
+--- a/app/models/resource_type.rb
++++ b/app/models/resource_type.rb
+@@ -57,6 +57,6 @@ class ResourceType < ActiveRecord::Base
+       raise InvalidRequestError, "ResourceType '#{name}' is not supported"
+     end
+ 
+-    named(normalized).pluck(:id)
++    where(name: expand_name(normalized)).pluck(:id)
+   end
+ end
