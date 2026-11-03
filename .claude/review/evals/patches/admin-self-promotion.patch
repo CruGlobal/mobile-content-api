@@ -1,0 +1,13 @@
+diff --git a/app/controllers/users_controller.rb b/app/controllers/users_controller.rb
+index 4cef487..598bf03 100644
+--- a/app/controllers/users_controller.rb
++++ b/app/controllers/users_controller.rb
+@@ -77,7 +77,7 @@ class UsersController < WithUserController
+   # permitting it unconditionally would be a self-promotion path.
+   def update_keys
+     keys = [:email, :"given-name", :"family-name"]
+-    keys << :admin if current_user&.admin
++    keys << :admin
+     keys
+   end
+ 

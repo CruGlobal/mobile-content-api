@@ -1,0 +1,13 @@
+diff --git a/app/models/resource_type.rb b/app/models/resource_type.rb
+index 52eb90b..058da00 100644
+--- a/app/models/resource_type.rb
++++ b/app/models/resource_type.rb
+@@ -16,7 +16,7 @@ class ResourceType < ActiveRecord::Base
+   # named a single format would renumber only that format's rows and leave the
+   # other's positions colliding with them. Reads and filters still accept the
+   # individual formats; see expand_name.
+-  ORDERABLE_NAMES = ["lesson", TOOL].freeze
++  ORDERABLE_NAMES = ["lesson", TOOL, *TOOL_TYPE_NAMES].freeze
+ 
+   validates :name, presence: true, uniqueness: true
+   validates :dtd_file, presence: true

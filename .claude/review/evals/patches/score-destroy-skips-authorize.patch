@@ -1,0 +1,12 @@
+diff --git a/app/controllers/resource_scores_controller.rb b/app/controllers/resource_scores_controller.rb
+index 7efeea0..d8ccf50 100644
+--- a/app/controllers/resource_scores_controller.rb
++++ b/app/controllers/resource_scores_controller.rb
+@@ -51,7 +51,6 @@ class ResourceScoresController < ApplicationController
+ 
+   def destroy
+     @resource_score = ResourceScore.find(params[:id])
+-    authorize @resource_score
+     @resource_score.destroy!
+ 
+     render json: {}, status: :ok

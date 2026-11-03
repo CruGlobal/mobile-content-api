@@ -1,0 +1,13 @@
+diff --git a/app/lib/xml_util.rb b/app/lib/xml_util.rb
+index d4e9dfc..242a3d2 100644
+--- a/app/lib/xml_util.rb
++++ b/app/lib/xml_util.rb
+@@ -25,7 +25,7 @@ module XmlUtil
+   end
+ 
+   def self.xpath_namespace(xml, string)
+-    xml.xpath(string, "manifest" => XMLNS_MANIFEST, "content" => XMLNS_CONTENT, "publish" => XMLNS_PUBLISH, "shareable" => XMLNS_SHAREABLE, "tract" => XMLNS_TRACT, "training" => XMLNS_TRAINING)
++    xml.xpath(string, "manifest" => XMLNS_MANIFEST, "content" => XMLNS_CONTENT, "shareable" => XMLNS_SHAREABLE, "tract" => XMLNS_TRACT, "training" => XMLNS_TRAINING)
+   end
+ 
+   def self.get_or_create_child(xml, ns, name)

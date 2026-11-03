@@ -1,0 +1,103 @@
+# Standards — Checklist
+
+Generic baseline. Every item here is mandatory unless the repo's own conventions override it —
+`/agent-review:init` appends the repo-specific checklist, and both layers are kept.
+
+This is an explicit checklist: report compliance for each **bold group below** in the
+`### Rule Checklist Results` section of your output (✅ / ⚠️ / ❌ / N/A), and raise anything
+non-compliant as a finding at the severity its impact warrants.
+
+**Exports & Naming**
+
+- [ ] Export style matches the repo's convention (named vs default) — don't introduce a second style
+- [ ] File and directory naming follows the existing convention (casing, suffixes, special filenames
+      the framework requires)
+- [ ] Public identifiers are descriptive; abbreviations match ones already used in the codebase
+- [ ] Imports use the repo's alias/path convention rather than deep relative traversal
+
+**Types**
+
+- [ ] No escape hatches that disable type checking in new code (untyped `any`-equivalents, suppression
+      comments) without an inline comment explaining why
+- [ ] No non-null/force-unwrap assertions on values that can legitimately be absent — check explicitly
+- [ ] Types are derived from a single source of truth rather than hand-duplicated alongside it
+
+**Input & Forms**
+
+- [ ] User input is validated with the repo's established validation approach, not ad-hoc checks
+- [ ] Every client-side validation rule has a server-side counterpart
+- [ ] Submit/confirm actions are disabled or guarded while in flight so they can't double-fire
+
+**Data**
+
+- [ ] Writes invalidate or update the cached data they affect
+- [ ] Cache/query keys are stable, descriptive, and scoped to the resource and its inputs
+- [ ] Queries rely on the real authorization boundary, not on a client-side filter
+
+**Dates & Numbers**
+
+- [ ] Date math uses the repo's chosen date library and format conventions, not ad-hoc arithmetic
+- [ ] Numeric formatting and rounding happen at the display boundary, consistently
+
+**Testing**
+
+- [ ] Every new function, hook, and non-trivial component has a test in the repo's conventional
+      location
+- [ ] Tests use the repo's runner and mocking idioms
+- [ ] Test code is typed as strictly as production code
+
+**Code Quality**
+
+- [ ] Lint, type-check, and format commands pass
+- [ ] No debug output left behind (console/print statements, debuggers, `TODO` without a tracked issue
+      reference)
+- [ ] No unused imports, variables, or dead parameters
+- [ ] No commented-out code blocks (delete, don't comment)
+- [ ] No empty catch blocks that swallow errors silently
+- [ ] Package-manager usage matches the repo's lockfile (don't mix tools)
+
+<!-- init: extend this file with repo-specific focus areas and evidence links -->
+
+## Repo-specific checklist (mobile-content-api)
+
+Report each bold group below in the checklist results too.
+
+**Commands (CI runs the same ones)**
+
+- [ ] `bundle exec standardrb --format simple` is clean (CI `lint` job). `.standard.yml` holds the only ignores; there is no `.rubocop.yml`
+- [ ] `bundle exec brakeman -A -q --no-pager -x UnscopedFind` reports 0 warnings (CI `lint` job; `bin/brakeman` locally)
+- [ ] `bundle exec rspec` passes (CI `test` job); run `bin/bundler-audit check --update` for dependency changes
+- [ ] XSD changes pass `xmllint --schema public/xmlns/<schema>.xsd --noout schema_tests/<type>/valid/*/*.xml` and `./schema_tests/invalid.sh public/xmlns/<schema>.xsd schema_tests/<type>/invalid/*/*.xml`
+- [ ] `bin/ci` runs setup, lint, audit, brakeman and specs locally in one go
+
+**Ruby and file conventions**
+
+- [ ] New Ruby files start with `# frozen_string_literal: true`
+- [ ] StandardRB style: double-quoted strings, `{key: value}` hash literals, `%w[]` arrays, no semicolons
+- [ ] One constant per file under Zeitwerk naming (`app/services/okta_auth_service.rb` defines `OktaAuthService`)
+- [ ] API errors are raised, not rendered by hand: `Error::*` classes in `app/models/error/` (`Error::BadRequestError`, `Error::NotFoundError`, `Error::TextNotFoundError`, ...) and `InvalidRequestError`, `UserNotFound`, `UserAlreadyExist` in `app/errors/`, rendered by `ApplicationController`
+
+**Placement**
+
+- [ ] Controllers stay thin. Integrations live in `app/services/` (class-method services like `BaseAuthService` subclasses and `CrowdinService`), packaging and XML in `app/lib/` and `app/models/xml/`, validators in `app/validators/` (used with `validates_with`), authorization in `app/policies/` (Pundit), jobs in `app/sidekiq/` (`include Sidekiq::Job`)
+- [ ] Admin-only controllers inherit `SecureController`; per-user `/users/:user_id/...` controllers inherit `WithUserController`
+- [ ] Serializers in `app/serializers/` set an explicit `type` and dasherized `key:` names; JSON:API bodies are read with `data_attrs` / `permit_params`, filters with `filter_param`
+
+**Dependencies**
+
+- [ ] Gems that the code depends on by API carry a constraint that says so (`gem "rubyzip", ">= 3.0"`); `Gemfile.lock` is regenerated by Bundler, never edited by hand
+- [ ] `sidekiq-pro` stays inside the `gems.contribsys.com` source block; `Gemfile.oss` stays a thin `eval_gemfile` wrapper
+- [ ] Rails minor and major upgrades are hand-run upgrade PRs, not a side effect of another change (`.github/dependabot.yml` ignores them for that reason)
+
+**Docs**
+
+- [ ] When a PR changes something `CLAUDE.md` states (an integration, a command, a directory's role, the XML schema list), it updates `CLAUDE.md` in the same PR
+
+### From PR history
+
+- The PR description matches the diff at the head commit: status codes, breaking-changes lists, example counts and gem lists in the body agree with the code, and the title is a real summary because it becomes the squash commit subject. Long generated bodies drift after review rounds (#2036's body promised 400s while the code returned 422). Flag a body claim that the diff contradicts.
+  <!-- evidence: PR #2036, #2042, #2052 -->
+- Every method, constant and config option a change calls exists in the gem version locked in `Gemfile.lock`. Flag options removed upstream (datadog 1.0 dropped `controller_service`, `cache_service` and `database_service` and now ignores them silently), positional flags replaced by keywords (rubyzip 3 replaced `Zip::File::CREATE` with `create: true`), and deprecated calls (`Aws::S3::Object#upload_file`).
+  <!-- evidence: PR #2047, #2040, #2042 -->
+- Keep `CLAUDE.md` in step with the code. #1988 updated it for the new manifest checksum attributes, but it still names OneSky (`app/lib/one_sky.rb`, `ONESKY_API_KEY`) although translations moved to Crowdin (`app/services/crowdin_service.rb`, `CROWDIN_API_TOKEN`). Flag a PR that changes a fact `CLAUDE.md` states without the matching edit.
+  <!-- evidence: PR #1988, #2016 -->

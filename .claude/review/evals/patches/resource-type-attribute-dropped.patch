@@ -1,0 +1,12 @@
+diff --git a/app/serializers/resource_serializer.rb b/app/serializers/resource_serializer.rb
+index b4b22a0..e76badb 100644
+--- a/app/serializers/resource_serializer.rb
++++ b/app/serializers/resource_serializer.rb
+@@ -3,7 +3,6 @@
+ class ResourceSerializer < ActiveModel::Serializer
+   type "resource"
+   attributes :id, :name, :abbreviation, :description, :crowdin_project_id, :manifest
+-  attribute :resource_type_name, key: :"resource-type"
+   attribute :total_views, key: :"total-views"
+ 
+   belongs_to :system

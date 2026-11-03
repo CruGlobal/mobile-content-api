@@ -1,0 +1,19 @@
+diff --git a/app/controllers/resources_personalization_controller.rb b/app/controllers/resources_personalization_controller.rb
+index 81a19bf..788d657 100644
+--- a/app/controllers/resources_personalization_controller.rb
++++ b/app/controllers/resources_personalization_controller.rb
+@@ -32,11 +32,11 @@ class ResourcesPersonalizationController < ApplicationController
+   end
+ 
+   def default_order
+-    lang = filter_param(:lang)
++    lang_code = filter_param(:lang)
+ 
+-    raise Error::BadRequestError, "Language Filter is required." unless lang.present?
++    raise Error::BadRequestError, "Language Filter is required." unless lang_code.present?
+ 
+-    language = find_language!(lang)
++    language = find_language!(lang_code)
+ 
+     render_resources all_default_order_resources(
+       language: language,
