@@ -1,0 +1,130 @@
+version: 1
+# Visible development set: every case below is committed with the repo, so prompt and rule
+# changes can overfit to it. Keep a separate private holdout (a protected branch or a private
+# evaluation repo) for the real readiness gate. See the plugin's templates/evals/README.md.
+name: mobile-content-api-review-gate
+blocker_threshold: 7
+thresholds:
+  blocker_recall: 0.85
+  blocker_precision: 0.80
+  clean_false_blocker_rate: 0.05
+  false_positive_dismissal_rate: 0.20
+  category_recall: 0.70
+  minimum_runs: 50
+cases:
+  # Mined: authorize before any write; verify_authorized is a safety net, not the check (#2045, #2046).
+  - id: score-destroy-skips-authorize
+    kind: seeded_bug
+    category: security
+    patch: patches/score-destroy-skips-authorize.patch
+    expected:
+      - id: destroy-without-authorize
+        must_block: true
+        min_severity: 7
+        category: security
+        match:
+          paths: ['app/controllers/resource_scores_controller.rb']
+          categories: [security, authorization]
+          message_any: [authorize, authorization, policy, permission, Pundit]
+
+  # Mined: admin is a privilege field, permitted only for admins (#2045, #2048, #2049).
+  - id: admin-self-promotion
+    kind: seeded_bug
+    category: security
+    patch: patches/admin-self-promotion.patch
+    expected:
+      - id: non-admin-can-set-admin
+        must_block: true
+        min_severity: 7
+        category: security
+        match:
+          paths: ['app/controllers/users_controller.rb']
+          categories: [security, authorization]
+          message_any: [admin, privilege, escalat, promot]
+
+  # Mined: a blank value never widens access; "*" is the only wildcard (#2045, #2049).
+  - id: blank-lang-grants-whole-country
+    kind: seeded_bug
+    category: data-integrity
+    patch: patches/blank-lang-grants-whole-country.patch
+    expected:
+      - id: blank-lang-over-grants
+        must_block: true
+        min_severity: 7
+        category: data-integrity
+        match:
+          paths: ['app/models/resource_score_grants.rb']
+          categories: [data-integrity, security, authorization, validation]
+          message_any: [blank, wildcard, every language, all languages, whole country, over-grant]
+
+  # Mined: ordering writes name tool or lesson, never one tool format (#2046).
+  - id: ordering-accepts-single-tool-format
+    kind: seeded_bug
+    category: data-integrity
+    patch: patches/ordering-accepts-single-tool-format.patch
+    expected:
+      - id: single-format-ordering-write
+        must_block: true
+        min_severity: 7
+        category: data-integrity
+        match:
+          paths: ['app/models/resource_type.rb']
+          categories: [data-integrity, correctness, logic]
+          message_any: [tract, cyoa, order, position, renumber, collid]
+
+  # Phase 1: is_published flips only after the S3 upload succeeds.
+  - id: published-before-upload
+    kind: seeded_bug
+    category: data-integrity
+    patch: patches/published-before-upload.patch
+    expected:
+      - id: published-flag-before-push
+        must_block: true
+        min_severity: 7
+        category: data-integrity
+        match:
+          paths: ['app/models/translation.rb']
+          categories: [data-integrity, correctness, error-handling, logic]
+          message_any: [is_published, published, upload, push_to_s3, S3]
+
+  # Mined: no serialized field removed without a declared break and consumer rollout (#2036, #2046).
+  - id: resource-type-attribute-dropped
+    kind: seeded_bug
+    category: api-contracts
+    patch: patches/resource-type-attribute-dropped.patch
+    expected:
+      - id: resource-type-removed-from-api
+        must_block: true
+        min_severity: 7
+        category: api-contracts
+        match:
+          paths: ['app/serializers/resource_serializer.rb']
+          categories: [api-contracts, api, contract, compatibility, breaking]
+          message_any: [resource-type, resource_type, breaking, client, contract, mobile]
+
+  # Mined: package and manifest XML output must not change under the code that builds it (#2052, #1988).
+  - id: publish-namespace-dropped
+    kind: seeded_bug
+    category: content-schema
+    patch: patches/publish-namespace-dropped.patch
+    expected:
+      - id: publish-prefix-unbound
+        must_block: true
+        min_severity: 7
+        category: content-schema
+        match:
+          paths: ['app/lib/xml_util.rb']
+          categories: [content-schema, correctness, xml, logic]
+          message_any: [publish, namespace, prefix, if-locale, filterable]
+
+  # Behavior-preserving: rename a local to match the sibling actions.
+  - id: clean-rename-default-order-lang
+    kind: clean_control
+    patch: patches/clean-rename-default-order-lang.patch
+    expected: []
+
+  # Behavior-preserving: inline the named scope (same SQL).
+  - id: clean-inline-named-scope
+    kind: clean_control
+    patch: patches/clean-inline-named-scope.patch
+    expected: []

@@ -1,0 +1,18 @@
+diff --git a/app/models/resource_score_grants.rb b/app/models/resource_score_grants.rb
+index a55346b..2038567 100644
+--- a/app/models/resource_score_grants.rb
++++ b/app/models/resource_score_grants.rb
+@@ -60,12 +60,7 @@ module ResourceScoreGrants
+   # missing or blank code is a client bug (a misspelled key gets dropped by
+   # permit), so it errors rather than silently granting the whole country.
+   def resolve_language(code)
+-    if code.blank?
+-      raise InvalidRequestError,
+-        "lang is required (use \"#{ResourceScorePermission::ALL_LANGUAGES}\" for every language in the country)"
+-    end
+-
+-    return nil if code == ResourceScorePermission::ALL_LANGUAGES
++    return nil if code.blank? || code == ResourceScorePermission::ALL_LANGUAGES
+ 
+     language = Language.find_by_code(code)
+     raise InvalidRequestError, "Language not found for code: #{code}" unless language
