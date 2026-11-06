@@ -116,5 +116,6 @@ PRs here are reviewed with the agent-review plugin, run locally from Claude Code
 4. When no blocker (severity 7+) is open, the `github-actions` bot approves the PR.
 
 - A PR labeled `needs-human-approval` needs a person's approval. The card-data check adds the label, and so does any path under `human_approval` in `.claude/review/config.yml`.
-- Never edit `.claude/review/` to get a PR to pass. Change the rules in their own PR.
+- Never edit `.claude/review/` rules or config to get a PR to pass; change them in their own PR. The review and address steps commit their own bookkeeping files (metrics, feedback.jsonl), and that's expected.
+- A new push takes back the bot's approval unless it only merges in the default branch. Run the review again to get it back.
 - Needs agent-review plugin 1.1.0 or later: `/plugin marketplace update cruglobal`.
