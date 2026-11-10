@@ -57,3 +57,8 @@ vendor/ruby
 pages/*
 node_modules
 
+
+# Ignore agent-review config, rules and eval patches, and the Claude Code guides
+/.claude
+**/CLAUDE.md
+**/AGENTS.md

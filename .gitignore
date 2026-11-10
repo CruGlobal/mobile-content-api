@@ -54,3 +54,10 @@ vendor/bundle
 spec/examples.txt
 service_account_cred.json
 dump/*.sql
+
+# Ignore agent-review's per-run output and the learning loop's local scratch files.
+# Only learnings/feedback.jsonl and learnings/learnings.yml are committed.
+/.claude/review/metrics/
+/.claude/review/index/
+/.claude/review/learnings/pending/
+/.claude/review/learnings/findings.json
