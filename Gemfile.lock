@@ -333,7 +333,7 @@ GEM
     mime-types-data (3.2026.0414)
     mini_mime (1.1.5)
     minitest (5.27.0)
-    msgpack (1.8.3)
+    msgpack (1.8.7)
     multi_json (1.19.1)
     multi_xml (0.8.1)
       bigdecimal (>= 3.1, < 5)
@@ -818,7 +818,7 @@ CHECKSUMS
   mime-types-data (3.2026.0414) sha256=461c4c655373a44bd6c5fe54bcf5b7776026ea96e808144b1ec465c4b99148cc
   mini_mime (1.1.5) sha256=8681b7e2e4215f2a159f9400b5816d85e9d8c6c6b491e96a12797e798f8bccef
   minitest (5.27.0) sha256=2d3b17f8a36fe7801c1adcffdbc38233b938eb0b4966e97a6739055a45fa77d5
-  msgpack (1.8.3) sha256=8bda4a6428d3244e50d6bd55854d354edbada88a4e1f4f5731a39a0f86bee6a1
+  msgpack (1.8.7) sha256=dfefec761b5f9047e6e8d95d2c7f8af4b3725d984a01942adc533aa819a2df33
   multi_json (1.19.1) sha256=7aefeff8f2c854bf739931a238e4aea64592845e0c0395c8a7d2eea7fdd631b7
   multi_xml (0.8.1) sha256=addba0290bac34e9088bfe73dc4878530297a82a7bbd66cb44dcd0a4b86edf5a
   mustache (1.1.1) sha256=90891fdd50b53919ca334c8c1031eada1215e78d226d5795e523d6123a2717d0
