@@ -76,9 +76,8 @@ risk:
     - { glob: 'app/**/*.rb', points: 1, tier: medium }
     - { glob: 'lib/**', points: 1, tier: medium }
     - { glob: 'db/seeds.rb', points: 1, tier: medium } # loaded before every spec run; specs depend on its ids
-    # Explicit 0-point entries: documentation of intent, not scoring behavior.
-    - { glob: 'spec/**', points: 0, tier: low }
-    - { glob: 'schema_tests/**', points: 0, tier: low }
+    - { glob: 'spec/**', points: 1, tier: medium }
+    - { glob: 'schema_tests/**', points: 1, tier: medium }
 
   # Unknown paths are not zero-risk. Each non-excluded file that matches none of
   # the patterns above gets this many points, preventing a newly introduced
@@ -399,6 +398,9 @@ excluded_paths:
   - 'public/*.svg'
   - 'schema_tests/**/*.png'
   - 'schema_tests/**/*.jpg'
+  - '.claude/review/learnings/feedback.jsonl'
+  - '.claude/review/metrics/**'
+  - '.claude/review/index/**'
 
 # ── Deterministic evidence ────────────────────────────────────────────────────
 # ast-grep runs trusted, repo-authored AST rules before the model. Only matches
