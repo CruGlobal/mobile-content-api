@@ -27,10 +27,21 @@ ARG SIDEKIQ_CREDS
 RUN gem install bundler -v $(awk '/^BUNDLED WITH/ { getline; print $1; exit }' Gemfile.lock) \
     && bundle config --global gems.contribsys.com $SIDEKIQ_CREDS
 
-# Install build-dependencies, then install gems, subsequently removing build-dependencies
+# Install build-dependencies, then install gems, subsequently removing build-dependencies.
+# Then drop what installed gems ship for their own development and this app doesn't use:
+# the gem cache, git-gem .git folders, top-level spec/test/example folders, and every
+# Gemfile.lock inside an installed gem or one of Ruby's bundled gems. Image scanners read
+# those lock files as installed packages. The mkdir keeps find from failing when the app
+# has no git-sourced gems.
 RUN apk --no-cache add --virtual build-deps build-base postgresql-dev yaml-dev \
     && bundle install --jobs 20 --retry 2 \
-    && apk del build-deps
+    && apk del build-deps \
+    && mkdir -p /usr/local/bundle/bundler/gems \
+    && rm -rf /usr/local/bundle/cache /usr/local/bundle/bundler/gems/*/.git \
+    && find /usr/local/bundle/gems /usr/local/bundle/bundler/gems -mindepth 2 -maxdepth 2 -type d \
+         \( -name spec -o -name test -o -name tests -o -name example -o -name examples \) -exec rm -rf {} + \
+    && find /usr/local/bundle/gems /usr/local/bundle/bundler/gems /usr/local/lib/ruby/gems \
+         -type f -name Gemfile.lock -exec rm -f {} +
 
 # Copy the application
 COPY . .
