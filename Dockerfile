@@ -22,10 +22,8 @@ ENV LD_PRELOAD=/usr/lib/libjemalloc.so.2
 # Copy dependency definitions and lock files
 COPY Gemfile Gemfile.lock .ruby-version ./
 
-# Install bundler version which created the lock file and configure it
-ARG SIDEKIQ_CREDS
-RUN gem install bundler -v $(awk '/^BUNDLED WITH/ { getline; print $1; exit }' Gemfile.lock) \
-    && bundle config --global gems.contribsys.com $SIDEKIQ_CREDS
+# Install bundler version which created the lock file
+RUN gem install bundler -v $(awk '/^BUNDLED WITH/ { getline; print $1; exit }' Gemfile.lock)
 
 # Install build-dependencies, then install gems, subsequently removing build-dependencies.
 # Then drop what installed gems ship for their own development and this app doesn't use:
@@ -33,8 +31,14 @@ RUN gem install bundler -v $(awk '/^BUNDLED WITH/ { getline; print $1; exit }' G
 # Gemfile.lock inside an installed gem or one of Ruby's bundled gems. Image scanners read
 # those lock files as installed packages. The mkdir keeps find from failing when the app
 # has no git-sourced gems.
-RUN apk --no-cache add --virtual build-deps build-base postgresql-dev yaml-dev \
+# The Sidekiq Pro login comes in as the sidekiq_creds BuildKit secret (see build.sh), and
+# bundler reads it from BUNDLE_GEMS__CONTRIBSYS__COM during this RUN only, so it is not
+# saved in the image history. Bundler names its index cache folder under /root/.bundle after
+# the source URL, username included, so that folder is removed in the same RUN.
+RUN --mount=type=secret,id=sidekiq_creds,env=BUNDLE_GEMS__CONTRIBSYS__COM \
+    apk --no-cache add --virtual build-deps build-base postgresql-dev yaml-dev \
     && bundle install --jobs 20 --retry 2 \
+    && rm -rf /root/.bundle \
     && apk del build-deps \
     && mkdir -p /usr/local/bundle/bundler/gems \
     && rm -rf /usr/local/bundle/cache /usr/local/bundle/bundler/gems/*/.git \
