@@ -1,0 +1,25 @@
+{
+  "metricHeaders": [
+    {
+      "name": "totalUsers",
+      "type": "TYPE_INTEGER"
+    },
+    {
+      "name": "sessions",
+      "type": "TYPE_INTEGER"
+    }
+  ],
+  "rows": [
+    {
+      "metricValues": [
+        {
+          "value": "238326"
+        },
+        {
+          "value": "966442"
+        }
+      ]
+    }
+  ],
+  "rowCount": 1
+}

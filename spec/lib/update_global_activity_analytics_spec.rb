@@ -65,4 +65,16 @@ describe UpdateGlobalActivityAnalytics do
         "`cp spec/fixtures/service_account_cred.json.actions #{described_class::SERVICE_ACCOUNT_CREDENTIALS_FILE_PATH}`"
     end
   end
+
+  describe "GA4 client initialization" do
+    it "configures client with service account credentials" do
+      mock_config = double("config")
+      expect(mock_config).to receive(:credentials=).with(described_class::SERVICE_ACCOUNT_CREDENTIALS_FILE_PATH)
+
+      mock_client = instance_double(Google::Analytics::Data::V1beta::AnalyticsData::Client)
+      allow(Google::Analytics::Data::V1beta::AnalyticsData::Client).to receive(:new).and_yield(mock_config).and_return(mock_client)
+
+      described_class.new
+    end
+  end
 end
