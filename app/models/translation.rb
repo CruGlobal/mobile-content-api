@@ -21,7 +21,7 @@ class Translation < ActiveRecord::Base
   def s3_url
     obj = Package.s3_object(self)
     raise Error::NotFoundError, "Zip file not found in S3 for translation: #{id}" unless obj.exists?
-    obj.public_url
+    Package.public_url(obj)
   end
 
   def translated_page(page_id, strict)
